@@ -27,4 +27,14 @@ public class StoreNews {
     // 작성일시 (now()?, sysdate())
     private LocalDateTime regDt;
 
+
+    // Method
+    public void setNewsImgFile(MultipartFile newsImgFile) {
+        this.newsImgFile = newsImgFile;
+
+        if (newsImgFile != null) {
+            this.newsImg = newsImgFile.getOriginalFilename();
+        }
+    }
+
 }
