@@ -1,4 +1,4 @@
-package com.example.server.service.chat;
+package com.placeHere.server.service.chat;
 
 public interface ChatService {
 }
