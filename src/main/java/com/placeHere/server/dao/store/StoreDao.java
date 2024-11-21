@@ -13,7 +13,7 @@ public interface StoreDao {
     // 사업자번호 중복확인 (DB) - Rest 에서 사용
     public int chkDuplicateBusinessNo(String businessNo);
 
-    // 가게 등록 (return 되는 값은 store_id 의 값)
+    // 가게 등록 (return 되는 값은 store_id 의 값) TODO
     public int addStore(Store store);
 
     // 가게 정보 조회
@@ -22,19 +22,22 @@ public interface StoreDao {
     // 가게 검색, 가게 목록 조회
     public List<Store> getStoreList(Search search);
 
-    // 가게 수정
+    // 가게 수정 TODO
     public int updateStore(Store store);
 
-    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
+    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경) TODO
     public int removeStore(int storeId);
 
-    // 편의시설 등록
+    // 편의시설 등록 (편의시설이 없으면 등록X) TODO
     public int addAmenities(int storeId, List<Integer> amenitiesNoList);
 
-    // 메뉴 등록
+    // 편의시설 삭제 (통채로 삭제후 다시 등록) TODO
+    public int removeAmenities(int storeId);
+
+    // 메뉴 등록 TODO
     public int addMenu(int storeId, List<Menu> menuList);
 
-    // 메뉴 삭제 (통채로 삭제후 다시 등록)
+    // 메뉴 삭제 (통채로 삭제후 다시 등록) TODO
     public int removeMenu(int storeId);
 
     // 가게 운영 등록

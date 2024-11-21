@@ -1,9 +1,6 @@
 package com.placeHere.server.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -13,6 +10,7 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
+@AllArgsConstructor
 public class Store {
 
     // Field
@@ -40,7 +38,7 @@ public class Store {
         ⑤키즈존, ⑥노키즈존, ⑦반려동물 동반, ⑧유아시설,
         ⑨장애인 편의시설 ⑩대관 가능, ⑪이벤트 가능, ⑫단체 이용가능
         단, ③콜키지 프리와 ④콜키지 가능은 동시 선택불가, ⑤키즈존과 ⑥노키즈존 동시 선택 불가 */
-    private List<Integer> amenitiesList;
+    private List<Integer> amenitiesNoList;
     // 음식 카테고리 ID (숫자6글자 + 세부분류) (숫자 2글자 단위로 1,2,3차 분류) ex: 010101/장어솥밥
     private String foodCategoryId;
     // 메뉴 목록
@@ -48,7 +46,7 @@ public class Store {
     // 대표 메뉴 번호 (메뉴 번호 순서중 하나)
     private int specialMenuNo;
     // 포트원 가게 ID
-    private String portOneStoreId = "store-1c3898e5-2b22-4c4a-acdb-13202bb56919";
+    private String portOneStoreId;
     // 가게 운영 Class (오픈시간, 마감시간, 브레이크타임, 정기 휴무요일 목록, 예약 보증금, 예약 최대인수, 적용일, 휴무일 목록)
     private StoreOperation storeOperation;
     // 매장 소식 목록 (소식 ID, 가게 ID, 소식 사진, 소식 내용, 작성일시)
