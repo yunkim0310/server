@@ -13,10 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class Menu {
 
     // Field
-    // 메뉴 번호 (PK)
-    private int menuNo;
+    // 메뉴 ID (PK, AI)
+    private int menuId;
     // 가게 ID (FK)
     private int storeId;
+    // 메뉴 번호
+    private int menuNo;
     // 메뉴 사진
     private MultipartFile menuImgFile;
     private String menuImg;

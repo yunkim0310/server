@@ -1,6 +1,7 @@
 package com.placeHere.server.dao.store;
 
 import com.placeHere.server.domain.*;
+import org.apache.ibatis.annotations.Param;
 
 import java.sql.Date;
 import java.util.List;
@@ -13,7 +14,7 @@ public interface StoreDao {
     // 사업자번호 중복확인 (DB) - Rest 에서 사용
     public int chkDuplicateBusinessNo(String businessNo);
 
-    // 가게 등록
+    // 가게 등록 (return 되는 값은 store_id 의 값)
     public int addStore(Store store);
 
     // 가게 정보 조회
@@ -29,10 +30,10 @@ public interface StoreDao {
     public int removeStore(int storeId);
 
     // 편의시설 등록
-    public int addAmenities(int storeId, List<Integer> amenitiesNoList);
+    public int addAmenities(@Param("storeId")int storeId, @Param("amenitiesNoList") List<Integer> amenitiesNoList);
 
     // 메뉴 등록
-    public int addMenu(int storeId, List<Menu> menuList);
+    public int addMenu(@Param("storeId")int storeId, @Param("menuList") List<Menu> menuList);
 
     // 메뉴 삭제 (통채로 삭제후 다시 등록)
     public int removeMenu(int storeId);
