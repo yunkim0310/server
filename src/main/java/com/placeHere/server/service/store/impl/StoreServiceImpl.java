@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -35,7 +36,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 등록 (return 되는 값은 store_id 의 값) TODO
+    // 가게 등록 (return 되는 값은 store_id 의 값) TEST
     @Override
     public void addStore(Store store) {
 
@@ -73,7 +74,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 수정 TODO
+    // 가게 수정 TEST
     @Override
     public void updateStore(Store store) {
 
@@ -99,7 +100,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경) TODO
+    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경) TEST
     @Override
     public void removeStore(int storeId) {
 
@@ -113,9 +114,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 운영 등록
+    // 가게 운영 등록 TODO
     @Override
     public void addOperation(StoreOperation storeOperation) {
+
+
+
+    }
+
+    // 가게 운영 수정 (현재날짜+14일후 적용) TODO
+    @Override
+    public void updateOperation(StoreOperation storeOperation) {
 
     }
 
@@ -136,14 +145,14 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 등록
+    // 매장 소식 등록 TODO
     @Override
     public void addStoreNews(StoreNews storeNews) {
 
     }
 
 
-    // 매장 소식 목록 조회
+    // 매장 소식 목록 조회 TODO
     @Override
     public List<StoreNews> getStoreNewsList(int storeId) {
 
@@ -151,28 +160,28 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 수정
+    // 매장 소식 수정 TODO
     @Override
     public void updateStoreNews(StoreNews storeNews) {
 
     }
 
 
-    // 매장 소식 삭제 (DELETE)
+    // 매장 소식 삭제 (DELETE) TODO
     @Override
     public void removeStoreNews(int newsId) {
 
     }
 
 
-    // 휴무일 등록
+    // 휴무일 등록 TODO
     @Override
     public void addCloseday(Date closeday) {
 
     }
 
 
-    // 휴무일 목록 조회
+    // 휴무일 목록 조회 TODO
     @Override
     public List<Date> getClosedayList(int storeId) {
 
@@ -180,14 +189,14 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 삭제 (DELETE)
+    // 휴무일 삭제 (DELETE) TODO
     @Override
     public void removeCloseday(int closedayId) {
 
     }
 
 
-    // 가게 주변 시설 추천 (구글 API)
+    // 가게 주변 시설 추천 (구글 API) TODO
     @Override
     public Map<String, Place> getNearbyPlaces(String storeAddr) {
 
@@ -195,7 +204,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 예약 통계 (RsrvDao 사용)
+    // 가게 예약 통계 (RsrvDao 사용) TODO
     @Override
     public Map<String, Map<String, Integer>> getStatistics(int storeId) {
 
