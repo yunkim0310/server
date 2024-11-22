@@ -4,15 +4,18 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
+import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@MapperScan("com.placeHere.server.dao.store.StoreDao")
 @Setter
 @Service("storeServiceImpl")
 public class StoreServiceImpl implements StoreService {
@@ -108,7 +111,7 @@ public class StoreServiceImpl implements StoreService {
 
         int result = 0;
 
-        result = storeDao.removeStore(storeId);
+        storeDao.removeStore(storeId);
         System.out.println("\tstoreRemoveResult= "+result);
 
     }
@@ -118,13 +121,17 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void addOperation(StoreOperation storeOperation) {
 
-
+        storeOperation.setEffectDt(Date.valueOf(LocalDate.now()));
+        storeDao.addOperation(storeOperation);
 
     }
 
     // 가게 운영 수정 (현재날짜+14일후 적용) TODO
     @Override
     public void updateOperation(StoreOperation storeOperation) {
+
+        storeOperation.setEffectDt(Date.valueOf(LocalDate.now().plusDays(14)));
+        storeDao.addOperation(storeOperation);
 
     }
 
@@ -149,6 +156,8 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void addStoreNews(StoreNews storeNews) {
 
+        storeDao.addStoreNews(storeNews);
+
     }
 
 
@@ -156,13 +165,17 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<StoreNews> getStoreNewsList(int storeId) {
 
-        return List.of();
+        List<StoreNews> storeNewsList = storeDao.getStoreNewsList(storeId);
+
+        return storeNewsList;
     }
 
 
     // 매장 소식 수정 TODO
     @Override
     public void updateStoreNews(StoreNews storeNews) {
+
+        storeDao.updateStoreNews(storeNews);
 
     }
 
@@ -171,21 +184,27 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void removeStoreNews(int newsId) {
 
+        storeDao.removeStoreNews(newsId);
+
     }
 
 
     // 휴무일 등록 TODO
     @Override
-    public void addCloseday(Date closeday) {
+    public void addCloseday(int storeId, Date closeday) {
+
+        storeDao.addCloseday(storeId, closeday);
 
     }
 
 
     // 휴무일 목록 조회 TODO
     @Override
-    public List<Date> getClosedayList(int storeId) {
+    public List<Date> getClosedayList(int storeId, Search search) {
 
-        return List.of();
+        List<Date> closedayList = storeDao.getClosedayList(storeId, search);
+
+        return closedayList;
     }
 
 
@@ -193,10 +212,12 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public void removeCloseday(int closedayId) {
 
+        storeDao.removeCloseday(closedayId);
+
     }
 
 
-    // 가게 주변 시설 추천 (구글 API) TODO
+    // 가게 주변 시설 추천 (구글 API)
     @Override
     public Map<String, Place> getNearbyPlaces(String storeAddr) {
 
@@ -204,7 +225,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 예약 통계 (RsrvDao 사용) TODO
+    // 가게 예약 통계 (RsrvDao 사용)
     @Override
     public Map<String, Map<String, Integer>> getStatistics(int storeId) {
 
