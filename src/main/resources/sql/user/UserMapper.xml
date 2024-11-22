@@ -4,6 +4,13 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="">
+<mapper namespace="UserMapper">
+
+    <select id="getUser" parameterType="string"	resultMap="userSelectMap">
+        SELECT
+            *
+        FROM user
+        WHERE username = #{value}
+    </select>
 
 </mapper>
