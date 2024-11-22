@@ -1,5 +1,5 @@
 mybatis:
-  config-location: classpath:/sql/mybatis-config.xml
+  config-location: classpath:sql/mybatis-config.xml
 
 spring:
   application:
