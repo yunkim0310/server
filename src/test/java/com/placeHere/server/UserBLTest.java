@@ -24,7 +24,7 @@ public class UserBLTest {
         System.out.println("4567");
 
         User user = new User();
-        user = userService.getUser("place");
+        user = userService.getUser("store_user1");
         System.out.println("user chk !! " + user);
         System.out.println("6789");
     }

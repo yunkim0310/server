@@ -74,4 +74,5 @@ public class Store {
 
         this.storeImgList = fileNameList;
     }
+
 }

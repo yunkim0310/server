@@ -4,18 +4,15 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
-import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@MapperScan("com.placeHere.server.dao.store.StoreDao")
 @Setter
 @Service("storeServiceImpl")
 public class StoreServiceImpl implements StoreService {
@@ -35,7 +32,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public int chkDuplicateBusinessNo(String businessNo) {
 
-        return 0;
+        return storeDao.chkDuplicateBusinessNo(businessNo);
     }
 
 
@@ -45,17 +42,26 @@ public class StoreServiceImpl implements StoreService {
 
         System.out.println("\nStoreDao.addStore()");
 
-        int result = 0;
+        // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
+        List<String> storeImgList = store.getStoreImgList();
+
+        if (storeImgList.size() < 5) {
+
+            for (int i = 0; i < 5 - storeImgList.size(); i++) {
+                storeImgList.add(null);
+            }
+
+        }
+
+        store.setStoreImgList(storeImgList);
 
         // INSERT 되는 TABLE : store, amenities, menu
         int storeId = storeDao.addStore(store);
         System.out.println("\tstoreId= "+storeId);
-        result = storeDao.addMenu(storeId, store.getMenuList());
-        System.out.println("\tmenuAddResult= "+result);
+        storeDao.addMenu(storeId, store.getMenuList());
 
         if (!store.getAmenitiesNoList().isEmpty()) {
-            result = storeDao.addAmenities(storeId, store.getAmenitiesNoList());
-            System.out.println("\tamenitiesAddResult= "+result);
+            storeDao.addAmenities(storeId, store.getAmenitiesNoList());
         }
 
     }
@@ -83,21 +89,25 @@ public class StoreServiceImpl implements StoreService {
 
         System.out.println("\nStoreDao.updateStore()");
 
-        int result = 0;
+        // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
+        List<String> storeImgList = store.getStoreImgList();
+
+        if (storeImgList.size() < 5) {
+
+            for (int i = 0; i < 5 - storeImgList.size(); i++) {
+                storeImgList.add(null);
+            }
+
+        }
 
         // UPDATE 되는 TABLE : store, amenities, menu
-        result = storeDao.updateStore(store);
-        System.out.println("\tstoreUpdateResult= "+result);
-        result = storeDao.removeAmenities(store.getStoreId());
-        System.out.println("\tamenitiesRemoveResult= "+result);
-        result = storeDao.removeMenu(store.getStoreId());
-        System.out.println("\tmenuRemoveResult= "+result);
-        result = storeDao.addMenu(store.getStoreId(), store.getMenuList());
-        System.out.println("\tmenuAddResult= "+result);
+        storeDao.updateStore(store);
+        storeDao.removeAmenities(store.getStoreId());
+        storeDao.removeMenu(store.getStoreId());
+        storeDao.addMenu(store.getStoreId(), store.getMenuList());
 
         if (!store.getAmenitiesNoList().isEmpty()) {
-            result = storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
-            System.out.println("\tamenitiesAddResult= "+result);
+            storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
         }
 
     }

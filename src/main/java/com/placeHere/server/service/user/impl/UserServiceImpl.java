@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     UserDao userDao;
 
     public User getUser(String username) throws Exception {
-        return null;
+        return userDao.getUser(username);
     }
 
 
