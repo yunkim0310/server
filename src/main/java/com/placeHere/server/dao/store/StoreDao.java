@@ -1,12 +1,13 @@
 package com.placeHere.server.dao.store;
 
 import com.placeHere.server.domain.*;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.sql.Date;
 import java.util.List;
 //import org.apache.ibatis.annotations.Mapper;
 
-//@Mapper
+@Mapper
 public interface StoreDao {
 
     // Method

@@ -3,6 +3,7 @@ package com.placeHere.server.service.store.impl;
 import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
+import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -11,6 +12,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
+@Setter
 @Service("storeServiceImpl")
 public class StoreServiceImpl implements StoreService {
 
@@ -18,6 +20,10 @@ public class StoreServiceImpl implements StoreService {
     @Autowired
     @Qualifier("storeDao")
     private StoreDao storeDao;
+
+    public StoreServiceImpl() {
+        super();
+    }
 
 
     // Method
