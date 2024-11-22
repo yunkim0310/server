@@ -146,7 +146,7 @@
         INSERT INTO operation
             (store_id, open_time, close_time, break_time_start, break_time_end,
              security, rsrv_limit,
-             regular_cloaseday1, regular_closeday2, regular_closeday3, effect_dt)
+             regular_closeday1, regular_closeday2, regular_closeday3, effect_dt)
         VALUES
             (#{storeId}, #{openTime}, #{closeTime}, #{breakTimeStart}, #{breakTimeEnd},
              #{security}, #{rsrvLimit},
