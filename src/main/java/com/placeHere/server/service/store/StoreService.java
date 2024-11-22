@@ -30,6 +30,9 @@ public interface StoreService {
     // 가게 운영 등록
     public void addOperation(StoreOperation storeOperation);
 
+    // 가게 운영 수정 (현재날짜+14일후 적용)
+    public void updateOperation(StoreOperation storeOperation);
+
     // 가게 운영 조회 (가게의 해당 날짜에 적용되고 있는 가게 운영 정보를 조회한다. 예약할때 사용 - Rest)
     public StoreOperation getOperation(int storeId, Date effectDt);
 
