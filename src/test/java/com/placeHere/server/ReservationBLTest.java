@@ -26,7 +26,7 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user04");
+        reservation.setUserName("user11");
         reservation.setRsrvStatus("결제 중");
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
