@@ -17,7 +17,7 @@ public interface CommunityDao {
 
 
     //전체 리뷰 가져오기
-    public List<Community> getReviewList(Community community) throws Exception;
+    public List<Community> getReviewList() throws Exception;
 
 
     //리뷰 업데이트
@@ -26,4 +26,16 @@ public interface CommunityDao {
 
     //리뷰 삭제 -> 노출여부 T => F 로 변경
     public void removeReview(Community community) throws Exception;
+
+    //댓글 작성
+    public void addComment(Community community) throws Exception;
+
+    //댓글 불러오다
+    public Community getComment(int commentNo) throws Exception;
+
+    //댓글 수정
+    public void updateComment(Community community) throws Exception;
+
+    //댓글 삭제 -> 노출여부 T => F 로 변경
+    public void removeComment(Community community) throws Exception;
 }
