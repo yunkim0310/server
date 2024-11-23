@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.reservation.ReservationDao">
+
+    <resultMap type="com.placeHere.server.domain.Reservation" id="ReservationResultMap">
+        <id property="rsrvNo" column="rsrv_no" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="INTEGER"/>
+        <result property="rsrvStatus" column="rsrv_status" jdbcType="VARCHAR"/>
+        <result property="rsrvDt" column="rsrv_dt" jdbcType="DATE"/>
+        <result property="rsrvPerson" column="rsrv_person" jdbcType="INTEGER"/>
+        <result property="amount" column="amount" jdbcType="INTEGER"/>
+        <result property="paymentId" column="payment_id" jdbcType="VARCHAR"/>
+        <result property="rsrvReq" column="rsrv_req" jdbcType="VARCHAR"/>
+        <result property="reason" column="reason" jdbcType="VARCHAR"/>
+        <result property="rsrvCreateTime" column="rsrv_create_time" jdbcType="DATE"/>
+        <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
+        <result property="storeAddr" column="store_addr" jdbcType="VARCHAR"/>
+        <result property="rsrvNumber" column="rsrv_number" jdbcType="VARCHAR"/>
+
+    </resultMap>
+
+
+    <insert id="addRsrv" parameterType="com.placeHere.server.domain.Reservation">
+        INSERT INTO reservation (
+            store_id, user_name, rsrv_dt, rsrv_person, amount,
+            rsrv_req, rsrv_create_time, store_name, store_addr, rsrv_status, rsrv_number
+        ) VALUES (
+                     #{storeId}, #{userName}, #{rsrvDt}, #{rsrvPerson}, #{amount},
+                     #{rsrvReq}, NOW(), #{storeName}, #{storeAddr}, '결제 중', #{rsrvNumber}
+                 );
+    </insert>
+
+    <update id="updateRsrvStatus" parameterType="com.placeHere.server.domain.Reservation">
+        UPDATE reservation
+        SET rsrv_status = #{rsrvStatus}
+        WHERE rsrv_no = #{rsrvNo};
+    </update>
+
+    <update id="updateRsrvpay" parameterType="com.placeHere.server.domain.Reservation">
+        UPDATE reservation
+        SET payment_id = #{paymentId}
+        WHERE rsrv_no = #{rsrvNo};
+    </update>
+
+    <update id="updateRsrvReason" parameterType="com.placeHere.server.domain.Reservation">
+        UPDATE reservation
+        SET reason = #{reason}
+        WHERE rsrv_no = #{rsrvNo};
+    </update>
+
+    <select id="getRsrv" parameterType="int" resultMap="ReservationResultMap">
+        SELECT
+            rsrv_no,
+            store_id,
+            user_name,
+            rsrv_status,
+            rsrv_dt,
+            rsrv_person,
+            amount,
+            payment_id,
+            rsrv_req,
+            reason,
+            rsrv_create_time,
+            store_name,
+            store_addr,
+            rsrv_number
+        FROM
+            reservation
+        WHERE
+            rsrv_no = #{rsrvNo}
+    </select>
+
+    <select id="countRsrv" parameterType="String" resultType="int">
+        select sum(rsrv_person) from reservation where rsrv_dt = #{rsrvDt}
+    </select>
+
+</mapper>
