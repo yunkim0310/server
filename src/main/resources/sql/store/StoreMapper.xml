@@ -5,10 +5,34 @@
 
 <mapper namespace="com.placeHere.server.dao.store.StoreDao">
 
-    <!--    <resultMap type="com.placeHere.server.domain.StoreOperation" id="StoreOperationResultMap">-->
+    <!-- Menu -->
+    <resultMap id="MenuResultMap" type="com.placeHere.server.domain.Menu">
+        <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="menuNo" column="menu_no" jdbcType="INTEGER"/>
+        <result property="menuImg" column="menu_img" jdbcType="VARCHAR"/>
+        <result property="menuName" column="menu_name" jdbcType="VARCHAR"/>
+        <result property="menuPrice" column="menu_price" jdbcType="INTEGER"/>
+        <result property="menuInfo" column="menu_info" jdbcType="VARCHAR"/>
+    </resultMap>
 
-    <!--    </resultMap>-->
+    <!-- StoreOperation -->
+    <resultMap  id="StoreOperationResultMap" type="com.placeHere.server.domain.StoreOperation">
+        <id property="operationId" column="operation_id" javaType="int" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" javaType="int" jdbcType="INTEGER"/>
+        <result property="openTime" column="open_time" jdbcType="TIME"/>
+        <result property="closeTime" column="close_time" jdbcType="TIME"/>
+        <result property="breakTimeStart" column="break_time_start" jdbcType="TIME"/>
+        <result property="breakTimeEnd" column="break_time_end" jdbcType="TIME"/>
+        <result property="security" column="security" jdbcType="INTEGER"/>
+        <result property="rsrvLimit" column="rsrv_limit" jdbcType="INTEGER"/>
+        <result property="effectDt" column="effect_dt" jdbcType="DATE"/>
+        <result property="regularCloseday1" column="regular_closeday1" jdbcType="CHAR"/>
+        <result property="regularCloseday2" column="regular_closeday2" jdbcType="CHAR"/>
+        <result property="regularCloseday3" column="regular_closeday3" jdbcType="CHAR"/>
+    </resultMap>
 
+    <!-- StoreNews -->
     <resultMap id="StoreNewsResultMap" type="com.placeHere.server.domain.StoreNews">
         <id property="newsId" column="news_id" javaType="int" jdbcType="INTEGER"/>
         <result property="storeId" column="store_id" javaType="int" jdbcType="INTEGER"/>
@@ -17,9 +41,33 @@
         <result property="regDt" column="reg_dt" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
     </resultMap>
 
-    <!--    <resultMap type="com.placeHere.server.domain.Store" id="StoreResultMap">-->
+    <!-- Store -->
+    <!-- 리뷰 관련 추가 필요 -->
+    <resultMap type="com.placeHere.server.domain.Store" id="StoreResultMap">
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
+        <result property="businessNo" column="business_no" jdbcType="CHAR"/>
+        <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
+        <result property="storeAddr" column="store_addr" jdbcType="VARCHAR"/>
+        <result property="storePhone" column="store_phone" jdbcType="VARCHAR"/>
+        <result property="storeImg1" column="store_img1" jdbcType="VARCHAR"/>
+        <result property="storeImg2" column="store_img2" jdbcType="VARCHAR"/>
+        <result property="storeImg3" column="store_img3" jdbcType="VARCHAR"/>
+        <result property="storeImg4" column="store_img4" jdbcType="VARCHAR"/>
+        <result property="storeImg5" column="store_img5" jdbcType="VARCHAR"/>
+        <result property="storeInfo" column="store_info" jdbcType="VARCHAR"/>
+        <result property="hashtag" column="hashtag" jdbcType="VARCHAR"/>
+        <result property="specialMenuNo" column="special_menu_no" jdbcType="INTEGER"/>
+        <result property="portOneStoreId" column="portone_store_id" jdbcType="VARCHAR"/>
+        <result property="foodCategoryId" column="food_category_id" jdbcType="VARCHAR"/>
+        <result property="foodCategory" column="food_category" jdbcType="VARCHAR"/>
+        <result property="storeStatus" column="store_status" jdbcType="INTEGER"/>
 
-    <!--    </resultMap>-->
+        <association property="amenitiesNoList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getAmenitiesList"/>
+        <association property="menuList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getMenuList"/>
+        <association property="storeNewsList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getStoreNewsList"/>
+        
+    </resultMap>
 
     <!-- 사업자 번호 중복 확인 -->
     <select id="chkDuplicateBusinessNo" parameterType="String" resultType="int">
@@ -58,19 +106,55 @@
     </select>
 
     <!-- 가게 정보 조회 -->
-    <!--    <select id="getStore"-->
-    <!--            parameterType="com.placeHere.server.domain.Store"-->
-    <!--            resultMap="StoreResultMap">-->
+    <select id="getStore" resultMap="StoreResultMap">
 
-    <!--    </select>-->
+        SELECT *
+        FROM store
+        WHERE store_id = #{storeId}
+
+    </select>
 
     <!-- 가게 검색, 가게 목록 조회 -->
-    <!--    <select id="getStoreList"-->
-    <!--            parameterType="com.placeHere.server.domain.Search"-->
-    <!--            resultMap="StoreResultMap">-->
+    <select id="getStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="StoreResultMap">
 
+        SELECT *
+        FROM
+            (SELECT *
+            FROM store
+            WHERE store_name LIKE CONCAT('%',#{searchKeyword},'%')
+            OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+            OR food_category LIKE CONCAT('%',#{searchKeyword},'%')
+            OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+            OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))) AS store
+        <where>
+            <if test="regionList != null and !regionList.isEmpty()">
+                AND (<foreach collection="regionList" separator="OR" item="region">
+                        store_addr Like CONCAT('%',#{region},'%')
+                    </foreach>)
+            </if>
 
-    <!--    </select>-->
+            <if test='foodCategoryId != null and !foodCategory.equals("")'>
+                AND food_category_id LIKE CONCAT(#{foodCategoryId},'%')
+            </if>
+
+            <if test="hashtagList != null and !hashtagList.isEmpty()">
+                AND (<foreach collection="hashtagList" separator="OR" item="hashtag">
+                        hashtag LIKE CONCAT('%',#{hashtag},'%')
+                    </foreach>)
+            </if>
+            <if test="priceMin != 0 and priceMax!=0">
+                AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
+            </if>
+
+            <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">
+                AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN
+                                <foreach collection="amenitiesNoList" item="amenitiesNo" open="(" close=")" separator=",">
+                                    #{amenitiesNo}
+                                </foreach>)
+            </if>
+        </where>
+
+    </select>
 
     <!-- 가게 수정 -->
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
@@ -105,6 +189,15 @@
 
     </insert>
 
+    <!-- 편의시설 목록 조회 -->
+    <select id="getAmenitiesList">
+
+        SELECT amenities_no
+        FROM amenities
+        WHERE store_id = #{storeId}
+
+    </select>
+
     <!-- 편의시설 삭제 (통채로 삭제후 다시 등록) -->
     <delete id="removeAmenities" parameterType="int">
 
@@ -123,6 +216,15 @@
         </foreach>
 
     </insert>
+
+    <!-- 메뉴 목록 조회 -->
+    <select id="getMenuList" resultMap="MenuResultMap">
+
+        SELECT *
+        FROM menu
+        WHERE store_id = #{storeId}
+
+    </select>
 
     <!-- 메뉴 삭제 (통채로 삭제후 다시 등록) -->
     <delete id="removeMenu" parameterType="int">
@@ -147,18 +249,37 @@
 
     </insert>
 
-    <!-- 가게 운영 조회 (날짜로 적용되고 있는 운영 정보 조회) -->
-    <!--    <select id="getOperationByDt"-->
-    <!--            resultMap="StoreOperationResultMap">-->
+    <!-- 가게 운영 조회 (선택한 날짜에 적용되고 있는 운영 정보 조회) -->
+    <select id="getOperationByDt" resultMap="StoreOperationResultMap">
 
-    <!--    </select>-->
+        SELECT
+            operation_id, store_id, open_time, close_time, break_time_start, break_time_end,
+            security, rsrv_limit, regular_closeday1, regular_closeday2, regular_closeday3,
+            effect_dt
+        FROM operation
+        WHERE store_id = #{storeId}
+        AND effect_dt &lt;= #{effectDt}
+        ORDER BY operation_id DESC
+        LIMIT 1
+
+    </select>
+
 
     <!-- 최신 가게 운영 조회 -->
-    <!--    <select id="getCurrOperation"-->
-    <!--            parameterType="int"-->
-    <!--            resultMap="StoreOperationResultMap">-->
+        <select id="getCurrOperation"
+                parameterType="int"
+                resultMap="StoreOperationResultMap">
 
-    <!--    </select>-->
+            SELECT
+                operation_id, store_id, open_time, close_time, break_time_start, break_time_end,
+                security, rsrv_limit, regular_closeday1, regular_closeday2, regular_closeday3,
+                effect_dt
+            FROM operation
+            WHERE store_id = #{storeId}
+            ORDER BY operation_id DESC
+            LIMIT 1
+
+        </select>
 
     <!-- 매장 소식 등록 TODO-->
     <insert id="addStoreNews" parameterType="com.placeHere.server.domain.StoreNews">
@@ -205,13 +326,23 @@
     </insert>
 
     <!-- 휴무일 목록 조회 TODO-->
-    <select id="getClosedayList" parameterType="map">
+    <select id="getClosedayListBySearch" parameterType="map">
 
         SELECT closeday
         FROM closeday
         WHERE store_id = #{storeId}
           AND closeday BETWEEN #{search.startDate} AND #{search.endDate}
         ORDER BY closeday
+
+    </select>
+    
+    <!-- 휴무일 목록 조회 (오늘~14일후) -->
+    <select id="getClosedayList">
+
+        SELECT closeday
+        FROM closeday
+        WHERE store_id = #{storeId}
+        AND closeday BETWEEN CURRENT_DATE() AND DATE_ADD(CURRENT_DATE(), INTERVAL 14 DAY)
 
     </select>
 

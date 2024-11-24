@@ -29,6 +29,11 @@ public class Store {
     // 매장 사진 목록 (매장 대표 사진은 첫번째꺼)
     private MultipartFile[] storeImgFiles;
     private List<String> storeImgList;
+    private String storeImg1;
+    private String storeImg2;
+    private String storeImg3;
+    private String storeImg4;
+    private String storeImg5;
     // 매장 소개
     private String storeInfo;
     // 해시태그 목록
@@ -42,6 +47,7 @@ public class Store {
     private List<Integer> amenitiesNoList;
     // 음식 카테고리 ID (숫자6글자 + 세부분류) (숫자 2글자 단위로 1,2,3차 분류) ex: 010101/장어솥밥
     private String foodCategoryId;
+    private String foodCategory;
     // 메뉴 목록
     private List<Menu> menuList;
     // 대표 메뉴 번호 (메뉴 번호 순서중 하나)
@@ -90,6 +96,26 @@ public class Store {
         }
 
         this.hashtag = fullHashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
+
+        List<String> hashtagList = new ArrayList<>();
+
+        if (hashtag != null && !hashtag.isEmpty()) {
+
+            for (String hash : hashtag.split("#")) {
+                if (!hash.isEmpty()) {
+                    hashtagList.add(hash.trim());
+                }
+            }
+
+            this.hashtagList = hashtagList;
+
+        }
+
+
     }
 
 }

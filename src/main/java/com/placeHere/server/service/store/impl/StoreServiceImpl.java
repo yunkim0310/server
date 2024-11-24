@@ -4,12 +4,14 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -70,11 +72,43 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 정보 조회
+    // 가게 정보 조회 (특정 날짜)
+    @Override
+    public Store getStore(int storeId, Date effectDt) {
+
+        Store store = storeDao.getStore(storeId);
+        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+        store.setStoreOperation(storeOperation);
+
+        List<String> storeImgList = new ArrayList<String>();
+        storeImgList.add(store.getStoreImg1());
+        storeImgList.add(store.getStoreImg2());
+        storeImgList.add(store.getStoreImg3());
+        storeImgList.add(store.getStoreImg4());
+        storeImgList.add(store.getStoreImg5());
+        store.setStoreImgList(storeImgList);
+
+        return store;
+    }
+
+
+    // 가게 정보 조회 (최신)
     @Override
     public Store getStore(int storeId) {
 
-        return null;
+        Store store = storeDao.getStore(storeId);
+        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+        store.setStoreOperation(storeOperation);
+
+        List<String> storeImgList = new ArrayList<String>();
+        storeImgList.add(store.getStoreImg1());
+        storeImgList.add(store.getStoreImg2());
+        storeImgList.add(store.getStoreImg3());
+        storeImgList.add(store.getStoreImg4());
+        storeImgList.add(store.getStoreImg5());
+        store.setStoreImgList(storeImgList);
+
+        return store;
     }
 
 
@@ -82,7 +116,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Store> getStoreList(Search search) {
 
-        return List.of();
+        return storeDao.getStoreList(search);
     }
 
 
@@ -154,7 +188,17 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreOperation getOperation(int storeId, Date effectDt) {
 
-        return null;
+        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+
+        List<String> regularClosedayList = new ArrayList<>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        storeOperation.setRegularClosedayList(regularClosedayList);
+
+        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+
+        return storeOperation;
     }
 
 
@@ -162,7 +206,17 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreOperation getOperation(int storeId) {
 
-        return null;
+        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+
+        List<String> regularClosedayList = new ArrayList<>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        storeOperation.setRegularClosedayList(regularClosedayList);
+
+        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+
+        return storeOperation;
     }
 
 
@@ -216,7 +270,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Date> getClosedayList(int storeId, Search search) {
 
-        List<Date> closedayList = storeDao.getClosedayList(storeId, search);
+        List<Date> closedayList = storeDao.getClosedayListBySearch(storeId, search);
 
         return closedayList;
     }
