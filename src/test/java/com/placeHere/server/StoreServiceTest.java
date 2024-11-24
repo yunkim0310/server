@@ -2,7 +2,9 @@ package com.placeHere.server;
 
 import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.Menu;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.Store;
+import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.service.store.StoreService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
@@ -10,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -123,11 +128,71 @@ public class StoreServiceTest {
 
     }
 
-//    @Test
+    @Test
     public void testChkDuplicateBusinessNo() {
         int result = storeService.chkDuplicateBusinessNo("6575100638");
 
         System.out.println(result);
+    }
+
+    @Test
+    public void getOperationByDt() {
+
+        LocalDate dayAfter = LocalDate.now().plusDays(3);
+        Date a = Date.valueOf(dayAfter);
+        Date day = Date.valueOf("2024-12-10");
+
+        StoreOperation storeOperation =  storeService.getOperation(1, day);
+        System.out.println(storeOperation);
+
+    }
+
+    @Test
+    public void getCurrOperation() {
+
+        StoreOperation storeOperation = storeService.getOperation(1);
+
+        System.out.println(storeOperation);
+
+    }
+
+    @Test
+    public void getMenuList() {
+        List<Menu> menuList = storeDao.getMenuList(13);
+        System.out.println(menuList);
+    }
+
+    @Test
+    public void getAmenitiesList() {
+        System.out.println(storeDao.getAmenitiesList(1));
+    }
+
+    @Test
+    public void getStore() {
+
+//        Store store = storeService.getStore(13);
+        Store store = storeService.getStore(13, Date.valueOf("2024-12-10"));
+
+        System.out.println(store);
+
+    }
+
+    @Test
+    public void getStoreList() {
+
+        Search search = new Search();
+        search.setSearchKeyword("케밥");
+
+//        List<String> regionList = new ArrayList<>(List.of("강남"));
+//        search.setRegionList(regionList);
+
+        search.setAmenitiesNoList(List.of(1));
+
+//        System.out.println(search);
+
+        List<Store> storeList = storeService.getStoreList(search);
+        System.out.println(storeList.size());
+        System.out.println(storeList);
     }
 
 }
