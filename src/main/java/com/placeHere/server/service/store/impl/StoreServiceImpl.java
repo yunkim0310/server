@@ -45,26 +45,25 @@ public class StoreServiceImpl implements StoreService {
         // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
         List<String> storeImgList = store.getStoreImgList();
 
-        System.out.println(storeImgList.size());
-
         if (storeImgList.size() < 5) {
 
-            for (int i = 1; i <= 5 - storeImgList.size(); i++) {
+            while (storeImgList.size() < 5) {
                 storeImgList.add(null);
+
             }
 
         }
 
-        System.out.println(storeImgList);
-
+        System.out.println("storeImgList= "+storeImgList);
         store.setStoreImgList(storeImgList);
 
         // INSERT 되는 TABLE : store, amenities, menu
-        int storeId = storeDao.addStore(store);
+        storeDao.addStore(store);
+        int storeId = storeDao.getStoreId(store.getBusinessNo());
         System.out.println("\tstoreId= "+storeId);
         storeDao.addMenu(storeId, store.getMenuList());
 
-        if (!store.getAmenitiesNoList().isEmpty()) {
+        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
             storeDao.addAmenities(storeId, store.getAmenitiesNoList());
         }
 
@@ -98,8 +97,9 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            for (int i = 0; i < 5 - storeImgList.size(); i++) {
+            while (storeImgList.size() < 5) {
                 storeImgList.add(null);
+
             }
 
         }
@@ -110,7 +110,7 @@ public class StoreServiceImpl implements StoreService {
         storeDao.removeMenu(store.getStoreId());
         storeDao.addMenu(store.getStoreId(), store.getMenuList());
 
-        if (!store.getAmenitiesNoList().isEmpty()) {
+        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
             storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
         }
 

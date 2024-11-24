@@ -31,8 +31,8 @@
 
     </select>
 
-    <!-- 가게 등록 TEST-->
-    <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyColumn="store_id" keyProperty="storeId">
+    <!-- 가게 등록 -->
+    <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyColumn="store_id">
 
         INSERT INTO store
             (username, business_no, store_name, store_addr, store_phone,
@@ -40,20 +40,22 @@
              store_img1, store_img2, store_img3,
              store_img4, store_img5, hashtag)
         VALUES
-            (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone},
-             #{storeInfo}, #{foodCategoryId}, #{specialMenuNo},
-             #{storeImgList[0]}, #{storeImgList[1]}, #{storeImgList[2]},
-             #{storeImgList[3]}, #{storeImgList[4]},
-             <if test="hashtagList != null and hashtagList.size() > 0">
-                <foreach collection="hashtagList" open='"' close='"' separator="," item="hashtag">
-                    #{hashtag}
-                </foreach>
-             </if>
-             <if test="hashtagList == null or hashtagList.size() == 0">
-                NULL
-             </if>)
+        (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone},
+        #{storeInfo}, #{foodCategoryId}, #{specialMenuNo},
+        #{storeImgList[0]}, #{storeImgList[1]}, #{storeImgList[2]},
+        #{storeImgList[3]}, #{storeImgList[4]}, #{hashtag})
 
     </insert>
+
+    <!-- 등록된 가게 Id 얻기 -->
+    <select id="getStoreId">
+
+        SELECT store_id
+        FROM store
+        WHERE business_no = #{businessNo}
+        AND store_status = 0
+
+    </select>
 
     <!-- 가게 정보 조회 -->
     <!--    <select id="getStore"-->
@@ -70,29 +72,20 @@
 
     <!--    </select>-->
 
-    <!-- 가게 수정 TEST-->
+    <!-- 가게 수정 -->
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
 
         UPDATE store
-        SET (store_name=#{storeName}, store_phone=#{storePhone}, store_info=#{storeInfo},
+        SET store_name=#{storeName}, store_phone=#{storePhone}, store_info=#{storeInfo},
         food_category_id=#{foodCategoryId}, special_menu_no=#{specialMenuNo},
         store_img1=#{storeImgList[0]}, store_img2=#{storeImgList[1]}, store_img3=#{storeImgList[2]},
         store_img4=#{storeImgList[3]}, store_img5=#{storeImgList[4]},
-        hashtag=
-        <if test="hashtagList != null and hashtagList.size() > 0">
-            <foreach collection="hashtagList" open='"' close='"' separator="," item="hashtag">
-                #{hashtag}
-            </foreach>
-        </if>
-        <if test="hashtagList == null or hashtagList.size() == 0">
-            NULL
-        </if>
-        )
+        hashtag=#{hashtag}
         WHERE store_id = #{storeId}
 
     </update>
 
-    <!-- 가게 삭제 TEST-->
+    <!-- 가게 삭제 -->
     <update id="removeStore" parameterType="int">
 
         UPDATE store
@@ -101,7 +94,7 @@
 
     </update>
 
-    <!-- 편의시설 등록 TEST-->
+    <!-- 편의시설 등록 -->
     <insert id="addAmenities" parameterType="map">
 
         INSERT INTO amenities(store_id, amenities_no)
@@ -112,7 +105,7 @@
 
     </insert>
 
-    <!-- 편의시설 삭제 (통채로 삭제후 다시 등록) TEST-->
+    <!-- 편의시설 삭제 (통채로 삭제후 다시 등록) -->
     <delete id="removeAmenities" parameterType="int">
 
         DELETE FROM amenities
@@ -120,7 +113,7 @@
 
     </delete>
 
-    <!-- 메뉴 등록 TEST-->
+    <!-- 메뉴 등록 -->
     <insert id="addMenu" parameterType="map">
 
         INSERT INTO Menu(store_id, menu_no, menu_img, menu_name, menu_price, menu_info)
@@ -131,7 +124,7 @@
 
     </insert>
 
-    <!-- 메뉴 삭제 (통채로 삭제후 다시 등록) TEST-->
+    <!-- 메뉴 삭제 (통채로 삭제후 다시 등록) -->
     <delete id="removeMenu" parameterType="int">
 
         DELETE FROM menu

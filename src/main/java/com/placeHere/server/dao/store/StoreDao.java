@@ -12,11 +12,14 @@ import java.util.List;
 public interface StoreDao {
 
     // Method
-    // 사업자번호 중복확인 (DB) - Rest 에서 사용 TEST
+    // 사업자번호 중복확인 (DB) - Rest 에서 사용
     public int chkDuplicateBusinessNo(String businessNo);
 
-    // 가게 등록 (return 되는 값은 store_id 의 값) TEST
+    // 가게 등록 (return 되는 값은 store_id 의 값)
     public int addStore(Store store);
+
+    // 가게 Id 조회
+    public int getStoreId(String businessNo);
 
     // 가게 정보 조회
 //    public Store getStore(int storeId);
@@ -24,22 +27,22 @@ public interface StoreDao {
     // 가게 검색, 가게 목록 조회
 //    public List<Store> getStoreList(Search search);
 
-    // 가게 수정 TEST
+    // 가게 수정
     public int updateStore(Store store);
 
-    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경) TEST
+    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
     public int removeStore(int storeId);
 
-    // 편의시설 등록 (편의시설이 없으면 등록X) TEST
+    // 편의시설 등록 (편의시설이 없으면 등록X)
     public int addAmenities(@Param("storeId") int storeId, @Param("amenitiesNoList") List<Integer> amenitiesNoList);
 
-    // 편의시설 삭제 (통채로 삭제후 다시 등록) TEST
+    // 편의시설 삭제 (통채로 삭제후 다시 등록)
     public int removeAmenities(int storeId);
 
-    // 메뉴 등록 TEST
+    // 메뉴 등록
     public int addMenu(@Param("storeId") int storeId, @Param("menuList") List<Menu> menuList);
 
-    // 메뉴 삭제 (통채로 삭제후 다시 등록) TEST
+    // 메뉴 삭제 (통채로 삭제후 다시 등록)
     public int removeMenu(int storeId);
 
     // 가게 운영 등록 TODO

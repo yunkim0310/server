@@ -33,6 +33,7 @@ public class Store {
     private String storeInfo;
     // 해시태그 목록
     private List<String> hashtagList;
+    private String hashtag;
     // 편의시설 목록
     /* ①주차 가능, ②발렛 가능, ③콜키지 프리, ④콜키지 가능,
         ⑤키즈존, ⑥노키즈존, ⑦반려동물 동반, ⑧유아시설,
@@ -73,6 +74,22 @@ public class Store {
         }
 
         this.storeImgList = fileNameList;
+    }
+
+    public void setHashtagList(List<String> hashtagList) {
+        this.hashtagList = hashtagList;
+
+        String fullHashtag = "";
+
+        if (hashtagList != null) {
+
+            for (String hashtag : hashtagList) {
+                fullHashtag += "#"+hashtag;
+            }
+
+        }
+
+        this.hashtag = fullHashtag;
     }
 
 }

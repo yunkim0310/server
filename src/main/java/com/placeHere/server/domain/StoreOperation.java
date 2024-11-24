@@ -47,9 +47,10 @@ public class StoreOperation {
         regularClosedayList = (regularClosedayList == null) ? new ArrayList<>() : regularClosedayList;
         int regularClosedayCnt = regularClosedayList.size();
 
-        if (regularClosedayCnt != 3) {
+        if (regularClosedayCnt < 3) {
 
-            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
+            while (regularClosedayCnt < 3) {
+
                 regularClosedayList.add(null);
             }
 
