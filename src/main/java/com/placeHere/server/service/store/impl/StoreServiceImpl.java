@@ -45,13 +45,17 @@ public class StoreServiceImpl implements StoreService {
         // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
         List<String> storeImgList = store.getStoreImgList();
 
+        System.out.println(storeImgList.size());
+
         if (storeImgList.size() < 5) {
 
-            for (int i = 0; i < 5 - storeImgList.size(); i++) {
+            for (int i = 1; i <= 5 - storeImgList.size(); i++) {
                 storeImgList.add(null);
             }
 
         }
+
+        System.out.println(storeImgList);
 
         store.setStoreImgList(storeImgList);
 

@@ -34,24 +34,24 @@
     <!-- 가게 등록 TEST-->
     <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyColumn="store_id" keyProperty="storeId">
 
-        INSERT INTO store(username, business_no, store_name, store_addr, store_phone,
-        store_info, food_category_id, special_menu_no,
-        store_img1, store_img2, store_img3,
-        store_img4, store_img5, hashtag)
-        VALUES (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone:null},
-        #{storeInfo:null}, #{foodCategoryId}, #{specialMenuNo},
-        #{storeImgList[0]}, #{storeImgList[1]}, #{storeImgList[2]},
-        #{storeImgList[3]}, #{storeImgList[4]},
-        <if test="hashtagList != null and hashtagList.size() > 0">
-            <foreach collection="hashtagList" open='"' close='"' separator="," item="hashtag">
-                #{hashtag}
-            </foreach>
-        </if>
-        <if test="hashtagList == null or hashtagList.size() == 0">
-            NULL
-        </if>
-
-        )
+        INSERT INTO store
+            (username, business_no, store_name, store_addr, store_phone,
+             store_info, food_category_id, special_menu_no,
+             store_img1, store_img2, store_img3,
+             store_img4, store_img5, hashtag)
+        VALUES
+            (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone},
+             #{storeInfo}, #{foodCategoryId}, #{specialMenuNo},
+             #{storeImgList[0]}, #{storeImgList[1]}, #{storeImgList[2]},
+             #{storeImgList[3]}, #{storeImgList[4]},
+             <if test="hashtagList != null and hashtagList.size() > 0">
+                <foreach collection="hashtagList" open='"' close='"' separator="," item="hashtag">
+                    #{hashtag}
+                </foreach>
+             </if>
+             <if test="hashtagList == null or hashtagList.size() == 0">
+                NULL
+             </if>)
 
     </insert>
 
@@ -74,7 +74,7 @@
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
 
         UPDATE store
-        SET (store_name=#{storeName}, store_phone=#{storePhone:null}, store_info=#{storeInfo:null},
+        SET (store_name=#{storeName}, store_phone=#{storePhone}, store_info=#{storeInfo},
         food_category_id=#{foodCategoryId}, special_menu_no=#{specialMenuNo},
         store_img1=#{storeImgList[0]}, store_img2=#{storeImgList[1]}, store_img3=#{storeImgList[2]},
         store_img4=#{storeImgList[3]}, store_img5=#{storeImgList[4]},
@@ -126,7 +126,7 @@
         INSERT INTO Menu(store_id, menu_no, menu_img, menu_name, menu_price, menu_info)
         VALUES
         <foreach collection="menuList" item="menu" separator=",">
-            (#{storeId}, #{menu.menuNo},#{menu.menuImg:null}, #{menu.menuName}, #{menu.menuPrice}, #{menu.menuInfo})
+            (#{storeId}, #{menu.menuNo},#{menu.menuImg}, #{menu.menuName}, #{menu.menuPrice}, #{menu.menuInfo})
         </foreach>
 
     </insert>
