@@ -15,7 +15,10 @@ public interface StoreService {
     // 가게 등록 (return 되는 값은 store_id 의 값)
     public void addStore(Store store);
 
-    // 가게 정보 조회
+    // 가게 정보 조회 (특정 날짜)
+    public Store getStore(int storeId, Date effectDt);
+
+    // 가게 정보 조회 (최신)
     public Store getStore(int storeId);
 
     // 가게 검색, 가게 목록 조회

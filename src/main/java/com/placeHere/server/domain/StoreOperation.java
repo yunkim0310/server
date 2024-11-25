@@ -30,6 +30,9 @@ public class StoreOperation {
     private Time breakTimeEnd;
     // 정기 휴무요일(최대3개)
     private List<String> regularClosedayList;
+    private String regularCloseday1;
+    private String regularCloseday2;
+    private String regularCloseday3;
     // 예약 보증금(5000~10000원, 1000원 단위)
     private int security;
     // 예약 최대 인수
@@ -47,9 +50,10 @@ public class StoreOperation {
         regularClosedayList = (regularClosedayList == null) ? new ArrayList<>() : regularClosedayList;
         int regularClosedayCnt = regularClosedayList.size();
 
-        if (regularClosedayCnt != 3) {
+        if (regularClosedayCnt < 3) {
 
-            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
+            while (regularClosedayCnt < 3) {
+
                 regularClosedayList.add(null);
             }
 

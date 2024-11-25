@@ -27,11 +27,11 @@ public class Search {
     private Date startDate;
     private Date endDate;
     // 편의시설 목록
-    private List<Integer> amenitiesList;
+    private List<Integer> amenitiesNoList;
     // 해시태그 목록
     private List<String> hashtagList;
     // 음식 카테고리
-    private String foodCategory;
+    private String foodCategoryId;
     // 검색일시
     private LocalDateTime searchDt;
     // 페이징 관련

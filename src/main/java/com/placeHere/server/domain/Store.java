@@ -29,10 +29,16 @@ public class Store {
     // 매장 사진 목록 (매장 대표 사진은 첫번째꺼)
     private MultipartFile[] storeImgFiles;
     private List<String> storeImgList;
+    private String storeImg1;
+    private String storeImg2;
+    private String storeImg3;
+    private String storeImg4;
+    private String storeImg5;
     // 매장 소개
     private String storeInfo;
     // 해시태그 목록
     private List<String> hashtagList;
+    private String hashtag;
     // 편의시설 목록
     /* ①주차 가능, ②발렛 가능, ③콜키지 프리, ④콜키지 가능,
         ⑤키즈존, ⑥노키즈존, ⑦반려동물 동반, ⑧유아시설,
@@ -73,6 +79,42 @@ public class Store {
         }
 
         this.storeImgList = fileNameList;
+    }
+
+    public void setHashtagList(List<String> hashtagList) {
+        this.hashtagList = hashtagList;
+
+        String fullHashtag = "";
+
+        if (hashtagList != null) {
+
+            for (String hashtag : hashtagList) {
+                fullHashtag += "#"+hashtag;
+            }
+
+        }
+
+        this.hashtag = fullHashtag;
+    }
+
+    public void setHashtag(String hashtag) {
+        this.hashtag = hashtag;
+
+        List<String> hashtagList = new ArrayList<>();
+
+        if (hashtag != null && !hashtag.isEmpty()) {
+
+            for (String hash : hashtag.split("#")) {
+                if (!hash.isEmpty()) {
+                    hashtagList.add(hash.trim());
+                }
+            }
+
+            this.hashtagList = hashtagList;
+
+        }
+
+
     }
 
 }

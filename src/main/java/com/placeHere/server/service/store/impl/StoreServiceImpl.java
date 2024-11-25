@@ -4,12 +4,14 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -45,37 +47,68 @@ public class StoreServiceImpl implements StoreService {
         // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
         List<String> storeImgList = store.getStoreImgList();
 
-        System.out.println(storeImgList.size());
-
         if (storeImgList.size() < 5) {
 
-            for (int i = 1; i <= 5 - storeImgList.size(); i++) {
+            while (storeImgList.size() < 5) {
                 storeImgList.add(null);
+
             }
 
         }
 
-        System.out.println(storeImgList);
-
+        System.out.println("storeImgList= "+storeImgList);
         store.setStoreImgList(storeImgList);
 
         // INSERT 되는 TABLE : store, amenities, menu
-        int storeId = storeDao.addStore(store);
+        storeDao.addStore(store);
+        int storeId = storeDao.getStoreId(store.getBusinessNo());
         System.out.println("\tstoreId= "+storeId);
         storeDao.addMenu(storeId, store.getMenuList());
 
-        if (!store.getAmenitiesNoList().isEmpty()) {
+        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
             storeDao.addAmenities(storeId, store.getAmenitiesNoList());
         }
 
     }
 
 
-    // 가게 정보 조회
+    // 가게 정보 조회 (특정 날짜)
+    @Override
+    public Store getStore(int storeId, Date effectDt) {
+
+        Store store = storeDao.getStore(storeId);
+        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+        store.setStoreOperation(storeOperation);
+
+        List<String> storeImgList = new ArrayList<String>();
+        storeImgList.add(store.getStoreImg1());
+        storeImgList.add(store.getStoreImg2());
+        storeImgList.add(store.getStoreImg3());
+        storeImgList.add(store.getStoreImg4());
+        storeImgList.add(store.getStoreImg5());
+        store.setStoreImgList(storeImgList);
+
+        return store;
+    }
+
+
+    // 가게 정보 조회 (최신)
     @Override
     public Store getStore(int storeId) {
 
-        return null;
+        Store store = storeDao.getStore(storeId);
+        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+        store.setStoreOperation(storeOperation);
+
+        List<String> storeImgList = new ArrayList<String>();
+        storeImgList.add(store.getStoreImg1());
+        storeImgList.add(store.getStoreImg2());
+        storeImgList.add(store.getStoreImg3());
+        storeImgList.add(store.getStoreImg4());
+        storeImgList.add(store.getStoreImg5());
+        store.setStoreImgList(storeImgList);
+
+        return store;
     }
 
 
@@ -83,7 +116,7 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public List<Store> getStoreList(Search search) {
 
-        return List.of();
+        return storeDao.getStoreList(search);
     }
 
 
@@ -98,8 +131,9 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            for (int i = 0; i < 5 - storeImgList.size(); i++) {
+            while (storeImgList.size() < 5) {
                 storeImgList.add(null);
+
             }
 
         }
@@ -110,7 +144,7 @@ public class StoreServiceImpl implements StoreService {
         storeDao.removeMenu(store.getStoreId());
         storeDao.addMenu(store.getStoreId(), store.getMenuList());
 
-        if (!store.getAmenitiesNoList().isEmpty()) {
+        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
             storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
         }
 
@@ -131,7 +165,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 운영 등록 TODO
+    // 가게 운영 등록 TEST
     @Override
     public void addOperation(StoreOperation storeOperation) {
 
@@ -140,7 +174,7 @@ public class StoreServiceImpl implements StoreService {
 
     }
 
-    // 가게 운영 수정 (현재날짜+14일후 적용) TODO
+    // 가게 운영 수정 (현재날짜+14일후 적용) TEST
     @Override
     public void updateOperation(StoreOperation storeOperation) {
 
@@ -154,7 +188,17 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreOperation getOperation(int storeId, Date effectDt) {
 
-        return null;
+        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+
+        List<String> regularClosedayList = new ArrayList<>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        storeOperation.setRegularClosedayList(regularClosedayList);
+
+        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+
+        return storeOperation;
     }
 
 
@@ -162,11 +206,21 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public StoreOperation getOperation(int storeId) {
 
-        return null;
+        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+
+        List<String> regularClosedayList = new ArrayList<>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        storeOperation.setRegularClosedayList(regularClosedayList);
+
+        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+
+        return storeOperation;
     }
 
 
-    // 매장 소식 등록 TODO
+    // 매장 소식 등록 TEST
     @Override
     public void addStoreNews(StoreNews storeNews) {
 
@@ -175,7 +229,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 목록 조회 TODO
+    // 매장 소식 목록 조회 TEST
     @Override
     public List<StoreNews> getStoreNewsList(int storeId) {
 
@@ -185,7 +239,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 수정 TODO
+    // 매장 소식 수정 TEST
     @Override
     public void updateStoreNews(StoreNews storeNews) {
 
@@ -194,7 +248,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 삭제 (DELETE) TODO
+    // 매장 소식 삭제 (DELETE) TEST
     @Override
     public void removeStoreNews(int newsId) {
 
@@ -203,7 +257,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 등록 TODO
+    // 휴무일 등록 TEST
     @Override
     public void addCloseday(int storeId, Date closeday) {
 
@@ -212,17 +266,17 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 목록 조회 TODO
+    // 휴무일 목록 조회 TEST
     @Override
     public List<Date> getClosedayList(int storeId, Search search) {
 
-        List<Date> closedayList = storeDao.getClosedayList(storeId, search);
+        List<Date> closedayList = storeDao.getClosedayListBySearch(storeId, search);
 
         return closedayList;
     }
 
 
-    // 휴무일 삭제 (DELETE) TODO
+    // 휴무일 삭제 (DELETE) TEST
     @Override
     public void removeCloseday(int closedayId) {
 
@@ -231,7 +285,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 주변 시설 추천 (구글 API)
+    // 가게 주변 시설 추천 (구글 API) TODO
     @Override
     public Map<String, Place> getNearbyPlaces(String storeAddr) {
 
@@ -239,7 +293,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 예약 통계 (RsrvDao 사용)
+    // 가게 예약 통계 (RsrvDao 사용) TODO
     @Override
     public Map<String, Map<String, Integer>> getStatistics(int storeId) {
 
