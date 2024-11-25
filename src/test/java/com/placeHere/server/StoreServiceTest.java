@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 public class StoreServiceTest {
@@ -193,6 +194,19 @@ public class StoreServiceTest {
         List<Store> storeList = storeService.getStoreList(search);
         System.out.println(storeList.size());
         System.out.println(storeList);
+    }
+
+    @Test
+    public void getStatistics() {
+
+        int storeId = 2;
+
+        List<Integer> cntWeekRsrv = storeDao.cntWeekRsrv(storeId);
+        System.out.println(cntWeekRsrv);
+
+        List<Integer> cntRsrvAvg = storeDao.cntRsrvAvg(storeId);
+        System.out.println(cntRsrvAvg);
+
     }
 
 }
