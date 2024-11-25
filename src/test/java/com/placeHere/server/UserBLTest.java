@@ -26,7 +26,7 @@ public class UserBLTest {
         System.out.println("1234");
     }
 
-    //    @Test
+//    @Test
     public void getUser() throws Exception{
         System.out.println("4567");
 
@@ -97,17 +97,13 @@ public class UserBLTest {
 
         list = userService.getUserList();
 
-        System.out.println("유저 리스트 end");
+        System.out.println("유저 리스트 start");
         for (User user : list) {
             System.out.println( "list chk :: " + user);
         }
+
         System.out.println("유저 리스트 end");
 
-
-
-//        System.out.println(userService.getUserList());
-
     }
-
 
 }

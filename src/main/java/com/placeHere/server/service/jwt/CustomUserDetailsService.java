@@ -32,8 +32,13 @@ public class CustomUserDetailsService implements UserDetailsService {
             }
 
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new UsernameNotFoundException("User not found");
         }
+
+        // active_status 확인
+//        if ("INACTIVE".equals(user.getActiveStatus()) || "DELETED".equals(user.getActiveStatus())) {
+//            throw new UsernameNotFoundException("Inactive or deleted account");
+//        }
 
 //        if
 

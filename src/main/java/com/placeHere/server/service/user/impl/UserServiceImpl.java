@@ -100,8 +100,12 @@ public class UserServiceImpl implements UserService {
 
     public List<User> getUserList() throws Exception {
 
+        System.out.println("serviceImpl start");
         List<User> user = userDao.getUserList();
+        System.out.println(user);
+        System.out.println("serviceImpl end");
         return user;
+
     }
 
 
