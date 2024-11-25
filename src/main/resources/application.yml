@@ -6,13 +6,13 @@ spring:
     name: server
 
   datasource:
-#    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
-#    username: ds
-#    password: "0000"
-#    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/kosa?serverTimezone=UTC&characterEncoding=UTF-8
-    username: root
-    password: mysql1234
+    #    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
+    #    username: ds
+    #    password: "0000"
+    #    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
+    username: DS
+    password: "0000"
     driver-class-name: com.mysql.cj.jdbc.Driver
 
     #type-aliases-package: com.example.demo.domain,com.example.demo.vo,com.example.demo.dto
