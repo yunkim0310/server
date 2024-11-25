@@ -426,4 +426,50 @@
 
     </select>
 
+    <!-- 성별, 나이대별 예약비율 -->
+    <select id="calcRsrvPercent">
+
+        SELECT
+        CONCAT(
+        CASE
+            WHEN YEAR(CURDATE()) - LEFT(u.birth, 4) &lt; 20 THEN '10대'
+            WHEN YEAR(CURDATE()) - LEFT(u.birth, 4) BETWEEN 20 AND 29 THEN '20대'
+            WHEN YEAR(CURDATE()) - LEFT(u.birth, 4) BETWEEN 30 AND 39 THEN '30대'
+            WHEN YEAR(CURDATE()) - LEFT(u.birth, 4) BETWEEN 40 AND 49 THEN '40대'
+            WHEN YEAR(CURDATE()) - LEFT(u.birth, 4) BETWEEN 50 AND 59 THEN '50대'
+            ELSE '60대이상'
+        END,
+        ' ',
+        CASE u.gender
+            WHEN 'M' THEN '남성'
+            WHEN 'F' THEN '여성'
+        END
+        ) AS x,
+
+        ROUND(
+        COUNT(r.rsrv_no) /
+        COALESCE(
+        (SELECT COUNT(*)
+        FROM reservation r2
+        WHERE r2.store_id = #{storeId}
+        AND r2.rsrv_status IN ('전화 예약', '예약 확정', '이용 완료', '리뷰 완료')
+        ), 1) * 100, 0
+        ) AS y
+
+        FROM reservation r
+        JOIN user u ON r.user_name = u.username
+        WHERE r.store_id = #{storeId}
+        AND r.rsrv_status IN ('전화 예약', '예약 확정', '이용 완료', '리뷰 완료')
+        AND u.birth IS NOT NULL
+        AND u.gender IN ('M', 'F')
+        AND u.role = 'ROLE_USER'
+
+        GROUP BY x
+
+        ORDER BY FIELD(x,
+        '10대 남성', '20대 남성', '30대 남성', '40대 남성', '50대 남성', '60대이상 남성',
+        '10대 여성', '20대 여성', '30대 여성', '40대 여성', '50대 여성', '60대이상 여성');
+
+    </select>
+
 </mapper>
