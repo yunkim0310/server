@@ -15,9 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 public class StoreServiceTest {
@@ -199,13 +197,58 @@ public class StoreServiceTest {
     @Test
     public void getStatistics() {
 
-        int storeId = 2;
+        int storeId = 1;
 
-        List<Integer> cntWeekRsrv = storeDao.cntWeekRsrv(storeId);
-        System.out.println(cntWeekRsrv);
+//        System.out.println("금주 요일별 예약횟수");
+//        List<Integer> cntWeekRsrvList = storeDao.cntWeekRsrv(storeId);
+//        System.out.println(cntWeekRsrvList);
+//
+//        Map<String, Integer> cntWeekRsrvMap = new HashMap<String, Integer>();
+//        List<String> weekName = new ArrayList<>(List.of("일", "월", "화", "수", "목", "금", "토"));
+//        System.out.println(weekName);
+//
+//        for (int i = 0; i < weekName.size(); i++) {
+//            cntWeekRsrvMap.put(weekName.get(i), cntWeekRsrvList.get(i));
+//        }
+//
+//        System.out.println(cntWeekRsrvMap);
+//
+//        System.out.println("\n요일별 평균 예약횟수");
+//        List<Integer> cntRsrvAvgList = storeDao.cntRsrvAvg(storeId);
+//        System.out.println(cntRsrvAvgList);
+//
+//        Map<String, Integer> cntRsrvAvgMap = new HashMap<>();
+//
+//        for (int i = 0; i < weekName.size(); i++) {
+//            cntRsrvAvgMap.put(weekName.get(i), cntRsrvAvgList.get(i));
+//        }
+//
+//        System.out.println(cntRsrvAvgMap);
+//
+//        System.out.println("\n성별 나이대별 예약비율");
+//        List<Map<String, Integer>> calcRsrvPercentList = storeDao.calcRsrvPercent(storeId);
+//        System.out.println(calcRsrvPercentList);
+//
+//        Map<String, Integer> calcRsrvPercentMap = new HashMap<>();
+//
+//        Set<String> ageGenderList = new HashSet<>(Arrays.asList(
+//                "10대 남성", "20대 남성", "30대 남성", "40대 남성", "50대 남성", "60대이상 남성",
+//                "10대 여성", "20대 여성", "30대 여성", "40대 여성", "50대 여성", "60대이상 여성"
+//        ));
+//
+//        for (Map<String, Integer> map : calcRsrvPercentList) {
+//            calcRsrvPercentMap.put(map.values().toArray()[0].toString(), Integer.parseInt(map.values().toArray()[1].toString()));
+//        }
+//
+//        System.out.println(calcRsrvPercentMap);
+//
+//        for (String ageGender : ageGenderList) {
+//            calcRsrvPercentMap.putIfAbsent(ageGender, 0);
+//        }
+//
+//        System.out.println(calcRsrvPercentMap);
 
-        List<Integer> cntRsrvAvg = storeDao.cntRsrvAvg(storeId);
-        System.out.println(cntRsrvAvg);
+        storeService.getStatistics(2);
 
     }
 
