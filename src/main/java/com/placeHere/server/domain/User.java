@@ -1,8 +1,15 @@
 package com.placeHere.server.domain;
 
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 import java.util.Date;
-public class User {
+
+
+@Data
+public class User implements Serializable {
 
     // Field
     // 회원어아디
