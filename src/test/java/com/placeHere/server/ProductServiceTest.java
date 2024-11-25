@@ -55,7 +55,7 @@ public class ProductServiceTest {
 
     }
 
-//    @Transactional
+    @Transactional
     @Test
     public void testGetProduct() throws Exception {
         Product product = productService.getProduct(13);
