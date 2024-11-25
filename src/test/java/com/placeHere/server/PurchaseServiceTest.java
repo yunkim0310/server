@@ -27,123 +27,130 @@ public class PurchaseServiceTest {
     @Qualifier("productServiceImpl")
     private ProductService productService;
 
-//    @Transactional
-//    @Test
-//    public void testAddPurchase() throws Exception {
-//        Purchase purchase = new Purchase();
-//        purchase.setUserName("user1");
-//        purchase.setPurchaseProd(productService.getProduct(1));
-//        purchase.setBarcodeNo("1234567890008");
-//        purchase.setBarcodeName("1234567890008");
-//        //purchase.setTranPoint(1000);
-//        purchase.setCntProd(1);
-//        purchase.setTranDt(Date.valueOf("2024-11-24"));
-//        purchase.setCurrPoint(5000);
-//
-//        // 상품 추가 테스트
-//        purchaseService.addPurchase(purchase);
-////        Product fetchedProduct = productService.getProduct(product.getProdNo());
-//
-//        // 결과 확인
-////        Assertions.assertNotNull(fetchedProduct);
-////        Assertions.assertEquals("ddd", fetchedProduct.getProdName());
-//        System.out.println("1234"+purchase);
-//
-//    }
+    @Transactional
+    @Test
+    public void testAddPurchase() throws Exception {
+        Purchase purchase = new Purchase();
+        purchase.setUserName("user1");
+        purchase.setPurchaseProd(productService.getProduct(9));
+        purchase.setBarcodeNo("1234567890009");
+        purchase.setBarcodeName("1234567890009");
+        //purchase.setTranPoint(1000);
+        purchase.setCntProd(2);
+        purchase.setPointDt(Date.valueOf("2024-11-25"));
+        purchase.setCurrPoint(10000);
 
-    //@Test
+        purchaseService.addPurchase(purchase);
+
+        Assertions.assertEquals("user1", purchase.getUserName());
+        Assertions.assertEquals("1234567890009", purchase.getBarcodeNo());
+        Assertions.assertEquals("1234567890009", purchase.getBarcodeName());
+        Assertions.assertEquals(2, purchase.getCntProd());
+        Assertions.assertEquals(Date.valueOf("2024-11-25"), purchase.getPointDt());
+        Assertions.assertEquals(10000, purchase.getCurrPoint());
+
+        System.out.println("addPurchase : "+purchase);
+
+    }
+
+    @Test
     public void testGetPurchase() throws Exception {
         Purchase purchase = purchaseService.getPurchase(20001);
-//        Assertions.assertNotNull(product);
-//        Assertions.assertEquals(1, product.getProdNo());
-        System.out.println("Purchase : " + purchase);
+
+        Assertions.assertEquals(20001, purchase.getTranNo());
+        Assertions.assertEquals("user1", purchase.getUserName());
+        Assertions.assertNotNull(purchase.getPurchaseProd());
+        Assertions.assertEquals(1, purchase.getPurchaseProd().getProdNo());
+        Assertions.assertEquals("배달 상품권", purchase.getPurchaseProd().getProdName());
+        Assertions.assertEquals(10000, purchase.getPurchaseProd().getProdPrice());
+        Assertions.assertEquals("1234567890001", purchase.getBarcodeNo());
+        Assertions.assertEquals(5000, purchase.getTranPoint());
+        Assertions.assertEquals(1, purchase.getCntProd());
+        Assertions.assertEquals(Date.valueOf("2024-11-21"), purchase.getPointDt());
+        Assertions.assertEquals(15000, purchase.getCurrPoint());
+        Assertions.assertEquals("상품 구매", purchase.getDepType());
+        Assertions.assertEquals(0, purchase.getWishCartNo());
+        Assertions.assertEquals("delivery_giftcard.jpg", purchase.getPurchaseProd().getProdImg1());
+        Assertions.assertNull(purchase.getPurchaseProd().getProdImg2());
+        Assertions.assertNull(purchase.getPurchaseProd().getProdImg3());
+
+        System.out.println("getPurchase : " + purchase);
     }
 
 //    @Test
-//    public void testGetPurchase() throws Exception {
-//        // 테스트를 위한 더미 데이터 추가
-//        Purchase newPurchase = new Purchase();
-//        newPurchase.setTranNo(20001);
-//        newPurchase.setUserName("user1");
-//        newPurchase.setTranPoint(1000);
-//        purchaseService.addPurchase(newPurchase);
-//
-//        // 테스트
-//        Purchase purchase = purchaseService.getPurchase(20001);
-////        Assertions.assertNotNull(purchase);
-////        Assertions.assertEquals(20001, purchase.getTranNo());
-//        System.out.println("Purchase: " + purchase);
-//    }
+    public void testGetPurchasesList() throws Exception {
 
-//    @Test
-//    public void testGetPurchasesList() throws Exception {
-//        // 예시 userName (사용자 이름)
-//        String userName = "user1";  // 실제로 존재하는 사용자 이름으로 바꾸세요.
-//
-//        // purchaseMapper의 getPurchaseList 메소드 호출
-//        Map<String, Object> purchaseList = purchaseService.getPurchaseList(userName);
-//
-//        // 전체 구매 목록 출력
-//        System.out.println("PurchaseList : " + purchaseList);
-//    }
+        String userName = "user1";
 
-//@Test
-//void testAddCart() throws Exception {
-//    Purchase purchase = new Purchase();
-//    purchase.setUserName("user1");
-//    purchase.setProdNo(1);
-//    purchase.setCntProd(2);
-//
-//    purchaseService.addCart(purchase);
-//
-//    System.out.println("Purchase : " + purchase);
-//
-//}
+        Map<String, Object> purchaseList = purchaseService.getPurchaseList(userName);
 
-//    @Test
-//    void testGetCartList() throws Exception {
-//        String userName = "user1";
-//
-//        purchaseService.getCartList(userName);
-//
-//        System.out.println("user1's CartList : " + purchaseService.getCartList(userName));
-//    }
-//
-//    @Test
-//    void testRemoveCart() throws Exception {
-//        int wishCartNo = 10004;
-//
-//        purchaseService.removeCart(wishCartNo);
-//
-//        System.out.println("Remove cart : " + wishCartNo);
-//    }
 
-//@Test
-//void testAddWish() throws Exception {
-//    Purchase purchase = new Purchase();
-//    purchase.setUserName("user1");
-//    purchase.setProdNo(1);
-//
-//    purchaseService.addWish(purchase);
-//
-//    System.out.println("AddWish : " + purchase);
-//}
-//
-//@Test
-//void testGetWishList() throws Exception {
-//    String userName = "user1";
-//
-//    // 테스트할 데이터를 준비합니다.
-//    Purchase purchase = new Purchase();
-//    purchase.setUserName(userName);
-//    purchase.setProdNo(1);
-//
-//    System.out.println("WishList : " + purchase);
-//}
-//
-    // 찜 목록 항목을 삭제하는 테스트
+
+        System.out.println("getPurchaseList : " + purchaseList);
+    }
+
+//  @Test
+    public void testAddCart() throws Exception {
+        Purchase purchase = new Purchase();
+        purchase.setUserName("user1");
+        purchase.setProdNo(1);
+        purchase.setCntProd(2);
+
+        purchaseService.addCart(purchase);
+
+        Assertions.assertEquals("user1", purchase.getUserName());
+        Assertions.assertEquals(1, purchase.getProdNo());
+        Assertions.assertEquals(2, purchase.getCntProd());
+
+        System.out.println("Purchase : " + purchase);
+
+    }
+
     @Test
-    void testRemoveWish() throws Exception {
+    public void testGetCartList() throws Exception {
+
+        List<Purchase> cartList = purchaseService.getCartList("user1");
+
+        System.out.println("user1's CartList : " + cartList);
+    }
+
+//    @Transactional
+//    @Test
+    public void testRemoveCart() throws Exception {
+        int wishCartNo = 10003;
+
+        purchaseService.removeCart(wishCartNo);
+
+        System.out.println("Remove cart : " + wishCartNo);
+    }
+
+    @Test
+    public void testAddWish() throws Exception {
+
+        Purchase purchase = new Purchase();
+        purchase.setUserName("user1");
+        purchase.setProdNo(3);
+        purchase.setCntProd(0);
+
+        purchaseService.addWish(purchase);
+
+        Assertions.assertEquals("user1", purchase.getUserName());
+        Assertions.assertEquals(3, purchase.getProdNo());
+        Assertions.assertEquals(0, purchase.getCntProd());
+
+        System.out.println("AddWish : " + purchase);
+    }
+
+    @Test
+    public void testGetWishList() throws Exception {
+
+        List<Purchase> wishList = purchaseService.getWishList("user1");
+
+        System.out.println("WishList : " + wishList);
+    }
+
+//    @Test
+    public void testRemoveWish() throws Exception {
         int wishCartNo = 10005;
 
         purchaseService.removeWish(wishCartNo);

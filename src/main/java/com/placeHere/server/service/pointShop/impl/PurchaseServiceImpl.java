@@ -26,16 +26,18 @@ public class PurchaseServiceImpl implements PurchaseService {
     public PurchaseServiceImpl() {
     }
 
+    @Override
     public void addPurchase(Purchase purchase) throws Exception{
 
 //        String barcodeNo = purchaseDao.getNextBarcodeNumber();
 //        purchase.setBarcodeNo(barcodeNo);
-        int tranPoint = purchaseDao.calcTranPoint(purchase.getUserName());
-        purchase.setTranPoint(tranPoint);
+//        int tranPoint = purchaseDao.calcTranPoint(purchase.getUserName());
+//        purchase.setTranPoint(tranPoint);
         purchaseDao.addPurchase(purchase);
 
     }
 
+    @Override
     public Purchase getPurchase(int tranNo) throws Exception{
 
         return purchaseDao.getPurchase(tranNo);
@@ -43,6 +45,7 @@ public class PurchaseServiceImpl implements PurchaseService {
     }
 
     //수정 필요
+    @Override
     public Map<String, Object> getPurchaseList(String userName) throws Exception{
 
 //        List<Purchase> list = purchaseDao.getPurchaseList(search, userName);

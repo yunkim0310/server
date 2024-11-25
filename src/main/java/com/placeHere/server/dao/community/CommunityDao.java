@@ -1,4 +1,4 @@
-package com.example.server.dao.community;
+package com.placeHere.server.dao.community;
 
 public interface CommunityDao {
 }

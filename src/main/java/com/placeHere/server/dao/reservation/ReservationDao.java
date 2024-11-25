@@ -1,4 +1,4 @@
-package com.example.server.dao.reservation;
+package com.placeHere.server.dao.reservation;
 
 public interface ReservationDao {
 }

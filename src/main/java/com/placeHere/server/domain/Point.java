@@ -1,4 +1,7 @@
-package com.example.server.domain;
+package com.placeHere.server.domain;
 
 public class Point {
+
+
+
 }

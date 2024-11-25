@@ -12,12 +12,15 @@ public interface PurchaseDao {
 
     //상품 구매
     public void addPurchase(Purchase purchase) throws Exception;
+
     //구매 상품 조회
     public Purchase getPurchase(int tranNo) throws Exception;
+
     //구매 상품 목록
     public List<Purchase> getPurchaseList(String userName) throws Exception;
 
-    public int calcTranPoint(String userName)throws Exception;
+    // 거래 포인트 계산
+//    public int calcTranPoint(String userName)throws Exception;
 
     //바코드 번호
 //    public String getNextBarcodeNumber() throws Exception;

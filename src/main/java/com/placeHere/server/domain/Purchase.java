@@ -36,9 +36,9 @@ public class Purchase {
     //int 타입의 상품 수량
     private int cntProd;
     //Date 타입의 거래 날짜
-    private Date tranDt;
+    private Date pointDt;
     //String 타입의 거래 유형
-    private String tranType;
+    private String depType;
     //int 타입의 보유 포인트
     private int currPoint;
 
