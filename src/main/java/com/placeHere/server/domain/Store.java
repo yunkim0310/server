@@ -47,7 +47,6 @@ public class Store {
     private List<Integer> amenitiesNoList;
     // 음식 카테고리 ID (숫자6글자 + 세부분류) (숫자 2글자 단위로 1,2,3차 분류) ex: 010101/장어솥밥
     private String foodCategoryId;
-    private String foodCategory;
     // 메뉴 목록
     private List<Menu> menuList;
     // 대표 메뉴 번호 (메뉴 번호 순서중 하나)
