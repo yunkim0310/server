@@ -1,4 +1,3 @@
-//package com.example.server;
 package com.placeHere.server;
 
 import org.springframework.boot.SpringApplication;

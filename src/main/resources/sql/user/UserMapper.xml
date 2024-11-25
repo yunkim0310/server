@@ -4,6 +4,84 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="">
+<mapper namespace="com.placeHere.server.dao.user.UserDao">
+
+    <!--    <resultMap id="userSelectMap" type="user">-->
+    <resultMap id="userSelectMap" type="com.placeHere.server.domain.User">
+        <result property="username" 			column="username" 			jdbcType="VARCHAR"/>
+        <result property="password"	            column="password" 		    jdbcType="VARCHAR" />
+        <result property="email" 	            column="email" 		        jdbcType="VARCHAR" />
+        <result property="role" 				column="role" 				jdbcType="VARCHAR" />
+        <result property="regDt" 				column="reg_dt" 			jdbcType="DATE" />
+        <result property="profileImg" 			column="profile_img" 		jdbcType="VARCHAR" />
+        <result property="loginDt" 				column="login_dt" 			jdbcType="DATE" />
+        <result property="updateDt" 			column="update_dt" 			jdbcType="DATE"  />
+        <result property="gender" 		        column="gender" 			jdbcType="VARCHAR" />
+        <result property="birth" 		        column="birth" 			    jdbcType="DATE" />
+        <result property="activeStatus" 		column="activeStatus" 		jdbcType="VARCHAR" />
+    </resultMap>
+
+    <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
+        SELECT
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
+        FROM user
+        WHERE username = #{value}
+    </select>
+
+    <update id="updateLoginDt" parameterType="java.lang.String">
+        UPDATE user
+        SET login_dt = NOW()
+        WHERE username = #{username}
+    </update>
+
+    <insert id="join" parameterType="com.placeHere.server.domain.User">
+        INSERT INTO user (username, password, email, role, reg_dt, gender, birth )
+        VALUES ( #{username}, #{password}, #{email}, #{role}, NOW(), #{gender}, #{birth}  )
+    </insert>
+
+    <update	id="updateUserStatus"	parameterType="com.placeHere.server.domain.User" >
+        UPDATE user
+        SET
+            active_status 	= #{ activeStatus },
+            update_dt = NOW()
+        WHERE username = #{username}
+    </update>
+
+    <update	id="updateUser"	parameterType="com.placeHere.server.domain.User" >
+        UPDATE user
+        SET
+            profile_img 	= #{ profileImg },
+            update_dt = NOW()
+        WHERE username = #{username}
+    </update>
+
+    <select id="getUserList" resultType="com.placeHere.server.domain.User">
+        SELECT
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
+        FROM user
+        --         WHERE active_status = 'ACTIVE'
+--        ORDER BY reg_dt DESC
+    </select>
+
 
 </mapper>

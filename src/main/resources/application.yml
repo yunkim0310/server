@@ -3,18 +3,23 @@ spring:
     name: server
 
   datasource:
-    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
-    username: ds
-    password: "0000"
+#    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
+#    username: ds
+#    password: "0000"
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/kosa?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: mysql1234
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   mybatis:
     mapper-locations: classpath:sql/**/*.xml
     #type-aliases-package: com.example.demo.domain,com.example.demo.vo,com.example.demo.dto
-    configuration:
-      map-underscore-to-camel-case: true
-      default-fetch-size: 100
-      default-statement-timeout: 30
-      cache-enabled: true
+#    configuration:
+#      map-underscore-to-camel-case: true
+#      default-fetch-size: 100
+#      default-statement-timeout: 30
+#      cache-enabled: true
 
 # Spring Boot 내장 서버 포트 설정
 server:
