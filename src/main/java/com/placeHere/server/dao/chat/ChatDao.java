@@ -1,4 +1,4 @@
-package com.example.server.dao.chat;
+package com.placeHere.server.dao.chat;
 
 public interface ChatDao {
 }
