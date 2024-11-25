@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import java.sql.Date;
 import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -37,4 +38,23 @@ public class StoreOperation {
     private Date effectDt;
     // 휴무일 목록
     private List<Date> closedayList;
+
+
+    // Method
+    public void setRegularClosedayList(List<String> regularClosedayList) {
+        
+        // 정기 휴무요일이 3개가 아니면 List 의 남는 부분을 null 로 넣게끔함
+        regularClosedayList = (regularClosedayList == null) ? new ArrayList<>() : regularClosedayList;
+        int regularClosedayCnt = regularClosedayList.size();
+
+        if (regularClosedayCnt != 3) {
+
+            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
+                regularClosedayList.add(null);
+            }
+
+        }
+
+        this.regularClosedayList = regularClosedayList;
+    }
 }

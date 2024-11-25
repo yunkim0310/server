@@ -1,0 +1,104 @@
+[33mcommit 2e3904cd5f547b680393e95db4a4721145193b1c[m[33m ([m[1;36mHEAD -> [m[1;32mbr_user[m[33m, [m[1;31morigin/dev[m[33m, [m[1;31morigin/br_user[m[33m, [m[1;32mdev[m[33m, [m[1;32mbr_user_back[m[33m)[m
+Author: yunji <yunkim1346@gmail.com>
+Date:   Mon Nov 25 12:30:23 2024 +0900
+
+    feat: userList, join, updateLoginDt, chkDuplivation, updateUser 완료
+
+[33mcommit 6b598de0063717400e7bd47907ceb180ed199c90[m[33m ([m[1;31morigin/master[m[33m, [m[1;32mmaster[m[33m)[m
+Author: yunji <yunkim1346@gmail.com>
+Date:   Fri Nov 22 15:19:09 2024 +0900
+
+    feat: Junit5 완성
+
+[33mcommit ad001585fecb9a3fb2b62edbc5c35896d6d6cc35[m
+Merge: 63d0c47 79913e8
+Author: yunkim0310 <yunkim1346@gmail.com>
+Date:   Thu Nov 21 20:48:02 2024 +0900
+
+    Merge pull request #2 from yunkim0310/dev
+    
+    Dev
+
+[33mcommit 63d0c470347196f62e7ed90b410139c3211773c1[m
+Merge: 86d655c a0207aa
+Author: yunkim0310 <yunkim1346@gmail.com>
+Date:   Thu Nov 21 20:46:02 2024 +0900
+
+    Merge pull request #1 from yunkim0310/br_user
+    
+    fix: 패키지 경로 수정
+
+[33mcommit 79913e8cf35ce39836cf8c241b983b5c2022c305[m
+Merge: bd4d05b a0207aa
+Author: yunji <yunkim1346@gmail.com>
+Date:   Thu Nov 21 20:32:52 2024 +0900
+
+    Merge branch 'br_user' into dev
+
+[33mcommit a0207aae814c339553dd3a650d6aac6753888905[m
+Author: yunji <yunkim1346@gmail.com>
+Date:   Thu Nov 21 20:28:34 2024 +0900
+
+    fix: 패키지 경로 수정
+
+[33mcommit bd4d05b6c49b574cdb996323135ed4f0c8f7cab1[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 18:02:35 2024 +0900
+
+    fix: @Param import 문제로 제거
+
+[33mcommit 8629473023e388bcbee4c97c581f5366f15f7ecb[m
+Merge: 6805a56 86d655c
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 17:56:03 2024 +0900
+
+    Merge remote-tracking branch 'origin/dev' into dev
+
+[33mcommit 6805a56720318546d05123292d0323561e942f82[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 17:50:17 2024 +0900
+
+    feat: war 플러그인 추가
+
+[33mcommit e18657530329b9b450d12ef6d89ebfea15cbfe2b[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 17:37:55 2024 +0900
+
+    feat: 가게관리 - StoreMapper.xml 틀 구현
+    
+    context:
+    + Mapper 내용 추가 필요
+
+[33mcommit 19735d794aa68c264a40e3e9423fe7bc01f0ae2e[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 17:37:04 2024 +0900
+
+    refactor: Menu.java 필드 변경, StoreDao.java @Param 추가
+
+[33mcommit 86d655c6830a8b5ecc7ca8652c8d97412633d97f[m
+Author: yunji <yunkim1346@gmail.com>
+Date:   Thu Nov 21 16:06:37 2024 +0900
+
+    init: junit5 의존성 추가
+
+[33mcommit 024e31d0fe5874699ec236a7de5c1583744980f0[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 15:58:04 2024 +0900
+
+    feat: 가게관리 - Place.java 필드 추가, StoreNews.java newsImgFile setter override
+
+[33mcommit aed309615bddc1d9f3761dc378588fdd7ca169e2[m
+Author: peace1nmind <aont95@naver.com>
+Date:   Thu Nov 21 15:44:03 2024 +0900
+
+    feat: 가게관리 - Domain, Dao, Service 추가
+    
+    24.11.21
+    + Domain, Dao, Service 빈 메서드 추가
+    + StoreMapper.xml 추가 필요
+
+[33mcommit 51f8ff17cab49ae2db569d2a9550ebeb0a03c8cc[m[33m ([m[1;31morigin/br_point[m[33m, [m[1;31morigin/br_chat[m[33m)[m
+Author: yunji <yunkim1346@gmail.com>
+Date:   Thu Nov 21 15:14:46 2024 +0900
+
+    init

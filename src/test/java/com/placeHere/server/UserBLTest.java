@@ -21,12 +21,12 @@ public class UserBLTest {
     @Qualifier("userServiceImpl")
     private UserService userService;
 
-//    @Test
+    //    @Test
     public void test() {
         System.out.println("1234");
     }
 
-//    @Test
+    //    @Test
     public void getUser() throws Exception{
         System.out.println("4567");
 
@@ -36,7 +36,7 @@ public class UserBLTest {
         System.out.println("6789");
     }
 
-//    @Test
+    //    @Test
     public void chkDuplication() throws Exception {
 
         String username = "normal_user1";
@@ -46,7 +46,7 @@ public class UserBLTest {
         assertFalse(result, "중복회원 ~");
     }
 
-//    @Test
+    //    @Test
     public void join() throws Exception {
 
         User user = new User();
@@ -77,7 +77,7 @@ public class UserBLTest {
 //        Assert.assertEquals("test@test.com", user.getEmail());
     }
 
-//    @Test
+    //    @Test
     public void updateLoginDt() throws Exception {
 
         String username = "testName";
@@ -87,7 +87,7 @@ public class UserBLTest {
 
         System.out.println("로그인일시변경");
         System.out.println(user);
-;
+        ;
     }
 
     @Test

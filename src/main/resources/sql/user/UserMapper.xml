@@ -6,7 +6,7 @@
 
 <mapper namespace="com.placeHere.server.dao.user.UserDao">
 
-<!--    <resultMap id="userSelectMap" type="user">-->
+    <!--    <resultMap id="userSelectMap" type="user">-->
     <resultMap id="userSelectMap" type="com.placeHere.server.domain.User">
         <result property="username" 			column="username" 			jdbcType="VARCHAR"/>
         <result property="password"	            column="password" 		    jdbcType="VARCHAR" />
@@ -67,19 +67,19 @@
 
     <select id="getUserList" resultType="com.placeHere.server.domain.User">
         SELECT
-        username,
-        password,
-        email,
-        role,
-        active_status,
-        reg_dt,
-        profile_img,
-        login_dt,
-        update_dt,
-        gender,
-        birth
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
         FROM user
---         WHERE active_status = 'ACTIVE'
+        --         WHERE active_status = 'ACTIVE'
 --        ORDER BY reg_dt DESC
     </select>
 
