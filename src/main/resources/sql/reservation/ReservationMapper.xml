@@ -35,11 +35,24 @@
                  );
     </insert>
 
+
+    <insert id="addRsrvStore" parameterType="com.placeHere.server.domain.Reservation">
+        INSERT INTO reservation (
+            store_id, user_name, rsrv_dt, rsrv_person,
+            rsrv_req, store_name, store_addr, rsrv_status, rsrv_number
+        ) VALUES (
+                     #{storeId}, #{userName}, #{rsrvDt}, #{rsrvPerson},
+                     #{rsrvReq}, #{storeName}, #{storeAddr}, '전화 예약', #{rsrvNumber}
+                 );
+    </insert>
+
+
     <update id="updateRsrvStatus" parameterType="com.placeHere.server.domain.Reservation">
         UPDATE reservation
         SET rsrv_status = #{rsrvStatus}
         WHERE rsrv_no = #{rsrvNo};
     </update>
+
 
     <update id="updateRsrvpay" parameterType="com.placeHere.server.domain.Reservation">
         UPDATE reservation
@@ -47,11 +60,13 @@
         WHERE rsrv_no = #{rsrvNo};
     </update>
 
+
     <update id="updateRsrvReason" parameterType="com.placeHere.server.domain.Reservation">
         UPDATE reservation
         SET reason = #{reason}
         WHERE rsrv_no = #{rsrvNo};
     </update>
+
 
     <select id="getRsrv" parameterType="int" resultMap="ReservationResultMap">
         SELECT
@@ -75,8 +90,94 @@
             rsrv_no = #{rsrvNo}
     </select>
 
-    <select id="countRsrv" parameterType="String" resultType="int">
-        select sum(rsrv_person) from reservation where rsrv_dt = #{rsrvDt}
+
+    <select id="getCountRsrv" parameterType="map" resultType="int">
+        SELECT SUM(rsrv_person)
+        FROM reservation
+        WHERE rsrv_dt = #{rsrvDt}
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청');
     </select>
+
+
+    <select id="getCountDayRsrv" parameterType="map" resultType="int">
+        SELECT SUM(rsrv_person)
+        FROM reservation
+        WHERE DATE(rsrv_dt) = DATE(#{rsrvDt})
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청');
+    </select>
+
+
+    <select id="getCountRsrvUser" parameterType="string" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation
+        WHERE user_name = #{userName}
+        AND DATE(rsrv_dt) > NOW()
+        AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
+    <select id="getCountRsrvStore" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt > NOW()
+          AND amount &lt;&gt; 0
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
+    <select id="getCountRsrvNumber" parameterType="int" resultType="int">
+        SELECT COUNT(*)
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt > NOW()
+          AND rsrv_status = '전화 예약';
+    </select>
+
+
+    <select id="getRsrvList" resultType="map">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        FROM reservation
+        WHERE rsrv_status &lt;&gt; '결제 중';
+    </select>
+
+
+    <select id="getRsrvUserList" parameterType="string" resultType="map">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, store_name
+        FROM reservation
+        WHERE user_name = #{userName}
+          AND rsrv_dt >= NOW()
+          AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '예약 취소', '예약 거절');
+    </select>
+
+
+    <select id="getRsrvStoreList" parameterType="int" resultType="map">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt >= NOW()
+          AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '전화 예약');
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 </mapper>

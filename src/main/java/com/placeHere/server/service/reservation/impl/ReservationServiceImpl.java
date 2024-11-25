@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service("reservationServiceImpl")
 public class ReservationServiceImpl implements ReservationService{
@@ -21,6 +24,13 @@ public class ReservationServiceImpl implements ReservationService{
     public void addRsrv(Reservation reservation) throws Exception {
         reservation.setRsrvStatus("결제 중");
         reservationDao.addRsrv(reservation);
+    }
+
+
+    // 예약 정보 등록 점주
+    public void addRsrvStore(Reservation reservation) throws Exception {
+        reservation.setRsrvStatus("전화 예약");
+        reservationDao.addRsrvStore(reservation);
     }
 
 
@@ -48,21 +58,45 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-    // 예약 목록 조회 미완
-    public void getRsrvList(int rsrvNo, String reason) throws Exception {
-        reservationDao.getRsrvList(rsrvNo, reason);
+    // 예약 목록 조회 어드민
+    public List<Map<String, Object>> getRsrvList() throws Exception {
+        return reservationDao.getRsrvList();
+    }
+
+
+    // 예약 목록 조회 일반 회원
+    public List<Map<String, Object>> getRsrvUserList(String userName) throws Exception {
+        return reservationDao.getRsrvUserList(userName);
+    }
+
+
+    // 예약 목록 조회 점주
+    public List<Map<String, Object>> getRsrvStoreList(int storeId) throws Exception {
+        return reservationDao.getRsrvStoreList(storeId);
     }
 
 
     // 예약 일시(rsrsDate)의 예약 인수들의 합 미완
-    public int countRsrv(Date rsrvDt) throws Exception {
-        return reservationDao.countRsrv(rsrvDt);
+    public int getCountRsrv(Date rsrvDt, int storeId) throws Exception {
+        // Map으로 파라미터 생성
+        Map<String, Object> params = new HashMap<>();
+        params.put("rsrvDt", rsrvDt);
+        params.put("storeId", storeId);
+
+        // DAO 호출하여 결과 반환
+        return reservationDao.getCountRsrv(params);
     }
 
 
-    // 예약 날짜의 예약 인수들의 합 미완
-    public void countDayRsrv(int rsrvNo, String reason) throws Exception {
-        reservationDao.countDayRsrv(rsrvNo, reason);
+    // 예약 날짜의 예약 인수들의 합(휴무일에도 쓰임)
+    public int getCountDayRsrv(Date rsrvDt, int storeId) throws Exception {
+        // Map으로 파라미터 생성
+        Map<String, Object> params = new HashMap<>();
+        params.put("rsrvDt", rsrvDt);
+        params.put("storeId", storeId);
+
+        // DAO 호출하여 결과 반환
+        return reservationDao.getCountDayRsrv(params);
     }
 
 
@@ -72,9 +106,21 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-    // 탈퇴할 회원의 예약 권수 카운팅 미완
-    public void chkRsrv(int rsrvNo, String reason) throws Exception {
-        reservationDao.chkRsrv(rsrvNo, reason);
+    // 탈퇴할 회원의 예약 권수 카운팅
+    public int getCountRsrvUser(String userName) throws Exception {
+        return reservationDao.getCountRsrvUser(userName);
+    }
+
+
+    // 탈퇴할 점주 회원의 예약 권수 카운팅
+    public int getCountRsrvStore(int storeId) throws Exception {
+        return reservationDao.getCountRsrvStore(storeId);
+    }
+
+
+    // 탈퇴할 점주 회원의 전화 예약 권수 카운팅
+    public int getCountRsrvNumber(int storeId) throws Exception {
+        return reservationDao.getCountRsrvNumber(storeId);
     }
 
 
