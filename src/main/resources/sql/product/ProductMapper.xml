@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.pointShop.ProductDao">
+
+    <resultMap id="productSelectMap" type="com.placeHere.server.domain.Product">
+        <result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+        <result property="prodName"	column="prod_name" jdbcType="VARCHAR"/>
+        <result property="prodDetail" column="prod_detail" jdbcType="VARCHAR"/>
+        <result property="prodPrice" column="prod_price" jdbcType="INTEGER"/>
+        <result property="prodImg1" column="prod_img1" jdbcType="VARCHAR"/>
+        <result property="prodImg2" column="prod_img2" jdbcType="VARCHAR"/>
+        <result property="prodImg3" column="prod_img3" jdbcType="VARCHAR"/>
+        <result property="prodCateNo" column="prod_category_no" jdbcType="INTEGER"/>
+        <result property="prodCateName" column="prod_category_name" jdbcType="VARCHAR"/>
+        <result property="regDt" column="reg_dt" jdbcType="DATE"/>
+        <result property="prodStatus" column="prod_status" jdbcType="BOOLEAN"/>
+    </resultMap>
+
+    <insert id="addProduct"	parameterType="com.placeHere.server.domain.Product">
+        INSERT INTO product( prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no, prod_category_name, reg_dt
+        )
+        VALUES	 (	#{prodName} , #{prodDetail:VARCHAR} , #{prodPrice:INTEGER} , #{prodStatus:BOOLEAN} , #{prodImg1:VARCHAR} , #{prodImg2:VARCHAR} , #{prodImg3:VARCHAR} ,#{prodCateNo:INTEGER},#{prodCateName:VARCHAR}, CURRENT_DATE)
+    </insert>
+
+    <select id="getProduct"	parameterType="int"	resultMap="productSelectMap">
+        SELECT
+            prod_no , prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no ,prod_category_name, reg_dt
+        FROM product
+        WHERE prod_no = #{prodNo}
+    </select>
+<!--    <select id="getProduct"	parameterType="int"	resultMap="productSelectMap">-->
+<!--        SELECT * FROM product limit 1-->
+<!--    </select>-->
+
+    <update	id="updateProduct" parameterType="com.placeHere.server.domain.Product">
+        UPDATE product
+--         SET
+        <set>
+            prod_name = #{prodName},
+            prod_detail	= #{prodDetail},
+            prod_price = #{prodPrice},
+            prod_status	= #{prodStatus},
+            prod_img1 = #{prodImg1},
+            prod_img2 = #{prodImg2},
+            prod_img3 = #{prodImg3},
+            prod_category_no = #{prodCateNo},
+            prod_category_name = #{prodCateName}
+        </set>
+        WHERE prod_no = #{prodNo}
+    </update>
+
+    <select id="getProductList" parameterType="com.placeHere.server.domain.Search" resultMap="productSelectMap">
+        SELECT prod_no, prod_name, prod_price, prod_status, prod_img1
+        FROM product
+        WHERE prod_name LIKE CONCAT('%',#{searchKeyword},'%')
+<!--        <if test="searchCondition != null">-->
+<!--            <where>-->
+<!--&#45;&#45;                 <if test="searchKeyword != null and searchKeyword != ''">-->
+<!--                    prod_name LIKE CONCAT('%',#{searchKeyword},'%')-->
+<!--&#45;&#45;                 </if>-->
+<!--                <if test="priceMin != 0">-->
+<!--                    AND prod_price &gt;= #{priceMin:INTEGER}-->
+<!--                </if>-->
+<!--                <if test="priceMax != 0">-->
+<!--                    AND prod_price &lt;= #{priceMax:INTEGER}-->
+<!--                </if>-->
+<!--            </where>-->
+<!--        </if>-->
+<!--        <if test="sortOrder == 'asc'">-->
+<!--            ORDER BY prod_price ASC-->
+<!--        </if>-->
+<!--        <if test="sortOrder == 'desc'">-->
+<!--            ORDER BY prod_price DESC-->
+<!--        </if>-->
+<!--        <if test="sortOrder == null">-->
+<!--            ORDER BY prod_no-->
+<!--        </if>-->
+        ORDER BY prod_no
+    </select>
+
+</mapper>

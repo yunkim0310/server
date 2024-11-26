@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Setter
 @Service("storeServiceImpl")
@@ -297,6 +295,53 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Map<String, Map<String, Integer>> getStatistics(int storeId) {
 
-        return Map.of();
+        // 요일 리스트
+        List<String> dayName = new ArrayList<>(List.of("일", "월", "화", "수", "목", "금", "토"));
+        
+        // 금주 요일별 예약횟수
+        List<Integer> cntWeekRsrvList = storeDao.cntWeekRsrv(storeId);
+        Map<String, Integer> cntWeekRsrvMap = new HashMap<String, Integer>();
+
+        for (int i = 0; i < dayName.size(); i++) {
+            cntWeekRsrvMap.put(dayName.get(i), cntWeekRsrvList.get(i));
+        }
+
+        System.out.println(cntWeekRsrvMap);
+
+        // 요일별 평균 예약횟수
+        List<Integer> cntRsrvAvgList = storeDao.cntRsrvAvg(storeId);
+        Map<String, Integer> cntRsrvAvgMap = new HashMap<>();
+
+        for (int i = 0; i < dayName.size(); i++) {
+            cntRsrvAvgMap.put(dayName.get(i), cntRsrvAvgList.get(i));
+        }
+
+        System.out.println(cntRsrvAvgMap);
+
+        // 성별, 나이대별 예약 비율
+        List<Map<String, Integer>> calcRsrvPercentList = storeDao.calcRsrvPercent(storeId);
+        Map<String, Integer> calcRsrvPercentMap = new HashMap<>();
+
+        Set<String> ageGenderList = new HashSet<>(Arrays.asList(
+                "10대 남성", "20대 남성", "30대 남성", "40대 남성", "50대 남성", "60대이상 남성",
+                "10대 여성", "20대 여성", "30대 여성", "40대 여성", "50대 여성", "60대이상 여성"
+        ));
+
+        for (Map<String, Integer> map : calcRsrvPercentList) {
+            calcRsrvPercentMap.put(map.values().toArray()[0].toString(), Integer.parseInt(map.values().toArray()[1].toString()));
+        }
+
+        for (String ageGender : ageGenderList) {
+            calcRsrvPercentMap.putIfAbsent(ageGender, 0);
+        }
+
+        System.out.println(calcRsrvPercentMap);
+
+        Map<String, Map<String, Integer>> statisticsMap = new HashMap<String, Map<String, Integer>>();
+        statisticsMap.put("cntWeekRsrv", cntWeekRsrvMap);
+        statisticsMap.put("cntRsrvAvg", cntRsrvAvgMap);
+        statisticsMap.put("calcRsrvPercent", calcRsrvPercentMap);
+        
+        return statisticsMap;
     }
 }

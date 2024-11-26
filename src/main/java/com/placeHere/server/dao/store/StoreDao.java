@@ -88,7 +88,10 @@ public interface StoreDao {
     // 금주 요일별 예약횟수
     public List<Integer> cntWeekRsrv(int storeId);
 
-    // 평균 요일별 예약횟수
+    // 요일별 평균 예약횟수
     public List<Integer> cntRsrvAvg(int storeId);
+
+    // 성별, 나이대별 예약비율
+    public List<Map<String, Integer>> calcRsrvPercent(int storeId);
 
 }
