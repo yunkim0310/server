@@ -82,20 +82,60 @@
     </select>
 
     <!-- 가게 등록 -->
-    <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyColumn="store_id">
+    <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyProperty="storeId" keyColumn="store_id">
 
         INSERT INTO store
-            (username, business_no, store_name, store_addr, store_phone,
-             store_info, food_category_id, special_menu_no,
-             store_img1, store_img2, store_img3,
-             store_img4, store_img5, hashtag)
+        (username, business_no, store_name, store_addr, store_phone,
+        store_info, food_category_id, special_menu_no,
+        store_img1, store_img2, store_img3,
+        store_img4, store_img5, hashtag)
         VALUES
         (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone},
         #{storeInfo}, #{foodCategoryId}, #{specialMenuNo},
-        #{storeImgList[0]}, #{storeImgList[1]}, #{storeImgList[2]},
-        #{storeImgList[3]}, #{storeImgList[4]}, #{hashtag})
+        <choose>
+            <when test="storeImgList[0] != null and storeImgList[0] != ''">
+                #{storeImgList[0]}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="storeImgList[1] != null and storeImgList[1] != ''">
+                #{storeImgList[1]}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="storeImgList[2] != null and storeImgList[2] != ''">
+                #{storeImgList[2]}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="storeImgList[3] != null and storeImgList[3] != ''">
+                #{storeImgList[3]}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        <choose>
+            <when test="storeImgList[4] != null and storeImgList[4] != ''">
+                #{storeImgList[4]}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>,
+        #{hashtag})
 
     </insert>
+
 
     <!-- 등록된 가게 Id 얻기 -->
     <select id="getStoreId">
@@ -108,13 +148,6 @@
     </select>
 
     <!-- 가게 정보 조회 -->
-<!--    <select id="getStore" resultMap="StoreResultMap">-->
-
-<!--        SELECT *-->
-<!--        FROM store-->
-<!--        WHERE store_id = #{storeId}-->
-
-<!--    </select>-->
     <select id="getStore" resultMap="StoreResultMap">
 
         SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
@@ -226,13 +259,25 @@
 
     <!-- 메뉴 등록 -->
     <insert id="addMenu" parameterType="map">
-
-        INSERT INTO Menu(store_id, menu_no, menu_img, menu_name, menu_price, menu_info)
+        INSERT INTO Menu (store_id, menu_no, menu_img, menu_name, menu_price, menu_info)
         VALUES
         <foreach collection="menuList" item="menu" separator=",">
-            (#{storeId}, #{menu.menuNo},#{menu.menuImg}, #{menu.menuName}, #{menu.menuPrice}, #{menu.menuInfo})
+            (
+            #{storeId},
+            #{menu.menuNo},
+            <choose>
+                <when test="menu.menuImg != null and menu.menuImg != ''">
+                    #{menu.menuImg}
+                </when>
+                <otherwise>
+                    NULL
+                </otherwise>
+            </choose>,
+            #{menu.menuName},
+            #{menu.menuPrice},
+            #{menu.menuInfo}
+            )
         </foreach>
-
     </insert>
 
     <!-- 메뉴 목록 조회 -->

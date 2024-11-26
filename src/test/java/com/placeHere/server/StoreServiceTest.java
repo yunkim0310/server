@@ -289,4 +289,10 @@ public class StoreServiceTest {
 
     }
 
+    @Test
+    public void addMenu() {
+
+
+    }
+
 }
