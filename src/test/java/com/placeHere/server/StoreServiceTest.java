@@ -169,8 +169,8 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-//        Store store = storeService.getStore(3);
-        Store store = storeService.getStore(2, Date.valueOf("2024-11-26"));
+        Store store = storeService.getStore(2);
+//        Store store = storeService.getStore(1, Date.valueOf("2024-11-26"));
 
         System.out.println(store);
 
@@ -182,8 +182,8 @@ public class StoreServiceTest {
         Search search = new Search();
         search.setSearchKeyword("");
 
-        List<String> regionList = new ArrayList<>(List.of("강남"));
-        search.setRegionList(regionList);
+//        List<String> regionList = new ArrayList<>(List.of("강남"));
+//        search.setRegionList(regionList);
 
         search.setFoodCategoryId("한식");
 

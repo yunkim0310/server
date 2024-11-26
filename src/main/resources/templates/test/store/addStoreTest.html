@@ -8,6 +8,8 @@
 
     <script type="text/javascript">
 
+        let duplicateResult = "";
+
         function checkDuplicateBusinessNo(businessNo) {
             // 2148884534
             var bNo = {"b_no": [businessNo]};
@@ -24,7 +26,6 @@
                     console.log(result);
 
                     let data = result.data[0];
-                    let duplicateResult = "";
 
                     let bState = data.b_stt_cd;
                     let taxType = data.tax_type_cd;
@@ -38,8 +39,7 @@
                     }
 
                     if (taxType === "") {
-                        let a = data.tax_type;
-                        duplicateResult = a;
+                        duplicateResult = data.tax_type;
                     }
 
                     if (bState === "01" && taxType !== "") {
@@ -57,38 +57,37 @@
         }
 
         $(function() {
-
             $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
-
-
             $("#checkDuplicate").on('click', function () {
-
                 let businessNo = $("input[name='businessNo']").val();
 
                 // RestController 에서 중복 확인
-                // $.ajax(
-                //     {
-                //         url: "/api/store/checkDuplicateBusinessNo/"+businessNo,
-                //         method: "GET",
-                //         dataType: "json",
-                //         headers: {
-                //             "Accept" : "application/json",
-                //             "Content-Type" : "application/json"
-                //         },
-                //         success : function (JSONData, status) {
-                //
-                //             console.log(JSONData);
-                //
-                //         }
-                //     }
-                // );
+                $.ajax({
+                    url: "/api-store/chkDuplicateBusinessNo",
+                    method: "GET",
+                    data: {businessNo: businessNo},  // URL 파라미터로 보내는 대신 data로 전달
+                    dataType: "json",
+                    headers: {
+                        "Accept": "application/json"  // Content-Type은 GET 요청에서는 필요 없음
+                    },
+                    success: function (response) {
+                        if (response) {
+                            checkDuplicateBusinessNo(businessNo);
+                        } else {
+                            duplicateResult = "중복된 사업자 번호입니다.";
 
-                checkDuplicateBusinessNo(businessNo);
+                            $("#duplicateResult").text(duplicateResult);
+                        }
 
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("Request failed: " + status + ", " + error);  // 실패 시 오류 로그
+                    }
+                });
             });
+        });
 
-        })
 
     </script>
 </head>
@@ -99,7 +98,13 @@
     <form>
         <input type="hidden" id="apiKey" th:value="${apiKey}">
         <p th:text="${apiKey}"></p>
-        <input type="hidden" name="userName" th:value="${userName}">
+        <label>
+            <strong>회원 아이디</strong>
+            <input type="text" name="userName">
+        </label>
+
+        <br/><br/>
+
         <label>
             <strong>사업자 번호</strong>
             <input type="text" name="businessNo">
@@ -111,22 +116,30 @@
             <strong>매장명</strong>
             <input type="text" name="storeName">
         </label>
+
         <br/><br/>
+
         <label>
             <strong>매장 주소</strong>
             <input type="text" name="storeAddr">
         </label>
+
         <br/><br/>
+
         <label>
             <strong>매장 전화번호</strong>
             <input type="text" name="storePhone">
         </label>
+
         <br/><br/>
+
         <label>
             <strong>매장 대표사진</strong>
             <input type="file" name="storeImgFiles" accept="image/*">
         </label>
+
         <br/><br/>
+
         <label>
             <strong>매장 사진</strong>
             <input type="file" name="storeImgFiles" accept="image/*">
@@ -134,28 +147,37 @@
             <input type="file" name="storeImgFiles" accept="image/*">
             <input type="file" name="storeImgFiles" accept="image/*">
         </label>
+
         <br/><br/>
+
         <label>
             <strong>매장 소개</strong>
             <textarea name="storeInfo" rows="5" cols="50" style="resize: none"></textarea>
         </label>
+
         <br/><br/>
+
         <label>
             <strong>해시태그</strong>
             <input type="text" name="hashtag">
         </label>
+
         <br/><br/>
+
         <strong>편의시설</strong>
         <br/>
         <div th:each="name, iterStat : ${amenitiesNameList}">
             <input type="checkbox" name="amenitiesNoList" th:value="${iterStat.index + 1}">
             <label th:text="${name}">편의시설 이름</label><br/>
         </div>
+
         <br/>
+
         <label>
             <strong>음식 카테고리</strong>
             <input type="text" name="foodCategoryId">
         </label>
+
         <br/><br/>
 
         <label>
@@ -169,51 +191,66 @@
             메뉴 사진
             <input type="file" name="menuList[0].menuImgFile" accept="image/*">
         </label>
+
         <br/>
+
         <label>
             메뉴 이름
             <input type="text" name="menuList[0].menuName">
         </label>
+
         <br/>
+
         <label>
             메뉴 가격
             <input type="number" name="menuList[0].menuPrice" value="0">
         </label>
+
         <br/>
+
         <label>
             메뉴 설명
             <textarea name="menuList[0].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
         </label>
-        <br/>
 
-        <br/>
+        <br/><br/>
+
         <label>
             <strong>메뉴2</strong>
             <input type="radio" name="specialMenuNo" value="2">
         </label>
         <input type="hidden" name="menuList[1].menuNo" value="2">
+
         <br/>
 
         <label>
             메뉴 사진
             <input type="file" name="menuList[1].menuImgFile">
         </label>
+
         <br/>
+
         <label>
             메뉴 이름
             <input type="text" name="menuList[1].menuName">
         </label>
+
         <br/>
+
         <label>
             메뉴 가격
             <input type="number" name="menuList[1].menuPrice" value="0">
         </label>
+
         <br/>
+
         <label>
             메뉴 설명
             <textarea name="menuList[1].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
         </label>
+
         <br/><br/><br/>
+
         <input type="submit" value="다음 단계">
 
     </form>

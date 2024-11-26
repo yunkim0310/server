@@ -17,7 +17,7 @@ public class Search {
 
     // Field
     // 검색어
-    private String searchKeyword;
+    private String searchKeyword = "";
     // 지역필터
     private List<String> regionList;
     // 가격 범위

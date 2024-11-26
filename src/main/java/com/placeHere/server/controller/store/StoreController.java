@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -48,7 +47,6 @@ public class StoreController {
 
         System.out.println("/store/addStore : GET");
 
-        model.addAttribute("userName", "user01");
         model.addAttribute("apiKey", apiKey);
         model.addAttribute("amenitiesNameList", amenitiesNameList);
 
@@ -60,21 +58,29 @@ public class StoreController {
 
         System.out.println("/store/addStore : POST");
 
-        model.addAttribute("userName", "user01");
-        model.addAttribute("storeId", 4);
-
         System.out.println(store);
+
+        int storeId = storeService.addStore(store);
+
+        model.addAttribute("userName", store.getUserName());
+        model.addAttribute("storeId", storeId);
 
         return "/test/store/addOperationTest";
     }
 
     @PostMapping("/addOperation")
-    public String addOperation(@ModelAttribute StoreOperation storeOperation) {
+    public String addOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
         System.out.println("/store/addOperation : POST");
 
         System.out.println(storeOperation);
 
-        return "redirect:/test/test";
+        storeService.addOperation(storeOperation);
+
+        Store store = storeService.getStore(storeOperation.getStoreId());
+
+        model.addAttribute("store", store);
+
+        return "/test/store/addStoreTestResult";
     }
 }
