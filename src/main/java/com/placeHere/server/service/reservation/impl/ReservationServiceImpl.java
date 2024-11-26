@@ -2,6 +2,7 @@ package com.placeHere.server.service.reservation.impl;
 
 import com.placeHere.server.dao.reservation.ReservationDao;
 import com.placeHere.server.domain.Reservation;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -65,14 +66,14 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 예약 목록 조회 일반 회원
-    public List<Map<String, Object>> getRsrvUserList(String userName) throws Exception {
-        return reservationDao.getRsrvUserList(userName);
+    public List<Reservation> getRsrvUserList(String userName, String searchKeyword, String sortOrder) throws Exception {
+        return reservationDao.getRsrvUserList(userName, searchKeyword, sortOrder);
     }
 
 
     // 예약 목록 조회 점주
-    public List<Map<String, Object>> getRsrvStoreList(int storeId) throws Exception {
-        return reservationDao.getRsrvStoreList(storeId);
+    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception {
+        return reservationDao.getRsrvStoreList(storeId, search);
     }
 
 

@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Date;
+import java.util.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -40,4 +40,6 @@ public class Search {
     private int listSize;
     private int startRowNum;
     private int endRowNum;
+    //예약 상태
+    private List<String> searchStatuses;
 }

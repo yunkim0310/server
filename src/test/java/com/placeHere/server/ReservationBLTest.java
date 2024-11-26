@@ -1,14 +1,16 @@
 package com.placeHere.server;
 
 import com.placeHere.server.domain.Reservation;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.sql.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -29,12 +31,10 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user3");
-        reservation.setRsrvStatus("전화 예약");
+        reservation.setUserName("user9");
+        reservation.setRsrvStatus("결제 중");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date customDate = sdf.parse("2024-11-29 21:30"); // 임의의 날짜 설정
-        reservation.setRsrvDt(customDate);
+        reservation.setRsrvDt(Timestamp.valueOf("2024-11-24 21:30:00"));
 
         reservation.setRsrvPerson(2);
         reservation.setAmount(10000);
@@ -47,7 +47,6 @@ public class ReservationBLTest {
         reservationService.addRsrv(reservation);
     }
 
-
     @Test
     public void addRsrvStore() throws Exception{
         Reservation reservation = new Reservation();
@@ -55,9 +54,7 @@ public class ReservationBLTest {
         reservation.setUserName("store1");
         reservation.setRsrvStatus("전화 예약");
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date customDate = sdf.parse("2024-11-29 21:30"); // 임의의 날짜 설정
-        reservation.setRsrvDt(customDate);
+        reservation.setRsrvDt(Timestamp.valueOf("2024-11-23 21:30:00"));
 
         reservation.setRsrvPerson(2);
         reservation.setRsrvReq(null);
@@ -73,8 +70,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 4; // 테스트용 예약 번호
-        String rsrvStatus = "전화 예약"; // 상태 업데이트 값
+        int rsrvNo = 22; // 테스트용 예약 번호
+        String rsrvStatus = "예약 확정"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);
@@ -141,16 +138,16 @@ public class ReservationBLTest {
 
     @Test
     public void testGetCountRsrv() throws Exception {
+        Reservation reservation = new Reservation();
         // Given: 테스트 데이터
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date targetDate = sdf.parse("2024-11-29 21:30:00");
-        int storeId = 1;
+        reservation.setRsrvDt(Timestamp.valueOf("2024-11-22 21:30:00"));
+        reservation.setStoreId(1);
 
         // When: 서비스 메서드 호출
-        reservationService.getCountRsrv(targetDate, storeId);
+        reservationService.getCountRsrv(reservation.getRsrvDt(), reservation.getStoreId());
 
         // Then: 결과 출력
-        System.out.println("2024-11-29 21:30:00 가게 번호 " + storeId + "의 총 예약 인원: " + reservationService.getCountRsrv(targetDate, storeId));
+        System.out.println(reservation.getStoreId() + "의 총 예약 인원: " + reservationService.getCountRsrv(reservation.getRsrvDt(), reservation.getStoreId()));
     }
 
 
@@ -159,9 +156,7 @@ public class ReservationBLTest {
 
         // Assert로 기대 값 검증 (예: 예상 값이 10명이라고 가정)
         // Assertions.assertEquals(10, totalPersons);
-
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date targetDate = sdf.parse("2024-11-29");
+        Date targetDate = Date.valueOf("2024-11-29");
         int storeId = 1;
 
         // When: 서비스 메서드 호출
@@ -228,31 +223,45 @@ public class ReservationBLTest {
 
     @Test
     public void testGetRsrvUserList() throws Exception {
-
+        // Given: 특정 유저와 검색 조건, 내림차순
         String userName = "user3";
-        // When: 어드민용 서비스 호출
-        List<Map<String, Object>> reservations = reservationService.getRsrvUserList(userName);
+        String searchKeyword = ""; // 기본 상태
+        String sortOrder = "desc";
+
+        // When: 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, searchKeyword, sortOrder);
 
         // Then: 결과 출력
-        for (Map<String, Object> reservation : reservations) {
-            System.out.println("User Reservation: " + reservation);
-        }
+        System.out.println("=== Reservations Sorted Descending ===");
+        reservations.forEach(System.out::println);
     }
 
 
     @Test
     public void testGetRsrvStoreList() throws Exception {
-
+        // Given: Reservation과 Search 객체 설정
         int storeId = 1;
-        // When: 어드민용 서비스 호출
-        List<Map<String, Object>> reservations = reservationService.getRsrvStoreList(storeId);
+
+        Search search = new Search();
+        search.setStartDate(Date.valueOf("2024-11-22")); // 검색 시작 날짜
+        search.setEndDate(Date.valueOf("2024-12-01"));   // 검색 종료 날짜
+
+        //search.setStartDate(null); // 검색 시작 날짜
+        //search.setEndDate(null);   // 검색 종료 날짜
+
+        //search.setSearchStatuses(List.of("예약 요청", "예약 확정", "예약 취소")); // 예약 상태 필터
+        search.setSearchStatuses(null); // 예약 상태 필터
+
+        // When: 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
         // Then: 결과 출력
-        for (Map<String, Object> reservation : reservations) {
-            System.out.println("Store Reservation: " + reservation);
-        }
+        System.out.println("=== Reservations with Reservation and Search ===");
+        reservations.forEach(System.out::println);
     }
-
-
-
 }
+
+
+
+
+

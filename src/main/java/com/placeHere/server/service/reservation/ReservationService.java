@@ -1,6 +1,7 @@
 package com.placeHere.server.service.reservation;
 
 import com.placeHere.server.domain.Reservation;
+import com.placeHere.server.domain.Search;
 
 import java.util.Date;
 import java.util.List;
@@ -30,10 +31,10 @@ public interface ReservationService {
     public List<Map<String, Object>> getRsrvList() throws Exception;
 
     // 예약 목록 조회 일반 회원
-    public List<Map<String, Object>> getRsrvUserList(String userName) throws Exception;
+    public List<Reservation> getRsrvUserList(String userName, String searchKeyword, String sortOrder) throws Exception;
 
     // 예약 목록 조회 점주 회원
-    public List<Map<String, Object>> getRsrvStoreList(int storeId) throws Exception;
+    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception;
 
     // 예약 일시(rsrsDate)의 예약 인수들의 합
     int getCountRsrv(Date rsrvDt, int storeId) throws Exception;
