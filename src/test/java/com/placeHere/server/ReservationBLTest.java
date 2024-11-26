@@ -210,18 +210,6 @@ public class ReservationBLTest {
 
 
     @Test
-    public void testGetRsrvList() throws Exception {
-        // When: 어드민용 서비스 호출
-        List<Map<String, Object>> reservations = reservationService.getRsrvList();
-
-        // Then: 결과 출력
-        for (Map<String, Object> reservation : reservations) {
-            System.out.println("Admin Reservation: " + reservation);
-        }
-    }
-
-
-    @Test
     public void testGetRsrvUserList() throws Exception {
         // Given: 특정 유저와 검색 조건, 내림차순
         String userName = "user3";
