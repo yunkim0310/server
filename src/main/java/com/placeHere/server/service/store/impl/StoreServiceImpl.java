@@ -46,7 +46,8 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            while (storeImgList.size() < 5) {
+            for (int i = 0; i < 5-storeImgList.size(); i++) {
+
                 storeImgList.add(null);
 
             }
@@ -143,7 +144,8 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            while (storeImgList.size() < 5) {
+            for (int i = 0; i < 5-storeImgList.size(); i++) {
+
                 storeImgList.add(null);
 
             }

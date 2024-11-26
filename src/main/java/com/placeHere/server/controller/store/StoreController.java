@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -68,6 +65,8 @@ public class StoreController {
         return "/test/store/addOperationTest";
     }
 
+
+    // 가게 운영 정보 등록
     @PostMapping("/addOperation")
     public String addOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
@@ -82,5 +81,59 @@ public class StoreController {
         model.addAttribute("store", store);
 
         return "/test/store/addStoreTestResult";
+    }
+
+
+    // 가게 기본 정보 수정
+    @GetMapping("/updateStore")
+    public String updateStore(@RequestParam("storeId") int storeId, Model model) {
+
+        System.out.println("/store/updateStore : GET");
+
+        Store store = storeService.getStore(storeId);
+
+        System.out.println(store);
+
+        model.addAttribute("store", store);
+
+        return "/test/store/updateStoreTest";
+    }
+
+    @PostMapping("/updateStore")
+    public String updateStore(@ModelAttribute Store store, Model model) {
+
+        System.out.println("/store/updateStore : POST");
+
+        System.out.println(store);
+
+        storeService.updateStore(store);
+
+        StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
+
+        System.out.println(storeOperation);
+
+        model.addAttribute("storeOperation", storeOperation);
+        model.addAttribute("userName", store.getUserName());
+        model.addAttribute("storeId", store.getStoreId());
+
+        return "/test/store/updateOperationTest";
+    }
+
+
+    // 가게 운영 정보 수정
+    @PostMapping("/updateOperation")
+    public String updateOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
+
+        System.out.println("/store/updateOperation : POST");
+
+        System.out.println(storeOperation);
+
+        storeService.updateOperation(storeOperation);
+
+        Store store = storeService.getStore(storeOperation.getStoreId());
+
+        model.addAttribute("store", store);
+
+        return "/test/store/updateStoreTestResult";
     }
 }

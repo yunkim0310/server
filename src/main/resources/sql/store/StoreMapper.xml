@@ -289,20 +289,20 @@
 
 
     <!-- 최신 가게 운영 조회 -->
-        <select id="getCurrOperation"
-                parameterType="int"
-                resultMap="StoreOperationResultMap">
+    <select id="getCurrOperation"
+            parameterType="int"
+            resultMap="StoreOperationResultMap">
 
-            SELECT
-                operation_id, store_id, open_time, close_time, break_time_start, break_time_end,
-                security, rsrv_limit, regular_closeday1, regular_closeday2, regular_closeday3,
-                effect_dt
-            FROM operation
-            WHERE store_id = #{storeId}
-            ORDER BY operation_id DESC
-            LIMIT 1
+        SELECT
+            operation_id, store_id, open_time, close_time, break_time_start, break_time_end,
+            security, rsrv_limit, regular_closeday1, regular_closeday2, regular_closeday3,
+            effect_dt
+        FROM operation
+        WHERE store_id = #{storeId}
+        ORDER BY operation_id DESC
+        LIMIT 1
 
-        </select>
+    </select>
 
     <!-- 매장 소식 등록 -->
     <insert id="addStoreNews" parameterType="com.placeHere.server.domain.StoreNews">
