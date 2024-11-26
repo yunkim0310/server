@@ -137,15 +137,6 @@
     </select>
 
 
-    <select id="getRsrvList" parameterType="Reservation" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
-        FROM reservation
-        WHERE rsrv_status &lt;&gt; '결제 중';
-
-    </select>
-
-
-
     <select id="getRsrvUserList" parameterType="Reservation" resultMap="ReservationResultMap">
         SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name
         FROM reservation
