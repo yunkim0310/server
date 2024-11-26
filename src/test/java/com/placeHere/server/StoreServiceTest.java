@@ -169,8 +169,8 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-//        Store store = storeService.getStore(13);
-        Store store = storeService.getStore(13, Date.valueOf("2024-12-10"));
+//        Store store = storeService.getStore(3);
+        Store store = storeService.getStore(2, Date.valueOf("2024-11-26"));
 
         System.out.println(store);
 
@@ -180,12 +180,14 @@ public class StoreServiceTest {
     public void getStoreList() {
 
         Search search = new Search();
-        search.setSearchKeyword("케밥");
+        search.setSearchKeyword("");
 
-//        List<String> regionList = new ArrayList<>(List.of("강남"));
-//        search.setRegionList(regionList);
+        List<String> regionList = new ArrayList<>(List.of("강남"));
+        search.setRegionList(regionList);
 
-        search.setAmenitiesNoList(List.of(1));
+        search.setFoodCategoryId("한식");
+
+//        search.setAmenitiesNoList(List.of(1));
 
 //        System.out.println(search);
 
@@ -248,7 +250,42 @@ public class StoreServiceTest {
 //
 //        System.out.println(calcRsrvPercentMap);
 
-        storeService.getStatistics(2);
+        storeService.getStatistics(1);
+
+    }
+
+    @Test
+    public void test() {
+
+        StoreOperation storeOperation = new StoreOperation();
+        storeOperation.setRegularClosedayList(new ArrayList<String>(List.of("월","금")));
+
+        List<String> regularClosedayList = (storeOperation.getRegularClosedayList() == null) ? new ArrayList<>() : storeOperation.getRegularClosedayList();
+        int regularClosedayCnt = regularClosedayList.size();
+
+        if (regularClosedayCnt < 3) {
+
+            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
+                regularClosedayList.add(null);
+            }
+
+        }
+
+        System.out.println(regularClosedayList);
+    }
+
+    @Test
+    public void updateOperation() {
+
+        StoreOperation storeOperation = new StoreOperation();
+        storeOperation.setStoreId(3);
+        storeOperation.setOpenTime("09:30");
+        storeOperation.setCloseTime("23:30");
+        storeOperation.setRegularClosedayList(null);
+        storeOperation.setSecurity(5000);
+        storeOperation.setRsrvLimit(30);
+
+        storeService.updateOperation(storeOperation);
 
     }
 

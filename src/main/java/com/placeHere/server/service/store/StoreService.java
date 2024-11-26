@@ -13,7 +13,7 @@ public interface StoreService {
     public int chkDuplicateBusinessNo(String businessNo);
 
     // 가게 등록 (return 되는 값은 store_id 의 값)
-    public void addStore(Store store);
+    public int addStore(Store store);
 
     // 가게 정보 조회 (특정 날짜)
     public Store getStore(int storeId, Date effectDt);

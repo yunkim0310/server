@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>addStoreTest</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        function checkDuplicateBusinessNo(businessNo) {
+            // 2148884534
+            var bNo = {"b_no": [businessNo]};
+            var apiKey = $("#apiKey").val();
+
+            $.ajax({
+                url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,  // serviceKey 값을 xxxxxx에 입력
+                type: "POST",
+                data: JSON.stringify(bNo), // json 을 string으로 변환하여 전송
+                dataType: "JSON",
+                contentType: "application/json",
+                accept: "application/json",
+                success: function(result) {
+                    console.log(result);
+
+                    let data = result.data[0];
+                    let duplicateResult = "";
+
+                    let bState = data.b_stt_cd;
+                    let taxType = data.tax_type_cd;
+
+                    console.log((bState === "")? "null":bState);
+                    console.log((taxType === "")? "null":taxType);
+
+
+                    if (bState !== "01") {
+                        duplicateResult = "휴업 또는 폐업상태입니다.";
+                    }
+
+                    if (taxType === "") {
+                        let a = data.tax_type;
+                        duplicateResult = a;
+                    }
+
+                    if (bState === "01" && taxType !== "") {
+                        duplicateResult = "사용가능한 사업자 번호입니다.";
+                    }
+
+                    $("#duplicateResult").text(duplicateResult);
+
+                },
+                error: function(result) {
+                    console.log(result.responseText); //responseText의 에러메세지 확인
+                }
+            });
+
+        }
+
+        $(function() {
+
+            $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
+
+
+
+            $("#checkDuplicate").on('click', function () {
+
+                let businessNo = $("input[name='businessNo']").val();
+
+                // RestController 에서 중복 확인
+                // $.ajax(
+                //     {
+                //         url: "/api/store/checkDuplicateBusinessNo/"+businessNo,
+                //         method: "GET",
+                //         dataType: "json",
+                //         headers: {
+                //             "Accept" : "application/json",
+                //             "Content-Type" : "application/json"
+                //         },
+                //         success : function (JSONData, status) {
+                //
+                //             console.log(JSONData);
+                //
+                //         }
+                //     }
+                // );
+
+                checkDuplicateBusinessNo(businessNo);
+
+            });
+
+        })
+
+    </script>
+</head>
+<body>
+
+
+    <h1>가게 등록 (가게 기본 정보)</h1>
+    <form>
+        <input type="hidden" id="apiKey" th:value="${apiKey}">
+        <p th:text="${apiKey}"></p>
+        <input type="hidden" name="userName" th:value="${userName}">
+        <label>
+            <strong>사업자 번호</strong>
+            <input type="text" name="businessNo">
+            <input type="button" id="checkDuplicate" value="등록 확인">
+            <p id="duplicateResult">&nbsp;</p>
+        </label>
+
+        <label>
+            <strong>매장명</strong>
+            <input type="text" name="storeName">
+        </label>
+        <br/><br/>
+        <label>
+            <strong>매장 주소</strong>
+            <input type="text" name="storeAddr">
+        </label>
+        <br/><br/>
+        <label>
+            <strong>매장 전화번호</strong>
+            <input type="text" name="storePhone">
+        </label>
+        <br/><br/>
+        <label>
+            <strong>매장 대표사진</strong>
+            <input type="file" name="storeImgFiles" accept="image/*">
+        </label>
+        <br/><br/>
+        <label>
+            <strong>매장 사진</strong>
+            <input type="file" name="storeImgFiles" accept="image/*">
+            <input type="file" name="storeImgFiles" accept="image/*">
+            <input type="file" name="storeImgFiles" accept="image/*">
+            <input type="file" name="storeImgFiles" accept="image/*">
+        </label>
+        <br/><br/>
+        <label>
+            <strong>매장 소개</strong>
+            <textarea name="storeInfo" rows="5" cols="50" style="resize: none"></textarea>
+        </label>
+        <br/><br/>
+        <label>
+            <strong>해시태그</strong>
+            <input type="text" name="hashtag">
+        </label>
+        <br/><br/>
+        <strong>편의시설</strong>
+        <br/>
+        <div th:each="name, iterStat : ${amenitiesNameList}">
+            <input type="checkbox" name="amenitiesNoList" th:value="${iterStat.index + 1}">
+            <label th:text="${name}">편의시설 이름</label><br/>
+        </div>
+        <br/>
+        <label>
+            <strong>음식 카테고리</strong>
+            <input type="text" name="foodCategoryId">
+        </label>
+        <br/><br/>
+
+        <label>
+            <strong>메뉴1</strong>
+            <input type="radio" name="specialMenuNo" value="1" checked>
+        </label>
+        <input type="hidden" name="menuList[0].menuNo" value="1">
+        <br/>
+
+        <label>
+            메뉴 사진
+            <input type="file" name="menuList[0].menuImgFile" accept="image/*">
+        </label>
+        <br/>
+        <label>
+            메뉴 이름
+            <input type="text" name="menuList[0].menuName">
+        </label>
+        <br/>
+        <label>
+            메뉴 가격
+            <input type="number" name="menuList[0].menuPrice" value="0">
+        </label>
+        <br/>
+        <label>
+            메뉴 설명
+            <textarea name="menuList[0].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
+        </label>
+        <br/>
+
+        <br/>
+        <label>
+            <strong>메뉴2</strong>
+            <input type="radio" name="specialMenuNo" value="2">
+        </label>
+        <input type="hidden" name="menuList[1].menuNo" value="2">
+        <br/>
+
+        <label>
+            메뉴 사진
+            <input type="file" name="menuList[1].menuImgFile">
+        </label>
+        <br/>
+        <label>
+            메뉴 이름
+            <input type="text" name="menuList[1].menuName">
+        </label>
+        <br/>
+        <label>
+            메뉴 가격
+            <input type="number" name="menuList[1].menuPrice" value="0">
+        </label>
+        <br/>
+        <label>
+            메뉴 설명
+            <textarea name="menuList[1].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
+        </label>
+        <br/><br/><br/>
+        <input type="submit" value="다음 단계">
+
+    </form>
+</body>
+</html>

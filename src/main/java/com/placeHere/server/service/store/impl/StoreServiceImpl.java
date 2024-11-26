@@ -4,7 +4,6 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -38,7 +37,7 @@ public class StoreServiceImpl implements StoreService {
 
     // 가게 등록 (return 되는 값은 store_id 의 값) TEST
     @Override
-    public void addStore(Store store) {
+    public int addStore(Store store) {
 
         System.out.println("\nStoreDao.addStore()");
 
@@ -67,6 +66,7 @@ public class StoreServiceImpl implements StoreService {
             storeDao.addAmenities(storeId, store.getAmenitiesNoList());
         }
 
+        return storeId;
     }
 
 
@@ -76,7 +76,11 @@ public class StoreServiceImpl implements StoreService {
 
         Store store = storeDao.getStore(storeId);
         StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
-        store.setStoreOperation(storeOperation);
+
+        List<String> regularClosedayList = new ArrayList<String>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
 
         List<String> storeImgList = new ArrayList<String>();
         storeImgList.add(store.getStoreImg1());
@@ -84,6 +88,9 @@ public class StoreServiceImpl implements StoreService {
         storeImgList.add(store.getStoreImg3());
         storeImgList.add(store.getStoreImg4());
         storeImgList.add(store.getStoreImg5());
+
+        storeOperation.setRegularClosedayList(regularClosedayList);
+        store.setStoreOperation(storeOperation);
         store.setStoreImgList(storeImgList);
 
         return store;
@@ -96,7 +103,11 @@ public class StoreServiceImpl implements StoreService {
 
         Store store = storeDao.getStore(storeId);
         StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
-        store.setStoreOperation(storeOperation);
+
+        List<String> regularClosedayList = new ArrayList<String>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
 
         List<String> storeImgList = new ArrayList<String>();
         storeImgList.add(store.getStoreImg1());
@@ -104,6 +115,9 @@ public class StoreServiceImpl implements StoreService {
         storeImgList.add(store.getStoreImg3());
         storeImgList.add(store.getStoreImg4());
         storeImgList.add(store.getStoreImg5());
+
+        storeOperation.setRegularClosedayList(regularClosedayList);
+        store.setStoreOperation(storeOperation);
         store.setStoreImgList(storeImgList);
 
         return store;

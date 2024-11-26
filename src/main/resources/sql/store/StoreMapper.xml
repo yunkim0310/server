@@ -133,8 +133,8 @@
                     </foreach>)
             </if>
 
-            <if test='foodCategoryId != null and !foodCategory.equals("")'>
-                AND food_category_id LIKE CONCAT(#{foodCategoryId},'%')
+            <if test='foodCategoryId != null and !foodCategoryId.equals("")'>
+                AND food_category_id LIKE CONCAT('%',#{foodCategoryId},'%')
             </if>
 
             <if test="hashtagList != null and !hashtagList.isEmpty()">
@@ -244,7 +244,12 @@
         VALUES
             (#{storeId}, #{openTime}, #{closeTime}, #{breakTimeStart}, #{breakTimeEnd},
              #{security}, #{rsrvLimit},
-             #{regularClosedayList[0]}, #{regularClosedayList[1]}, #{regularClosedayList[2]},
+             <if test="regularClosedayList != null and regularClosedayList.size() > 0">
+                #{regularClosedayList[0]}, #{regularClosedayList[1]}, #{regularClosedayList[2]},
+             </if>
+             <if test="regularClosedayList == null || regularClosedayList.size() == 0">
+                 NULL, NULL, NULL,
+             </if>
              #{effectDt})
 
     </insert>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>addOperationTest</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $("form").attr("action", "/store/addOperation").attr("method", "post");
+            
+            $("#breakTimeToggle").on("change", function () {
+
+                let isEnabled = this.checked;
+                $("#breakStart, #breakEnd").prop("disabled", !isEnabled);
+
+            })
+
+            $("#submit").on("click", function () {
+
+              $("form").submit();
+
+            })
+
+        });
+
+    </script>
+
+</head>
+<body>
+
+    <h1>가게 등록 (가게 운영 정보)</h1>
+
+    <form>
+
+      <input type="hidden" name="userName" th:value="${userName}">
+      <p th:text="${userName}"></p>
+      <input type="hidden" name="storeId" th:value="${storeId}">
+      <p th:text="${storeId}"></p>
+
+      <label>
+        <strong>오픈 시간</strong>
+        <input type="time" name="openTime">
+      </label>
+      <br/><br/>
+
+      <label>
+        <strong>마감 시간</strong>
+        <input type="time" name="closeTime">
+      </label>
+      <br/><br/>
+
+
+      <label for="breakTimeToggle">
+        <strong>브레이크 타임</strong>
+        <input type="checkbox" id="breakTimeToggle">
+      </label>
+
+      <div id="breakTimeInput">
+        <input type="time" id="breakStart" name="breakStart" disabled>
+        ~
+        <input type="time" id="breakEnd" name="breakEnd" disabled>
+      </div>
+      <br/>
+
+      <strong>정기 휴무요일</strong><br/>
+      <input type="checkbox" name="regularClosedayList" id="sun" value="일"><label for="sun">일&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="mon" value="월"><label for="mon">월&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="tue" value="화"><label for="tue">화&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="wed" value="수"><label for="wed">수&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="thu" value="목"><label for="thu">목&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="fri" value="금"><label for="fri">금&nbsp;</label>
+      <input type="checkbox" name="regularClosedayList" id="set" value="토"><label for="set">토&nbsp;</label>
+      <br/><br/>
+
+      <label>
+        <strong>예약 보증금</strong>
+        <select name="security">
+          <th:block th:each="amount : ${#numbers.sequence(5000, 10000, 1000)}">
+            <option th:value="${amount}" th:text="${amount} + '원'"></option>
+          </th:block>
+        </select>
+      </label>
+      <br/><br/>
+
+      <label>
+        <strong>예약 최대 인수 *</strong>
+        <select name="rsrvLimit">
+          <th:block th:each="amount : ${#numbers.sequence(10, 100)}">
+            <option th:value="${amount}" th:text="${amount} + '명'"></option>
+          </th:block>
+        </select>
+
+      </label>
+
+      <br/><br/><br/>
+      <button id="submit">등록 완료</button>
+
+    </form>
+
+</body>
+</html>

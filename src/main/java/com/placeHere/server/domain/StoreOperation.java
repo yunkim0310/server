@@ -22,12 +22,12 @@ public class StoreOperation {
     // 가게 ID (FK)
     private int storeId;
     // 오픈 시간
-    private Time openTime;
+    private String openTime;
     // 마감 시간
-    private Time closeTime;
+    private String closeTime;
     // 브레이크 타임
-    private Time breakTimeStart;
-    private Time breakTimeEnd;
+    private String breakTimeStart;
+    private String breakTimeEnd;
     // 정기 휴무요일(최대3개)
     private List<String> regularClosedayList;
     private String regularCloseday1;
@@ -45,15 +45,14 @@ public class StoreOperation {
 
     // Method
     public void setRegularClosedayList(List<String> regularClosedayList) {
-        
+
         // 정기 휴무요일이 3개가 아니면 List 의 남는 부분을 null 로 넣게끔함
         regularClosedayList = (regularClosedayList == null) ? new ArrayList<>() : regularClosedayList;
         int regularClosedayCnt = regularClosedayList.size();
 
         if (regularClosedayCnt < 3) {
 
-            while (regularClosedayCnt < 3) {
-
+            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
                 regularClosedayList.add(null);
             }
 
@@ -61,4 +60,5 @@ public class StoreOperation {
 
         this.regularClosedayList = regularClosedayList;
     }
+
 }
