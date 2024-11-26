@@ -59,12 +59,6 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-    // 예약 목록 조회 어드민
-    public List<Map<String, Object>> getRsrvList() throws Exception {
-        return reservationDao.getRsrvList();
-    }
-
-
     // 예약 목록 조회 일반 회원
     public List<Reservation> getRsrvUserList(String userName, String searchKeyword, String sortOrder) throws Exception {
         return reservationDao.getRsrvUserList(userName, searchKeyword, sortOrder);
@@ -77,7 +71,7 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-    // 예약 일시(rsrsDate)의 예약 인수들의 합 미완
+    // 예약 일시(rsrsDate)의 예약 인수들의 합
     public int getCountRsrv(Date rsrvDt, int storeId) throws Exception {
         // Map으로 파라미터 생성
         Map<String, Object> params = new HashMap<>();
@@ -98,12 +92,6 @@ public class ReservationServiceImpl implements ReservationService{
 
         // DAO 호출하여 결과 반환
         return reservationDao.getCountDayRsrv(params);
-    }
-
-
-    // 예약 검색(예약 상태, 예약 날짜) 미완
-    public void searchRsrv(int rsrvNo, String reason) throws Exception {
-        reservationDao.searchRsrv(rsrvNo, reason);
     }
 
 
