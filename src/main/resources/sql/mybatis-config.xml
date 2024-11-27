@@ -37,6 +37,7 @@
         <mapper resource="sql/purchase/PurchaseMapper.xml"/>
 		<mapper resource="sql/reservation/ReservationMapper.xml"/>
 		<mapper resource="sql/community/CommunityMapper.xml"/>
+		<mapper resource="sql/point/PointMapper.xml"/>
 	</mappers>
 
 </configuration>
