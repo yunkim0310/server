@@ -41,6 +41,8 @@ public class Search {
     private int startRowNum;
     //예약 상태
     private List<String> searchStatuses;
+    // 정렬 기준 (ASC, DESC)
+    private String order;
 
 
     // Constructor
