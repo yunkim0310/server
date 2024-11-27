@@ -28,7 +28,17 @@
 
     <select id="getProduct"	parameterType="int"	resultMap="productSelectMap">
         SELECT
-            prod_no , prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no ,prod_category_name, reg_dt
+            prod_no ,
+            prod_name ,
+            prod_detail ,
+            prod_price ,
+            prod_status ,
+            prod_img1,
+            prod_img2,
+            prod_img3,
+            prod_category_no ,
+            prod_category_name,
+            reg_dt
         FROM product
         WHERE prod_no = #{prodNo}
     </select>
@@ -56,29 +66,29 @@
     <select id="getProductList" parameterType="com.placeHere.server.domain.Search" resultMap="productSelectMap">
         SELECT prod_no, prod_name, prod_price, prod_status, prod_img1
         FROM product
-        WHERE prod_name LIKE CONCAT('%',#{searchKeyword},'%')
-<!--        <if test="searchCondition != null">-->
-<!--            <where>-->
-<!--&#45;&#45;                 <if test="searchKeyword != null and searchKeyword != ''">-->
-<!--                    prod_name LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--&#45;&#45;                 </if>-->
-<!--                <if test="priceMin != 0">-->
-<!--                    AND prod_price &gt;= #{priceMin:INTEGER}-->
-<!--                </if>-->
-<!--                <if test="priceMax != 0">-->
-<!--                    AND prod_price &lt;= #{priceMax:INTEGER}-->
-<!--                </if>-->
-<!--            </where>-->
-<!--        </if>-->
-<!--        <if test="sortOrder == 'asc'">-->
-<!--            ORDER BY prod_price ASC-->
-<!--        </if>-->
-<!--        <if test="sortOrder == 'desc'">-->
-<!--            ORDER BY prod_price DESC-->
-<!--        </if>-->
-<!--        <if test="sortOrder == null">-->
-<!--            ORDER BY prod_no-->
-<!--        </if>-->
+#         WHERE prod_name LIKE CONCAT('%',#{searchKeyword},'%')
+        <if test="search.searchCondition != null">
+            <where>
+                 <if test="search.searchKeyword != null and search.searchKeyword != ''">
+                    prod_name LIKE CONCAT('%',#{searchKeyword},'%')
+                 </if>
+                <if test="search.priceMin != 0">
+                    AND prod_price &gt;= #{priceMin:INTEGER}
+                </if>
+                <if test="search.priceMax != 0">
+                    AND prod_price &lt;= #{priceMax:INTEGER}
+                </if>
+            </where>
+        </if>
+        <if test="search.order == 'asc'">
+            ORDER BY prod_price ASC
+        </if>
+        <if test="search.order == 'desc'">
+            ORDER BY prod_price DESC
+        </if>
+        <if test="search.order == null">
+            ORDER BY prod_category_no
+        </if>
         ORDER BY prod_no
     </select>
 
