@@ -245,9 +245,9 @@ public class StoreServiceImpl implements StoreService {
 
     // 매장 소식 목록 조회 TEST
     @Override
-    public List<StoreNews> getStoreNewsList(int storeId) {
+    public List<StoreNews> getStoreNewsList(int storeId, Search search) {
 
-        List<StoreNews> storeNewsList = storeDao.getStoreNewsList(storeId);
+        List<StoreNews> storeNewsList = storeDao.getStoreNewsList(storeId, search);
 
         return storeNewsList;
     }

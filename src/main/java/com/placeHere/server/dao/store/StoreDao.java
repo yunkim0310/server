@@ -29,31 +29,31 @@ public interface StoreDao {
     public List<Store> getStoreList(Search search);
 
     // 가게 수정
-    public int updateStore(Store store);
+    public void updateStore(Store store);
 
     // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
-    public int removeStore(int storeId);
+    public void removeStore(int storeId);
 
     // 편의시설 등록 (편의시설이 없으면 등록X)
-    public int addAmenities(@Param("storeId") int storeId, @Param("amenitiesNoList") List<Integer> amenitiesNoList);
+    public void addAmenities(@Param("storeId") int storeId, @Param("amenitiesNoList") List<Integer> amenitiesNoList);
 
     // 편의시설 목록 조회
     public List<Integer> getAmenitiesList(int storeId);
 
     // 편의시설 삭제 (통채로 삭제후 다시 등록)
-    public int removeAmenities(int storeId);
+    public void removeAmenities(int storeId);
 
     // 메뉴 등록
-    public int addMenu(@Param("storeId") int storeId, @Param("menuList") List<Menu> menuList);
+    public void addMenu(@Param("storeId") int storeId, @Param("menuList") List<Menu> menuList);
 
     // 메뉴 목록 조회
     public List<Menu> getMenuList(int storeId);
 
     // 메뉴 삭제 (통채로 삭제후 다시 등록)
-    public int removeMenu(int storeId);
+    public void removeMenu(int storeId);
 
     // 가게 운영 등록 TEST
-    public int addOperation(StoreOperation storeOperation);
+    public void addOperation(StoreOperation storeOperation);
 
     // 가게 운영 조회 (가게의 해당 날짜에 적용되고 있는 가게 운영 정보를 조회한다. 예약할때 사용 - Rest)
     public StoreOperation getOperationByDt(@Param("storeId") int storeId, @Param("effectDt") Date effectDt);
@@ -62,19 +62,19 @@ public interface StoreDao {
     public StoreOperation getCurrOperation(int storeId);
 
     // 매장 소식 등록 TEST
-    public int addStoreNews(StoreNews storeNews);
+    public void addStoreNews(StoreNews storeNews);
 
     // 매장 소식 목록 조회 TEST
-    public List<StoreNews> getStoreNewsList(int storeId);
+    public List<StoreNews> getStoreNewsList(@Param("storeId") int storeId, @Param("search") Search search);
 
     // 매장 소식 수정 TEST
-    public int updateStoreNews(StoreNews storeNews);
+    public void updateStoreNews(StoreNews storeNews);
 
     // 매장 소식 삭제 (DELETE) TEST
-    public int removeStoreNews(int newsId);
+    public void removeStoreNews(int newsId);
 
     // 휴무일 등록 TEST
-    public int addCloseday(@Param("storeId") int storeId, @Param("closeday") Date closeday);
+    public void addCloseday(@Param("storeId") int storeId, @Param("closeday") Date closeday);
 
     // 휴무일 목록 조회 TEST
     public List<Date> getClosedayListBySearch(@Param("storeId") int storeId, @Param("search") Search search);
@@ -83,7 +83,7 @@ public interface StoreDao {
     public List<Date> getClosedayList(int storeId);
 
     // 휴무일 삭제 (DELETE) TEST
-    public int removeCloseday(int closedayId);
+    public void removeCloseday(int closedayId);
 
     // 금주 요일별 예약횟수
     public List<Integer> cntWeekRsrv(int storeId);

@@ -46,7 +46,7 @@ public interface StoreService {
     public void addStoreNews(StoreNews storeNews);
 
     // 매장 소식 목록 조회
-    public List<StoreNews> getStoreNewsList(int storeId);
+    public List<StoreNews> getStoreNewsList(int storeId, Search search);
 
     // 매장 소식 수정
     public void updateStoreNews(StoreNews storeNews);

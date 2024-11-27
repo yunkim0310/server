@@ -1,15 +1,13 @@
 package com.placeHere.server;
 
 import com.placeHere.server.dao.store.StoreDao;
-import com.placeHere.server.domain.Menu;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.Store;
-import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
@@ -26,6 +24,9 @@ public class StoreServiceTest {
 
     @Autowired
     private StoreDao storeDao;
+
+    @Value("${list_size}")
+    private int listSize;
 
 //    @Test
     public void testAddStore() {
@@ -180,12 +181,13 @@ public class StoreServiceTest {
     public void getStoreList() {
 
         Search search = new Search();
+        search.setListSize(listSize);
         search.setSearchKeyword("");
 
 //        List<String> regionList = new ArrayList<>(List.of("강남"));
 //        search.setRegionList(regionList);
 
-        search.setFoodCategoryId("한식");
+//        search.setFoodCategoryId("한식");
 
 //        search.setAmenitiesNoList(List.of(1));
 
@@ -290,8 +292,23 @@ public class StoreServiceTest {
     }
 
     @Test
-    public void addMenu() {
+    public void pagingTest() {
 
+//        System.out.println(listSize);
+        Search search = new Search();
+        search.setListSize(listSize);
+
+        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1, search);
+
+//        System.out.println(storeNewsList.size());
+//        System.out.println(storeNewsList);
+
+        List<Date> closedayList = storeService.getClosedayList(1, search);
+
+//        System.out.println(closedayList.size());
+//        System.out.println(closedayList);
+
+        System.out.println(storeDao.getClosedayList(1));
 
     }
 
