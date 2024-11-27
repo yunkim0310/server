@@ -49,7 +49,7 @@ public class ProductServiceTest {
         Assertions.assertEquals("123abcdefghijk.jpg", product.getProdImg3());
         Assertions.assertEquals(1, product.getProdCateNo());
         Assertions.assertEquals("배달 상품권", product.getProdCateName());
-        Assertions.assertEquals(Date.valueOf("2024-11-25"), product.getRegDt());
+        Assertions.assertEquals(Date.valueOf("2024-11-21"), product.getRegDt());
 
         System.out.println("1234"+product);
 
@@ -61,14 +61,14 @@ public class ProductServiceTest {
         Product product = productService.getProduct(13);
 //        Assertions.assertNotNull(product);
         Assertions.assertEquals(13, product.getProdNo());
-        Assertions.assertEquals("배달 상품권", product.getProdName());
-        Assertions.assertEquals("ddd", product.getProdDetail());
-        Assertions.assertEquals(111111, product.getProdPrice());
+        Assertions.assertEquals("도미노 피자 슈퍼슈프림 쿠폰", product.getProdName());
+        Assertions.assertEquals("도미노 피자 슈퍼슈프림 쿠폰입니다.", product.getProdDetail());
+        Assertions.assertEquals(20000, product.getProdPrice());
         Assertions.assertEquals("abcdefghijk.jpg", product.getProdImg1());
         Assertions.assertEquals("111abcdefghijk.jpg", product.getProdImg2());
         Assertions.assertEquals("123abcdefghijk.jpg", product.getProdImg3());
-        Assertions.assertEquals(1, product.getProdCateNo());
-        Assertions.assertEquals("배달 상품권", product.getProdCateName());
+        Assertions.assertEquals(6, product.getProdCateNo());
+        Assertions.assertEquals("버거/피자", product.getProdCateName());
         Assertions.assertEquals(Date.valueOf("2024-11-25"), product.getRegDt());
 
         System.out.println("getProduct : " + product);
