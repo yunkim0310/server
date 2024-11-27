@@ -21,8 +21,8 @@ public interface ProductService {
     // 상품 수정
     public void updateProduct(Product product) throws Exception;
 
-//    // 자동 입력
-//    public List<String> getAutocomplete(String prodName) throws Exception;
+    // 자동 입력
+    public List<String> getAutocomplete(String prodName) throws Exception;
 
 //    // 상품 검색
 //    public void searchProduct(Search search) throws Exception;

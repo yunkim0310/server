@@ -62,6 +62,12 @@ public class ProductServiceImpl implements ProductService{
 
     }
 
+    public List<String> getAutocomplete(String prodName) throws Exception{
+        List<String> list = productDao.getAutocomplete("%"+prodName+"%");
+
+        return list;
+    }
+
 //    // 상품 검색
 //    public void searchProduct(Search search) throws Exception{
 //

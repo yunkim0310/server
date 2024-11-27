@@ -116,10 +116,10 @@ public class PurchaseServiceTest {
 
 //    @Transactional
 //    @Test
-    public void testRemoveCart() throws Exception {
+    public void testRemoveWishCart() throws Exception {
         int wishCartNo = 10003;
 
-        purchaseService.removeCart(wishCartNo);
+        purchaseService.removeWishCart(wishCartNo);
 
         System.out.println("Remove cart : " + wishCartNo);
     }
@@ -149,14 +149,14 @@ public class PurchaseServiceTest {
         System.out.println("WishList : " + wishList);
     }
 
-//    @Test
-    public void testRemoveWish() throws Exception {
-        int wishCartNo = 10005;
-
-        purchaseService.removeWish(wishCartNo);
-
-        System.out.println("Remove Wish : " + wishCartNo);
-
-    }
+////    @Test 찜/장바구니 합쳐짐
+//    public void testRemoveWish() throws Exception {
+//        int wishCartNo = 10005;
+//
+//        purchaseService.removeWish(wishCartNo);
+//
+//        System.out.println("Remove Wish : " + wishCartNo);
+//
+//    }
 
 }
