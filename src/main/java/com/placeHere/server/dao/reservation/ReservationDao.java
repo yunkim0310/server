@@ -32,7 +32,7 @@ public interface ReservationDao {
     public void updateRsrvReason(int rsrvNo, String reason) throws Exception;
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, String searchKeyword, String sortOrder) throws Exception;
+    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception;
 
     // 예약 목록 조회 점주 회원
     public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception;

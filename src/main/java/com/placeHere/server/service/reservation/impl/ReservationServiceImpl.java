@@ -60,8 +60,8 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, String searchKeyword, String sortOrder) throws Exception {
-        return reservationDao.getRsrvUserList(userName, searchKeyword, sortOrder);
+    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception {
+        return reservationDao.getRsrvUserList(userName, search);
     }
 
 

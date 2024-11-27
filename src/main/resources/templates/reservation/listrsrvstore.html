@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Store Reservation List</title>
+</head>
+<body>
+<h1>Store Reservation List</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Reservation Number</th>
+        <th>Status</th>
+        <th>Reservation Date</th>
+        <th>Person Count</th>
+        <th>Rsrv PhoneNumber</th>
+        <th>requeset</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.rsrvNo}">[예약 번호]</td>
+        <td th:text="${reservation.rsrvStatus}">[예약 상태]</td>
+        <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy-MM-dd HH:mm:ss')}">[예약 일시]</td>
+        <td th:text="${reservation.rsrvPerson}">[예약 인원]</td>
+        <td th:text="${reservation.rsrvNumber}">[전화 번호]</td>
+        <td th:text="${reservation.rsrvReq}">[요청 사항]</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -31,14 +31,14 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user9");
+        reservation.setUserName("user10");
         reservation.setRsrvStatus("결제 중");
 
-        reservation.setRsrvDt(Timestamp.valueOf("2024-11-24 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-01 21:30:00"));
 
         reservation.setRsrvPerson(2);
         reservation.setAmount(10000);
-        reservation.setRsrvReq(null);
+        reservation.setRsrvReq("짬뽕 맛있게 만들어 주세요");
         reservation.setStoreName("보배 반점");
         reservation.setStoreAddr("서울 강남구");
         reservation.setRsrvNumber("01056484822");
@@ -70,7 +70,7 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 22; // 테스트용 예약 번호
+        int rsrvNo = 23; // 테스트용 예약 번호
         String rsrvStatus = "예약 확정"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
@@ -213,11 +213,18 @@ public class ReservationBLTest {
     public void testGetRsrvUserList() throws Exception {
         // Given: 특정 유저와 검색 조건, 내림차순
         String userName = "user3";
-        String searchKeyword = ""; // 기본 상태
-        String sortOrder = "desc";
+        Search search = new Search();
+
+        //기본 상태
+//        search.setSearchKeyword(null);
+//        search.setOrder(null);
+
+        //조건 설정
+        search.setSearchKeyword("예약 확정");
+        search.setOrder("desc");
 
         // When: 서비스 호출
-        List<Reservation> reservations = reservationService.getRsrvUserList(userName, searchKeyword, sortOrder);
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         // Then: 결과 출력
         System.out.println("=== Reservations Sorted Descending ===");

@@ -137,23 +137,27 @@
     </select>
 
 
-    <select id="getRsrvUserList" parameterType="Reservation" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name
+
+    <select id="getRsrvUserList" resultMap="ReservationResultMap">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
         FROM reservation
         <where>
-            AND user_name = #{userName} <!-- 특정 유저 예약 -->
-            <if test="searchKeyword == null or searchKeyword == ''">
+            user_name = #{userName} <!-- 특정 유저 예약 -->
+            <if test="search.searchKeyword == null or search.searchKeyword == ''">
                 AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '예약 취소', '예약 거절')
             </if>
-            <if test="searchKeyword != null and searchKeyword != ''">
-                AND rsrv_status = #{searchKeyword}
+            <if test="search.searchKeyword != null and search.searchKeyword != ''">
+                AND rsrv_status = #{search.searchKeyword}
             </if>
         </where>
         ORDER BY
-        <if test="sortOrder == 'asc'">
+        <if test="search.order == null or search.order == ''">
             rsrv_no ASC <!-- 오름차순 -->
         </if>
-        <if test="sortOrder == 'desc'">
+        <if test="search.order == 'asc'">
+            rsrv_no ASC <!-- 오름차순 -->
+        </if>
+        <if test="search.order == 'desc'">
             rsrv_no DESC <!-- 내림차순 -->
         </if>
     </select>
@@ -167,17 +171,17 @@
 
             <!-- 기본 조건: 예약 일시가 현재 이후 -->
             <if test="search.startDate == null and search.endDate == null">
-                AND rsrv_dt >= CURRENT_DATE
+                AND DATE(rsrv_dt) >= CURRENT_DATE
             </if>
 
             <!-- 시작 날짜 조건 -->
             <if test="search.startDate != null">
-                AND rsrv_dt >= #{search.startDate}
+                AND DATE(rsrv_dt) >= #{search.startDate}
             </if>
 
             <!-- 종료 날짜 조건 -->
             <if test="search.endDate != null">
-                AND rsrv_dt &lt;= #{search.endDate}
+                AND DATE(rsrv_dt) &lt;= #{search.endDate}
             </if>
 
             <!-- 예약 상태 필터 -->

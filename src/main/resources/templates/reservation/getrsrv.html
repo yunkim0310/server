@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Details</title>
+</head>
+<body>
+<h1>Reservation Details</h1>
+
+<!-- 예약 정보 출력 -->
+<p>Reservation Number: <span th:text="${reservation.rsrvNo}">[예약 번호]</span></p>
+<p>Store ID: <span th:text="${reservation.storeId}">[가게 ID]</span></p>
+<p>User Name: <span th:text="${reservation.userName}">[사용자 이름]</span></p>
+<p>Status: <span th:text="${reservation.rsrvStatus}">[예약 상태]</span></p>
+<p>Reservation Date: <span th:text="${#dates.format(reservation.rsrvDt, 'yyyy-MM-dd HH:mm:ss')}">[예약 일시]</span></p>
+<p>Person Count: <span th:text="${reservation.rsrvPerson}">[예약 인원]</span></p>
+<p>Store Name: <span th:text="${reservation.storeName}">[가게 이름]</span></p>
+<p>Store Addr: <span th:text="${reservation.storeAddr}">[가게 이름]</span></p>
+<p>Request: <span th:text="${reservation.rsrvReq}">[요청 사항]</span></p>
+
+</body>
+</html>
