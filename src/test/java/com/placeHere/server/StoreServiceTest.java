@@ -28,7 +28,14 @@ public class StoreServiceTest {
     @Value("${list_size}")
     private int listSize;
 
-//    @Test
+    @Value("${food-category.main-category}")
+    private List<String> mainCategory;
+
+    @Value("${food-category.sub-category}")
+    private List<String> subCategory;
+
+
+    //    @Test
     public void testAddStore() {
 
         Store store = new Store();
@@ -182,7 +189,7 @@ public class StoreServiceTest {
 
         Search search = new Search();
         search.setListSize(listSize);
-        search.setSearchKeyword("");
+        search.setSearchKeyword("감자탕");
 
 //        List<String> regionList = new ArrayList<>(List.of("강남"));
 //        search.setRegionList(regionList);
@@ -310,6 +317,20 @@ public class StoreServiceTest {
 
         System.out.println(storeDao.getClosedayList(1));
 
+    }
+
+    @Test
+    public void getStoreId() {
+
+        System.out.println(storeService.getStoreId("store08"));
+    }
+
+    @Test
+    public void foodCategory() {
+
+        System.out.println(mainCategory);
+        System.out.println(subCategory);
+        System.out.println(subCategory.size());
     }
 
 }

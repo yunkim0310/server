@@ -35,6 +35,13 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
+    // 가게 Id 조회
+    public int getStoreId(String userName) {
+
+        return storeDao.getStoreId(userName);
+    }
+
+
     // 가게 등록 (return 되는 값은 store_id 의 값) TEST
     @Override
     public int addStore(Store store) {
@@ -59,7 +66,7 @@ public class StoreServiceImpl implements StoreService {
 
         // INSERT 되는 TABLE : store, amenities, menu
         storeDao.addStore(store);
-        int storeId = storeDao.getStoreId(store.getBusinessNo());
+        int storeId = storeDao.getStoreId(store.getUserName());
         System.out.println("\tstoreId= "+storeId);
         storeDao.addMenu(storeId, store.getMenuList());
 

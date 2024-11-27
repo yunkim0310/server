@@ -1,5 +1,6 @@
 package com.placeHere.server.controller.store;
 
+import com.placeHere.server.domain.FoodCategory;
 import com.placeHere.server.domain.Store;
 import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.service.store.StoreService;
@@ -39,15 +40,26 @@ public class StoreController {
 
     // Method
     // 가게 기본 정보 등록
-    @GetMapping("/addStore")
-    public String addStore(Model model) {
+    @GetMapping(value="/addStore", params = "userName")
+    public String addStore(@RequestParam("userName") String userName, Model model) {
 
         System.out.println("/store/addStore : GET");
 
-        model.addAttribute("apiKey", apiKey);
-        model.addAttribute("amenitiesNameList", amenitiesNameList);
+        if (storeService.getStoreId(userName) != 0) {
 
-        return "/test/store/addStoreTest";
+            // 이미 등록된 가게가 있을시 어디로 보낼지 고민 TODO
+            return null;
+        }
+
+        else {
+
+            model.addAttribute("foodCategory", new FoodCategory());
+            model.addAttribute("userName", userName);
+            model.addAttribute("apiKey", apiKey);
+            model.addAttribute("amenitiesNameList", amenitiesNameList);
+
+            return "/test/store/addStoreTest";
+        }
     }
 
     @PostMapping("/addStore")
@@ -85,10 +97,19 @@ public class StoreController {
 
 
     // 가게 기본 정보 수정
-    @GetMapping("/updateStore")
-    public String updateStore(@RequestParam("storeId") int storeId, Model model) {
+    @GetMapping(value = "/updateStore", params = "userName")
+    public String updateStore(@RequestParam("userName") String userName, Model model) {
 
         System.out.println("/store/updateStore : GET");
+
+        int storeId = storeService.getStoreId(userName);
+
+        if (storeId == 0) {
+
+            return null;
+        }
+
+        else {
 
         Store store = storeService.getStore(storeId);
 
@@ -97,6 +118,8 @@ public class StoreController {
         model.addAttribute("store", store);
 
         return "/test/store/updateStoreTest";
+        }
+
     }
 
     @PostMapping("/updateStore")
@@ -135,5 +158,15 @@ public class StoreController {
         model.addAttribute("store", store);
 
         return "/test/store/updateStoreTestResult";
+    }
+
+
+    // 매장 소식 목록 조회
+    @GetMapping
+    public String getStoreNewsList() {
+
+        System.out.println("/store/getStoreNewsList : GET");
+
+        return null;
     }
 }

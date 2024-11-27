@@ -238,8 +238,8 @@ public class ReservationBLTest {
         int storeId = 1;
 
         Search search = new Search();
-        search.setStartDate(Date.valueOf("2024-11-22")); // 검색 시작 날짜
-        search.setEndDate(Date.valueOf("2024-12-01"));   // 검색 종료 날짜
+        search.setStartDate("2024-11-22"); // 검색 시작 날짜
+        search.setEndDate("2024-12-01");   // 검색 종료 날짜
 
         //search.setStartDate(null); // 검색 시작 날짜
         //search.setEndDate(null);   // 검색 종료 날짜

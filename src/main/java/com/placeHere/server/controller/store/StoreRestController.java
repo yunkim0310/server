@@ -24,6 +24,7 @@ public class StoreRestController {
     // 사업자 번호 중복 확인
     @GetMapping("/chkDuplicateBusinessNo")
     public ResponseEntity<Boolean> chkDuplicateBusinessNo(@RequestParam("businessNo") String businessNo) {
+
         System.out.println("/api-store/chkDuplicateBusinessNo/" + businessNo);
 
         int count = storeService.chkDuplicateBusinessNo(businessNo);
@@ -33,5 +34,23 @@ public class StoreRestController {
     }
 
 
+    // 가게 좋아요 추가
+    @GetMapping("/addLikeStore")
+    public ResponseEntity<Boolean> addLikeStore(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/addLikeStore/" + storeId);
+
+        return null;
+    }
+
+
+    // 가게 좋아요 취소
+    @GetMapping("/removeLikeStore")
+    public ResponseEntity<Boolean> removeLikeStore(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/removeLikeStore/" + storeId);
+
+        return null;
+    }
 
 }

@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 //import org.apache.ibatis.annotations.Mapper;
@@ -20,7 +21,7 @@ public interface StoreDao {
     public int addStore(Store store);
 
     // 가게 Id 조회
-    public int getStoreId(String businessNo);
+    public int getStoreId(String userName);
 
     // 가게 정보 조회
     public Store getStore(int storeId);
