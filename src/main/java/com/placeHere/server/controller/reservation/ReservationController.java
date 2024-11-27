@@ -21,9 +21,6 @@ import java.util.List;
 public class ReservationController {
 
     @Autowired
-    @Qualifier("productServiceImpl")
-    private ProductService productService;
-    @Autowired
     private ReservationService reservationService;
 
     public ReservationController(){
