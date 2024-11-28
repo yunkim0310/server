@@ -75,13 +75,13 @@ public interface StoreDao {
     public void removeStoreNews(int newsId);
 
     // 휴무일 등록 TEST
-    public void addCloseday(@Param("storeId") int storeId, @Param("closeday") Date closeday);
+    public void addCloseday(Closeday closeday);
 
     // 휴무일 목록 조회 TEST
-    public List<Date> getClosedayListBySearch(@Param("storeId") int storeId, @Param("search") Search search);
+    public List<Closeday> getClosedayListBySearch(@Param("storeId") int storeId, @Param("search") Search search);
 
     // 휴무일 목록 조회 (오늘~14일후)
-    public List<Date> getClosedayList(int storeId);
+    public List<String> getClosedayList(int storeId);
 
     // 휴무일 삭제 (DELETE) TEST
     public void removeCloseday(int closedayId);

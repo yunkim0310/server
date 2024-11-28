@@ -28,11 +28,45 @@ public class StoreServiceTest {
     @Value("${list_size}")
     private int listSize;
 
-    @Value("${food-category.main-category}")
-    private List<String> mainCategory;
+    @Value("${page_size}")
+    private int pageSize;
 
-    @Value("${food-category.sub-category}")
-    private List<String> subCategory;
+
+    @Test
+    public void removeStoreNews() {
+
+        storeService.removeStoreNews(13);
+
+        StoreNews storeNews = new StoreNews();
+        storeNews.setStoreId(1);
+        storeNews.setNewsContents("보배반점 인스타 행사중~");
+
+        Search search = new Search(pageSize, listSize);
+
+//        storeService.addStoreNews(storeNews);
+
+        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1,search);
+        System.out.println(storeNewsList.size());
+        System.out.println(storeNewsList);
+
+    }
+
+    @Test
+    public void addStoreNews() {
+
+        StoreNews storeNews = new StoreNews();
+        storeNews.setStoreId(1);
+        storeNews.setNewsContents("보배반점 인스타 행사중~");
+
+        Search search = new Search(pageSize, listSize);
+
+        storeService.addStoreNews(storeNews);
+
+        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1,search);
+        System.out.println(storeNewsList.size());
+        System.out.println(storeNewsList);
+
+    }
 
 
     //    @Test
@@ -177,7 +211,7 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-        Store store = storeService.getStore(2);
+        Store store = storeService.getStore(1);
 //        Store store = storeService.getStore(1, Date.valueOf("2024-11-26"));
 
         System.out.println(store);
@@ -302,20 +336,21 @@ public class StoreServiceTest {
     public void pagingTest() {
 
 //        System.out.println(listSize);
-        Search search = new Search();
-        search.setListSize(listSize);
+        Search search = new Search(pageSize, listSize);
 
-        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1, search);
-
+//        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1, search);
+//
 //        System.out.println(storeNewsList.size());
 //        System.out.println(storeNewsList);
 
-        List<Date> closedayList = storeService.getClosedayList(1, search);
+//        System.out.println(search);
 
-//        System.out.println(closedayList.size());
-//        System.out.println(closedayList);
+        List<Closeday> closedayList = storeService.getClosedayList(1, search);
 
-        System.out.println(storeDao.getClosedayList(1));
+        System.out.println(closedayList.size());
+        System.out.println(closedayList);
+
+//        System.out.println(storeDao.getClosedayList(1));
 
     }
 
@@ -325,12 +360,5 @@ public class StoreServiceTest {
         System.out.println(storeService.getStoreId("store08"));
     }
 
-    @Test
-    public void foodCategory() {
-
-        System.out.println(mainCategory);
-        System.out.println(subCategory);
-        System.out.println(subCategory.size());
-    }
 
 }
