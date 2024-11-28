@@ -115,7 +115,7 @@ public class ReservationBLTest {
     @Test
     public void getRsrv() throws Exception {
         // Given: 테스트할 예약 번호
-        int rsrvNo = 2; // 테스트용 예약 번호 (사전에 존재해야 함)
+        int rsrvNo = 5; // 테스트용 예약 번호 (사전에 존재해야 함)
 
         // When: 예약 정보를 가져오는 메서드 호출
         Reservation reservation = reservationService.getRsrv(rsrvNo);
@@ -238,8 +238,8 @@ public class ReservationBLTest {
         int storeId = 1;
 
         Search search = new Search();
-        search.setStartDate(Date.valueOf("2024-11-22")); // 검색 시작 날짜
-        search.setEndDate(Date.valueOf("2024-12-01"));   // 검색 종료 날짜
+        search.setStartDate("2024-11-22"); // 검색 시작 날짜
+        search.setEndDate("2024-12-01");   // 검색 종료 날짜S
 
         //search.setStartDate(null); // 검색 시작 날짜
         //search.setEndDate(null);   // 검색 종료 날짜

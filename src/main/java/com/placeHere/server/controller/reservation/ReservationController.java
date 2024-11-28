@@ -56,10 +56,10 @@ public class ReservationController {
 
         // 조건 설정
         if (startDate != null) {
-            search.setStartDate(Date.valueOf(startDate)); // "yyyy-MM-dd" 형식 필요
+            search.setStartDate(startDate); // "yyyy-MM-dd" 형식 필요
         }
         if (endDate != null) {
-            search.setEndDate(Date.valueOf(endDate)); // "yyyy-MM-dd" 형식 필요
+            search.setEndDate(endDate); // "yyyy-MM-dd" 형식 필요
         }
         search.setSearchStatuses(searchStatuses); // 예약 상태 목록
 
