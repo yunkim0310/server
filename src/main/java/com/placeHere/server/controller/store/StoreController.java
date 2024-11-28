@@ -2,7 +2,6 @@ package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,9 +10,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -39,6 +37,10 @@ public class StoreController {
     @Value("${list_size}")
     private int listSize;
 
+    @Value("${region_list}")
+    private List<String> regionList;
+
+
     // Constructor
     public StoreController() {
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
@@ -59,6 +61,8 @@ public class StoreController {
         }
 
         else {
+
+            System.out.println(userName);
 
             model.addAttribute("foodCategory", new FoodCategory());
             model.addAttribute("userName", userName);
@@ -118,13 +122,18 @@ public class StoreController {
 
         else {
 
-        Store store = storeService.getStore(storeId);
+            Store store = storeService.getStore(storeId);
+            List<String> selectedCategoryList = Arrays.asList(store.getFoodCategoryId().split("/"));
 
-        System.out.println(store);
+            System.out.println(store);
+            System.out.println(selectedCategoryList);
 
-        model.addAttribute("store", store);
+            model.addAttribute("store", store);
+            model.addAttribute("selectedCategoryList", selectedCategoryList);
+            model.addAttribute("foodCategory", new FoodCategory());
+            model.addAttribute("amenitiesNameList", amenitiesNameList);
 
-        return "test/store/updateStoreTest";
+            return "test/store/updateStoreTest";
         }
 
     }
@@ -319,5 +328,28 @@ public class StoreController {
         }
 
         return "redirect:/store/getClosedayList?userName=" + userName;
+    }
+
+    // 가게 검색
+    @GetMapping("/searchStore")
+    public String searchStore(Model model) {
+
+        System.out.println("/searchStore : GET");
+
+        model.addAttribute("regionList", regionList);
+        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("amenitiesNameList", amenitiesNameList);
+
+        return "test/store/searchStoreTest";
+    }
+
+    @PostMapping("/searchStore")
+    public String searchStore(@ModelAttribute Search search,
+                              Model model) {
+
+        System.out.println("/searchStore : POST");
+
+
+        return "test/store/getStoreListTest";
     }
 }

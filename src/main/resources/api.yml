@@ -1,6 +1,9 @@
 # 가게 편의시설 이름 (12개)
 amenities_name_list:  주차가능,발렛 가능,콜키지 프리,콜키지 가능,키즈존,노키즈존,반려동물 동반,유아시설,장애인 편의시설,대관 가능,이벤트 가능,단체 이용가능
 
+# 지역 필터
+region_list:  강남구, 강동구, 강북구, 강서구, 관악구, 광진구, 구로구, 금천구, 노원구, 도봉구, 동대문구, 동작구, 마포구, 서대문구, 서초구, 성동구, 성북구, 송파구, 용산구, 은평구, 종로구, 중구, 중랑구
+
 # 사업자 번호 조회 API 키
 business_no_api:  nc45BSwtU7L3a%2BdfhWI9de17ugAEjsNTL1yeub5Jcithkjuzk8uOCpHdFzMR7qZCuiU6stON%2FTemx4%2Fw%2BQ13eg%3D%3D
 
