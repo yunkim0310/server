@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>매장 소식 목록 조회 테스트</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function (){
+
+            // action 맵핑
+            $("form").attr("action", "/store/getStoreNewsList").attr("method", "post").attr("enctype", "multipart/form-data");
+
+            $("#addStoreNews").on("click", function () {
+
+                $("form[name='addStoreNews']").submit();
+
+            })
+
+
+            // 수정 폼 버튼
+            $(document).on("click", "button[name='updateStoreNewsForm']", function () {
+                var $row = $(this).closest("tr"); // 클릭한 버튼의 행을 가져옴
+                var newsId = $(this).data("newsid"); // 버튼의 data-newsid 값 가져옴
+
+                console.log("updateStoreNewsForm " + newsId);
+
+                // 기존에 열려 있던 수정 폼 복원
+                $("tr").each(function () {
+                    var $currentRow = $(this);
+                    if ($currentRow.data("originalImg")) {
+                        // 복원할 데이터가 있으면 복원
+                        var originalImg = $currentRow.data("originalImg");
+                        var originalContents = $currentRow.data("originalContents");
+                        var originalDt = $currentRow.data("originalDt");
+                        var currentNewsId = $currentRow.find("button[name='updateStoreNewsForm']").data("newsid");
+
+                        $currentRow.html(`
+                            <td>${currentNewsId}</td>
+                            <td>${originalImg}</td>
+                            <td>${originalContents}</td>
+                            <td>${originalDt}</td>
+                            <td>
+                                <button name="updateStoreNewsForm" data-newsid="${currentNewsId}" type="button">수정</button>
+                                <button name="removeStoreNews" data-newsid="${currentNewsId}" type="button">삭제</button>
+                            </td>
+                        `);
+
+                        $currentRow.removeData("originalImg");
+                        $currentRow.removeData("originalContents");
+                        $currentRow.removeData("originalDt");
+                    }
+                });
+
+                // 현재 행의 기존 데이터 저장
+                var originalImg = $row.find("td:eq(1)").text().trim(); // 첫 번째 열 (이미지)
+                var originalContents = $row.find("td:eq(2)").text().trim(); // 두 번째 열 (내용)
+                var originalDt = $row.find("td:eq(3)").text().trim();
+
+                $row.data("originalImg", originalImg);
+                $row.data("originalContents", originalContents);
+                $row.data("originalDt", originalDt);
+                $row.data("originNewsId", newsId);
+
+                // 행 내용을 수정 폼으로 변경
+                $row.html(`
+                    <td>${newsId}</td>
+                    <td>
+                        <input type="file" name="newsImgFile" accept="image/*">
+                    </td>
+                    <td>
+                        <textarea name="newsContents" rows="3" cols="30">${originalContents}</textarea>
+                    </td>
+                    <td>
+                        ${originalDt}
+                    </td>
+                    <td>
+                        <button name="updateStoreNews" data-newsid="${newsId}" type="button">저장</button>
+                        <button name="cancelEdit" type="button">취소</button>
+                    </td>
+                `);
+
+                console.log(`Editing row with newsId: ${newsId}`);
+            });
+
+
+            // 수정 취소 버튼
+            $(document).on("click", "button[name='cancelEdit']", function () {
+
+                // 현재 행 가져오기
+                var $row = $(this).closest("tr");
+
+                // 저장된 원래 데이터를 읽어옴
+                var originalImg = $row.data("originalImg");
+                var originalContents = $row.data("originalContents");
+                var originalDt = $row.data("originalDt");
+                var newsId = $row.data("originNewsId");
+
+                console.log("cancelEdit " + newsId);
+
+                // 행 내용을 원래 데이터로 복원
+                $row.html(`
+                    <td>${newsId}</td>
+                    <td>${originalImg}</td>
+                    <td>${originalContents}</td>
+                    <td>${originalDt}</td>
+                    <td>
+                        <button name="updateStoreNewsForm" data-newsid="${newsId}" type="button">수정</button>
+                        <button name="removeStoreNews" data-newsid="${newsId}" type="button">삭제</button>
+                    </td>
+                `);
+            });
+
+
+            // 소식 수정
+            $(document).on("click", "button[name='updateStoreNews']", function () {
+
+                var newsId = $(this).data("newsid");
+
+                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
+                $("input[name='mode']:hidden").val("update");
+
+                console.log("updateStoreNews "+newsId);
+
+                $("form[name='updateAndRemoveStoreNews']").submit();
+
+            })
+
+
+            // 소식 삭제
+            $("button[name='removeStoreNews']").on("click", function () {
+
+                var newsId = $(this).data("newsid");
+
+                console.log(newsId);
+
+                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
+                $("input[name='mode']:hidden").val("remove");
+
+                $("form[name='updateAndRemoveStoreNews']").submit();
+            })
+
+        });
+
+    </script>
+
+</head>
+<body>
+
+    <h1>매장 소식 목록</h1>
+    <hr/>
+
+    <p th:text="${userName}"></p>
+    <p th:text="${storeId}"></p>
+    <br/><hr/>
+    <strong>매장 소식</strong>&ensp;<span th:text="${totalCnt}"></span>
+    <br/><br/>
+
+    <form name="updateAndRemoveStoreNews">
+
+        <input type="hidden" name="mode">
+        <input type="hidden" name="newsId" disabled>
+
+        <input type="text" name="userName" th:value="${userName}" readonly><br/>
+        <input type="text" name="storeId" th:value="${storeId}" readonly><br/>
+
+        <table border="1">
+            <thead>
+            <tr>
+                <th>newsId</th>
+                <th>사진</th>
+                <th>내용</th>
+                <th>작성일</th>
+                <th>&nbsp;</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr th:each="storeNews : ${storeNewsList}">
+                    <td th:text="${storeNews.newsId}"></td>
+                    <td th:attr="data-newsid=${storeNews.newsId}" th:text="${(storeNews.newsImg == null)? 'NULL': storeNews.newsImg}"></td>
+                    <td th:text="${storeNews.newsContents}"></td>
+                    <td th:text="${storeNews.regDt}"></td>
+                    <td>
+                        <button name="updateStoreNewsForm" th:attr="data-newsid=${storeNews.newsId}" type="button">수정</button>
+                        <button name="removeStoreNews" th:attr="data-newsid=${storeNews.newsId}" type="button">삭제</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+    <br/><hr/>
+
+    <form name="addStoreNews">
+
+        <strong>매장 소식 등록</strong>
+
+        <br/><br/>
+
+        <input type="text" name="userName" th:value="${userName}" readonly><br/>
+        <input type="text" name="storeId" th:value="${storeId}" readonly><br/>
+        <input type="text" name="mode" value="add" readonly>
+
+        <br/><br/>
+
+        <input type="file" accept="image/*" name="newsImgFile"><br/><br/>
+        <textarea name="newsContents" rows="5" cols="50" style="resize: none"></textarea>
+
+        <br/><br/>
+
+        <button id="addStoreNews">등록</button>
+
+    </form>
+    <br/><hr/>
+
+</body>
+</html>

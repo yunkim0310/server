@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>휴무일 목록 조회 테스트</title>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+    <script type="text/javascript">
+
+        $(function (){
+
+            // action 맵핑
+            $("form").attr("action", "/store/getClosedayList").attr("method", "post");
+
+
+            // 휴무일 삭제 함수
+            $("button[name='removeCloseday']").on("click", function () {
+
+                var closedayId = $(this).data("closedayid");
+
+                console.log(closedayId);
+
+                $("input[name='mode']:hidden").val("remove");
+                $("input[name='closedayId']:hidden").prop("disabled", null).val(closedayId);
+
+                $("form[name='getAndRemoveCloseday']").submit();
+
+            });
+
+
+            // 휴무일 검색 함수
+            $("button[name='getClosedayList']").on("click", function () {
+
+                $("input[name='mode']:hidden").val("get");
+
+                $("form[name='getAndRemoveCloseday']").submit();
+
+            });
+
+
+            // 휴무일 등록 함수
+            $("button[name='addCloseday']").on("click", function () {
+
+                $("form[name='addCloseday']").submit();
+
+            })
+
+        });
+
+    </script>
+
+</head>
+<body>
+
+    <h1>휴무일 목록</h1>
+    <hr/>
+
+    <p th:text="${userName}">회원 아이디</p>
+    <p th:text="${storeId}">가게 Id</p>
+
+    <br/><hr/>
+
+    <strong>휴무일</strong>&ensp;<span th:text="${totalCnt}"></span>
+
+    <br/><br/>
+
+    <form name="getAndRemoveCloseday">
+
+        <input type="text" name="userName" th:value="${userName}" readonly><br/>
+        <input type="text" name="storeId" th:value="${storeId}" readonly><br/>
+        <input type="hidden" name="mode">
+        <input type="hidden" name="closedayId" disabled>
+
+        <input type="date" name="startDate" th:value="${search.startDate}">
+        ~
+        <input type="date" name="endDate" th:value="${search.endDate}">
+        &ensp;
+        <button type="button" name="getClosedayList">검색</button>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th colspan="3">휴무일</th>
+                </tr>
+          </thead>
+
+          <tbody>
+                <tr th:each="closeday : ${closedayList}">
+                    <td th:text="${closeday.closedayId}">휴무일 Id</td>
+                    <td th:text="${closeday.closeday}">휴무일</td>
+                    <td>
+                        <button name="removeCloseday" th:attr="data-closedayid=${closeday.closedayId}" type="button">삭제</button>
+                    </td>
+                </tr>
+          </tbody>
+        </table>
+
+    </form>
+
+    <br/><hr/>
+
+    <strong>휴무일 등록</strong>
+
+    <br/><br/>
+
+    <form name="addCloseday">
+
+        <input type="text" name="userName" th:value="${userName}" readonly><br/>
+        <input type="text" name="storeId" th:value="${storeId}" readonly><br/>
+        <input type="text" name="mode" value="add" readonly><br/>
+
+        <input type="date" name="closeday" th:value="${today}">
+
+        <br/><br/>
+
+        <button type="button" name="addCloseday">등록</button>
+
+    </form>
+
+
+</body>
+</html>
