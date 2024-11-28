@@ -2,26 +2,28 @@ package com.placeHere.server.controller.reservation;
 
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
-import com.placeHere.server.service.pointShop.ProductService;
+import com.placeHere.server.domain.Store;
 import com.placeHere.server.service.reservation.ReservationService;
+import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
 import java.util.List;
 
 
 @Controller
-@RequestMapping("/reservation/*")
+@RequestMapping("test/reservation/*")
 public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+
+    @Autowired
+    private StoreService storeService;
+
 
     public ReservationController(){
         System.out.println(this.getClass());
@@ -36,66 +38,131 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "reservation/getrsrv";
+        return "test/reservation/getrsrv";
     }
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
             @RequestParam("storeId") int storeId, // 가게 ID는 필수
-            @RequestParam(value = "startDate", required = false) String startDate, // 시작 날짜
-            @RequestParam(value = "endDate", required = false) String endDate, // 종료 날짜
-            @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses, // 상태 목록
             Model model) throws Exception {
 
-        // Search 객체 생성
+        // 초기 Search 객체 설정 (기본값)
         Search search = new Search();
-
-        // 조건 설정
-        if (startDate != null) {
-            search.setStartDate(startDate); // "yyyy-MM-dd" 형식 필요
-        }
-        if (endDate != null) {
-            search.setEndDate(endDate); // "yyyy-MM-dd" 형식 필요
-        }
-        search.setSearchStatuses(searchStatuses); // 예약 상태 목록
+        search.setStartDate(null); // 기본값 없음
+        search.setEndDate(null); // 기본값 없음
+        search.setSearchStatuses(null); // 모든 상태 포함
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
+
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "reservation/listrsrvstore";
+        return "test/reservation/listrsrvstore";
     }
 
 
-    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
-    public String getRsrvUserList(
-            @RequestParam("userName") String userName, // 유저 네임은 필수
-            @RequestParam(value = "searchKeyword", required = false) String searchKeyword, // 예약 상태 검색
-            @RequestParam(value = "order", required = false) String order, // 차순
+    @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
+    public String getRsrvStoreList(
+            @RequestParam("storeId") int storeId,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             Model model) throws Exception {
 
         // Search 객체 생성
         Search search = new Search();
 
-        if (searchKeyword != null) {
-            search.setSearchKeyword(searchKeyword);
+        // 조건 설정: 값이 있을 때만 설정
+        if (startDate != null && !startDate.isEmpty()) {
+            search.setStartDate(startDate);
         }
-        if (order != null) {
-            search.setOrder(order);
+
+        if (endDate != null && !endDate.isEmpty()) {
+            search.setEndDate(endDate);
+        }
+
+        if (searchStatuses != null && !searchStatuses.isEmpty()) {
+            search.setSearchStatuses(searchStatuses);
         }
 
         // 서비스 호출
-       List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+        List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
+
+        model.addAttribute("reservations", reservations);
+
+        return "test/reservation/listrsrvstore";
+    }
+
+
+
+    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
+    public String getRsrvUserList(
+            @RequestParam("userName") String userName, // 가게 ID는 필수
+            Model model) throws Exception {
+
+        // 초기 Search 객체 설정 (기본값)
+        Search search = new Search();
+        search.setOrder(null); // 기본값 없음
+        search.setSearchKeyword(null); // 모든 상태 포함
+
+        // 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "reservation/listrsrvuser";
+        return "test/reservation/listrsrvuser";
+    }
+
+
+    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
+    public String getRsrvUserList(
+            @RequestParam("userName") String userName,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "order", required = false) String order,
+            Model model) throws Exception {
+
+        // Search 객체 생성
+        Search search = new Search();
+
+        // 조건 설정: 값이 있을 때만 설정
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            search.setSearchKeyword(searchKeyword);
+        }
+        if (order != null && !order.isEmpty()) {
+            search.setOrder(order);
+        }
+
+        // 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+
+        // 모델에 데이터 추가
+        model.addAttribute("reservations", reservations);
+
+        return "test/reservation/listrsrvuser";
+    }
+
+
+    @RequestMapping(value = "addRsrv", method = RequestMethod.GET)
+    public String addRsrv(
+            @RequestParam("storeId") int storeId,
+            @RequestParam(value = "effectDt", required = false) Date effectDt,
+            Model model) {
+
+        if (effectDt == null) {
+            effectDt = new Date(System.currentTimeMillis()); // 현재 날짜
+        }
+
+        Store store = storeService.getStore(storeId, effectDt);
+
+        model.addAttribute("store", store);
+
+        return "test/reservation/addrsrv";
     }
 
 }
