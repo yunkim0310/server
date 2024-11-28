@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
+
 
 @SpringBootTest
 public class ReservationBLTest {
@@ -31,10 +30,10 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user10");
+        reservation.setUserName("user12");
         reservation.setRsrvStatus("결제 중");
 
-        reservation.setRsrvDt(Timestamp.valueOf("2024-12-01 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-07 21:30:00"));
 
         reservation.setRsrvPerson(2);
         reservation.setAmount(10000);
@@ -70,8 +69,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 23; // 테스트용 예약 번호
-        String rsrvStatus = "예약 확정"; // 상태 업데이트 값
+        int rsrvNo = 27; // 테스트용 예약 번호
+        String rsrvStatus = "예약 요청"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);
@@ -140,7 +139,7 @@ public class ReservationBLTest {
     public void testGetCountRsrv() throws Exception {
         Reservation reservation = new Reservation();
         // Given: 테스트 데이터
-        reservation.setRsrvDt(Timestamp.valueOf("2024-11-22 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-11-29 21:30:00"));
         reservation.setStoreId(1);
 
         // When: 서비스 메서드 호출
@@ -206,6 +205,21 @@ public class ReservationBLTest {
 
         // Then: 결과 출력
         System.out.println("점주회원 " + storeId + "의 미완료 전화 예약 권수: " + reservationService.getCountRsrvNumber(storeId));
+    }
+
+
+    @Test
+    public void testGetRsrvList() throws Exception {
+
+//        Search search = new Search();
+//        search.setSearchKeyword(null);
+
+        // When: 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvList();
+
+        // Then: 결과 출력
+        System.out.println("=== Reservations with Reservation and Search ===");
+        reservations.forEach(System.out::println);
     }
 
 

@@ -137,6 +137,17 @@
     </select>
 
 
+    <select id="getRsrvList" resultMap="ReservationResultMap">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        FROM reservation
+        <where>
+            rsrv_status &lt;&gt; '결제 중'
+        </where>
+        ORDER BY
+            rsrv_dt DESC <!-- 내림차순 -->
+    </select>
+
+
 
     <select id="getRsrvUserList" resultMap="ReservationResultMap">
         SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
@@ -152,7 +163,7 @@
         </where>
         ORDER BY
         <if test="search.order == null or search.order == ''">
-            rsrv_no ASC <!-- 오름차순 -->
+            rsrv_no DESC <!-- 오름차순 -->
         </if>
         <if test="search.order == 'asc'">
             rsrv_no ASC <!-- 오름차순 -->
@@ -186,7 +197,7 @@
 
             <!-- 예약 상태 필터 -->
             <if test="search.searchStatuses == null or search.searchStatuses.isEmpty()">
-                AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '전화 예약')
+                AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '예약 취소', '예약 거절', '전화 예약')
             </if>
             <if test="search.searchStatuses != null and !search.searchStatuses.isEmpty()">
                 AND rsrv_status IN
@@ -195,7 +206,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY rsrv_dt ASC <!-- 예약 일시 오름차순 -->
+        ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
     </select>
 
 
