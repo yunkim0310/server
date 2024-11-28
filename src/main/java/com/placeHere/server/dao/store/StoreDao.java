@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 //import org.apache.ibatis.annotations.Mapper;
@@ -20,7 +21,7 @@ public interface StoreDao {
     public int addStore(Store store);
 
     // 가게 Id 조회
-    public int getStoreId(String businessNo);
+    public int getStoreId(String userName);
 
     // 가게 정보 조회
     public Store getStore(int storeId);
@@ -74,13 +75,13 @@ public interface StoreDao {
     public void removeStoreNews(int newsId);
 
     // 휴무일 등록 TEST
-    public void addCloseday(@Param("storeId") int storeId, @Param("closeday") Date closeday);
+    public void addCloseday(Closeday closeday);
 
     // 휴무일 목록 조회 TEST
-    public List<Date> getClosedayListBySearch(@Param("storeId") int storeId, @Param("search") Search search);
+    public List<Closeday> getClosedayListBySearch(@Param("storeId") int storeId, @Param("search") Search search);
 
     // 휴무일 목록 조회 (오늘~14일후)
-    public List<Date> getClosedayList(int storeId);
+    public List<String> getClosedayList(int storeId);
 
     // 휴무일 삭제 (DELETE) TEST
     public void removeCloseday(int closedayId);

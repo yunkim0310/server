@@ -25,7 +25,9 @@ public class StoreNews {
     // 소식 내용
     private String newsContents;
     // 작성일시 (now()?, sysdate())
-    private LocalDateTime regDt;
+    private String regDt;
+    // 뉴스 개수
+    private int totalCnt;
 
 
     // Method

@@ -40,3 +40,10 @@ out/
 src/main/resources/application.yml
 application.yml
 aws.yml
+src/main/resources/api.yml
+api.yml
+
+# Gradle
+build.gradle
+/build/
+.gradletasknamecache

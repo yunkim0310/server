@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
+
 
 @SpringBootTest
 public class ReservationBLTest {
@@ -31,10 +30,10 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user10");
+        reservation.setUserName("user12");
         reservation.setRsrvStatus("결제 중");
 
-        reservation.setRsrvDt(Timestamp.valueOf("2024-12-01 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-07 21:30:00"));
 
         reservation.setRsrvPerson(2);
         reservation.setAmount(10000);
@@ -70,8 +69,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 23; // 테스트용 예약 번호
-        String rsrvStatus = "예약 확정"; // 상태 업데이트 값
+        int rsrvNo = 27; // 테스트용 예약 번호
+        String rsrvStatus = "예약 요청"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);
@@ -115,7 +114,7 @@ public class ReservationBLTest {
     @Test
     public void getRsrv() throws Exception {
         // Given: 테스트할 예약 번호
-        int rsrvNo = 5; // 테스트용 예약 번호 (사전에 존재해야 함)
+        int rsrvNo = 2; // 테스트용 예약 번호 (사전에 존재해야 함)
 
         // When: 예약 정보를 가져오는 메서드 호출
         Reservation reservation = reservationService.getRsrv(rsrvNo);
@@ -140,7 +139,7 @@ public class ReservationBLTest {
     public void testGetCountRsrv() throws Exception {
         Reservation reservation = new Reservation();
         // Given: 테스트 데이터
-        reservation.setRsrvDt(Timestamp.valueOf("2024-11-22 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-11-29 21:30:00"));
         reservation.setStoreId(1);
 
         // When: 서비스 메서드 호출
@@ -210,6 +209,21 @@ public class ReservationBLTest {
 
 
     @Test
+    public void testGetRsrvList() throws Exception {
+
+//        Search search = new Search();
+//        search.setSearchKeyword(null);
+
+        // When: 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvList();
+
+        // Then: 결과 출력
+        System.out.println("=== Reservations with Reservation and Search ===");
+        reservations.forEach(System.out::println);
+    }
+
+
+    @Test
     public void testGetRsrvUserList() throws Exception {
         // Given: 특정 유저와 검색 조건, 내림차순
         String userName = "user3";
@@ -239,7 +253,7 @@ public class ReservationBLTest {
 
         Search search = new Search();
         search.setStartDate("2024-11-22"); // 검색 시작 날짜
-        search.setEndDate("2024-12-01");   // 검색 종료 날짜S
+        search.setEndDate("2024-12-01");   // 검색 종료 날짜
 
         //search.setStartDate(null); // 검색 시작 날짜
         //search.setEndDate(null);   // 검색 종료 날짜

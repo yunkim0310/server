@@ -63,6 +63,8 @@ public class Store {
     private int reviewCnt;
     // 가게 상태(0이면 점주회원, 1이면 탈퇴회원)
     private int storeStatus;
+    // 목록 조회 총 개수
+    private int totalCnt;
 
 
     // Method

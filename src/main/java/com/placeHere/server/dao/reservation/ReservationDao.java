@@ -4,7 +4,7 @@ import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
 
-import java.util.Date;
+
 import java.util.List;
 import java.util.Map;
 
@@ -31,6 +31,9 @@ public interface ReservationDao {
     // 예약 환불 사유 업데이트
     public void updateRsrvReason(int rsrvNo, String reason) throws Exception;
 
+    // 예약 목록 조회 어드민
+    public List<Reservation> getRsrvList() throws Exception;
+
     // 예약 목록 조회 일반 회원
     public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception;
 
@@ -43,7 +46,6 @@ public interface ReservationDao {
     // 예약 날짜의 예약 인수들의 합(휴무일에도 쓰임)
     public int getCountDayRsrv(Map<String, Object> params) throws Exception;
 
-
     // 탈퇴할 일반 회원의 예약 권수 카운팅
     public int getCountRsrvUser(String userName) throws Exception;
 
@@ -53,12 +55,4 @@ public interface ReservationDao {
     // 탈퇴할 점주 회원의 전화 예약 권수 카운팅
     public int getCountRsrvNumber(int storeId) throws Exception;
 
-    // 한솔 예정
-    public void calcRsrvPercent(int rsrvNo, String paymentId) throws Exception;
-
-    // 한솔 예정
-    public void cntWeekRsrv(int rsrvNo, String paymentId) throws Exception;
-
-    // 한솔 예정
-    public void cntRsrvAvg(int rsrvNo, String paymentId) throws Exception;
 }
