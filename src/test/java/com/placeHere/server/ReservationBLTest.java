@@ -31,7 +31,6 @@ public class ReservationBLTest {
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
         reservation.setUserName("user12");
-        reservation.setRsrvStatus("결제 중");
 
         reservation.setRsrvDt(Timestamp.valueOf("2024-12-07 21:30:00"));
 

@@ -1,24 +1,52 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Store</title>
+    <title>Reservation Form</title>
 </head>
 <body>
-<h1>Store</h1>
+<h1>Make a Reservation</h1>
 
-<!-- 예약 정보 출력 -->
-<p>가게 이름: <span th:text="${store.storeName}">[가게 이름]</span></p>
-<p>가게 주소: <span th:text="${store.StoreId}">[가게 주소]</span></p>
-<p>가게 ID: <span th:text="${store.storeAddr}">[가게 ID]</span></p>
-<p>오픈 시간: <span th:text="${store.getStoreOperation().getOpenTime()}">[오픈 시간]</span></p>
-<p>마감 시간: <span th:text="${store.getStoreOperation().getCloseTime()}">[마감 시간]</span></p>
-<p>휴무일: <span th:text="${store.getStoreOperation().getClosedayList()}">[휴무일]</span></p>
-<p>휴무요일: <span th:text="${store.getStoreOperation().getRegularClosedayList()}">[휴무요일]</span></p>
-<p>보증금: <span th:text="${store.getStoreOperation().getSecurity()}">[보증금]</span></p>
-<p>최대 예약 인수: <span th:text="${store.getStoreOperation().getRsrvLimit()}">[최대 예약 인수]</span></p>
-<p>적용일: <span th:text="${store.getStoreOperation().getEffectDt()}">[적용일]</span></p>
-<p>포트원 가게 ID: <span th:text="${store.specialMenuNo}">[포트원 가게 ID]</span></p>
+<!-- 가게 정보 -->
+<h2>Store Information</h2>
+<p>Store Name: <span th:text="${store.storeName}">[Store Name]</span></p>
+<p>Store Address: <span th:text="${store.storeAddr}">[Store Address]</span></p>
 
+<!-- 예약 입력 폼 -->
+<h2>Reservation Details</h2>
+<form action="/test/reservation/addRsrv" method="post">
+    <!-- 가게 ID 전달 -->
+    <input type="hidden" name="storeId" th:value="${store.storeId}" />
+    <!-- 가게 이름 전달 -->
+    <input type="hidden" name="storeName" th:value="${store.storeName}" />
+    <!-- 가게 주소 전달 -->
+    <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
+
+    <!-- 예약자 이름 -->
+    <label for="userName">Your Name:</label>
+    <input type="text" id="userName" name="userName" required /><br><br>
+
+    <!-- 예약 인수 -->
+    <label for="rsrvPerson">Number of People:</label>
+    <input type="number" id="rsrvPerson" name="rsrvPerson" min="1" required /><br><br>
+
+    <!-- 결제 금액 -->
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" min="5000" required /><br><br>
+
+    <!-- 예약 일시 -->
+    <label for="rsrvDt">Reservation Date & Time:</label>
+    <input type="datetime-local" id="rsrvDt" name="rsrvDt" required /><br><br>
+
+    <!-- 예약 요청 사항 -->
+    <label for="rsrvReq">rsrvReq:</label>
+    <input type="text" id="rsrvReq" name="rsrvReq" required /><br><br>
+
+    <!-- 예약자 전화번호 -->
+    <label for="rsrvNumber">Phone Number:</label>
+    <input type="tel" id="rsrvNumber" name="rsrvNumber" required pattern="[0-9]{10,11}" placeholder="01012345678" /><br><br>
+
+    <button type="submit">Submit Reservation</button>
+</form>
 
 </body>
 </html>
