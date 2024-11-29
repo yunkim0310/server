@@ -24,4 +24,9 @@ public interface UserService {
     public void updateLoginDt (String username) throws Exception;
 
     public List<User> getUserList() throws Exception;
+
+    public boolean findPwdForm(User user) throws Exception;
+
+    // 비밀번호 재설정
+    public void updatePassword(User user) throws Exception;
 }

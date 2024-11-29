@@ -2,11 +2,9 @@ package com.placeHere.server.domain;
 
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
-
 
 @Data
 public class User implements Serializable {
@@ -34,6 +32,5 @@ public class User implements Serializable {
     // INACTIVE : 휴면계정상태
     // DELETED : 탈퇴상태
     private String activeStatus;
-
 
 }

@@ -6,7 +6,7 @@ import com.placeHere.server.domain.User;
 import com.placeHere.server.service.user.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,8 +23,9 @@ public class UserServiceImpl implements UserService {
     @Qualifier("userDao")
     UserDao userDao;
 
+    // BCryptPasswordEncoder 주입
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder; // BCryptPasswordEncoder 주입
+    private PasswordEncoder passwordEncoder;
 
     public void setUserDao(UserDao userDao) {
         System.out.println("::"+getClass()+".setUserDao  Call.....");
@@ -60,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         // 비밀번호 암호화
         String rawPassword = user.getPassword();
-        String encodedPassword = bCryptPasswordEncoder.encode(rawPassword); // 암호화
+        String encodedPassword = passwordEncoder.encode(rawPassword); // 암호화
 
         user.setPassword(encodedPassword);
 
@@ -103,6 +104,30 @@ public class UserServiceImpl implements UserService {
         List<User> user = userDao.getUserList();
         return user;
     }
+
+    // 비회원이 비밀번호 재설정
+    public boolean findPwdForm(User user) throws Exception {
+        int count = userDao.findPwdForm(user); // COUNT 결과 반환
+        return count > 0; // 0보다 크면 true, 아니면 false
+    }
+
+    public void updatePassword(User user) throws Exception {
+
+        System.out.println("user 확인 :: " + user);
+
+        // 비밀번호 암호화
+        String rawPassword = user.getPassword();
+        // 암호화
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+
+        user.setPassword(encodedPassword);
+
+        userDao.updatePassword(user);
+
+
+    }
+
+
 
 
 }

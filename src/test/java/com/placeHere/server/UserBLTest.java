@@ -1,18 +1,18 @@
 package com.placeHere.server;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.placeHere.server.domain.User;
+import com.placeHere.server.jwt.prop.JwtProps;
 import com.placeHere.server.service.user.UserService;
-import io.jsonwebtoken.lang.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserBLTest {
@@ -20,6 +20,28 @@ public class UserBLTest {
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService userService;
+
+    @Autowired
+    private JwtProps jwtProps;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Test
+    void testPwd() {
+        String rawPassword = "1234";
+        String encodedPassword = passwordEncoder.encode(rawPassword);
+        System.out.println("Encoded Password: " + encodedPassword);
+//        $2a$10$iuQb6RntW8zuMoHmPS3QiuKwem0153v/qhuR2lCe5RnaWMjD1Dw9a
+//        $2a$10$aDZ8s5S.BxZguWj/qSeJEeuDoctV2/aOugZ2qUEGEIiOf44O9PhPC
+    }
+
+    @Test
+    // 프로퍼티 파일 가져오기
+    void testJwtProps() {
+        String expected = "|+<T%0h;[G97|I$5Lr?h]}`8rUX.7;0gw@bF<R/|\"-U0n:_6j={'.T'GHs~<AxU9";
+        assertEquals(expected, jwtProps.getSecretKey(), "시크릿키 못가져옴 ....... ");
+    }
 
     //    @Test
     public void test() {
@@ -90,7 +112,7 @@ public class UserBLTest {
         ;
     }
 
-    @Test
+//    @Test
     public void getUserList() throws Exception {
 
         List<User> list = new ArrayList<>();
@@ -107,6 +129,37 @@ public class UserBLTest {
 
 //        System.out.println(userService.getUserList());
 
+    }
+
+//    @Test
+    public void findPwdForm() throws Exception {
+
+        String username = "normal_user1";
+//        String password = "123";
+        String email = "user1@example.com";
+
+        User user = new User();
+        user.setUsername(username);
+//        user.setPassword(password);
+        user.setEmail(email);
+
+
+        boolean result = userService.findPwdForm(user);
+
+        assertTrue(result, "비밀번호 변경 권한 있음");
+    }
+
+//    @Test
+    public void updatePwd () throws Exception {
+
+        String username = "normal_user1";
+        String password = "123";
+
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(password);
+
+        userService.updatePassword(user);
     }
 
 

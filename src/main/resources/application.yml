@@ -1,31 +1,27 @@
 mybatis:
   config-location: classpath:sql/mybatis-config.xml
 
+# jwt
+com:
+  yunkim:
+    jwt:
+      secret-key: "|+<T%0h;[G97|I$5Lr?h]}`8rUX.7;0gw@bF<R/|\"-U0n:_6j={'.T'GHs~<AxU9"
+
 spring:
   application:
     name: server
-
   datasource:
     #    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
-    #    username: ds
-    #    password: "0000"
+    #    username: DS
+    #    password: 0000
     #    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/place_here?serverTimezone=UTC&characterEncoding=UTF-8
-    username: DS
-    password: "0000"
+#    url: jdbc:mysql://127.0.0.1:3306/blog?serverTimezone=UTC&characterEncoding=UTF-8
+    url: jdbc:mysql://127.0.0.1:3306/kosa?serverTimezone=UTC&characterEncoding=UTF-8
+    username: root
+    password: mysql1234
     driver-class-name: com.mysql.cj.jdbc.Driver
 
-    #type-aliases-package: com.example.demo.domain,com.example.demo.vo,com.example.demo.dto
-#    configuration:
-#      map-underscore-to-camel-case: true
-#      default-fetch-size: 100
-#      default-statement-timeout: 30
-#      cache-enabled: true
 
-
-# jwt
-jwt:
-  secret: vmfhaltmskdlstkfkdgodyroqkfwkdbalroqkfwkdbalaaaaaaaaaaaaaaaabbbbb
 
 # Spring Boot 내장 서버 포트 설정
 server:

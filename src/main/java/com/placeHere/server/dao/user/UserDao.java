@@ -23,4 +23,11 @@ public interface UserDao {
 
     public List<User> getUserList() throws Exception;
 
+    public int findPwdForm(User user) throws Exception;
+
+    // 비밀번호 재설정
+    public void updatePassword(User user) throws Exception;
+
+
+
 }

@@ -9,11 +9,10 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Collection;
@@ -28,8 +27,9 @@ public class UserController {
     @Qualifier("userServiceImpl")
     private UserService userService;
 
+    // BCryptPasswordEncoder 주입
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder; // BCryptPasswordEncoder 주입
+    private PasswordEncoder passwordEncoder;
 
 
     @GetMapping("/")
@@ -55,7 +55,7 @@ public class UserController {
 
         User user = userService.login(username);
 
-        if (user == null || !bCryptPasswordEncoder.matches(password, user.getPassword())) {
+        if (user == null || !passwordEncoder.matches(password, user.getPassword())) {
             throw new AuthenticationException("Invalid credentials") {
             };
         }
