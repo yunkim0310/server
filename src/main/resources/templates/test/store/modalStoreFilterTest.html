@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가게 검색 필터</title>
+
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // 1차 분류 선택이 변경되면 2차, 3차 분류의 체크박스 해제 및 분류 표시
+            $("input[name='foodCategory1']").on("change", function() {
+                var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
+                $("#foodCategory4").css("display", "none");
+
+                // 2차 분류 표시
+                if (selectedCategory1) {
+                    $("div[id^='foodCategory2']").css("display", "block");
+                    // 3차 분류 숨기기
+                    $("div[id^='foodCategory3_']").css("display", "none");
+
+                    // 2차 분류의 체크 해제
+                    $("input[name='foodCategory2']").prop("checked", false);
+
+                    // 3차 분류의 체크 해제
+                    $("input[name='foodCategory3']").prop("checked", false);
+                } else {
+                    $("div[id^='foodCategory2']").css("display", "none");
+                    $("div[id^='foodCategory3_']").css("display", "none");
+                }
+            });
+
+            // 2차 분류 선택이 변경되면 3차 분류의 체크박스 해제 및 해당하는 3차 분류 표시
+            $("input[name='foodCategory2']").on("change", function() {
+                var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
+                updateDetailCategory(selectedCategory2);
+
+                // 3차 분류의 체크 해제
+                $("input[name='foodCategory3']").prop("checked", false);
+                $("#foodCategory4").css("display", "none");
+            });
+
+            // 3차 분류 표시 함수
+            function updateDetailCategory(selectedCategory2) {
+                // 3차 분류 항목 모두 숨기기
+                $("div[id^='foodCategory3_']").css("display", "none");
+                $("#foodCategory4").css("display", "none");
+
+                if (selectedCategory2) {
+                    // 선택된 2차 카테고리에 맞는 3차 카테고리만 보이도록 처리
+                    var detailCategoryDiv = $("#foodCategory3_" + selectedCategory2);
+                    if (detailCategoryDiv.length > 0) {
+                        detailCategoryDiv.css("display", "block");
+                    }
+                }
+            }
+
+            // 상세 분류 표시 함수
+            // $("input[name='foodCategory3']").on("change", function () {
+            //
+            //     var selectedCategory3 = $("input[name='foodCategory3']:checked").val();
+            //
+            //     if (selectedCategory3 != "전체") {
+            //         $("#foodCategory4").css("display", "block");
+            //     } else {
+            //         $("#foodCategory4").css("display", "none");
+            //     }
+            // })
+
+        });
+    </script>
+</head>
+<body>
+<!--style="display:none;"-->
+    <div id="filterModal" class="modal">
+        <div class="modal-content">
+            <span class="close" style="cursor:pointer;">&times;</span>
+
+            <h2>필터</h2>
+
+            <strong>지역</strong>
+
+            <br/>
+
+            <div th:each="region : ${regionList}">
+                <input type="checkbox" name="regionList" th:value="${region}">
+                <label th:text="${region}">지역이름(구)</label>
+            </div>
+
+            <br/><br/>
+
+            <strong>음식 카테고리</strong>
+            <input type="hidden" name="foodCategoryId">
+            <p>1차 분류</p>
+            <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+                <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}">
+                <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/>
+            </div>
+
+            <br/>
+
+            <p>2차 분류</p>
+            <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+                <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}">
+                <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}">2차 분류 이름</label><br/>
+            </div>
+
+            <br/>
+
+            <p>3차 분류</p>
+            <div th:each="entry : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+                <p th:each="detail : ${entry.value}">
+                    <input type="radio" name="foodCategory3" th:value="${detail}">
+                    <label th:text="${detail}">3차 분류 이름</label><br/>
+                </p>
+            </div>
+
+            <br/><br/>
+
+            <strong>가격</strong>
+            <p>* 대표메뉴의 가격 범위를 설정해주세요</p>
+            <input type="number" name="priceMin" value="0">
+            ~
+            <input type="number" name="priceMax" value="100000">
+
+            <br/><br/>
+
+
+
+            <br/><br/>
+
+            <button type="submit">적용</button>
+
+        </div>
+    </div>
+
+</body>
+</html>

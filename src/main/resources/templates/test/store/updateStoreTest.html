@@ -208,38 +208,6 @@
 
     <br/>
 
-<!--    <strong>음식 카테고리</strong>-->
-<!--    <input type="hidden" name="foodCategoryId">-->
-<!--    <p>1차 분류</p>-->
-<!--    <div th:each="name, iterStat : ${foodCategory.mainCategory}">-->
-<!--        <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}" th:attr="checked=${selectedCategoryList[0] == name ? 'checked' : null}">-->
-<!--        <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/>-->
-<!--    </div>-->
-
-<!--    <br/>-->
-
-<!--    <p>2차 분류</p>-->
-<!--    <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">-->
-<!--        <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}" th:attr="checked=${selectedCategoryList[1] == name ? 'checked' : null}">-->
-<!--        <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}">2차 분류 이름</label><br/>-->
-<!--    </div>-->
-
-<!--    <br/>-->
-
-<!--    <p>3차 분류</p>-->
-<!--    <div th:each="entry : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">-->
-<!--        <p th:each="detail : ${entry.value}">-->
-<!--            <input type="radio" name="foodCategory3" th:value="${detail}" th:attr="checked=${selectedCategoryList[2] == detail ? 'checked' : null}">-->
-<!--            <label th:text="${detail}">3차 분류 이름</label><br/>-->
-<!--        </p>-->
-<!--    </div>-->
-
-<!--    <div id="foodCategory4" style="display: none" >-->
-<!--        <br/>-->
-<!--        <p>상세 분류</p>-->
-<!--        <input type="text" name="foodCategory4" th:value="${selectedCategoryList.size() > 0 ? selectedCategoryList[3] : null}">-->
-<!--    </div>-->
-
     <strong>음식 카테고리</strong>
     <input type="hidden" name="foodCategoryId">
 
@@ -255,7 +223,7 @@
     <p>2차 분류</p>
     <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
         <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}"
-               th:attr="checked=${selectedCategoryList[1] == name ? 'checked' : null}">
+               th:attr="checked=${selectedCategoryList[1].replace(', ', '-') == name ? 'checked' : null}">
         <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}"></label><br/>
     </div>
 

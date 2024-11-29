@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가게 검색</title>
+
+    <div th:insert="~{test/store/importTest :: importFragment}"/>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            // 필터 버튼 클릭 시 모달 표시
+            $("button[name='searchStoreFilter']").on("click", function () {
+                $("#filterModal").show();  // 모달을 보이게 함
+            });
+
+            // 모달 닫기 버튼
+            $(".close").on("click", function () {
+                $("#filterModal").hide();  // 모달을 닫음
+            });
+
+            // 필터 적용 후 제출 (모달 내의 폼 제출)
+            $("#filterModal form").on("submit", function (e) {
+                e.preventDefault(); // 기본 제출 방지
+
+                // 필터 값 가져오기
+                var category = $("#category").val();
+                console.log("선택된 카테고리: " + category);
+
+                // 여기에 필터 적용 로직을 추가 (예: AJAX 요청)
+                $("#filterModal").hide();  // 필터 적용 후 모달 닫기
+            });
+
+        });
+
+    </script>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            // 검색 함수
+            $("button[name='searchStore']").on("click", function () {
+
+                var category1 = $("input[name='foodCategory1']:checked").val();
+                var category2 = $("input[name='foodCategory2']:checked").val();
+                var category3 = $("input[name='foodCategory3']:checked").val();
+
+                $("input[name='foodCategoryId']").val(category1+"/"
+                    +(
+                        (category2 === "전체" || category2 === "기타")? "" : (category2.replace("-", ", ")+"/"+
+                            ((category3 === "전체" || category3 === "기타")? "" : category3))
+                    ));
+
+                $("form").attr("action", "/searchStore").attr("method", "post").submit();
+
+            });
+
+        });
+
+    </script>
+
+
+</head>
+<body>
+
+    <h1>가게 검색</h1>
+    <hr/>
+
+    <form>
+
+        <input type="text" name="searchKeyword" placeholder="검색어를 입력해주세요.">
+        &ensp;
+        <button type="button" name="searchStore">검색</button>
+        &ensp;
+        <button type="button" name="searchStoreFilter">필터</button>
+
+        <br/><hr/>
+        <div th:insert="~{test/store/modalStoreFilterTest}"></div>
+
+    </form>
+
+
+
+</body>
+</html>
