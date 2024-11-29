@@ -47,9 +47,9 @@ public class StoreServiceTest {
 
 //        List<Community> reviewList = communityService.getReviewList();
 
-//        List<Community> reviewList = communityService.getReviewList(1);
+        List<Community> reviewList = communityService.getReviewList(1);
 
-        List<Community> reviewList = communityService.getReviewList(new ArrayList<>(List.of("user01","user02")));
+//        List<Community> reviewList = communityService.getReviewList(new ArrayList<>(List.of("user01","user02")));
 
         System.out.println(reviewList.size());
         System.out.println(reviewList);
