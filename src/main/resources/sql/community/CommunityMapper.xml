@@ -24,35 +24,26 @@
        <result property="commentContent" column="comments_content" jdbcType="VARCHAR"/>
        <result property="commentDt" column="comments_dt" jdbcType="DATE"/>
        <result property="currCommentUpdate" column="currcomments_update" jdbcType="DATE"/>
-       <result property="comment_ViewStatus" column="comments_viewstatus" jdbcType="BOOLEAN"/>
+       <result property="commentViewStatus" column="comments_viewstatus" jdbcType="BOOLEAN"/>
    </resultMap>
 
-   <!-- 리뷰 추가 -->
-<!--    <insert id="addReview" parameterType="com.placeHere.server.domain.Community">-->
-<!--        INSERT-->
-<!--        INTO review( review_no , review_score, review_img1, review_img2, review_img3, review_Content,-->
-<!--        review_Dt, currReview_Update, review_ViewStatus )-->
-<!--        VALUES ( seq_community_review_no.nextval, #{reviewScore}, #{reviewImg1} , #{reviewImg2}, #{reviewImg3},-->
-<!--        #{reviewContent},CURRENT_DATE, CURRENT_DATE ,  #{reviewViewStatus}  )-->
-
-<!--    </insert>-->
 
     <!-- 리뷰 추가 -->
-<!--    <insert id="addReview">-->
-<!--        INSERT INTO review-->
-<!--        (rsrv_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt, currReview_Update, review_ViewStatus)-->
-<!--        VALUES-->
-<!--        (-->
-<!--        #{rsrvNo},-->
-<!--        #{reviewScore},-->
-<!--        #{reviewImg1},-->
-<!--        #{reviewImg2},-->
-<!--        #{reviewImg3},-->
-<!--        #{reviewContent},-->
-<!--        CURRENT_DATE,-->
-<!--        CURRENT_DATE,-->
-<!--        #{reviewViewStatus})-->
-<!--    </insert>-->
+    <insert id="addReview" parameterType="com.placeHere.server.domain.Community">
+        INSERT INTO review
+        (rsrv_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt, currReview_Update, username)
+        VALUES
+        (
+        #{rsrvNo},
+        #{reviewScore},
+        #{reviewImg1},
+        #{reviewImg2},
+        #{reviewImg3},
+        #{reviewContent},
+        CURRENT_DATE,
+        CURRENT_DATE,
+        #{userName})
+    </insert>
 
 <!--&lt;!&ndash; 리뷰 상세보기&ndash;&gt;-->
     <select id="getReview" parameterType="int" resultMap="communityMap">
@@ -64,66 +55,67 @@
     </select>
 
 <!--    &lt;!&ndash;전체 리뷰 리스트 보기  &ndash;&gt;-->
-<!--    <select id="getReviewList" resultMap="communityMap">-->
-<!--        SELECT-->
-<!--        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,-->
-<!--        currReview_update, review_view_status-->
-<!--        FROM Review-->
-<!--        WHERE review_view_status = true-->
-<!--        ORDER BY review_Dt DESC-->
-<!--    </select>-->
+    <select id="getReviewList" resultMap="communityMap">
+        SELECT
+        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,
+        currReview_update, review_Viewstatus
+        FROM Review
+        WHERE review_Viewstatus = true
+        ORDER BY review_Dt DESC
+    </select>
 
 
 <!--    &lt;!&ndash; 리뷰 수정&ndash;&gt;-->
-<!--    <update id="updateReview" parameterType="com.placeHere.server.domain.Community">-->
-<!--        UPDATE review-->
-<!--        SET-->
-<!--        review_score=#{reviewScore}, review_img1=#{reviewImg1}, review_img2=#{reviewImg2},-->
-<!--        review_img3=#{reviewImg3}, review_Content=#{reviewContent},  currReview_update = SYSDATE-->
-<!--        WHERE review_no = #{reviewNo}-->
-<!--    </update>-->
+    <update id="updateReview" parameterType="com.placeHere.server.domain.Community">
+        UPDATE review
+        SET
+        review_score=#{reviewScore}, review_img1=#{reviewImg1}, review_img2=#{reviewImg2},
+        review_img3=#{reviewImg3}, review_Content=#{reviewContent},  currReview_update = SYSDATE()
+        WHERE review_no = #{reviewNo}
+    </update>
 
 <!--    &lt;!&ndash; 리뷰 노출 여부 Update => 리뷰삭제 &ndash;&gt;-->
-<!--    <update id="removeReview" parameterType="com.placeHere.server.domain.Community">-->
-<!--        UPDATE review-->
-<!--        SET review_Viewstatus = false-->
-<!--        WHERE review_no = #{reviewNo}-->
-<!--    </update>-->
+    <update id="removeReview" parameterType="com.placeHere.server.domain.Community">
+        UPDATE review
+        SET review_Viewstatus = 0
+        WHERE review_no = #{reviewNo}
+    </update>
 
 <!--    &lt;!&ndash; 댓글 추가 &ndash;&gt;-->
-<!--    <insert id="addComment">-->
-<!--    INSERT INTO comment-->
-<!--        (NULL, comments_content, comments_dt, currcomments_update, comments_viewstatus)-->
-<!--        VALUES-->
-<!--        (seq_community_review_no.nextval,-->
-<!--        #{commentContent},-->
-<!--        CURRENT_DATE,-->
-<!--        CURRENT_DATE,-->
-<!--        #{comment_ViewStatus},-->
-<!--    </insert>-->
+    <insert id="addComment" parameterType="com.placeHere.server.domain.Community">
+    INSERT INTO comment
+        (review_no,username,comments_content, comments_dt)
+        VALUES
+        (
+        #{reviewNo},
+        #{userName},
+        #{commentContent},
+        CURRENT_DATE)
 
-<!--    &lt;!&ndash; 댓글 불러오기 &ndash;&gt;-->
-<!--    <select id="getComment" parameterType="int" resultMap="CommentSelectMap">-->
-<!--        SELECT-->
-<!--        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus-->
-<!--        FROM Comment-->
-<!--        WHERE comment_no = #{value}-->
-<!--    </select>-->
+    </insert>
+
+    <!-- 댓글 불러오기 -->
+    <select id="getComment" parameterType="int" resultMap="communityMap">
+        SELECT
+        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus
+        FROM Comment
+        WHERE comment_no = #{commentNo}
+    </select>
 
 <!--    &lt;!&ndash; 댓글 수정 &ndash;&gt;-->
-<!--    <update id="updateComment" parameterType="com.placeHere.server.domain.Community">-->
-<!--        UPDATE comment-->
-<!--        SET-->
-<!--        comments_content=#{commentContent}, currReview_update = SYSDATE-->
-<!--        WHERE comment_no = #{commentNo}-->
-<!--    </update>-->
+    <update id="updateComment" parameterType="com.placeHere.server.domain.Community">
+        UPDATE comment
+        SET
+        comments_content=#{commentContent}, currcomments_update = CURRENT_DATE
+        WHERE comment_no = #{commentNo}
+    </update>
 
 <!--    &lt;!&ndash; 댓글 노출 여부 Update => 댓글삭제 &ndash;&gt;-->
-<!--    <update id="removeComment" parameterType="com.placeHere.server.domain.Community">-->
-<!--        UPDATE comment-->
-<!--        SET comments_viewstatus = false-->
-<!--        WHERE comment_no = #{commentNo}-->
-<!--    </update>-->
+    <update id="removeComment" parameterType="com.placeHere.server.domain.Community">
+        UPDATE comment
+        SET comments_viewstatus = false
+        WHERE comment_no = #{commentNo}
+    </update>
 
 
 </mapper>

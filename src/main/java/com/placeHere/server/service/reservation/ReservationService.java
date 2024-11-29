@@ -5,7 +5,7 @@ import com.placeHere.server.domain.Search;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
+
 
 public interface ReservationService {
 
@@ -26,6 +26,9 @@ public interface ReservationService {
 
     // 예약 환불 사유 업데이트
     public void updateRsrvReason(int rsrvNo, String reason) throws Exception;
+
+    // 예약 목록 조회 어드민
+    public List<Reservation> getRsrvList() throws Exception;
 
     // 예약 목록 조회 일반 회원
     public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception;
@@ -48,14 +51,6 @@ public interface ReservationService {
     // 탈퇴할 점주 회원의 전화 예약 권수 카운팅
     public int getCountRsrvNumber(int storeId) throws Exception;
 
-    // 한솔 예정
-    public void calcRsrvPercent(int rsrvNo, String paymentId) throws Exception;
-
-    // 한솔 예정
-    public void cntWeekRsrv(int rsrvNo, String paymentId) throws Exception;
-
-    // 한솔 예정
-    public void cntRsrvAvg(int rsrvNo, String paymentId) throws Exception;
 
 
 }

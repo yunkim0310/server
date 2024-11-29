@@ -58,6 +58,11 @@ public class ReservationServiceImpl implements ReservationService{
         reservationDao.updateRsrvReason(rsrvNo, reason);
     }
 
+    // 예약 목록 조회 어드민
+    public List<Reservation> getRsrvList() throws Exception{
+        return reservationDao.getRsrvList();
+    }
+
 
     // 예약 목록 조회 일반 회원
     public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception {
@@ -113,21 +118,5 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
-    // 한솔 예정
-    public void calcRsrvPercent(int rsrvNo, String paymentId) throws Exception {
-        reservationDao.calcRsrvPercent(rsrvNo, paymentId);
-    }
-
-
-    // 한솔 예정
-    public void cntWeekRsrv(int rsrvNo, String paymentId) throws Exception {
-        reservationDao.cntWeekRsrv(rsrvNo, paymentId);
-    }
-
-
-    // 한솔 예정
-    public void cntRsrvAvg(int rsrvNo, String paymentId) throws Exception {
-        reservationDao.cntRsrvAvg(rsrvNo, paymentId);
-    }
 
 }

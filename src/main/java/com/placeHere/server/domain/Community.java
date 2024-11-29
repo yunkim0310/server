@@ -35,7 +35,7 @@ public class Community {
     //리뷰 노출 여부
     private boolean reviewViewStatus;
     //회원아이디
-    private String username;
+    private String userName;
 
     // Field 댓글
     // 댓글 번호
@@ -47,6 +47,8 @@ public class Community {
     //최종댓글 수정일
     private Date currCommentUpdate;
     //댓글 노출 여부
-    private boolean comment_ViewStatus;
+    private boolean commentViewStatus;
+
+
 
 }
