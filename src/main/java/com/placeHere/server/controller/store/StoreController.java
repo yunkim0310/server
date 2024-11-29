@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 @Controller
 public class StoreController {
@@ -336,6 +338,7 @@ public class StoreController {
 
         System.out.println("/searchStore : GET");
 
+        model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
@@ -349,7 +352,75 @@ public class StoreController {
 
         System.out.println("/searchStore : POST");
 
+        System.out.println(search);
+
 
         return "test/store/getStoreListTest";
+    }
+
+
+    // 가게 목록 조회
+    @GetMapping("/getStoreList")
+    public String getStoreList(@ModelAttribute Search search,
+                               Model model) {
+
+        System.out.println("/getStoreList : GET");
+
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
+
+        List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
+
+        if (selectedCategoryList.get(0).equals("")) {
+            selectedCategoryList = List.of("","","");
+        }
+
+        List<String> hashtagList = search.getHashtagList();
+
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+
+        search.setHashtagList(hashtagList);
+
+        model.addAttribute("mode", "result");
+        model.addAttribute("search", search);
+        model.addAttribute("selectedCategoryList", selectedCategoryList);
+        
+        // 가게 목록 검색
+        String foodCategoryId = search.getFoodCategoryId();
+        foodCategoryId = foodCategoryId.replace("전체/", "").replace("기타/", "");
+        search.setFoodCategoryId(foodCategoryId);
+        System.out.println(search);
+
+        List<Store> storeList = storeService.getStoreList(search);
+        int totalCnt = (storeList.isEmpty()) ? 0 : storeList.get(0).getTotalCnt();
+
+        System.out.println(storeList);
+
+        // 가게 목록
+        model.addAttribute("storeList", storeList);
+        model.addAttribute("totalCnt", totalCnt);
+
+        // 필터 관련
+        model.addAttribute("regionList", regionList);
+        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("amenitiesNameList", amenitiesNameList);
+
+        return "test/store/getStoreListTest";
+    }
+
+
+    // 가게 정보 조회
+    @GetMapping(value = "/getStore", params = "storeId")
+    public String getStore(@RequestParam("storeId") int storeId, Model model) {
+
+        System.out.println("/getStore : GET");
+
+        Store store = storeService.getStore(storeId);
+
+        System.out.println(store);
+
+        model.addAttribute("store", store);
+
+        return "test/store/getStoreTest";
     }
 }

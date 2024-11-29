@@ -56,6 +56,9 @@ public class Search {
         startDate = dateFormat.format(today);
         endDate = dateFormat.format(today.plusMonths(1));
 
+        priceMin = 0;
+        priceMax = 100000;
+
         page = 1;
     }
 
@@ -68,6 +71,9 @@ public class Search {
 
         startDate = dateFormat.format(today);
         endDate = dateFormat.format(today.plusMonths(1));
+
+        priceMin = 0;
+        priceMax = 100000;
 
         page = 1;
 

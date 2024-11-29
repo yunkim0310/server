@@ -197,6 +197,7 @@
                 GROUP BY reservation.store_id
             ) AS reviews ON s.store_id = reviews.store_id
         WHERE s.store_id = #{storeId}
+        AND s.store_status = 0
 
     </select>
 
@@ -217,11 +218,15 @@
                     JOIN reservation ON review.rsrv_no = reservation.rsrv_no
                     GROUP BY reservation.store_id
                 ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
-            WHERE store_name LIKE CONCAT('%',#{searchKeyword},'%')
-                OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-                OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
-                OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
-                OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))) AS store
+                WHERE store_status = 0
+                <if test="searchKeyword != null and searchKeyword != ''">
+                        OR store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                </if>
+            ) AS store
         <where>
             <if test="regionList != null and !regionList.isEmpty()">
                 AND (<foreach collection="regionList" separator="OR" item="region">
@@ -234,9 +239,10 @@
             </if>
 
             <if test="hashtagList != null and !hashtagList.isEmpty()">
-                AND (<foreach collection="hashtagList" separator="OR" item="hashtag">
-                hashtag LIKE CONCAT('%',#{hashtag},'%')
-            </foreach>)
+                AND (
+                    <foreach collection="hashtagList" separator="OR" item="hashtag">
+                        <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
+                    </foreach>)
             </if>
             <if test="priceMin != 0 and priceMax!=0">
                 AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
@@ -250,7 +256,7 @@
             </if>
         </where>
         ORDER BY review_score_avg DESC, review_cnt DESC
-        LIMIT #{startRowNum}, #{listSize}
+        <!-- LIMIT #{startRowNum}, #{listSize} -->
 
     </select>
 
