@@ -8,7 +8,7 @@
         function updateRsrvStatus(rsrvNo, buttonElement) {
             console.log("Reservation Number: ", rsrvNo); // 디버깅용 로그
             $.ajax({
-                url: '/reservation/updateRsrvStatus',
+                url: '/test/reservation/updateRsrvStatus',
                 type: 'POST',
                 contentType: 'application/json',
                 data: JSON.stringify({

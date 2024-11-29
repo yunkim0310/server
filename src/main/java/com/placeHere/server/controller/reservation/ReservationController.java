@@ -3,6 +3,7 @@ package com.placeHere.server.controller.reservation;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.Store;
+import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -196,7 +197,8 @@ public class ReservationController {
     @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
     public String addRsrv(
             @RequestParam("rsrvDt") String rsrvDtStr, // String으로 받기
-            @ModelAttribute("reservation") Reservation reservation) throws Exception {
+            @ModelAttribute("reservation") Reservation reservation,
+            Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : POST");
 
@@ -210,7 +212,60 @@ public class ReservationController {
         // Business Logic
         reservationService.addRsrv(reservation);
 
-        return "test/reservation/success";
+        // 저장 후 예약 번호 가져오기 (MyBatis나 JPA의 경우, reservation 객체에 rsrvNo가 자동으로 설정됨)
+        int rsrvNo = reservation.getRsrvNo(); // MyBatis나 JPA가 예약 번호를 설정했다고 가정
+
+        // 예약 번호를 pay 페이지로 전달
+        model.addAttribute("rsrvNo", rsrvNo);
+
+        return "test/reservation/pay";
+    }
+
+
+    @RequestMapping(value = "pay", method = RequestMethod.POST)
+    public String confirmPay(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+        // 1. 예약 정보 조회
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        java.sql.Date sqlRsrvDt = new java.sql.Date(reservation.getRsrvDt().getTime());
+
+        // 2. 가게 정보 조회 (예약 최대 인수)
+        Store store = storeService.getStore(reservation.getStoreId(), sqlRsrvDt);
+        StoreOperation storeOperation = store.getStoreOperation();
+        int maxCapacity = store.getStoreOperation().getRsrvLimit(); // 가게의 예약 최대 인수
+
+        // 3. 휴무일 확인
+        List<String> closedayList = storeOperation.getClosedayList(); // 가게의 휴무일 목록
+        String reservationDate = sqlRsrvDt.toString(); // 예약 날짜를 문자열로 변환
+
+        if (closedayList != null && closedayList.contains(reservationDate)) {
+            // 예약 일자가 휴무일인 경우
+            reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+
+            // fail.html로 이동
+            model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
+            return "test/reservation/fail";
+        }
+
+        // 4. 현재 예약 일시의 예약 인수 계산
+        int currentReservationCount = reservationService.getCountRsrv(reservation.getRsrvDt(), reservation.getStoreId());
+        int totalReservationCount = currentReservationCount + reservation.getRsrvPerson();
+
+        // 5. 예약 최대 인수 비교 및 처리
+        if (totalReservationCount > maxCapacity) {
+            // 예약 상태를 "예약 취소"로 변경
+            reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+
+            // fail.html로 이동
+            model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
+            return "test/reservation/fail";
+        } else {
+            // 예약 상태를 "예약 요청"으로 변경
+            reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
+
+            // success.html로 이동
+            return "test/reservation/success";
+        }
     }
 
 }

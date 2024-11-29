@@ -32,9 +32,9 @@ public class ReservationBLTest {
         reservation.setStoreId(1);
         reservation.setUserName("user12");
 
-        reservation.setRsrvDt(Timestamp.valueOf("2024-12-07 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-12 12:00:00"));
 
-        reservation.setRsrvPerson(2);
+        reservation.setRsrvPerson(4);
         reservation.setAmount(10000);
         reservation.setRsrvReq("짬뽕 맛있게 만들어 주세요");
         reservation.setStoreName("보배 반점");
@@ -68,7 +68,7 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 27; // 테스트용 예약 번호
+        int rsrvNo = 35; // 테스트용 예약 번호
         String rsrvStatus = "예약 요청"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
@@ -138,7 +138,7 @@ public class ReservationBLTest {
     public void testGetCountRsrv() throws Exception {
         Reservation reservation = new Reservation();
         // Given: 테스트 데이터
-        reservation.setRsrvDt(Timestamp.valueOf("2024-11-29 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-20 21:30:00"));
         reservation.setStoreId(1);
 
         // When: 서비스 메서드 호출
