@@ -1,12 +1,14 @@
 package com.placeHere.server.controller.reservation;
 
+import com.placeHere.server.dao.store.StoreDao;
+import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.service.reservation.ReservationService;
-import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
 import java.util.Map;
 
 
@@ -18,7 +20,7 @@ public class ReservationRestController {
     private ReservationService reservationService;
 
     @Autowired
-    private StoreService storeService;
+    private StoreDao storeDao;
 
 
     public ReservationRestController(){
@@ -40,6 +42,25 @@ public class ReservationRestController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error updating reservation status: " + e.getMessage());
+        }
+    }
+
+
+    // 가게 운영 정보 조회 API
+    @GetMapping("/getOperationByDate")
+    public ResponseEntity<StoreOperation> getOperationByDate(@RequestParam("storeId") int storeId,
+                                                             @RequestParam("effectDt") String effectDt) {
+        try {
+            Date sqlEffectDt = Date.valueOf(effectDt); // String -> java.sql.Date 변환
+            StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
+
+            if (operation != null) {
+                return ResponseEntity.ok(operation);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 

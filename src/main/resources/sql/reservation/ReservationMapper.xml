@@ -25,7 +25,7 @@
     </resultMap>
 
 
-    <insert id="addRsrv" parameterType="com.placeHere.server.domain.Reservation">
+    <insert id="addRsrv" parameterType="com.placeHere.server.domain.Reservation" useGeneratedKeys="true" keyProperty="rsrvNo">
         INSERT INTO reservation (
             store_id, user_name, rsrv_dt, rsrv_person, amount,
             rsrv_req, rsrv_create_time, store_name, store_addr, rsrv_status, rsrv_number
@@ -92,7 +92,7 @@
 
 
     <select id="getCountRsrv" parameterType="map" resultType="int">
-        SELECT SUM(rsrv_person)
+        SELECT COALESCE(SUM(rsrv_person), 0)
         FROM reservation
         WHERE rsrv_dt = #{rsrvDt}
           AND store_id = #{storeId}
@@ -101,7 +101,7 @@
 
 
     <select id="getCountDayRsrv" parameterType="map" resultType="int">
-        SELECT SUM(rsrv_person)
+        SELECT COALESCE(SUM(rsrv_person), 0)
         FROM reservation
         WHERE DATE(rsrv_dt) = DATE(#{rsrvDt})
           AND store_id = #{storeId}
