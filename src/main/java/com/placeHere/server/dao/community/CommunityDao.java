@@ -2,6 +2,7 @@ package com.placeHere.server.dao.community;
 
 import com.placeHere.server.domain.Community;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -18,6 +19,12 @@ public interface CommunityDao {
 
     //전체 리뷰 가져오기
     public List<Community> getReviewList() throws Exception;
+
+    // 특정 가게의 리뷰 리스트 조회
+    public List<Community> getReviewListByStoreId(int storeId);
+
+    // 특정 회원들의 리뷰 리스트 조회
+    public List<Community> getReviewListByUserName(@Param("userNameList") List<String> userNameList);
 
 
     //리뷰 업데이트

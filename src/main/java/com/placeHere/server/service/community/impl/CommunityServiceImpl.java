@@ -40,6 +40,16 @@ public class CommunityServiceImpl implements CommunityService {
         return communityDao.getReviewList();
     }
 
+    @Override
+    public List<Community> getReviewList(int storeId) {
+        return communityDao.getReviewListByStoreId(storeId);
+    }
+
+    @Override
+    public List<Community> getReviewList(List<String> userNameList) {
+        return communityDao.getReviewListByUserName(userNameList);
+    }
+
     public void updateReview(Community community) throws Exception{
         communityDao.updateReview(community);
     }

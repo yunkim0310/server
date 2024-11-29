@@ -19,6 +19,11 @@ public interface CommunityService {
     //전체 리뷰 가져오기
     public List<Community> getReviewList() throws Exception;
 
+    // 특정 가게의 리뷰 리스트 조회
+    public List<Community> getReviewList(int storeId);
+
+    // 특정 회원들의 리뷰 리스트 조회
+    public List<Community> getReviewList(List<String> userNameList);
 
     //리뷰 업데이트
     public void updateReview(Community community) throws Exception;
