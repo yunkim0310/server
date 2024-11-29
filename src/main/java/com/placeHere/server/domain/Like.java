@@ -23,8 +23,10 @@ public class Like {
     private Date likeDt;
     // 관련 번호
     private int relationNo;
-
+    // 좋아요 대상
     private String target;
+    // 매장명
+    private String storeName;
 
 
 

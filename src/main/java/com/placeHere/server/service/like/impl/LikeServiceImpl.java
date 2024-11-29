@@ -45,5 +45,11 @@ public class LikeServiceImpl implements LikeService {
     public Like checkLike(Like like) throws Exception{
         return likeDao.checkLike(like);
     }
+    
+    // 가게 좋아요 목록 조회
+    @Override
+    public List<Like> getStoreLikeList(String UserName) throws Exception {
+        return likeDao.getStoreLikeList(UserName);
+    }
 
 }

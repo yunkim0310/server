@@ -13,6 +13,8 @@
         <result property="relationNo" column="relation_no" jdbcType="INTEGER"/>
         <result property="target" column="target" jdbcType="VARCHAR"/>
         <result property="likeDt" column="like_dt" jdbcType="DATE"/>
+        <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
+
     </resultMap>
 
     <!--    좋아요 추가-->
@@ -62,6 +64,20 @@
         WHERE username = #{userName}
         AND relation_no = #{relationNo}
         AND target = #{target}
+    </select>
+
+    <!-- 가게 좋아요 목록 조회 -->
+    <select id="getStoreLikeList" resultMap="likeMap">
+
+        SELECT like_store.*, store.store_name
+        FROM
+        (SELECT *
+        FROM likes
+        WHERE username= #{userName}
+        AND target = 'store'
+        ORDER BY like_dt, like_id) as like_store, store
+        WHERE like_store.relation_no = store.store_id
+
     </select>
 
 
