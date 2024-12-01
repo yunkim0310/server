@@ -27,7 +27,7 @@
 
                 if (selectedDate) {
                     // Ajax 요청으로 운영 정보 가져오기
-                    fetch(`/test/store/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
+                    fetch(`/test/reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data) {
