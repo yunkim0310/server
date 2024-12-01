@@ -1,23 +1,19 @@
 package com.placeHere.server;
 
 import com.placeHere.server.dao.store.StoreDao;
-import com.placeHere.server.domain.Menu;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.Store;
-import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @SpringBootTest
 public class StoreServiceTest {
@@ -29,7 +25,51 @@ public class StoreServiceTest {
     @Autowired
     private StoreDao storeDao;
 
-//    @Test
+    @Value("${list_size}")
+    private int listSize;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+
+    @Test
+    public void removeStoreNews() {
+
+        storeService.removeStoreNews(13);
+
+        StoreNews storeNews = new StoreNews();
+        storeNews.setStoreId(1);
+        storeNews.setNewsContents("보배반점 인스타 행사중~");
+
+        Search search = new Search(pageSize, listSize);
+
+//        storeService.addStoreNews(storeNews);
+
+        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1,search);
+        System.out.println(storeNewsList.size());
+        System.out.println(storeNewsList);
+
+    }
+
+    @Test
+    public void addStoreNews() {
+
+        StoreNews storeNews = new StoreNews();
+        storeNews.setStoreId(1);
+        storeNews.setNewsContents("보배반점 인스타 행사중~");
+
+        Search search = new Search(pageSize, listSize);
+
+        storeService.addStoreNews(storeNews);
+
+        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1,search);
+        System.out.println(storeNewsList.size());
+        System.out.println(storeNewsList);
+
+    }
+
+
+    //    @Test
     public void testAddStore() {
 
         Store store = new Store();
@@ -171,8 +211,8 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-//        Store store = storeService.getStore(13);
-        Store store = storeService.getStore(13, Date.valueOf("2024-12-10"));
+        Store store = storeService.getStore(1);
+//        Store store = storeService.getStore(1, Date.valueOf("2024-11-26"));
 
         System.out.println(store);
 
@@ -182,12 +222,15 @@ public class StoreServiceTest {
     public void getStoreList() {
 
         Search search = new Search();
-        search.setSearchKeyword("케밥");
+        search.setListSize(listSize);
+        search.setSearchKeyword("감자탕");
 
 //        List<String> regionList = new ArrayList<>(List.of("강남"));
 //        search.setRegionList(regionList);
 
-        search.setAmenitiesNoList(List.of(1));
+//        search.setFoodCategoryId("한식");
+
+//        search.setAmenitiesNoList(List.of(1));
 
 //        System.out.println(search);
 
@@ -199,14 +242,123 @@ public class StoreServiceTest {
     @Test
     public void getStatistics() {
 
-        int storeId = 2;
+        int storeId = 1;
 
-        List<Integer> cntWeekRsrv = storeDao.cntWeekRsrv(storeId);
-        System.out.println(cntWeekRsrv);
+//        System.out.println("금주 요일별 예약횟수");
+//        List<Integer> cntWeekRsrvList = storeDao.cntWeekRsrv(storeId);
+//        System.out.println(cntWeekRsrvList);
+//
+//        Map<String, Integer> cntWeekRsrvMap = new HashMap<String, Integer>();
+//        List<String> weekName = new ArrayList<>(List.of("일", "월", "화", "수", "목", "금", "토"));
+//        System.out.println(weekName);
+//
+//        for (int i = 0; i < weekName.size(); i++) {
+//            cntWeekRsrvMap.put(weekName.get(i), cntWeekRsrvList.get(i));
+//        }
+//
+//        System.out.println(cntWeekRsrvMap);
+//
+//        System.out.println("\n요일별 평균 예약횟수");
+//        List<Integer> cntRsrvAvgList = storeDao.cntRsrvAvg(storeId);
+//        System.out.println(cntRsrvAvgList);
+//
+//        Map<String, Integer> cntRsrvAvgMap = new HashMap<>();
+//
+//        for (int i = 0; i < weekName.size(); i++) {
+//            cntRsrvAvgMap.put(weekName.get(i), cntRsrvAvgList.get(i));
+//        }
+//
+//        System.out.println(cntRsrvAvgMap);
+//
+//        System.out.println("\n성별 나이대별 예약비율");
+//        List<Map<String, Integer>> calcRsrvPercentList = storeDao.calcRsrvPercent(storeId);
+//        System.out.println(calcRsrvPercentList);
+//
+//        Map<String, Integer> calcRsrvPercentMap = new HashMap<>();
+//
+//        Set<String> ageGenderList = new HashSet<>(Arrays.asList(
+//                "10대 남성", "20대 남성", "30대 남성", "40대 남성", "50대 남성", "60대이상 남성",
+//                "10대 여성", "20대 여성", "30대 여성", "40대 여성", "50대 여성", "60대이상 여성"
+//        ));
+//
+//        for (Map<String, Integer> map : calcRsrvPercentList) {
+//            calcRsrvPercentMap.put(map.values().toArray()[0].toString(), Integer.parseInt(map.values().toArray()[1].toString()));
+//        }
+//
+//        System.out.println(calcRsrvPercentMap);
+//
+//        for (String ageGender : ageGenderList) {
+//            calcRsrvPercentMap.putIfAbsent(ageGender, 0);
+//        }
+//
+//        System.out.println(calcRsrvPercentMap);
 
-        List<Integer> cntRsrvAvg = storeDao.cntRsrvAvg(storeId);
-        System.out.println(cntRsrvAvg);
+        storeService.getStatistics(1);
 
     }
+
+    @Test
+    public void test() {
+
+        StoreOperation storeOperation = new StoreOperation();
+        storeOperation.setRegularClosedayList(new ArrayList<String>(List.of("월","금")));
+
+        List<String> regularClosedayList = (storeOperation.getRegularClosedayList() == null) ? new ArrayList<>() : storeOperation.getRegularClosedayList();
+        int regularClosedayCnt = regularClosedayList.size();
+
+        if (regularClosedayCnt < 3) {
+
+            for (int i = 0; i < 3 - regularClosedayCnt; i++) {
+                regularClosedayList.add(null);
+            }
+
+        }
+
+        System.out.println(regularClosedayList);
+    }
+
+    @Test
+    public void updateOperation() {
+
+        StoreOperation storeOperation = new StoreOperation();
+        storeOperation.setStoreId(3);
+        storeOperation.setOpenTime("09:30");
+        storeOperation.setCloseTime("23:30");
+        storeOperation.setRegularClosedayList(null);
+        storeOperation.setSecurity(5000);
+        storeOperation.setRsrvLimit(30);
+
+        storeService.updateOperation(storeOperation);
+
+    }
+
+    @Test
+    public void pagingTest() {
+
+//        System.out.println(listSize);
+        Search search = new Search(pageSize, listSize);
+
+//        List<StoreNews> storeNewsList = storeService.getStoreNewsList(1, search);
+//
+//        System.out.println(storeNewsList.size());
+//        System.out.println(storeNewsList);
+
+//        System.out.println(search);
+
+        List<Closeday> closedayList = storeService.getClosedayList(1, search);
+
+        System.out.println(closedayList.size());
+        System.out.println(closedayList);
+
+//        System.out.println(storeDao.getClosedayList(1));
+
+    }
+
+    @Test
+    public void getStoreId() {
+
+        System.out.println(storeService.getStoreId("store08"));
+    }
+
 
 }

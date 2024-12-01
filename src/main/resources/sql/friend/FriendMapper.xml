@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.community.FriendDao">
+
+
+   <resultMap id="friendMap" type="com.placeHere.server.domain.Friend">
+       <result property="friendNo" column="friend_no" jdbcType="INTEGER"/>
+       <result property="friendReq" column="friend_req" jdbcType="VARCHAR"/>
+       <result property="friendRes" column="friend_res" jdbcType="VARCHAR"/>
+       <result property="chkfriendReq" column="chkfriend_req" jdbcType="BOOLEAN"/>
+       <result property="friendDate" column="friend_dt" jdbcType="DATE"/>
+       <result property="friendStatus" column="friend_status" jdbcType="BOOLEAN"/>
+   </resultMap>
+
+
+<!-- 친구 신청 -->
+    <insert id="sendFriendReq" parameterType="com.placeHere.server.domain.Friend">
+         INSERT INTO Friend (friend_req, friend_res,  friend_dt )
+         VALUES (#{friendReq}, #{friendRes}, CURRENT_DATE);
+    </insert>
+
+    <!-- 친구 수락&ndash;&gt;-->
+    <update id="addFriend" parameterType="com.placeHere.server.domain.Friend">
+        UPDATE friend
+        SET
+        friend_status = 1
+        WHERE friend_no = #{friendNo}
+    </update>
+
+    <!--    친구 신청 거절 -->
+        <delete id="removeFriendReq" parameterType="com.placeHere.server.domain.Friend">
+        DELETE FROM Friend
+        WHERE friend_no = #{friendNo}
+        AND friend_status = 0;
+        </delete>
+
+    <!--    친구 목록을 조회하다 -->
+        <select id="getFriendList" parameterType="String" resultMap="friendMap">
+        SELECT friend_res
+        FROM Friend
+        WHERE friend_req = #{friendReq} AND friend_status = 1
+        </select>
+
+<!--    친구 요청 확인-->
+    <select id="checkFriendReq" parameterType="String" resultMap="friendMap">
+        SELECT friend_req
+        FROM Friend
+        WHERE friend_res = #{friend_res} AND friend_status = 1
+    </select>
+
+        <!--    친구 요청 확인시 상태 변경-->
+    <update id="updateChkfriendReq" parameterType="com.placeHere.server.domain.Friend">
+        UPDATE Friend
+        SET chkfriend_req = 1
+        WHERE friend_res = #{friendRes} AND chkfriend_req = 0;
+    </update>
+</mapper>

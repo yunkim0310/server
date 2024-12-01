@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.like.LikeDao">
+
+    <resultMap id="likeMap" type="com.placeHere.server.domain.Like">
+
+        <result property="likeId" column="like_id" jdbcType="INTEGER"/>
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
+        <result property="relationNo" column="relation_no" jdbcType="INTEGER"/>
+        <result property="target" column="target" jdbcType="VARCHAR"/>
+        <result property="likeDt" column="like_dt" jdbcType="DATE"/>
+    </resultMap>
+
+    <!--    좋아요 추가-->
+    <insert id="addLike" parameterType="com.placeHere.server.domain.Like">
+        INSERT INTO likes (username, relation_no, target, like_dt)
+        VALUES (#{userName}, #{relationNo}, #{target}, CURRENT_DATE)
+    </insert>
+
+<!--    &lt;!&ndash; 좋아요 취소   &ndash;&gt;-->
+    <delete id="removeLike" parameterType="com.placeHere.server.domain.Like">
+        DELETE FROM likes
+        WHERE  like_id = #{likeId};
+    </delete>
+
+    <!-- 좋아요 토탈 카운트 -->
+    <select id="totalCount" parameterType="com.placeHere.server.domain.Like">
+        SELECT COUNT(CASE WHEN relation_no= #{relationNo} and target='store'  THEN 1 END) AS store,
+        COUNT(CASE WHEN relation_no= #{relationNo} and target='review'  THEN 1 END) AS review,
+        COUNT(CASE WHEN relation_no= #{relationNo} and target='comment'  THEN 1 END) AS comment
+        FROM likes;
+    </select>
+
+<!-- 좋아요 리스트 ( 좋아요 순위) -->
+<!--    <select id="likeList" parameterType="com.placeHere.server.domain.Like">-->
+<!--    SELECT COUNT(username) AS like_count-->
+<!--    FROM likes-->
+<!--    GROUP BY relation_no-->
+<!--    ORDER BY like_count DESC-->
+<!--    LIMIT 5-->
+<!--    </select>-->
+
+    <select id="likeList">
+        SELECT relation_no
+        FROM likes
+        WHERE target = #{target}
+            AND like_dt BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND CURDATE()
+        GROUP BY relation_no
+        ORDER BY COUNT(username) DESC
+        LIMIT 5;
+    </select>
+
+
+    <!--    좋아요 검증-->
+    <select id="checkLike" parameterType="com.placeHere.server.domain.Like">
+        SELECT  username
+        FROM likes
+        WHERE username = #{userName}
+        AND relation_no = #{relationNo}
+        AND target = #{target}
+    </select>
+
+
+
+</mapper>

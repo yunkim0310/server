@@ -105,29 +105,5 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    // 비회원이 비밀번호 재설정
-    public boolean findPwdForm(User user) throws Exception {
-        int count = userDao.findPwdForm(user); // COUNT 결과 반환
-        return count > 0; // 0보다 크면 true, 아니면 false
-    }
-
-    public void updatePassword(User user) throws Exception {
-
-        System.out.println("user 확인 :: " + user);
-
-        // 비밀번호 암호화
-        String rawPassword = user.getPassword();
-        // 암호화
-        String encodedPassword = passwordEncoder.encode(rawPassword);
-
-        user.setPassword(encodedPassword);
-
-        userDao.updatePassword(user);
-
-
-    }
-
-
-
 
 }

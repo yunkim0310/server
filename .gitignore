@@ -1,5 +1,5 @@
 HELP.md
-
+.gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
@@ -42,6 +42,7 @@ application.yml
 aws.yml
 src/main/resources/api.yml
 api.yml
+
 
 # Gradle
 .gradle

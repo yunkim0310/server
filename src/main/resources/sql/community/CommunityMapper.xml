@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.community.CommunityDao">
+
+    <!-- 리뷰 -->
+   <resultMap id="communityMap" type="com.placeHere.server.domain.Community">
+       <result property="reviewNo" column="review_no" jdbcType="INTEGER"/>
+       <result property="rsrvNo" column="rsrv_no" jdbcType="INTEGER"/>
+       <result property="reviewScore" column="review_score" jdbcType="INTEGER"/>
+       <result property="reviewImg1" column="review_img1" jdbcType="VARCHAR"/>
+       <result property="reviewImg2" column="review_img2" jdbcType="VARCHAR"/>
+       <result property="reviewImg3" column="review_img3" jdbcType="VARCHAR"/>
+       <result property="reviewContent" column="review_Content" jdbcType="VARCHAR" />
+       <result property="reviewDt" column="review_Dt" jdbcType="DATE" />
+       <result property="currReviewUpdate" column="currReview_Update" jdbcType="DATE"/>
+       <result property="reviewViewStatus" column="review_ViewStatus" jdbcType="BOOLEAN"/>
+
+       <!-- 댓글 -->
+       <result property="commentNo" column="comment_no" jdbcType="INTEGER"/>
+       <result property="commentContent" column="comments_content" jdbcType="VARCHAR"/>
+       <result property="commentDt" column="comments_dt" jdbcType="DATE"/>
+       <result property="currCommentUpdate" column="currcomments_update" jdbcType="DATE"/>
+       <result property="commentViewStatus" column="comments_viewstatus" jdbcType="BOOLEAN"/>
+   </resultMap>
+
+
+    <!-- 리뷰 추가 -->
+    <insert id="addReview" parameterType="com.placeHere.server.domain.Community">
+        INSERT INTO review
+        (rsrv_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt, currReview_Update, username)
+        VALUES
+        (
+        #{rsrvNo},
+        #{reviewScore},
+        #{reviewImg1},
+        #{reviewImg2},
+        #{reviewImg3},
+        #{reviewContent},
+        CURRENT_DATE,
+        CURRENT_DATE,
+        #{userName})
+    </insert>
+
+<!--&lt;!&ndash; 리뷰 상세보기&ndash;&gt;-->
+    <select id="getReview" parameterType="int" resultMap="communityMap">
+        SELECT
+        review_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt,
+        currReview_Update, review_ViewStatus
+        FROM Review
+        WHERE review_no = #{value}
+    </select>
+
+<!--    &lt;!&ndash;전체 리뷰 리스트 보기  &ndash;&gt;-->
+    <select id="getReviewList" resultMap="communityMap">
+        SELECT
+        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,
+        currReview_update, review_Viewstatus
+        FROM Review
+        WHERE review_Viewstatus = true
+        ORDER BY review_Dt DESC
+    </select>
+
+
+<!--    &lt;!&ndash; 리뷰 수정&ndash;&gt;-->
+    <update id="updateReview" parameterType="com.placeHere.server.domain.Community">
+        UPDATE review
+        SET
+        review_score=#{reviewScore}, review_img1=#{reviewImg1}, review_img2=#{reviewImg2},
+        review_img3=#{reviewImg3}, review_Content=#{reviewContent},  currReview_update = SYSDATE()
+        WHERE review_no = #{reviewNo}
+    </update>
+
+<!--    &lt;!&ndash; 리뷰 노출 여부 Update => 리뷰삭제 &ndash;&gt;-->
+    <update id="removeReview" parameterType="com.placeHere.server.domain.Community">
+        UPDATE review
+        SET review_Viewstatus = 0
+        WHERE review_no = #{reviewNo}
+    </update>
+
+<!--    &lt;!&ndash; 댓글 추가 &ndash;&gt;-->
+    <insert id="addComment" parameterType="com.placeHere.server.domain.Community">
+    INSERT INTO comment
+        (review_no,username,comments_content, comments_dt)
+        VALUES
+        (
+        #{reviewNo},
+        #{userName},
+        #{commentContent},
+        CURRENT_DATE)
+
+    </insert>
+
+    <!-- 댓글 불러오기 -->
+    <select id="getComment" parameterType="int" resultMap="communityMap">
+        SELECT
+        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus
+        FROM Comment
+        WHERE comment_no = #{commentNo}
+    </select>
+
+<!--    &lt;!&ndash; 댓글 수정 &ndash;&gt;-->
+    <update id="updateComment" parameterType="com.placeHere.server.domain.Community">
+        UPDATE comment
+        SET
+        comments_content=#{commentContent}, currcomments_update = CURRENT_DATE
+        WHERE comment_no = #{commentNo}
+    </update>
+
+<!--    &lt;!&ndash; 댓글 노출 여부 Update => 댓글삭제 &ndash;&gt;-->
+    <update id="removeComment" parameterType="com.placeHere.server.domain.Community">
+        UPDATE comment
+        SET comments_viewstatus = false
+        WHERE comment_no = #{commentNo}
+    </update>
+
+
+</mapper>

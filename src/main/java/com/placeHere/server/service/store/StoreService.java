@@ -12,8 +12,11 @@ public interface StoreService {
     // 사업자번호 중복확인 (DB) - Rest 에서 사용
     public int chkDuplicateBusinessNo(String businessNo);
 
+    // 가게 Id 조회
+    public int getStoreId(String userName);
+
     // 가게 등록 (return 되는 값은 store_id 의 값)
-    public void addStore(Store store);
+    public int addStore(Store store);
 
     // 가게 정보 조회 (특정 날짜)
     public Store getStore(int storeId, Date effectDt);
@@ -46,7 +49,7 @@ public interface StoreService {
     public void addStoreNews(StoreNews storeNews);
 
     // 매장 소식 목록 조회
-    public List<StoreNews> getStoreNewsList(int storeId);
+    public List<StoreNews> getStoreNewsList(int storeId, Search search);
 
     // 매장 소식 수정
     public void updateStoreNews(StoreNews storeNews);
@@ -55,10 +58,10 @@ public interface StoreService {
     public void removeStoreNews(int newsId);
 
     // 휴무일 등록
-    public void addCloseday(int storeId, Date closeday);
+    public void addCloseday(Closeday closeday);
 
     // 휴무일 목록 조회
-    public List<Date> getClosedayList(int storeId, Search search);
+    public List<Closeday> getClosedayList(int storeId, Search search);
 
     // 휴무일 삭제 (DELETE)
     public void removeCloseday(int closedayId);

@@ -4,16 +4,13 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Setter
 @Service("storeServiceImpl")
@@ -38,9 +35,16 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
+    // 가게 Id 조회
+    public int getStoreId(String userName) {
+
+        return storeDao.getStoreId(userName);
+    }
+
+
     // 가게 등록 (return 되는 값은 store_id 의 값) TEST
     @Override
-    public void addStore(Store store) {
+    public int addStore(Store store) {
 
         System.out.println("\nStoreDao.addStore()");
 
@@ -49,7 +53,8 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            while (storeImgList.size() < 5) {
+            for (int i = 0; i < 5-storeImgList.size(); i++) {
+
                 storeImgList.add(null);
 
             }
@@ -61,7 +66,7 @@ public class StoreServiceImpl implements StoreService {
 
         // INSERT 되는 TABLE : store, amenities, menu
         storeDao.addStore(store);
-        int storeId = storeDao.getStoreId(store.getBusinessNo());
+        int storeId = storeDao.getStoreId(store.getUserName());
         System.out.println("\tstoreId= "+storeId);
         storeDao.addMenu(storeId, store.getMenuList());
 
@@ -69,6 +74,7 @@ public class StoreServiceImpl implements StoreService {
             storeDao.addAmenities(storeId, store.getAmenitiesNoList());
         }
 
+        return storeId;
     }
 
 
@@ -78,7 +84,12 @@ public class StoreServiceImpl implements StoreService {
 
         Store store = storeDao.getStore(storeId);
         StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
-        store.setStoreOperation(storeOperation);
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        List<String> regularClosedayList = new ArrayList<String>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
 
         List<String> storeImgList = new ArrayList<String>();
         storeImgList.add(store.getStoreImg1());
@@ -86,6 +97,10 @@ public class StoreServiceImpl implements StoreService {
         storeImgList.add(store.getStoreImg3());
         storeImgList.add(store.getStoreImg4());
         storeImgList.add(store.getStoreImg5());
+
+        storeOperation.setRegularClosedayList(regularClosedayList);
+        storeOperation.setClosedayList(closedayList);
+        store.setStoreOperation(storeOperation);
         store.setStoreImgList(storeImgList);
 
         return store;
@@ -98,7 +113,12 @@ public class StoreServiceImpl implements StoreService {
 
         Store store = storeDao.getStore(storeId);
         StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
-        store.setStoreOperation(storeOperation);
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        List<String> regularClosedayList = new ArrayList<String>();
+        regularClosedayList.add(storeOperation.getRegularCloseday1());
+        regularClosedayList.add(storeOperation.getRegularCloseday2());
+        regularClosedayList.add(storeOperation.getRegularCloseday3());
 
         List<String> storeImgList = new ArrayList<String>();
         storeImgList.add(store.getStoreImg1());
@@ -106,6 +126,10 @@ public class StoreServiceImpl implements StoreService {
         storeImgList.add(store.getStoreImg3());
         storeImgList.add(store.getStoreImg4());
         storeImgList.add(store.getStoreImg5());
+
+        storeOperation.setRegularClosedayList(regularClosedayList);
+        storeOperation.setClosedayList(closedayList);
+        store.setStoreOperation(storeOperation);
         store.setStoreImgList(storeImgList);
 
         return store;
@@ -131,7 +155,8 @@ public class StoreServiceImpl implements StoreService {
 
         if (storeImgList.size() < 5) {
 
-            while (storeImgList.size() < 5) {
+            for (int i = 0; i < 5-storeImgList.size(); i++) {
+
                 storeImgList.add(null);
 
             }
@@ -196,7 +221,9 @@ public class StoreServiceImpl implements StoreService {
         regularClosedayList.add(storeOperation.getRegularCloseday3());
         storeOperation.setRegularClosedayList(regularClosedayList);
 
-        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        storeOperation.setClosedayList(closedayList);
 
         return storeOperation;
     }
@@ -214,7 +241,9 @@ public class StoreServiceImpl implements StoreService {
         regularClosedayList.add(storeOperation.getRegularCloseday3());
         storeOperation.setRegularClosedayList(regularClosedayList);
 
-        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        storeOperation.setClosedayList(closedayList);
 
         return storeOperation;
     }
@@ -231,9 +260,9 @@ public class StoreServiceImpl implements StoreService {
 
     // 매장 소식 목록 조회 TEST
     @Override
-    public List<StoreNews> getStoreNewsList(int storeId) {
+    public List<StoreNews> getStoreNewsList(int storeId, Search search) {
 
-        List<StoreNews> storeNewsList = storeDao.getStoreNewsList(storeId);
+        List<StoreNews> storeNewsList = storeDao.getStoreNewsList(storeId, search);
 
         return storeNewsList;
     }
@@ -248,6 +277,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
+
     // 매장 소식 삭제 (DELETE) TEST
     @Override
     public void removeStoreNews(int newsId) {
@@ -259,20 +289,18 @@ public class StoreServiceImpl implements StoreService {
 
     // 휴무일 등록 TEST
     @Override
-    public void addCloseday(int storeId, Date closeday) {
+    public void addCloseday(Closeday closeday) {
 
-        storeDao.addCloseday(storeId, closeday);
+        storeDao.addCloseday(closeday);
 
     }
 
 
     // 휴무일 목록 조회 TEST
     @Override
-    public List<Date> getClosedayList(int storeId, Search search) {
+    public List<Closeday> getClosedayList(int storeId, Search search) {
 
-        List<Date> closedayList = storeDao.getClosedayListBySearch(storeId, search);
-
-        return closedayList;
+        return storeDao.getClosedayListBySearch(storeId, search);
     }
 
 
@@ -297,6 +325,53 @@ public class StoreServiceImpl implements StoreService {
     @Override
     public Map<String, Map<String, Integer>> getStatistics(int storeId) {
 
-        return Map.of();
+        // 요일 리스트
+        List<String> dayName = new ArrayList<>(List.of("일", "월", "화", "수", "목", "금", "토"));
+        
+        // 금주 요일별 예약횟수
+        List<Integer> cntWeekRsrvList = storeDao.cntWeekRsrv(storeId);
+        Map<String, Integer> cntWeekRsrvMap = new HashMap<String, Integer>();
+
+        for (int i = 0; i < dayName.size(); i++) {
+            cntWeekRsrvMap.put(dayName.get(i), cntWeekRsrvList.get(i));
+        }
+
+        System.out.println(cntWeekRsrvMap);
+
+        // 요일별 평균 예약횟수
+        List<Integer> cntRsrvAvgList = storeDao.cntRsrvAvg(storeId);
+        Map<String, Integer> cntRsrvAvgMap = new HashMap<>();
+
+        for (int i = 0; i < dayName.size(); i++) {
+            cntRsrvAvgMap.put(dayName.get(i), cntRsrvAvgList.get(i));
+        }
+
+        System.out.println(cntRsrvAvgMap);
+
+        // 성별, 나이대별 예약 비율
+        List<Map<String, Integer>> calcRsrvPercentList = storeDao.calcRsrvPercent(storeId);
+        Map<String, Integer> calcRsrvPercentMap = new HashMap<>();
+
+        Set<String> ageGenderList = new HashSet<>(Arrays.asList(
+                "10대 남성", "20대 남성", "30대 남성", "40대 남성", "50대 남성", "60대이상 남성",
+                "10대 여성", "20대 여성", "30대 여성", "40대 여성", "50대 여성", "60대이상 여성"
+        ));
+
+        for (Map<String, Integer> map : calcRsrvPercentList) {
+            calcRsrvPercentMap.put(map.values().toArray()[0].toString(), Integer.parseInt(map.values().toArray()[1].toString()));
+        }
+
+        for (String ageGender : ageGenderList) {
+            calcRsrvPercentMap.putIfAbsent(ageGender, 0);
+        }
+
+        System.out.println(calcRsrvPercentMap);
+
+        Map<String, Map<String, Integer>> statisticsMap = new HashMap<String, Map<String, Integer>>();
+        statisticsMap.put("cntWeekRsrv", cntWeekRsrvMap);
+        statisticsMap.put("cntRsrvAvg", cntRsrvAvgMap);
+        statisticsMap.put("calcRsrvPercent", calcRsrvPercentMap);
+        
+        return statisticsMap;
     }
 }

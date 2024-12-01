@@ -1,18 +1,18 @@
 package com.placeHere.server;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import com.placeHere.server.domain.User;
-import com.placeHere.server.jwt.prop.JwtProps;
 import com.placeHere.server.service.user.UserService;
+import io.jsonwebtoken.lang.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
 public class UserBLTest {
@@ -112,7 +112,7 @@ public class UserBLTest {
         ;
     }
 
-//    @Test
+    @Test
     public void getUserList() throws Exception {
 
         List<User> list = new ArrayList<>();
@@ -129,37 +129,6 @@ public class UserBLTest {
 
 //        System.out.println(userService.getUserList());
 
-    }
-
-//    @Test
-    public void findPwdForm() throws Exception {
-
-        String username = "normal_user1";
-//        String password = "123";
-        String email = "user1@example.com";
-
-        User user = new User();
-        user.setUsername(username);
-//        user.setPassword(password);
-        user.setEmail(email);
-
-
-        boolean result = userService.findPwdForm(user);
-
-        assertTrue(result, "비밀번호 변경 권한 있음");
-    }
-
-//    @Test
-    public void updatePwd () throws Exception {
-
-        String username = "normal_user1";
-        String password = "123";
-
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(password);
-
-        userService.updatePassword(user);
     }
 
 
