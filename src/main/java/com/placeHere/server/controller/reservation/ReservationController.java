@@ -4,10 +4,12 @@ import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.Store;
 import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.service.reservation.RefundService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -35,6 +37,9 @@ public class ReservationController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private RefundService refundService;
 
 
     public ReservationController(){
@@ -218,6 +223,39 @@ public class ReservationController {
         // 예약 번호를 pay 페이지로 전달
         model.addAttribute("rsrvNo", rsrvNo);
 
+        return "test/reservation/redirectToPaycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.POST)
+    public String Paycheck(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : POST");
+        // 1. 예약 정보 조회
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        model.addAttribute("reservation", reservation);
+
+        return "test/reservation/paycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
+    public String Paycheck(@RequestParam("orderId") String orderId,
+                           @RequestParam("paymentKey") String paymentKey,
+                           @RequestParam int amount,
+                           Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : GET");
+
+        String paymentId = paymentKey;
+
+        int rsrvNo = Integer.parseInt(orderId);
+
+        reservationService.updateRsrvpay(rsrvNo, paymentId);
+
+
+
+        model.addAttribute("rsrvNo", rsrvNo);
+
         return "test/reservation/pay";
     }
 
@@ -267,5 +305,9 @@ public class ReservationController {
             return "test/reservation/success";
         }
     }
+
+
+
+
 
 }

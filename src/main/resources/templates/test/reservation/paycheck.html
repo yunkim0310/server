@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payment Confirmation</title>
+    <script src="https://js.tosspayments.com/v1"></script>
+
+</head>
+<body>
+<h1>Payment Confirmation</h1>
+
+<p> 가 격: <span th:text="${reservation.amount}">[가 격]</span></p>
+
+<form id="paymentForm">
+    <input type="hidden" id="rsrvNo" th:value="${reservation.rsrvNo}" />
+    <input type="hidden" id="amount" th:value="${reservation.amount}" />
+    <button type="button" id="payButton">결제하기</button>
+</form>
+
+<script th:inline="javascript">
+    document.getElementById("payButton").addEventListener("click", function () {
+        const rsrvNo = document.getElementById("rsrvNo").value;
+        const amount = document.getElementById("amount").value;
+
+        const orderId = rsrvNo.toString(); // 문자열로 변환
+        console.log(typeof orderId);
+
+
+        const tossPayments = TossPayments('test_ck_6BYq7GWPVv9AJ5Y9aDxl3NE5vbo1');
+
+
+        tossPayments.requestPayment('카드', {
+            amount: amount,
+            orderId: orderId,
+            orderName: 'Reservation Payment',
+            successUrl: `http://localhost:8080/test/reservation/paycheck?`,
+            failUrl: `http://localhost:8080/test/reservation/fail`
+        }).catch(error => {
+            console.error('결제 요청 실패:', error);
+            alert('결제 요청 중 오류가 발생했습니다.');
+        });
+    });
+</script>
+
+</body>
+</html>

@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Reservation Form</title>
+    <script src="https://js.tosspayments.com/v1"></script>
     <script>
         // JavaScript로 날짜 제한 및 이벤트 설정
         document.addEventListener("DOMContentLoaded", function () {
@@ -89,7 +90,8 @@
     <label for="rsrvNumber">Phone Number:</label>
     <input type="tel" id="rsrvNumber" name="rsrvNumber" required pattern="[0-9]{10,11}" placeholder="01012345678" /><br><br>
 
-    <button type="submit">Submit Reservation</button>
+    <button type="submit" id="payButton">Submit Reservation</button>
+
 </form>
 
 <!-- 운영 정보 표시 -->
@@ -97,6 +99,7 @@
     <h3>Store Operation Details</h3>
     <p>Select a date to see operation details.</p>
 </div>
+
 
 </body>
 </html>
