@@ -2,6 +2,8 @@ package com.placeHere.server;
 
 import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
@@ -23,6 +25,14 @@ public class StoreServiceTest {
     private StoreService storeService;
 
     @Autowired
+    @Qualifier("communityServiceImpl")
+    private CommunityService communityService;
+
+    @Autowired
+    @Qualifier("likeServiceImpl")
+    private LikeService likeService;
+
+    @Autowired
     private StoreDao storeDao;
 
     @Value("${list_size}")
@@ -30,6 +40,36 @@ public class StoreServiceTest {
 
     @Value("${page_size}")
     private int pageSize;
+
+
+    @Test
+    public void getReviewList() throws Exception {
+
+//        List<Community> reviewList = communityService.getReviewList();
+
+        List<Community> reviewList = communityService.getReviewList(1);
+
+//        List<Community> reviewList = communityService.getReviewList(new ArrayList<>(List.of("user01","user02")));
+
+        System.out.println(reviewList.size());
+        System.out.println(reviewList);
+
+    }
+
+    @Test
+    public void getlikeList() throws Exception {
+
+//        List<Integer> likeList = likeService.likeList("store");
+//
+//        System.out.println(likeList.size());
+//        System.out.println(likeList);
+
+        List<Like> storeLikeList = likeService.getStoreLikeList("user01");
+
+        System.out.println(storeLikeList.size());
+        System.out.println(storeLikeList);
+
+    }
 
 
     @Test

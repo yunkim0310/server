@@ -260,8 +260,6 @@
 
     </select>
 
-
-
     <!-- 가게 수정 -->
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
 

@@ -1,6 +1,8 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -23,6 +25,14 @@ public class StoreController {
     @Autowired
     @Qualifier("storeServiceImpl")
     private StoreService storeService;
+
+    @Autowired
+    @Qualifier("communityServiceImpl")
+    private CommunityService communityService;
+
+    @Autowired
+    @Qualifier("likeServiceImpl")
+    private LikeService likeService;
 
     @Value("${business_no_api}")
     private String apiKey;
@@ -422,5 +432,56 @@ public class StoreController {
         model.addAttribute("store", store);
 
         return "test/store/getStoreTest";
+    }
+
+
+    // 가게 좋아요 목록 조회
+    @GetMapping(value = "/store/getStoreLikeList", params = "userName")
+    public String getLikeStoreList(@RequestParam("userName") String userName, Model model) {
+
+        System.out.println("/store/getLikeStoreList : GET");
+
+        List<Like> storeLikeList = likeService.getStoreLikeList(userName);
+
+        model.addAttribute("storeLikeList", storeLikeList);
+
+        return "test/store/getStoreLikeListTest";
+    }
+
+
+    // 점주 회원 마이페이지
+    @GetMapping(value = "/store/getMyStore", params = "userName")
+    public String getMyStore(@RequestParam("userName") String userName, Model model) {
+
+        System.out.println("/store/getMyStore : GET");
+
+        int storeId = storeService.getStoreId(userName);
+
+        if (storeId == 0) {
+            return "redirect:/store/addStore?userName=" + userName;
+        }
+
+        else {
+            return "redirect:/store/getMyStoreReviewList?storeId=" + storeId;
+        }
+
+    }
+
+
+    // 내 가게 리뷰 목록 조회
+    @GetMapping(value = "/store/getMyStoreReviewList", params = "storeId")
+    public String getMyStoreReviewList(@RequestParam("storeId") int storeId, Model model) {
+
+        System.out.println("/store/getMyStoreReviewList : GET");
+
+        Store store = storeService.getStore(storeId);
+        List<Community> reviewList = communityService.getReviewList(storeId);
+        int totalCnt = (reviewList != null && !reviewList.isEmpty())? reviewList.get(0).getTotalCnt() : 0;
+
+        model.addAttribute("store", store);
+        model.addAttribute("reviewList", reviewList);
+        model.addAttribute("totalCnt", totalCnt);
+
+        return "test/store/getMyStoreReviewListTest";
     }
 }

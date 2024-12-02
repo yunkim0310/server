@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가게 좋아요 목록 조회</title>
+
+    <div th:insert="~{test/store/importTest :: importFragment}"/>
+
+    <script type="text/javascript">
+
+        $(function () {
+
+            $(".removeLike").on('click', function () {
+
+                var likeId = $(this).data("likeid");
+
+                alert(likeId);
+
+            });
+
+        });
+
+    </script>
+
+</head>
+<body>
+
+    <h1>가게 좋아요 목록</h1>
+    <hr/>
+    <table style="border-spacing: 10px;">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>좋아요 Id</th>
+                <th>매장명</th>
+                <th>좋아요 날짜</th>
+                <th>&nbsp;</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="like , iterStat : ${storeLikeList}">
+                <td th:text="${iterStat.count}">번호</td>
+                <td th:text="${like.likeId}">좋아요 Id</td>
+                <td>
+                    <a th:attr="href='/getStore?storeId='+${like.relationNo}" th:text="${like.storeName}">매장명</a>
+                </td>
+                <td th:text="${like.likeDt}">좋아요 날짜</td>
+                <td th:attr="data-likeid=${like.likeId}" class="removeLike">♥</td>
+            </tr>
+        </tbody>
+    </table>
+
+</body>
+</html>
