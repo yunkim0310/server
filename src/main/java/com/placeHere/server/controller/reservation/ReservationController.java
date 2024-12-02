@@ -4,7 +4,7 @@ import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.Store;
 import com.placeHere.server.domain.StoreOperation;
-import com.placeHere.server.service.reservation.RefundService;
+import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +38,7 @@ public class ReservationController {
     private StoreService storeService;
 
     @Autowired
-    private RefundService refundService;
+    private PaymentService paymentService;
 
 
     public ReservationController(){
@@ -245,10 +245,14 @@ public class ReservationController {
 
         System.out.println("/reservation/Paycheck : GET");
 
+        String[] parts = orderId.split("_");
+
+        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+
+        paymentService.confirmPayment(paymentKey, orderId, amount);
+
         String paymentId = paymentKey;
 
-
-        int rsrvNo = Integer.parseInt(orderId);
 
         reservationService.updateRsrvpay(rsrvNo, paymentId);
 

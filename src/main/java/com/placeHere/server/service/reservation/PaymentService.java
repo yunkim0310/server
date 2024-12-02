@@ -1,5 +1,8 @@
 package com.placeHere.server.service.reservation;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
+import org.json.JSONObject;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.http.*;
@@ -7,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Service
-public class RefundService {
+public class PaymentService {
 
     private final String TOSS_SECRET_KEY = "test_sk_6bJXmgo28eNybbqJAlmY3LAnGKWx"; // 테스트 Secret Key
     private final String TOSS_PAYMENT_VERIFY_URL = "https://api.tosspayments.com/v1/payments/";
@@ -47,34 +50,31 @@ public class RefundService {
         }
     }
 
-    public void verifyAndCompletePayment(String paymentKey, String orderId, int amount) {
+    public Map<String, Object> confirmPayment(String paymentKey, String orderId, int amount) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
 
-        // 요청 헤더 설정
+        // 요청 URL
+        String url = "https://api.tosspayments.com/v1/payments/confirm";
+
+        // 요청 헤더
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.setBasicAuth(TOSS_SECRET_KEY, "");
+        headers.set("Authorization", "Basic dGVzdF9za182YkpYbWdvMjhlTnliYnFKQWxtWTNMQW5HS1d4Og=="); // Base64 인코딩된 시크릿 키
 
-        // Toss Payments API 호출로 결제 검증
-        HttpEntity<String> request = new HttpEntity<>(headers);
-        String url = TOSS_PAYMENT_VERIFY_URL + paymentKey;
+        // 요청 바디
+        Map<String, Object> body = new HashMap<>();
+        body.put("paymentKey", paymentKey);
+        body.put("orderId", orderId);
+        body.put("amount", amount);
 
-        ResponseEntity<Map> response = restTemplate.exchange(url, HttpMethod.GET, request, Map.class);
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
-        if (response.getStatusCode() == HttpStatus.OK) {
-            Map<String, Object> paymentData = response.getBody();
+        // API 호출
+        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, entity, String.class);
 
-            // 결제 검증
-            if (!orderId.equals(paymentData.get("orderId")) || amount != (int) paymentData.get("totalAmount")) {
-                throw new RuntimeException("OrderId or Amount does not match.");
-            }
-
-            System.out.println("결제 검증 성공");
-
-
-        } else {
-            throw new RuntimeException("Payment verification failed: " + response.getBody());
-        }
+        // JSON 파싱
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(response.getBody(), Map.class); // Map으로 변환
     }
 
 
