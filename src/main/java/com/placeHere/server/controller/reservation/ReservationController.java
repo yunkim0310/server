@@ -9,7 +9,6 @@ import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
@@ -195,7 +194,7 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
-        return "test/reservation/addrsrv";
+        return "/test/reservation/testaddrsrv";
     }
 
 
@@ -248,6 +247,7 @@ public class ReservationController {
 
         String paymentId = paymentKey;
 
+
         int rsrvNo = Integer.parseInt(orderId);
 
         reservationService.updateRsrvpay(rsrvNo, paymentId);
@@ -282,7 +282,7 @@ public class ReservationController {
 
             // fail.html로 이동
             model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
-            return "test/reservation/fail";
+            return "test/reservation/testfail";
         }
 
         // 4. 현재 예약 일시의 예약 인수 계산
@@ -296,13 +296,13 @@ public class ReservationController {
 
             // fail.html로 이동
             model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
-            return "test/reservation/fail";
+            return "test/reservation/testfail";
         } else {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
             // success.html로 이동
-            return "test/reservation/success";
+            return "test/reservation/testsuccess";
         }
     }
 
