@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 수정</title>
+</head>
+<body>
+<h1>리뷰 수정</h1>
+
+<form action="/review/updateReview" method="post" th:object="${review}">
+    <input type="hidden" th:field="*{reviewNo}" />
+
+    <label for="score">리뷰 점수:</label>
+    <input type="number" id="score" min="1" max="5" th:field="*{reviewScore}" required /><br/>
+
+    <label for="content">리뷰 내용:</label>
+    <textarea id="content" th:field="*{reviewContent}" required></textarea><br/>
+
+    <label for="img1">이미지 1:</label>
+    <input type="text" id="img1" th:field="*{reviewImg1}" /><br/>
+
+    <label for="img2">이미지 2:</label>
+    <input type="text" id="img2" th:field="*{reviewImg2}" /><br/>
+
+    <label for="img3">이미지 3:</label>
+    <input type="text" id="img3" th:field="*{reviewImg3}" /><br/>
+
+    <button type="submit">리뷰 업데이트</button>
+</form>
+
+<a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a> <!-- 리뷰 목록 페이지로 돌아가기 링크 -->
+</body>
+</html>

@@ -32,8 +32,8 @@ public class LikeServiceImpl implements LikeService {
     }
 
     // 좋아요 토탈 카운트
-    public Long  totalCount(int relationNo) throws Exception{
-        return likeDao.totalCount(relationNo);
+    public Long  getTotalCount(int relationNo , String target) throws Exception{
+        return likeDao.getTotalCount(relationNo ,target);
     }
 
     //좋아요 리스트 ( 인기 가게 => 좋아요가 가장 많은 번호의 리스트 )
@@ -42,8 +42,8 @@ public class LikeServiceImpl implements LikeService {
     }
 
 //    // 좋아요 검증
-    public Like checkLike(Like like) throws Exception{
-        return likeDao.checkLike(like);
+    public Like chkLike(Like like) throws Exception{
+        return likeDao.chkLike(like);
     }
 
 }

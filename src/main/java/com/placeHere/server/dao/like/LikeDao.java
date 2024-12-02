@@ -16,13 +16,13 @@ public interface LikeDao {
     public void removeLike(Like like) throws Exception;
 
     // 좋아요 토탈 카운트
-    public Long totalCount(int relationNo) throws Exception;
+    public Long getTotalCount(@Param("relationNo") int relationNo , @Param("target") String target) throws Exception;
 
     // 좋아요 리스트 ( 인기 가게 => 좋아요가 가장 많은 번호의 리스트 )
     public List<Integer> likeList(String target) throws Exception;
 
     // 좋아요 검증
-    public Like checkLike(Like like) throws Exception;
+    public Like chkLike(Like like) throws Exception;
 
 }
 
