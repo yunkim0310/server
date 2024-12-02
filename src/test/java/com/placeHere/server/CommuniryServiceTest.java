@@ -43,7 +43,7 @@ public class CommuniryServiceTest {
     public void getReviewList() throws Exception {
 
         Search search = new Search(pageSize, listSize);
-        search.setCommentSize(commentSize);
+//        search.setCommentSize(commentSize);
 
 
         List<Review> reviewListALL = communityService.getReviewList(search);

@@ -6,7 +6,7 @@
 
 <mapper namespace="com.placeHere.server.dao.like.LikeDao">
 
-    <resultMap id="likeMap" type="com.placeHere.server.domain.Like">
+    <resultMap id="LikeResultMap" type="com.placeHere.server.domain.Like">
 
         <result property="likeId" column="like_id" jdbcType="INTEGER"/>
         <result property="relationNo" column="relation_no" jdbcType="INTEGER"/>
@@ -58,8 +58,8 @@
 
 
     <!--    좋아요 검증-->
-    <select id="chkLike" parameterType="com.placeHere.server.domain.Like">
-        SELECT  username
+    <select id="chkLike" parameterType="com.placeHere.server.domain.Like" resultMap="LikeResultMap">
+        SELECT  *
         FROM likes
         WHERE username = #{userName}
         AND relation_no = #{relationNo}
@@ -67,7 +67,7 @@
     </select>
 
     <!-- 가게 좋아요 목록 조회 -->
-    <select id="getStoreLikeList" resultMap="likeMap">
+    <select id="getStoreLikeList" resultMap="LikeResultMap">
 
         SELECT like_store.*, store.store_name
         FROM

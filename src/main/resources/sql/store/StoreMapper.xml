@@ -218,16 +218,18 @@
                     JOIN reservation ON review.rsrv_no = reservation.rsrv_no
                     GROUP BY reservation.store_id
                 ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
-                WHERE store_status = 0
                 <if test="searchKeyword != null and searchKeyword != ''">
-                        OR store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                    <where>
+                        store_name LIKE CONCAT('%',#{searchKeyword},'%')
                         OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
                         OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
                         OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
                         OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                    </where>
                 </if>
             ) AS store
         <where>
+            store_status = 0
             <if test="regionList != null and !regionList.isEmpty()">
                 AND (<foreach collection="regionList" separator="OR" item="region">
                 store_addr Like CONCAT('%',#{region},'%')

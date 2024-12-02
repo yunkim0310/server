@@ -43,13 +43,28 @@ public class StoreServiceTest {
 
 
     @Test
+    public void chkLike() throws Exception {
+
+        Like like = new Like("user01");
+        like.setTarget("store");
+        like.setRelationNo(6);
+
+        Like result = likeService.chkLike(like);
+
+        System.out.println(result);
+
+    }
+
+    @Test
     public void getReviewList() throws Exception {
 
-//        List<Community> reviewList = communityService.getReviewList();
+        Search search = new Search(pageSize, listSize);
+        System.out.println(search);
+//        List<Review> reviewList = communityService.getReviewList();
 
-        List<Community> reviewList = communityService.getReviewList(1);
+        List<Review> reviewList = communityService.getReviewList(1, search);
 
-//        List<Community> reviewList = communityService.getReviewList(new ArrayList<>(List.of("user01","user02")));
+//        List<Review> reviewList = communityService.getReviewList(new ArrayList<>(List.of("user01","user02")));
 
         System.out.println(reviewList.size());
         System.out.println(reviewList);

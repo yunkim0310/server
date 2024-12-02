@@ -11,7 +11,6 @@ import java.sql.Date;
 @Setter
 @ToString
 @NoArgsConstructor
-
 public class Like {
 
     // Field 좋아요
