@@ -89,20 +89,31 @@ public class UserServiceImpl implements UserService {
         return userDao.getUser(username);
     }
 
+    @Override
+    public void updateUserStatus(String username) throws Exception {
+
+    }
+
     public void updateLoginDt (String username) throws Exception {
         userDao.updateLoginDt(username);
     }
 
-//    public void updateUserStatus (String username) throws Exception {
-//
-//        System.out.println("updateUserStatus");
-//
-//    }
+
 
     public List<User> getUserList() throws Exception {
 
         List<User> user = userDao.getUserList();
         return user;
+    }
+
+    @Override
+    public boolean findPwdForm(User user) throws Exception {
+        return false;
+    }
+
+    @Override
+    public void updatePassword(User user) throws Exception {
+
     }
 
 

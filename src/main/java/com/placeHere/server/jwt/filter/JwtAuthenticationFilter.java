@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import javax.swing.text.html.BlockView;
 import java.io.IOException;
 
 /**          (/login)
@@ -40,6 +41,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         this.jwtTokenProvider = jwtTokenProvider;
         // 🔗 필터 URL 경로 설정 : /login
         setFilterProcessesUrl(JwtConstants.AUTH_LOGIN_URL);
+        System.out.println("URL chk :: " + JwtConstants.AUTH_LOGIN_URL);
     }
 
     /**
@@ -146,7 +148,12 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         String jwt = jwtTokenProvider.createToken(username, role);
 
         // 💍 { Authorization : Bearer + {jwt} }
-        response.addHeader(JwtConstants.TOKEN_HEADER, JwtConstants.TOKEN_PREFIX+ jwt);
+        response.addHeader(JwtConstants.TOKEN_HEADER, JwtConstants.TOKEN_PREFIX + jwt);
         response.setStatus(200);
+
+        if ( user.getUser().getRole().equals("ROLE_USER") || user.getUser().getRole().equals("ROLE_STORE")) {
+            response.sendRedirect("/");
+        }
+
     }
 }

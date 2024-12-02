@@ -23,6 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Slf4j
@@ -64,7 +65,8 @@ public class SecurityConfig {
                                 CorsConfiguration configuration = new CorsConfiguration();
 
                                 // 허용할 서버포트
-                                configuration.setAllowedOrigins( Collections.singletonList( "http://localhost:3000"));
+//                                configuration.setAllowedOrigins( Collections.singletonList( "http://localhost:3000"));
+                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000"));
                                 // get, post, option 등
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
@@ -88,6 +90,29 @@ public class SecurityConfig {
         http.csrf( csrf -> csrf.disable() );
 
         /**
+         * 인가설정
+         */
+        http.authorizeHttpRequests( authorizeRequests ->
+                authorizeRequests
+                        // 정적자원 경로 다 허용 (static)
+                        // 프론트랑 백이랑 분리되어 있다면 굳이 필요 x
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/login").permitAll()
+//                        .requestMatchers("/userView.html").permitAll()
+                        .requestMatchers("/user/userView").permitAll()
+                        .requestMatchers("/user/**").permitAll()
+                        // UserController에서 이미 권한을 관리하고 있기 때문에 여기서 우선 permitAll
+//                        .requestMatchers("/users/**").hasAnyRole("USER" , "ADMIN")
+//                        .requestMatchers("/user/**").permitAll()
+//                        .requestMatchers("/store/**").hasRole("STORE")
+//                        .requestMatchers("/admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/point/**").hasRole("POINT")
+//                        .requestMatchers("/store/**").hasRole("STORE")
+                        .anyRequest().authenticated() )
+        ;
+
+        /**
          * ㅇ필터설정 (순서)
          * (1) *Jwt Request* Filter : jwt 토큰을 포함해서 요청하는 필터
          * - jwt 토큰을 해석하는 작업
@@ -105,29 +130,11 @@ public class SecurityConfig {
          */
         // 필터 설정 ✅
 //                        (2)
-        System.out.println( "SIBAL :: " + authenticationManager);
+//        System.out.println( "SIBAL :: " + authenticationManager);
         http.addFilterAt(new JwtAuthenticationFilter(authenticationManager, jwtTokenProvider) , UsernamePasswordAuthenticationFilter.class)
                                     // (1)
                 .addFilterBefore(new JwtRequestFilter(jwtTokenProvider) , UsernamePasswordAuthenticationFilter.class);
 
-        /**
-         * 인가설정
-         */
-        http.authorizeHttpRequests( authorizeRequests ->
-                authorizeRequests
-                        // 정적자원 경로 다 허용 (static)
-                        // 프론트랑 백이랑 분리되어 있다면 굳이 필요 x
-                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                        .requestMatchers("/").permitAll()
-                        .requestMatchers("/login").permitAll()
-                        // UserController에서 이미 권한을 관리하고 있기 때문에 여기서 우선 permitAll
-//                        .requestMatchers("/users/**").hasAnyRole("USER" , "ADMIN")
-                        .requestMatchers("/user/**").permitAll()
-                        .requestMatchers("/store/**").hasRole("STORE")
-                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/store/**").hasRole("STORE")
-                        .anyRequest().authenticated() )
-        ;
         /**
          * 인증방식 설정
          * 사용자의 정보를 비즈니스 로직에서 어떻게 작성할건지 정하는 시큐리티 구조이다.

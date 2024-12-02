@@ -2,16 +2,19 @@ package com.placeHere.server;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import com.placeHere.server.domain.User;
+import com.placeHere.server.jwt.prop.JwtProps;
 import com.placeHere.server.service.user.UserService;
 import io.jsonwebtoken.lang.Assert;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest

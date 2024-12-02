@@ -44,7 +44,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         // 존재하는 유저
         log.info("user : ");
-        log.info(user.toString());
+//        log.info(user.toString());
 
         // Users -> CustomUser
         // 우리가 갖고 있는 Users 객체를 UserDetails에 맞게 변환해줘야 한다.
@@ -52,8 +52,8 @@ public class CustomUserDetailService implements UserDetailsService {
         CustomUser customUser = new CustomUser(user);
 
         // 비밀번호 비교
-        log.info( "user의 비밀번호" + user.getPassword() );
-        log.info( "customUser 비밀번호" + customUser.getPassword() );
+//        log.info( "user의 비밀번호" + user.getPassword() );
+//        log.info( "customUser 비밀번호" + customUser.getPassword() );
 
         log.info("customUser : ");
         log.info( customUser.toString() );

@@ -29,6 +29,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // 헤더에서 jwt 토큰을 가져옴
         String header = request.getHeader(JwtConstants.TOKEN_HEADER);
 
+        String uri = request.getRequestURI();
+        String method = request.getMethod();
+        log.info("URI CHECK :: " + uri);
+        log.info("METHOD CHECK :: " + method);
+
         // Bearer 없이 들어옴
         // eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJleHAiOjE3MzM2Mjk3OTYsInVubyI6IjEiLCJ1aWQiOiJ1c2VyIiwicm9sIjpbIlJPTEVfVVNFUiJdfQ.OBghAHxzgmZLc_DsryjBlvLxWU8_4rtB9_o9i12YG0oW9Et7vdP4nldTJVRjDpjlmCYfUj02lctWz950liMdCw
         log.info("authorization : " + header);
@@ -36,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Bearer + {jwt} 체크
         // 토큰이 이상하면 다음 필터에게 넘김
 //        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) ) {
-        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) ) {
+        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) || (uri.equals("/login") && method.equals("GET") )) {
             log.info("111");
             filterChain.doFilter(request, response);
             log.info("222");

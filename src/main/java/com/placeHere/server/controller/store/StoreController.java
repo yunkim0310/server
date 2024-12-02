@@ -384,7 +384,7 @@ public class StoreController {
         model.addAttribute("mode", "result");
         model.addAttribute("search", search);
         model.addAttribute("selectedCategoryList", selectedCategoryList);
-        
+
         // 가게 목록 검색
         String foodCategoryId = search.getFoodCategoryId();
         foodCategoryId = foodCategoryId.replace("전체/", "").replace("기타/", "");
