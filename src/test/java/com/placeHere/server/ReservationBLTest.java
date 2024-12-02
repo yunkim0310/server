@@ -276,7 +276,7 @@ public class ReservationBLTest {
     @Test
     public void testRefundPayment() {
         // 테스트용 결제 고유 ID (paymentKey)와 환불 사유 (reason)
-        String testPaymentKey = "tviva20241202115540sns97"; // 실제 테스트 키 사용
+        String testPaymentKey = "tviva20241202123534Ehlq6"; // 실제 테스트 키 사용
         String testReason = "Test refund reason";
 
         try {

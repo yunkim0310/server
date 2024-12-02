@@ -19,4 +19,6 @@ public class Reservation {
     private String storeName;
     private String storeAddr;
     private String rsrvNumber;
+
+    private int totalCnt;
 }
