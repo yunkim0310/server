@@ -9,9 +9,9 @@
     <resultMap id="likeMap" type="com.placeHere.server.domain.Like">
 
         <result property="likeId" column="like_id" jdbcType="INTEGER"/>
-        <result property="userName" column="username" jdbcType="VARCHAR"/>
         <result property="relationNo" column="relation_no" jdbcType="INTEGER"/>
         <result property="target" column="target" jdbcType="VARCHAR"/>
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
         <result property="likeDt" column="like_dt" jdbcType="DATE"/>
     </resultMap>
 
@@ -28,7 +28,7 @@
     </delete>
 
     <!-- 좋아요 토탈 카운트 -->
-    <select id="totalCount" parameterType="com.placeHere.server.domain.Like">
+    <select id="getTotalCount"  resultType="long">
         SELECT COUNT(CASE WHEN relation_no= #{relationNo} and target='store'  THEN 1 END) AS store,
         COUNT(CASE WHEN relation_no= #{relationNo} and target='review'  THEN 1 END) AS review,
         COUNT(CASE WHEN relation_no= #{relationNo} and target='comment'  THEN 1 END) AS comment
@@ -56,7 +56,7 @@
 
 
     <!--    좋아요 검증-->
-    <select id="checkLike" parameterType="com.placeHere.server.domain.Like">
+    <select id="chkLike" parameterType="com.placeHere.server.domain.Like">
         SELECT  username
         FROM likes
         WHERE username = #{userName}

@@ -22,7 +22,7 @@ class FriendServiceTest {
     private FriendService friendService;
 
     //친구 신청
-//    @Test
+    @Test
     public void testSendFriendReq() throws Exception {
         Friend friend = new Friend();
 
@@ -36,12 +36,26 @@ class FriendServiceTest {
 
         }
 
-//    @Test
+     @Test
+     public void testGetFrinedReq() throws  Exception{
+
+        int friendNo =1;
+
+         Friend friendReq = friendService.getFriendReq(friendNo);
+
+         System.out.println("");
+         System.out.println("");
+         System.out.println("");
+         System.out.println("GetFrinedReq : " + friendReq);
+     }
+
+
+    @Test
     public void testAddFriend() throws Exception{
 
-        int friendNo = 25;
+        int friendNo = 27;
 
-        boolean result = friendService.addFriend(25);
+        boolean result = friendService.addFriend(27);
 
         if (result){
             System.out.println("친구 요청 수락");
@@ -51,38 +65,35 @@ class FriendServiceTest {
     }
 
 //    @Transactional
-//    @Test
+    // 친구 거절 , 친구신청취소, 친구 삭제는 친구 레코드를 지우는거 동일 -> remove 메서드 하나 만들고 컨트롤러 에서 조절 필요
+    @Test
     public void testRemoveFriend() throws Exception{
 
-        friendService.removeFriendReq(21);
+        friendService.removeFriendReq(27);
 
         System.out.println("Remove Success !!!");
 
     }
 
-//    @Test
-    public void testGetFriendList() throws Exception{
-
-
-        List<Friend> friendList = friendService.getFriendList("user1");
-
-        System.out.println("friendList : "+ friendList);
-
-
-    }
-
     @Test
-    public void testCheckFriendReq() throws Exception{
+    public void testGetFriendList() throws Exception{
+        String friendReq  = "user1";
+        int startRowNum = 0;
+        int listSize = 3;
 
-        List<Friend> checkFriendReq = friendService.checkFriendReq("user03");
+        List<Friend> friendList = friendService.getFriendList(friendReq, startRowNum, listSize);
 
-        System.out.println("checkFriendReq ::: "  + checkFriendReq);
+
+        System.out.println("친구 목록 : " + friendList);
+
+
     }
+
 
     @Test
     public void testUpdateChkfriendReq() throws Exception{
 
-        friendService.updateChkfriendReq( "user1");
+        friendService.updateChkfriendReq( "user01");
 
 
 
