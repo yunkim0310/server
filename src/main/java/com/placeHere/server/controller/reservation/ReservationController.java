@@ -282,6 +282,8 @@ public class ReservationController {
 
         if (closedayList != null && closedayList.contains(reservationDate)) {
             // 예약 일자가 휴무일인 경우
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
@@ -296,6 +298,8 @@ public class ReservationController {
         // 5. 예약 최대 인수 비교 및 처리
         if (totalReservationCount > maxCapacity) {
             // 예약 상태를 "예약 취소"로 변경
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
