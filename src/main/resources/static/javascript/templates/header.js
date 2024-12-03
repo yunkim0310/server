@@ -85,3 +85,7 @@ smallDropdown.addEventListener('mouseover', small_keep_handler)
 smallDropdown.addEventListener('mouseout', small_remove_keep_handler)
 smallCategory.addEventListener('mouseover',small_down_handler)
 smallCategory.addEventListener('mouseout',small_up_handler)
+
+
+
+

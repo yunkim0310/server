@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -154,9 +155,17 @@ public class SecurityConfig {
         // sessionManagement().sessionFixation().none() : 로그인 시 세션 정보 변경 안함 -> 위험
         // sessionManagement().sessionFixation().newSession() : 로그인 시 세션 새로 생성
         // sessionManagement().sessionFixation().changeSessionId() : 로그인 시 동일한 세션에 대한 id 변경 => 많이 사용
-        http
-                .sessionManagement((session) -> session
-                        .sessionFixation().changeSessionId());
+//        http
+//                .sessionManagement((session) -> session
+//                        .sessionFixation().changeSessionId()
+//                        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+//                        // 하나의 세션만 허용
+//                        .maximumSessions(1)
+//                );
+        http.sessionManagement(sessionManagement -> sessionManagement
+                .sessionCreationPolicy(SessionCreationPolicy.ALWAYS) // 항상 세션 생성
+        );
+
 
 
         return http.build();

@@ -1,11 +1,62 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/templates/header.css">
     <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
     <script defer src="/javascript/templates/header.js"></script>
 </head>
+<!-- 제이쿼리 -->
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function() {
+
+    // 로그인 버튼 클릭
+    $("#btnLogin").click(function(e) {
+
+      e.preventDefault();
+
+      $.ajax({
+        url: '/user/loginView',
+        type: 'GET',
+        success: function(response) {
+
+          $('body').html(response);
+
+        },
+        error: function(xhr, status, error) {
+          console.error("Error:", status, error);
+        }
+      });
+    });
+
+    // 설정 버튼 클릭
+    $("#btnSetting").click(function(e) {
+
+      e.preventDefault();
+
+      $.ajax({
+
+        url: 'user/setting',
+        type: 'GET',
+        success: function(response) {
+
+          $('body').html(response);
+
+        },
+        error: function(xhr, status, error) {
+          console.error("Error:", status, error);
+        }
+
+      });
+    });
+
+  });
+
+</script>
+
+
 <body>
 <header th:fragment="header" class="header-wrap">
     <div class="header">
@@ -16,9 +67,13 @@
             <div class="login">
                 <ul class="loginMenu">
                     <li class="non-side-bar"><span id="username" class="text-white me-2">username</span></li>
-                    <li id="login" class="non-side-bar"><a href="/login">로그인</a></li>
+                    <li id="btnLogin" class="non-side-bar">로그인</li>
+                    <div sec:authorize-expr="isAuthenticated()">
+                        <li id="btnSetting" class="non-side-bar">설정</li>
+                    </div>
+
 <!--                    <li id="logout"><a href="/logout">로그아웃</a></li>-->
-                    <li id="join" class="non-side-bar"><a href="/join">회원가입</a></li>
+<!--                    <li id="join" class="non-side-bar"><a href="/join">회원가입</a></li>-->
                 </ul>
             </div>
         </div>
