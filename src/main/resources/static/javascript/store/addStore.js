@@ -58,6 +58,8 @@ function checkDuplicateBusinessNo(businessNo) {
 
 $(function() {
 
+    $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
+
     // 사업자 정보 중복확인 및 상태 확인 메서드
     $("input[name='businessNo']").on('input', function () {
 
@@ -108,34 +110,7 @@ $(function() {
         $("#changeBusinessNo").attr("id", "useBusinessNo");
 
     });
-
-
-    $("#submit").on("click", function () {
-
-        // 음식 카테고리 합치기
-        var category1 = $("input[name='foodCategory1']:checked").val();
-        var category2 = $("input[name='foodCategory2']:checked").val();
-        var category3 = $("input[name='foodCategory3']:checked").val();
-        var category4 = $("input[name='foodCategory4']").val();
-
-        $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/"+category4);
-        
-        // 매장 주소 합치기
-        $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ' ' + $("input[name='storeAddr2']").val());
-        
-        // 매장 전화번호 합치기
-        var phone1 = $("input[name='storePhone1']").val().trim();
-        var phone2 = $("input[name='storePhone2']").val().trim();
-        var phone3 = $("input[name='storePhone3']").val().trim();
-
-        $("input[name='storePhone']").val(phone1+'-'+phone2+'-'+phone3);
-
-        
-        // action 맵핑
-        $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data").submit();
-
-    })
-
+    
 });
 
 
@@ -239,7 +214,7 @@ $(function() {
                     '<div class="css-jmalg e1uzxhvi6">' +
                         '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
                             '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
-                            'placeholder="해시태그를 입력해주세요." name="hashtagList">' +
+                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -278,84 +253,92 @@ $(function() {
 
     var menuCnt = 1;
 
-    // 메뉴 입력창 추가 함수
     $('button[name="addMenuInput"]').on('click', function () {
 
         // 컨테이너 생성
         const container = $(
-            '<tr>' +
-                '<td>&nbsp;</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>&nbsp;</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td rowspan="6">' +
-                    '<input type="radio" name="specialMenuNo" value="'+(menuCnt+1)+'">' +
-                '</td>' +
-                '<td>' +
-                    '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                        '<input type="file" accept="image/*" name="menuList['+menuCnt+'].menuImgFile">' +
-                        '<span class="font-12 color-gray mt-10">메뉴 사진을 골라주세요.</span>' +
-                    '</div>' +
-                '</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<label class="css-1obgjqh e744wfw4">' +
-                            '메뉴 이름' +
-                            '<span class="css-qq9ke6 e744wfw0">*</span>' +
-                        '</label>' +
-                    '</div>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<div class="css-jmalg e1uzxhvi6">' +
-                            '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList['+menuCnt+'].menuName">' +
+            '<tbody class="addedMenuInput">' +
+                '<tr class="addedMenuInput">' +
+                    '<td>&nbsp;</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>&nbsp;</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td rowspan="6">' +
+                        '<input type="radio" name="specialMenuNo" value="'+(menuCnt+1)+'">' +
+                    '</td>' +
+                    '<td>' +
+                        '<div class="css-1pjgd36 e744wfw6">' +
+                            '<div class="css-82a6rk e744wfw3">' +
+                                '<input type="file" accept="image/*" name="menuList['+menuCnt+'].menuImgFile">' +
+                            '</div>' +
+                            '<div class="css-1w0ksfz e744wfw2">' +
+                                '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
+                                    '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
+                                '</button>' +
                             '</div>' +
                         '</div>' +
-                    '</div>' +
-                '</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>&nbsp;</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<label class="css-1obgjqh e744wfw4">' +
-                            '메뉴 가격' +
-                            '<span class="css-qq9ke6 e744wfw0">*</span>' +
-                        '</label>' +
-                    '</div>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<div class="css-jmalg e1uzxhvi6">' +
-                            '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                '<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList['+menuCnt+'].menuPrice">' +
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<label class="css-1obgjqh e744wfw4">' +
+                                '메뉴 이름' +
+                                '<span class="css-qq9ke6 e744wfw0">*</span>' +
+                            '</label>' +
+                        '</div>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<div class="css-jmalg e1uzxhvi6">' +
+                                '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
+                                    '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList['+menuCnt+'].menuName">' +
+                                '</div>' +
                             '</div>' +
                         '</div>' +
-                    '</div>' +
-                '</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>&nbsp;</td>' +
-            '</tr>' +
-            '<tr>' +
-                '<td>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<label class="css-1obgjqh e744wfw4">' +
-                            '메뉴 설명' +
-                        '</label>' +
-                    '</div>' +
-                    '<div class="css-82a6rk e744wfw3">' +
-                        '<div class="css-jmalg e1uzxhvi6">' +
-                            '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList['+menuCnt+'].menuInfo">' +
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>&nbsp;</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<label class="css-1obgjqh e744wfw4">' +
+                                '메뉴 가격' +
+                                '<span class="css-qq9ke6 e744wfw0">*</span>' +
+                            '</label>' +
+                        '</div>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<div class="css-jmalg e1uzxhvi6">' +
+                                '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
+                                    '<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList['+menuCnt+'].menuPrice">' +
+                                '</div>' +
                             '</div>' +
                         '</div>' +
-                    '</div>' +
-                '</td>' +
-            '</tr>');
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>&nbsp;</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<label class="css-1obgjqh e744wfw4">' +
+                                '메뉴 설명' +
+                            '</label>' +
+                        '</div>' +
+                        '<div class="css-82a6rk e744wfw3">' +
+                            '<div class="css-jmalg e1uzxhvi6">' +
+                                '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
+                                    '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList['+menuCnt+'].menuInfo">' +
+                                '</div>' +
+                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>' +
+            '</tbody>'
+            );
 
         // hashtagInputs에 컨테이너 추가
         $('#menuInputs').append(container);
@@ -370,8 +353,10 @@ $(function() {
 
     });
 
+
     $(document).on('click', "button[name='removeMenuInput']", function() {
-        $(this).closest('.addedHashtagInput').remove();  // 해당 div 삭제
+
+        $(this).closest('.addedMenuInput').remove();  // 해당 div 삭제
         menuCnt--;
 
         if (menuCnt < 20) {
@@ -381,8 +366,40 @@ $(function() {
         }
     });
 
+    
+    // 다음 단계 버튼 함수
+    $("button#submit").on("click", function () {
 
+        alert("submit");
 
+        // 음식 카테고리 합치기
+        var category1 = $("input[name='foodCategory1']:checked").val();
+        var category2 = $("input[name='foodCategory2']:checked").val();
+        var category3 = $("input[name='foodCategory3']:checked").val();
+        var category4 = $("input[name='foodCategory4']").val();
+        $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/"+category4);
 
+        // 매장 주소 합치기
+        $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ', ' + $("input[name='storeAddr2']").val());
+
+        // 매장 전화번호 합치기
+        var phone1 = $("input[name='storePhone1']").val().replace(" ", "");
+        var phone2 = $("input[name='storePhone2']").val().replace(" ", "");
+        var phone3 = $("input[name='storePhone3']").val().replace(" ", "");
+
+        $("input[name='storePhone']:hidden").val(phone1+'-'+phone2+'-'+phone3);
+
+        // 해시태그 변경 (공백, # 제거)
+        $("input[name='hashtagList']").each(function () {
+
+            let hashtag = $(this).val();
+
+            hashtag = hashtag.replace("#","").replace(" ", "");
+
+            $(this).val(hashtag);
+
+        });
+
+    });
 
 });

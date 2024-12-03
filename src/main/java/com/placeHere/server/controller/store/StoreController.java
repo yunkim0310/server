@@ -87,6 +87,10 @@ public class StoreController {
 
         System.out.println("/store/addStore : POST");
 
+        List<String> hashtagList = store.getHashtagList();
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+        store.setHashtagList(hashtagList);
+
         System.out.println(store);
 
 //        int storeId = storeService.addStore(store);
@@ -361,7 +365,6 @@ public class StoreController {
         System.out.println("/searchStore : POST");
 
         System.out.println(search);
-
 
         return "test/store/getStoreListTest";
     }
