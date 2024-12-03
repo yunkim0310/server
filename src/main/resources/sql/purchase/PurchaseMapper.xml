@@ -80,13 +80,13 @@
         ORDER BY pt.tran_no DESC
     </select>
 
-    <!--    <select id="getNextBarcodeNumber" resultType="String">-->
-    <!--        SELECT LAST_INSERT_ID()-->
-    <!--    </select>-->
+<!--        <select id="getNextBarcodeNumber" resultType="String">-->
+<!--            SELECT LAST_INSERT_ID()-->
+<!--        </select>-->
 
-    <!--    <select id="getNextBarcodeNumber" resultType="String">-->
-    <!--        SELECT UUID_SHORT()-->
-    <!--    </select>-->
+<!--        <select id="getNextBarcodeNumber" resultType="String">-->
+<!--            SELECT UUID_SHORT()-->
+<!--        </select>-->
 
     <select id="getNextBarcodeNumber" resultType="String">
         SELECT MAX(barcode_no) + 1 FROM point_transaction

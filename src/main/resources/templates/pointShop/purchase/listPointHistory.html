@@ -13,25 +13,25 @@
 <body>
 <h1>포인트 내역 목록</h1>
 
-<h3>현재 포인트</h3>
-<h3 th:text="${currPoint}+P">
-</h3>
+<h3>현재 포인트 : &nbsp;<span th:text="${currPoint} + 'P'"></span></h3>
 
 <table>
     <thead>
     <tr>
-        <th>포인트 내역 번호&nbsp;&nbsp;&nbsp;</th>
-        <th>거래 유형&nbsp;&nbsp;&nbsp;</th>
+<!--        <th>포인트 내역 번호&nbsp;&nbsp;&nbsp;</th>-->
         <th>거래 포인트&nbsp;&nbsp;&nbsp;</th>
+        <th>거래 유형&nbsp;&nbsp;&nbsp;</th>
         <th>거래일&nbsp;&nbsp;&nbsp;</th>
         <th>보유 포인트&nbsp;&nbsp;&nbsp;</th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="point : ${pointHistoryList}">
-        <td th:text="${point.tranNo}">포인트 내역 번호</td>
+<!--        <td th:text="${point.tranNo}">포인트 내역 번호</td>-->
+        <td th:text="${point.depType == '상품 구매' ? '-' + point.tranPoint + 'P' : '+' + point.tranPoint + 'P'}"
+            th:style="${point.depType == '상품 구매' ? 'color: red;' : 'color: blue;'}">거래 포인트</td>
         <td th:text="${point.depType}">거래 유형</td>
-        <td th:text="${point.tranPoint}+P">거래 포인트</td>
+<!--        <td th:text="${point.tranPoint}+P">거래 포인트</td>-->
         <td th:text="${point.pointDt}">거래일</td>
         <td th:text="${point.currPoint}">보유 포인트</td>
         <td>

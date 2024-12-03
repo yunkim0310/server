@@ -30,7 +30,7 @@
 <div>
     <strong>상품 바코드 : </strong>
     <span class="value" th:text="${purchase.barcodeName}">상품 바코드</span>
-    <img th:src="@{src/main/resources/static/file/pointShop/${purchase.barcodeName}}" alt="Barcode Image" />
+    <img th:src="@{${pageContext.request.contextPath}/static/file/pointShop/${purchase.barcodeName}}" alt="Barcode Image" />
 </div>
 <br/><br/>
 <div>

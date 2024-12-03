@@ -90,10 +90,10 @@ public class PurchaseController {
         return "pointShop/purchase/addPurchase";
     }
 
-    private String generateBarcodeNumber(int prodNo) {
-        // 바코드 번호는 EAN-13 형식으로 13자리를 생성
-        String barcode = String.format("%012d", prodNo);  // 제품 번호로 12자리 생성
-        // 마지막 1자리는 체크디지털로, 간단하게 계산할 수 있지만, 이 예제에서는 임의로 설정
+    private String generateBarcodeNumber() {
+        // 현재 시간을 밀리초 단위로 가져와 12자리로 만들기
+        String barcode = String.format("%012d", System.currentTimeMillis() % 1000000000000L);
+        // 마지막 1자리는 체크디지털로 계산
         int checkDigit = calculateCheckDigit(barcode);
         return barcode + checkDigit;  // 13자리 바코드 번호 반환
     }
@@ -114,7 +114,7 @@ public class PurchaseController {
     private void generateBarcode(String barcodeText, String filePath, int width, int height) throws Exception {
         BarcodeFormat format = BarcodeFormat.CODE_128;
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-        hints.put(EncodeHintType.MARGIN, 2);  // 바코드 주변 여백
+//        hints.put(EncodeHintType.MARGIN, 5);  // 바코드 주변 여백
 
         MultiFormatWriter writer = new MultiFormatWriter();
         BitMatrix bitMatrix = writer.encode(barcodeText, format, width, height, hints);
@@ -136,7 +136,12 @@ public class PurchaseController {
         model.addAttribute("purchase", purchase);
 
         String fileName = file.getOriginalFilename();
-        String uploadPath = servletContext.getRealPath(barcodePath);
+        String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+        File barcodeDirectory = new File(uploadPath);
+        if (!barcodeDirectory.exists()) {
+            barcodeDirectory.mkdirs();
+        }
+
         String saveFile = uploadPath + fileName;
         System.out.println("Image upload path: " + uploadPath);
 
@@ -148,15 +153,14 @@ public class PurchaseController {
 
         }
 
-        String barcodeNumber = purchaseService.getNextBarcodeNumber();
+        String barcodeNumber = generateBarcodeNumber();
         String barcodeFileName = barcodeNumber + ".png";
-        String barcodeFilePath = servletContext.getRealPath(barcodePath) + "/" + barcodeFileName;
+        String barcodeFilePath = uploadPath + "/" + barcodeFileName;
 
 
-        File barcodeDirectory = new File(servletContext.getRealPath(barcodePath));
-        if (!barcodeDirectory.exists()) {
-            barcodeDirectory.mkdirs();
-        }
+
+
+        System.out.println("barcodeDirectory : "+ barcodeDirectory);
 
         // 3. 바코드 이미지 생성
         generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);  // 바코드 생성
@@ -270,13 +274,6 @@ public class PurchaseController {
         int currPoint = pointService.getCurrentPoint(userName);
 
         List<Point> pointHistoryList = pointService.getPointHistoryList(userName);
-
-        for (Point point : pointHistoryList) {
-            System.out.println("point chk :: ");
-            System.out.println(point); // Point 객체를 출력
-            // 또는 각 Point 객체의 속성을 출력할 수 있습니다.
-            // 예시: System.out.println("Point ID: " + point.getId() + ", Point Value: " + point.getValue());
-        }
 
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("pointHistoryList", pointHistoryList);
