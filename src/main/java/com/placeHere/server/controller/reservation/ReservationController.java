@@ -2,32 +2,47 @@ package com.placeHere.server.controller.reservation;
 
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
-import com.placeHere.server.service.pointShop.ProductService;
+import com.placeHere.server.domain.Store;
+import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
+import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
+import java.util.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 @Controller
-@RequestMapping("/reservation/*")
+@RequestMapping("test/reservation/*")
 public class ReservationController {
 
-//    @Autowired
-//    @Qualifier("productServiceImpl")
-//    private ProductService productService;
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        dateFormat.setLenient(false);
+        binder.registerCustomEditor(Date.class, new CustomDateEditor(dateFormat, true));
+    }
+
+
     @Autowired
     private ReservationService reservationService;
 
+    @Autowired
+    private StoreService storeService;
+
+    @Autowired
+    private PaymentService paymentService;
+
+
     public ReservationController(){
-        System.out.println(this.getClass());
+        System.out.println("ReservationController Start");
     }
 
     @RequestMapping( value="getRsrv", method=RequestMethod.GET )
@@ -39,66 +54,268 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "reservation/getrsrv";
+        return "test/reservation/getrsrv";
     }
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
             @RequestParam("storeId") int storeId, // 가게 ID는 필수
-            @RequestParam(value = "startDate", required = false) String startDate, // 시작 날짜
-            @RequestParam(value = "endDate", required = false) String endDate, // 종료 날짜
-            @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses, // 상태 목록
             Model model) throws Exception {
 
-        // Search 객체 생성
+        // 초기 Search 객체 설정 (기본값)
         Search search = new Search();
-
-        // 조건 설정
-        if (startDate != null) {
-            search.setStartDate(startDate); // "yyyy-MM-dd" 형식 필요
-        }
-        if (endDate != null) {
-            search.setEndDate(endDate); // "yyyy-MM-dd" 형식 필요
-        }
-        search.setSearchStatuses(searchStatuses); // 예약 상태 목록
+        search.setStartDate(null); // 기본값 없음
+        search.setEndDate(null); // 기본값 없음
+        search.setSearchStatuses(null); // 모든 상태 포함
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
+
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "reservation/listrsrvstore";
+        return "test/reservation/testlistrsrvstore";
     }
 
 
-    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
-    public String getRsrvUserList(
-            @RequestParam("userName") String userName, // 유저 네임은 필수
-            @RequestParam(value = "searchKeyword", required = false) String searchKeyword, // 예약 상태 검색
-            @RequestParam(value = "order", required = false) String order, // 차순
+    @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
+    public String getRsrvStoreList(
+            @RequestParam("storeId") int storeId,
+            @RequestParam(value = "startDate", required = false) String startDate,
+            @RequestParam(value = "endDate", required = false) String endDate,
+            @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             Model model) throws Exception {
 
         // Search 객체 생성
         Search search = new Search();
 
-        if (searchKeyword != null) {
-            search.setSearchKeyword(searchKeyword);
+        // 조건 설정: 값이 있을 때만 설정
+        if (startDate != null && !startDate.isEmpty()) {
+            search.setStartDate(startDate);
         }
-        if (order != null) {
-            search.setOrder(order);
+
+        if (endDate != null && !endDate.isEmpty()) {
+            search.setEndDate(endDate);
+        }
+
+        if (searchStatuses != null && !searchStatuses.isEmpty()) {
+            search.setSearchStatuses(searchStatuses);
         }
 
         // 서비스 호출
-       List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+        List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
+
+        model.addAttribute("reservations", reservations);
+
+        return "test/reservation/testlistrsrvstore";
+    }
+
+
+
+    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
+    public String getRsrvUserList(
+            @RequestParam("userName") String userName, // 가게 ID는 필수
+            Model model) throws Exception {
+
+        // 초기 Search 객체 설정 (기본값)
+        Search search = new Search();
+        search.setOrder(null); // 기본값 없음
+        search.setSearchKeyword(null); // 모든 상태 포함
+
+        // 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "reservation/listrsrvuser";
+        return "test/reservation/listrsrvuser";
     }
+
+
+    @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
+    public String getRsrvUserList(
+            @RequestParam("userName") String userName,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "order", required = false) String order,
+            Model model) throws Exception {
+
+        // Search 객체 생성
+        Search search = new Search();
+
+        // 조건 설정: 값이 있을 때만 설정
+        if (searchKeyword != null && !searchKeyword.isEmpty()) {
+            search.setSearchKeyword(searchKeyword);
+        }
+        if (order != null && !order.isEmpty()) {
+            search.setOrder(order);
+        }
+
+        // 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+
+        // 모델에 데이터 추가
+        model.addAttribute("reservations", reservations);
+
+        return "test/reservation/listrsrvuser";
+    }
+
+
+    @RequestMapping(value = "addRsrv", method = RequestMethod.GET)
+    public String addRsrv(
+            @RequestParam("storeId") int storeId,
+            @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
+            Model model) {
+
+        System.out.println("/reservation/addReservation : GET");
+
+        java.util.Date effectDt;
+
+        try {
+            // effectDt가 null이면 현재 날짜 사용
+            if (effectDtStr == null || effectDtStr.isEmpty()) {
+                effectDt = new java.util.Date();
+            } else {
+                // "yyyy-MM-dd" 형식의 날짜를 java.util.Date로 변환
+                SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+                effectDt = dateFormat.parse(effectDtStr);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid date format for effectDt");
+        }
+
+        // java.sql.Date로 변환
+        java.sql.Date sqlEffectDt = new java.sql.Date(effectDt.getTime());
+
+        Store store = storeService.getStore(storeId, sqlEffectDt);
+
+        model.addAttribute("store", store);
+
+        return "/test/reservation/testaddrsrv";
+    }
+
+
+    @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
+    public String addRsrv(
+            @RequestParam("rsrvDt") String rsrvDtStr, // String으로 받기
+            @ModelAttribute("reservation") Reservation reservation,
+            Model model) throws Exception {
+
+        System.out.println("/reservation/addReservation : POST");
+
+        // "yyyy-MM-dd'T'HH:mm" 형식의 rsrvDt를 java.util.Date로 변환
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        java.util.Date parsedDate = dateTimeFormat.parse(rsrvDtStr);
+
+        // java.sql.Date 또는 java.sql.Timestamp로 변환 필요
+        reservation.setRsrvDt(new java.sql.Date(parsedDate.getTime())); // java.sql.Date 사용 시
+
+        // Business Logic
+        reservationService.addRsrv(reservation);
+
+        // 저장 후 예약 번호 가져오기 (MyBatis나 JPA의 경우, reservation 객체에 rsrvNo가 자동으로 설정됨)
+        int rsrvNo = reservation.getRsrvNo(); // MyBatis나 JPA가 예약 번호를 설정했다고 가정
+
+        // 예약 번호를 pay 페이지로 전달
+        model.addAttribute("rsrvNo", rsrvNo);
+
+        return "test/reservation/redirectToPaycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.POST)
+    public String Paycheck(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : POST");
+        // 1. 예약 정보 조회
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        model.addAttribute("reservation", reservation);
+
+        return "test/reservation/paycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
+    public String Paycheck(@RequestParam("orderId") String orderId,
+                           @RequestParam("paymentKey") String paymentKey,
+                           @RequestParam int amount,
+                           Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : GET");
+
+        String[] parts = orderId.split("_");
+
+        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+
+        paymentService.confirmPayment(paymentKey, orderId, amount);
+
+        String paymentId = paymentKey;
+
+
+        reservationService.updateRsrvpay(rsrvNo, paymentId);
+
+
+
+        model.addAttribute("rsrvNo", rsrvNo);
+
+        return "test/reservation/pay";
+    }
+
+
+    @RequestMapping(value = "pay", method = RequestMethod.POST)
+    public String confirmPay(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+        // 1. 예약 정보 조회
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        java.sql.Date sqlRsrvDt = new java.sql.Date(reservation.getRsrvDt().getTime());
+
+        // 2. 가게 정보 조회 (예약 최대 인수)
+        Store store = storeService.getStore(reservation.getStoreId(), sqlRsrvDt);
+        StoreOperation storeOperation = store.getStoreOperation();
+        int maxCapacity = store.getStoreOperation().getRsrvLimit(); // 가게의 예약 최대 인수
+
+        // 3. 휴무일 확인
+        List<String> closedayList = storeOperation.getClosedayList(); // 가게의 휴무일 목록
+        String reservationDate = sqlRsrvDt.toString(); // 예약 날짜를 문자열로 변환
+
+        if (closedayList != null && closedayList.contains(reservationDate)) {
+            // 예약 일자가 휴무일인 경우
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+
+            // fail.html로 이동
+            model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
+            return "test/reservation/testfail";
+        }
+
+        // 4. 현재 예약 일시의 예약 인수 계산
+        int currentReservationCount = reservationService.getCountRsrv(reservation.getRsrvDt(), reservation.getStoreId());
+        int totalReservationCount = currentReservationCount + reservation.getRsrvPerson();
+
+        // 5. 예약 최대 인수 비교 및 처리
+        if (totalReservationCount > maxCapacity) {
+            // 예약 상태를 "예약 취소"로 변경
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+
+            // fail.html로 이동
+            model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
+            return "test/reservation/testfail";
+        } else {
+            // 예약 상태를 "예약 요청"으로 변경
+            reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
+
+            // success.html로 이동
+            return "test/reservation/testsuccess";
+        }
+    }
+
+
+
+
 
 }

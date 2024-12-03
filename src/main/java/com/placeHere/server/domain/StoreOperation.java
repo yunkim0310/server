@@ -40,7 +40,7 @@ public class StoreOperation {
     // 적용일
     private Date effectDt;
     // 휴무일 목록
-    private List<Date> closedayList;
+    private List<String> closedayList;
 
 
     // Method

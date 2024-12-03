@@ -2,6 +2,7 @@ package com.placeHere.server;
 
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.sql.Date;
 import java.util.List;
-import java.util.Map;
+
 
 @SpringBootTest
 public class ReservationBLTest {
@@ -20,6 +20,9 @@ public class ReservationBLTest {
     @Autowired
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Test
     public void test() {
@@ -31,12 +34,11 @@ public class ReservationBLTest {
     public void addRsrv() throws Exception{
         Reservation reservation = new Reservation();
         reservation.setStoreId(1);
-        reservation.setUserName("user10");
-        reservation.setRsrvStatus("결제 중");
+        reservation.setUserName("user12");
 
-        reservation.setRsrvDt(Timestamp.valueOf("2024-12-01 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-12 12:00:00"));
 
-        reservation.setRsrvPerson(2);
+        reservation.setRsrvPerson(4);
         reservation.setAmount(10000);
         reservation.setRsrvReq("짬뽕 맛있게 만들어 주세요");
         reservation.setStoreName("보배 반점");
@@ -70,8 +72,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 23; // 테스트용 예약 번호
-        String rsrvStatus = "예약 확정"; // 상태 업데이트 값
+        int rsrvNo = 35; // 테스트용 예약 번호
+        String rsrvStatus = "예약 요청"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);
@@ -140,7 +142,7 @@ public class ReservationBLTest {
     public void testGetCountRsrv() throws Exception {
         Reservation reservation = new Reservation();
         // Given: 테스트 데이터
-        reservation.setRsrvDt(Timestamp.valueOf("2024-11-22 21:30:00"));
+        reservation.setRsrvDt(Timestamp.valueOf("2024-12-20 21:30:00"));
         reservation.setStoreId(1);
 
         // When: 서비스 메서드 호출
@@ -210,6 +212,21 @@ public class ReservationBLTest {
 
 
     @Test
+    public void testGetRsrvList() throws Exception {
+
+//        Search search = new Search();
+//        search.setSearchKeyword(null);
+
+        // When: 서비스 호출
+        List<Reservation> reservations = reservationService.getRsrvList();
+
+        // Then: 결과 출력
+        System.out.println("=== Reservations with Reservation and Search ===");
+        reservations.forEach(System.out::println);
+    }
+
+
+    @Test
     public void testGetRsrvUserList() throws Exception {
         // Given: 특정 유저와 검색 조건, 내림차순
         String userName = "user3";
@@ -254,9 +271,21 @@ public class ReservationBLTest {
         System.out.println("=== Reservations with Reservation and Search ===");
         reservations.forEach(System.out::println);
     }
+
+
+    @Test
+    public void testRefundPayment() {
+        // 테스트용 결제 고유 ID (paymentKey)와 환불 사유 (reason)
+        String testPaymentKey = "tviva20241202123534Ehlq6"; // 실제 테스트 키 사용
+        String testReason = "Test refund reason";
+
+        try {
+            String response = paymentService.refundPayment(testPaymentKey, testReason);
+            System.out.println("Refund successful! Response: " + response);
+        } catch (Exception e) {
+            System.err.println("Refund failed: " + e.getMessage());
+        }
+    }
+
+
 }
-
-
-
-
-

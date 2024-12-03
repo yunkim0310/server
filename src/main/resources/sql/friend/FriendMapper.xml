@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.community.FriendDao">
+
+
+   <resultMap id="friendMap" type="com.placeHere.server.domain.Friend">
+       <result property="friendNo" column="friend_no" jdbcType="INTEGER"/>
+       <result property="friendReq" column="friend_req" jdbcType="VARCHAR"/>
+       <result property="friendRes" column="friend_res" jdbcType="VARCHAR"/>
+       <result property="chkfriendReq" column="chkfriend_req" jdbcType="BOOLEAN"/>
+       <result property="friendDt" column="friend_dt" jdbcType="DATE"/>
+       <result property="friendStatus" column="friend_status" jdbcType="BOOLEAN"/>
+       <result property="profileImg" column="profile_img" jdbcType="VARCHAR"/>
+       <result property="userName" column="username" jdbcType="VARCHAR"/>
+   </resultMap>
+
+
+<!-- 친구 신청 -->
+    <insert id="sendFriendReq" parameterType="com.placeHere.server.domain.Friend">
+         INSERT INTO Friend (friend_req, friend_res,  friend_dt )
+         VALUES (#{friendReq}, #{friendRes}, CURRENT_DATE);
+    </insert>
+
+    <!-- 친구 신청 확인/ 하나 추가 /  -->
+    <select id="getFriendReq" parameterType="int" resultMap="friendMap">
+        SELECT Friend.*, User.username, User.profile_img
+        FROM Friend
+        JOIN User ON Friend.friend_req = User.username
+        WHERE friend_res = #{friendRes} AND friend_status = 0
+    </select>
+
+     <!-- 친구 수락 // 친구 수락시 쿼리문 2개 필요 => 1. 친구 상태값 변경 쿼리 2. 신청 확인 하는 쿼리 -->
+    <update id="addFriend" parameterType="com.placeHere.server.domain.Friend">
+        UPDATE Friend
+        SET friend_status = 1
+        WHERE friend_no = #{friendNo};
+    </update>
+
+
+    <!-- 친구 신청 거절 -->
+        <delete id="removeFriendReq" parameterType="com.placeHere.server.domain.Friend">
+        DELETE FROM Friend
+        WHERE friend_no = #{friendNo}
+        </delete>
+
+    <!--    친구 목록을 조회하다 -->
+        <select id="getFriendList" parameterType="map" resultMap="friendMap">
+        SELECT User.username, User.profile_img
+        FROM Friend
+        JOIN User ON Friend.friend_res = User.username
+        WHERE friend_req = #{friendReq} AND friend_status = 1
+        LIMIT #{startRowNum}, #{listSize};
+        </select>
+
+
+        <!--친구 요청 확인시 상태 변경-->
+    <update id="updateChkfriendReq" parameterType="com.placeHere.server.domain.Friend">
+        UPDATE Friend
+        SET chkfriend_req = 1
+        WHERE friend_res = #{friendRes} AND chkfriend_req = 0;
+    </update>
+
+
+    <!--    친구 요청 확인 // 필요 X => getFriendReq 가 있기 때문   -->
+    <!--    <select id="checkFriendReq" parameterType="String" resultMap="friendMap">-->
+    <!--        SELECT friend_req-->
+    <!--        FROM Friend-->
+    <!--        WHERE friend_res = #{friendRes} AND friend_status = 0-->
+    <!--    </select>-->
+
+</mapper>

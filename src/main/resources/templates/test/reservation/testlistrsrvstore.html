@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Store Reservation List</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // AJAX로 예약 상태 업데이트
+        function updateRsrvStatus(rsrvNo, buttonElement) {
+            console.log("Reservation Number: ", rsrvNo); // 디버깅용 로그
+            $.ajax({
+                url: '/test/reservation/updateRsrvStatus',
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    rsrvNo: rsrvNo,
+                    rsrvStatus: '예약 확정'
+                }),
+                success: function(response) {
+                    const row = $(buttonElement).closest('tr');
+                    row.find('.status-cell').text('예약 확정');
+                    row.find('.action-cell').empty();
+                },
+                error: function() {
+                    alert('Failed to update reservation status.');
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+<h1>Store Reservation List</h1>
+
+<!-- 검색 폼 -->
+<form action="/test/reservation/getRsrvStoreList" method="POST">
+    <input type="hidden" name="storeId" th:value="${param.storeId}" />
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" />
+
+    <label for="searchStatuses">Reservation Status:</label>
+    <div id="searchStatuses">
+        <label>
+            <input type="checkbox" name="searchStatuses" value="예약 요청" /> 예약 요청
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="예약 확정" /> 예약 확정
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="이용 완료" /> 이용 완료
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="전화 예약" /> 전화 예약
+        </label>
+    </div>
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- 결과 테이블 -->
+<table>
+    <thead>
+    <tr>
+        <th>Reservation Number</th>
+        <th>Status</th>
+        <th>Reservation Date</th>
+        <th>Person Count</th>
+        <th>Rsrv PhoneNumber</th>
+        <th>Request</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.rsrvNo}">[예약 번호]</td>
+        <td class="status-cell" th:text="${reservation.rsrvStatus}">[예약 상태]</td>
+        <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy-MM-dd HH:mm:ss')}">[예약 일시]</td>
+        <td th:text="${reservation.rsrvPerson}">[예약 인원]</td>
+        <td th:text="${reservation.rsrvNumber}">[전화 번호]</td>
+        <td th:text="${reservation.rsrvReq}">[요청 사항]</td>
+        <td class="action-cell" th:if="${reservation.rsrvStatus == '예약 요청'}">
+            <button type="button" th:attr="onclick='updateRsrvStatus(' + ${reservation.rsrvNo} + ', this)'">예약 수락</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

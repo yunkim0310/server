@@ -2,7 +2,7 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>addStoreTest</title>
+    <title>가게 등록 (가게 기본 정보)</title>
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
@@ -11,14 +11,13 @@
         let duplicateResult = "";
 
         function checkDuplicateBusinessNo(businessNo) {
-            // 2148884534
             var bNo = {"b_no": [businessNo]};
             var apiKey = $("#apiKey").val();
 
             $.ajax({
-                url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,  // serviceKey 값을 xxxxxx에 입력
+                url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,
                 type: "POST",
-                data: JSON.stringify(bNo), // json 을 string으로 변환하여 전송
+                data: JSON.stringify(bNo),
                 dataType: "JSON",
                 contentType: "application/json",
                 accept: "application/json",
@@ -30,9 +29,8 @@
                     let bState = data.b_stt_cd;
                     let taxType = data.tax_type_cd;
 
-                    console.log((bState === "")? "null":bState);
-                    console.log((taxType === "")? "null":taxType);
-
+                    console.log((bState === "") ? "null" : bState);
+                    console.log((taxType === "") ? "null" : taxType);
 
                     if (bState !== "01") {
                         duplicateResult = "휴업 또는 폐업상태입니다.";
@@ -47,212 +45,277 @@
                     }
 
                     $("#duplicateResult").text(duplicateResult);
-
                 },
                 error: function(result) {
-                    console.log(result.responseText); //responseText의 에러메세지 확인
+                    console.log(result.responseText);
                 }
             });
-
         }
 
         $(function() {
-            $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
+            // 사업자 정보 중복확인 및 상태 확인 메서드
             $("#checkDuplicate").on('click', function () {
                 let businessNo = $("input[name='businessNo']").val();
 
-                // RestController 에서 중복 확인
                 $.ajax({
                     url: "/api-store/chkDuplicateBusinessNo",
                     method: "GET",
-                    data: {businessNo: businessNo},  // URL 파라미터로 보내는 대신 data로 전달
+                    data: {businessNo: businessNo},
                     dataType: "json",
                     headers: {
-                        "Accept": "application/json"  // Content-Type은 GET 요청에서는 필요 없음
+                        "Accept": "application/json"
                     },
                     success: function (response) {
                         if (response) {
                             checkDuplicateBusinessNo(businessNo);
                         } else {
                             duplicateResult = "중복된 사업자 번호입니다.";
-
                             $("#duplicateResult").text(duplicateResult);
                         }
-
                     },
                     error: function (xhr, status, error) {
-                        console.error("Request failed: " + status + ", " + error);  // 실패 시 오류 로그
+                        console.error("Request failed: " + status + ", " + error);
                     }
                 });
             });
+
+            $("#submit").on("click", function () {
+
+                var category1 = $("input[name='foodCategory1']:checked").val();
+                var category2 = $("input[name='foodCategory2']:checked").val();
+                var category3 = $("input[name='foodCategory3']:checked").val();
+                var category4 = $("input[name='foodCategory4']").val();
+
+                $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/"+category4);
+
+                $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data").submit();
+
+            })
+
         });
-
-
     </script>
+
+    <script type="text/javascript">
+        $(function() {
+            // 1차 분류 선택이 변경되면 2차, 3차 분류의 체크박스 해제 및 분류 표시
+            $("input[name='foodCategory1']").on("change", function() {
+                var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
+                $("#foodCategory4").css("display", "none");
+
+                // 2차 분류 표시
+                if (selectedCategory1) {
+                    $("div[id^='foodCategory2']").css("display", "block");
+                    // 3차 분류 숨기기
+                    $("div[id^='foodCategory3_']").css("display", "none");
+
+                    // 2차 분류의 체크 해제
+                    $("input[name='foodCategory2']").prop("checked", false);
+
+                    // 3차 분류의 체크 해제
+                    $("input[name='foodCategory3']").prop("checked", false);
+                } else {
+                    $("div[id^='foodCategory2']").css("display", "none");
+                    $("div[id^='foodCategory3_']").css("display", "none");
+                }
+            });
+
+            // 2차 분류 선택이 변경되면 3차 분류의 체크박스 해제 및 해당하는 3차 분류 표시
+            $("input[name='foodCategory2']").on("change", function() {
+                var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
+                updateDetailCategory(selectedCategory2);
+
+                // 3차 분류의 체크 해제
+                $("input[name='foodCategory3']").prop("checked", false);
+                $("#foodCategory4").css("display", "none");
+            });
+
+            // 3차 분류 표시 함수
+            function updateDetailCategory(selectedCategory2) {
+                // 3차 분류 항목 모두 숨기기
+                $("div[id^='foodCategory3_']").css("display", "none");
+                $("#foodCategory4").css("display", "none");
+
+                if (selectedCategory2) {
+                    // 선택된 2차 카테고리에 맞는 3차 카테고리만 보이도록 처리
+                    var detailCategoryDiv = $("#foodCategory3_" + selectedCategory2);
+                    if (detailCategoryDiv.length > 0) {
+                        detailCategoryDiv.css("display", "block");
+                    }
+                }
+            }
+
+            // 상세 분류 표시 함수
+            $("input[name='foodCategory3']").on("change", function () {
+
+                var selectedCategory3 = $("input[name='foodCategory3']:checked").val();
+
+                if (selectedCategory3 != "전체") {
+                    $("#foodCategory4").css("display", "block");
+                } else {
+                    $("#foodCategory4").css("display", "none");
+                }
+            })
+        });
+    </script>
+
+
 </head>
 <body>
 
+<h1>가게 등록 (가게 기본 정보)</h1>
+<form>
+    <input type="hidden" id="apiKey" th:value="${apiKey}">
+    <p th:text="${apiKey}"></p>
 
-    <h1>가게 등록 (가게 기본 정보)</h1>
-    <form>
-        <input type="hidden" id="apiKey" th:value="${apiKey}">
-        <p th:text="${apiKey}"></p>
-        <label>
-            <strong>회원 아이디</strong>
-            <input type="text" name="userName">
-        </label>
+    <label>
+        <strong>회원 아이디</strong>
+        <input type="text" name="userName" th:value="${userName}" readonly>
+    </label>
 
-        <br/><br/>
+    <br/><br/>
 
-        <label>
-            <strong>사업자 번호</strong>
-            <input type="text" name="businessNo">
-            <input type="button" id="checkDuplicate" value="등록 확인">
-            <p id="duplicateResult">&nbsp;</p>
-        </label>
+    <label>
+        <strong>사업자 번호</strong>
+        <input type="text" name="businessNo">
+        <input type="button" id="checkDuplicate" value="등록 확인">
+        <p id="duplicateResult">&nbsp;</p>
+    </label>
 
-        <label>
-            <strong>매장명</strong>
-            <input type="text" name="storeName">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장명</strong>
+        <input type="text" name="storeName">
+    </label>
 
-        <label>
-            <strong>매장 주소</strong>
-            <input type="text" name="storeAddr">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장 주소</strong>
+        <input type="text" name="storeAddr">
+    </label>
 
-        <label>
-            <strong>매장 전화번호</strong>
-            <input type="text" name="storePhone">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장 전화번호</strong>
+        <input type="text" name="storePhone">
+    </label>
 
-        <label>
-            <strong>매장 대표사진</strong>
-            <input type="file" name="storeImgFiles" accept="image/*">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장 대표사진</strong>
+        <input type="file" name="storeImgFiles" accept="image/*">
+    </label>
 
-        <label>
-            <strong>매장 사진</strong>
-            <input type="file" name="storeImgFiles" accept="image/*">
-            <input type="file" name="storeImgFiles" accept="image/*">
-            <input type="file" name="storeImgFiles" accept="image/*">
-            <input type="file" name="storeImgFiles" accept="image/*">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장 사진</strong>
+        <input type="file" name="storeImgFiles" accept="image/*">
+        <input type="file" name="storeImgFiles" accept="image/*">
+        <input type="file" name="storeImgFiles" accept="image/*">
+        <input type="file" name="storeImgFiles" accept="image/*">
+    </label>
 
-        <label>
-            <strong>매장 소개</strong>
-            <textarea name="storeInfo" rows="5" cols="50" style="resize: none"></textarea>
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>매장 소개</strong>
+        <textarea name="storeInfo" rows="5" cols="50" style="resize: none"></textarea>
+    </label>
 
-        <label>
-            <strong>해시태그</strong>
-            <input type="text" name="hashtag">
-        </label>
+    <br/><br/>
 
-        <br/><br/>
+    <label>
+        <strong>해시태그</strong>
+        <input type="text" name="hashtag">
+    </label>
 
-        <strong>편의시설</strong>
+    <br/><br/>
+
+    <strong>편의시설</strong>
+    <br/>
+    <div th:each="name, iterStat : ${amenitiesNameList}">
+        <input type="checkbox" name="amenitiesNoList" th:value="${iterStat.index + 1}">
+        <label th:text="${name}">편의시설 이름</label><br/>
+    </div>
+
+    <br/>
+
+    <strong>음식 카테고리</strong>
+    <input type="hidden" name="foodCategoryId">
+    <p>1차 분류</p>
+    <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+        <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}">
+        <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/>
+    </div>
+
+    <br/>
+
+    <p>2차 분류</p>
+    <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+        <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}">
+        <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}">2차 분류 이름</label><br/>
+    </div>
+
+    <br/>
+
+    <p>3차 분류</p>
+    <div th:each="entry : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+        <p th:each="detail : ${entry.value}">
+            <input type="radio" name="foodCategory3" th:value="${detail}">
+            <label th:text="${detail}">3차 분류 이름</label><br/>
+        </p>
+    </div>
+
+    <div id="foodCategory4" style="display: none" >
         <br/>
-        <div th:each="name, iterStat : ${amenitiesNameList}">
-            <input type="checkbox" name="amenitiesNoList" th:value="${iterStat.index + 1}">
-            <label th:text="${name}">편의시설 이름</label><br/>
-        </div>
+        <p>상세 분류</p>
+        <input type="text" name="foodCategory4">
+    </div>
 
-        <br/>
+    <br/><br/>
 
-        <label>
-            <strong>음식 카테고리</strong>
-            <input type="text" name="foodCategoryId">
-        </label>
+    <label>
+        <strong>메뉴1</strong>
+        <input type="radio" name="specialMenuNo" value="1" checked>
+    </label>
+    <input type="hidden" name="menuList[0].menuNo" value="1">
+    <br/>
 
-        <br/><br/>
+    <label>
+        메뉴 사진
+        <input type="file" name="menuList[0].menuImgFile" accept="image/*">
+    </label>
 
-        <label>
-            <strong>메뉴1</strong>
-            <input type="radio" name="specialMenuNo" value="1" checked>
-        </label>
-        <input type="hidden" name="menuList[0].menuNo" value="1">
-        <br/>
+    <br/>
 
-        <label>
-            메뉴 사진
-            <input type="file" name="menuList[0].menuImgFile" accept="image/*">
-        </label>
+    <label>
+        메뉴 이름
+        <input type="text" name="menuList[0].menuName">
+    </label>
 
-        <br/>
+    <br/>
 
-        <label>
-            메뉴 이름
-            <input type="text" name="menuList[0].menuName">
-        </label>
+    <label>
+        메뉴 가격
+        <input type="number" name="menuList[0].menuPrice" value="0">
+    </label>
 
-        <br/>
+    <br/>
 
-        <label>
-            메뉴 가격
-            <input type="number" name="menuList[0].menuPrice" value="0">
-        </label>
+    <label>
+        메뉴 설명
+        <textarea name="menuList[0].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
+    </label>
 
-        <br/>
+    <br/><br/>
 
-        <label>
-            메뉴 설명
-            <textarea name="menuList[0].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
-        </label>
+    <button id="submit">다음 단계</button>
 
-        <br/><br/>
-
-        <label>
-            <strong>메뉴2</strong>
-            <input type="radio" name="specialMenuNo" value="2">
-        </label>
-        <input type="hidden" name="menuList[1].menuNo" value="2">
-
-        <br/>
-
-        <label>
-            메뉴 사진
-            <input type="file" name="menuList[1].menuImgFile">
-        </label>
-
-        <br/>
-
-        <label>
-            메뉴 이름
-            <input type="text" name="menuList[1].menuName">
-        </label>
-
-        <br/>
-
-        <label>
-            메뉴 가격
-            <input type="number" name="menuList[1].menuPrice" value="0">
-        </label>
-
-        <br/>
-
-        <label>
-            메뉴 설명
-            <textarea name="menuList[1].menuInfo" rows="5" cols="50" style="resize: none"></textarea>
-        </label>
-
-        <br/><br/><br/>
-
-        <input type="submit" value="다음 단계">
-
-    </form>
+</form>
 </body>
 </html>

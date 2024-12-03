@@ -38,6 +38,11 @@
 		<mapper resource="sql/reservation/ReservationMapper.xml"/>
 		<mapper resource="sql/community/CommunityMapper.xml"/>
 		<mapper resource="sql/point/PointMapper.xml"/>
+		<mapper resource="sql/reservation/ReservationMapper.xml"/>
+		<mapper resource="sql/community/CommunityMapper.xml"/>
+		<mapper resource="sql/friend/FriendMapper.xml"/>
+		<mapper resource="sql/like/LikeMapper.xml"/>
+
 	</mappers>
 
 </configuration>

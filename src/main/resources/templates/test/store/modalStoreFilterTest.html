@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가게 검색 필터</title>
+
+    <script type="text/javascript">
+
+        $(function() {
+
+            var mode = $("input[name='mode']:hidden").val();
+
+            console.log(mode);
+
+            if (mode === "result") {
+                // 초기 상태에서 선택된 1차, 2차, 3차 분류에 따라 표시 설정
+                initCategoryDisplay();
+
+                // 1차 분류 변경 이벤트
+                $("input[name='foodCategory1']").on("change", function () {
+                    var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
+
+                    // 1차 분류가 선택되면 2차 분류 표시 및 3차 분류 초기화
+                    if (selectedCategory1) {
+                        $("div[id^='foodCategory2']").css("display", "block");
+                        $("div[id^='foodCategory3_']").css("display", "none");
+                        $("#foodCategory4").css("display", "none");
+
+                        // 2차, 3차 분류 체크 해제
+                        $("input[name='foodCategory2']").prop("checked", false);
+                        $("input[name='foodCategory3']").prop("checked", false);
+                    } else {
+                        // 1차 분류가 선택되지 않은 경우 하위 분류 숨기기
+                        $("div[id^='foodCategory2']").css("display", "none");
+                        $("div[id^='foodCategory3_']").css("display", "none");
+                        $("#foodCategory4").css("display", "none");
+                    }
+                });
+
+                // 2차 분류 변경 이벤트
+                $("input[name='foodCategory2']").on("change", function () {
+                    var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
+
+                    // 2차 분류 선택에 따라 3차 분류 표시
+                    if (selectedCategory2) {
+                        $("div[id^='foodCategory3_']").css("display", "none");
+                        var detailCategoryDiv = $("#foodCategory3_" + selectedCategory2);
+                        if (detailCategoryDiv.length > 0) {
+                            detailCategoryDiv.css("display", "block");
+                        }
+
+                        // 3차 분류 체크 해제 및 상세 분류 숨기기
+                        $("input[name='foodCategory3']").prop("checked", false);
+                        $("#foodCategory4").css("display", "none");
+                    } else {
+                        $("div[id^='foodCategory3_']").css("display", "none");
+                        $("#foodCategory4").css("display", "none");
+                    }
+                });
+
+                // 초기 상태 설정 함수
+                function initCategoryDisplay() {
+                    var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
+                    var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
+                    var selectedCategory3 = $("input[name='foodCategory3']:checked").val();
+
+                    if (selectedCategory1) {
+                        $("div[id^='foodCategory2']").css("display", "block");
+
+                        if (selectedCategory2) {
+                            $("div[id^='foodCategory3_']").css("display", "none");
+
+                            var detailCategoryDiv = $("#foodCategory3_" + selectedCategory2);
+                            if (detailCategoryDiv.length > 0) {
+                                detailCategoryDiv.css("display", "block");
+
+                                // 3차 분류에서 선택된 항목의 상태를 설정
+                                if (selectedCategory3) {
+                                    detailCategoryDiv.find("input[name='foodCategory3'][value='" + selectedCategory3 + "']").prop("checked", true);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (mode === "search") {
+                // 1차 분류 선택이 변경되면 2차, 3차 분류의 체크박스 해제 및 분류 표시
+                $("input[name='foodCategory1']").on("change", function () {
+                    var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
+                    $("#foodCategory4").css("display", "none");
+
+                    // 2차 분류 표시
+                    if (selectedCategory1) {
+                        $("div[id^='foodCategory2']").css("display", "block");
+                        // 3차 분류 숨기기
+                        $("div[id^='foodCategory3_']").css("display", "none");
+
+                        // 2차 분류의 체크 해제
+                        $("input[name='foodCategory2']").prop("checked", false);
+
+                        // 3차 분류의 체크 해제
+                        $("input[name='foodCategory3']").prop("checked", false);
+                    } else {
+                        $("div[id^='foodCategory2']").css("display", "none");
+                        $("div[id^='foodCategory3_']").css("display", "none");
+                    }
+                });
+
+                // 2차 분류 선택이 변경되면 3차 분류의 체크박스 해제 및 해당하는 3차 분류 표시
+                $("input[name='foodCategory2']").on("change", function () {
+                    var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
+                    updateDetailCategory(selectedCategory2);
+
+                    // 3차 분류의 체크 해제
+                    $("input[name='foodCategory3']").prop("checked", false);
+                    $("#foodCategory4").css("display", "none");
+                });
+
+                // 3차 분류 표시 함수
+                function updateDetailCategory(selectedCategory2) {
+                    // 3차 분류 항목 모두 숨기기
+                    $("div[id^='foodCategory3_']").css("display", "none");
+                    $("#foodCategory4").css("display", "none");
+
+                    if (selectedCategory2) {
+                        // 선택된 2차 카테고리에 맞는 3차 카테고리만 보이도록 처리
+                        var detailCategoryDiv = $("#foodCategory3_" + selectedCategory2);
+                        if (detailCategoryDiv.length > 0) {
+                            detailCategoryDiv.css("display", "block");
+                        }
+                    }
+                }
+
+            }
+
+        });
+
+
+        $(function () {
+
+            // 해시태그 입력창 추가 함수
+            $('button[name="addHashtagInput"]').on('click', function () {
+                // 컨테이너 생성
+                const container = $('<div>', {
+                    class: 'hashtag-container'
+                });
+
+                // input 생성
+                const newInput = $('<input>', {
+                    type: 'text',
+                    name: 'hashtagList',
+                    class: 'hashtag-input'
+                });
+
+                // 삭제 버튼 생성
+                const removeBtn = $('<button>', {
+                    type: 'button',
+                    name: 'removeHashtagInput',
+                    text: '삭제'
+                });
+
+                // 컨테이너에 요소 추가
+                container.append(newInput).append('&nbsp;').append(removeBtn);
+
+                // hashtagInputs에 컨테이너 추가
+                $('#hashtagInputs').append(container);
+
+                // 삭제 버튼 클릭 이벤트
+                removeBtn.on('click', function () {
+                    container.remove();
+                });
+
+            });
+
+            // 리셋 함수
+            $("button[name='resetFilter']").on('click', function () {
+
+                // 알림
+                console.log("reset");
+
+                // 모든 input, select, textarea 필드의 값을 비우기
+                $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
+
+                $("form[name='searchStore'] input[name='priceMin']").val(0);
+                $("form[name='searchStore'] input[name='priceMax']").val(100000);
+
+                // 추가적으로 체크박스나 라디오 버튼의 선택을 해제하려면
+                $("form[name='searchStore'] input[type='checkbox'], form[name='searchStore'] input[type='radio']").prop('checked', false);
+            });
+
+
+            $(document).on('click', '.removeHashtagBtn', function() {
+                $(this).closest('.addedHashtagInput').remove();  // 해당 div 삭제
+            });
+
+        });
+
+    </script>
+</head>
+<body>
+<!--style="display:none;"-->
+    <form name="searchStore">
+
+        <input type="hidden" name="mode" th:value="${mode}">
+
+        <input type="hidden" name="searchKeyword">
+
+        <div id="filterModal" class="modal" style="display:none;">
+
+            <div class="modal-content">
+
+                <h2>필터&ensp;<span class="close" style="cursor:pointer;">&times;</span></h2>
+
+                <a href="#regionFilter">지역</a>
+                &ensp;
+                <a href="#foodCategoryFilter">음식 카테고리</a>
+                &ensp;
+                <a href="#priceFilter">가격</a>
+                &ensp;
+                <a href="#hashtagFilter">해시태그</a>
+                &ensp;
+                <a href="#amenitiesFilter">편의시설</a>
+                <br/><br/>
+
+                <strong id="regionFilter">지역</strong>
+
+                <br/>
+
+                <div th:each="region : ${regionList}">
+                    <input type="checkbox" name="regionList" th:value="${region}"
+                           th:attr="checked=${(mode == 'result' && search.regionList != null && search.regionList.indexOf(region) != -1) ? 'checked' : null}">
+                    <label th:text="${region}">지역이름(구)</label>
+                </div>
+
+                <br/><br/>
+                <strong id="foodCategoryFilter">음식 카테고리</strong>
+                <div th:if="${mode == 'search'}" th:attr="disables=${(mode != 'search')? 'disable': null}">
+                    <input type="hidden" name="foodCategoryId">
+                    <p>1차 분류</p>
+                    <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+                        <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}">
+                        <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/>
+                    </div>
+
+                    <br/>
+
+                    <p>2차 분류</p>
+                    <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+                        <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}">
+                        <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}">2차 분류 이름</label><br/>
+                    </div>
+
+                    <br/>
+
+                    <p>3차 분류</p>
+                    <div th:each="entry : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+                        <p th:each="detail : ${entry.value}">
+                            <input type="radio" name="foodCategory3" th:value="${detail}">
+                            <label th:text="${detail}">3차 분류 이름</label><br/>
+                        </p>
+                    </div>
+                </div>
+                <div th:if="${mode == 'result'}" th:attr="disables=${(mode != 'result')? 'disable': null}">
+                    <input type="hidden" name="foodCategoryId">
+
+                    <!-- 1차 분류 -->
+                    <p>1차 분류</p>
+                    <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+                        <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}"
+                               th:attr="checked=${selectedCategoryList[0] == name ? 'checked' : null}">
+                        <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}"></label><br/>
+                    </div>
+
+                    <!-- 2차 분류 -->
+                    <p>2차 분류</p>
+                    <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+                        <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2_' + ${iterStat.index}"
+                               th:attr="checked=${selectedCategoryList[1].replace(', ', '-') == name ? 'checked' : null}">
+                        <label th:text="${name}" th:for="'foodCategory2_' + ${iterStat.index}"></label><br/>
+                    </div>
+
+                    <!-- 3차 분류 -->
+                    <p>3차 분류</p>
+                    <div th:each="entry : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+                        <p th:each="detail : ${entry.value}">
+                            <input type="radio" name="foodCategory3" th:value="${detail}"
+                                   th:attr="checked=${selectedCategoryList[2] == detail ? 'checked' : null}">
+                            <label th:text="${detail}"></label><br/>
+                        </p>
+                    </div>
+                </div>
+
+                <br/><br/>
+
+                <div>
+                    <strong id="priceFilter">가격</strong>
+                    <p>* 대표메뉴의 가격 범위를 설정해주세요</p>
+                    <input type="number" name="priceMin" value="0">
+                    ~
+                    <input type="number" name="priceMax" value="100000">
+                </div>
+
+                <br/><br/>
+
+                <div>
+                    <strong id="hashtagFilter">해시태그</strong>
+                    &ensp;
+                    <button type="button" name="addHashtagInput">추가</button>
+                    <br/>
+
+                    <div id="hashtagInputs">
+                        <input type="text" name="hashtagList" th:value="${(mode == 'result' && search.hashtagList !=null && search.hashtagList.size()>0)? search.hashtagList[0] : null}"><br/>
+                        <div th:if="${mode=='result' &&  search.hashtagList !=null && search.hashtagList.size()>1}">
+                            <div th:each="hashtag, iterStat : ${search.hashtagList}">
+                                <div th:if="${iterStat.index > 0}" class="addedHashtagInput">
+                                    <input type="text" name="hashtagList" th:value="${hashtag}">
+                                    <button type="button" name="removeHashtagInput" class="removeHashtagBtn">삭제</button><br/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <br/><br/>
+
+                <div>
+                    <strong id="amenitiesFilter">편의시설</strong>
+                    <br/>
+                    <div th:each="name, iterStat : ${amenitiesNameList}">
+                        <input type="checkbox" name="amenitiesNoList" th:value="${iterStat.index + 1}"
+                               th:attr="checked=${(mode == 'result' && search.amenitiesNoList != null &&search.amenitiesNoList.indexOf(iterStat.index + 1) != -1) ? 'checked' : null}">
+                        <label th:text="${name}">편의시설 이름</label><br/>
+                    </div>
+                </div>
+
+                <br/><br/>
+
+                <button type="button" name="resetFilter">초기화</button>
+                &ensp;
+                <button type="button" name="saveFilter" th:text="${(mode == 'search')? '저장' : '적용'}">적용</button>
+
+            </div>
+
+        </div>
+
+    </form>
+
+</body>
+</html>

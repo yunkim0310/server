@@ -1,31 +1,31 @@
-//package com.placeHere.server;
-//
-//import ch.qos.logback.core.net.SyslogOutputStream;
-//import com.placeHere.server.domain.User;
+package com.placeHere.server;
+
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.placeHere.server.domain.User;
 //import com.placeHere.server.service.user.UserService;
 //import io.jsonwebtoken.lang.Assert;
-//import org.junit.jupiter.api.Test;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Qualifier;
-//import org.springframework.boot.test.context.SpringBootTest;
-//
-//import java.util.ArrayList;
-//import java.util.List;
-//
-//import static org.junit.jupiter.api.Assertions.assertFalse;
-//
-//@SpringBootTest
-//public class UserBLTest {
-//
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.test.context.SpringBootTest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
+@SpringBootTest
+public class UserBLTest {
+
 //    @Autowired
 //    @Qualifier("userServiceImpl")
 //    private UserService userService;
-//
-//    //    @Test
-//    public void test() {
-//        System.out.println("1234");
-//    }
-//
+
+        @Test
+    public void test() {
+        System.out.println("1234");
+    }
+
 //    //    @Test
 //    public void getUser() throws Exception{
 //        System.out.println("4567");
@@ -108,6 +108,6 @@
 ////        System.out.println(userService.getUserList());
 //
 //    }
-//
-//
-//}
+
+
+}

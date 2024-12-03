@@ -5,6 +5,14 @@
 
 <mapper namespace="com.placeHere.server.dao.store.StoreDao">
 
+    <!-- Closeday -->
+    <resultMap id="ClosedayResultMap" type="com.placeHere.server.domain.Closeday">
+        <result property="closedayId" column="closeday_id" jdbcType="INTEGER"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="closeday" column="closeday" jdbcType="DATE"/>
+        <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
+    </resultMap>
+
     <!-- Menu -->
     <resultMap id="MenuResultMap" type="com.placeHere.server.domain.Menu">
         <result property="menuId" column="menu_id" jdbcType="INTEGER"/>
@@ -38,11 +46,11 @@
         <result property="storeId" column="store_id" javaType="int" jdbcType="INTEGER"/>
         <result property="newsImg" column="news_img" javaType="String" jdbcType="VARCHAR"/>
         <result property="newsContents" column="news_contents" javaType="String" jdbcType="VARCHAR"/>
-        <result property="regDt" column="reg_dt" javaType="java.time.LocalDateTime" jdbcType="TIMESTAMP"/>
+        <result property="regDt" column="reg_dt" javaType="String" jdbcType="TIMESTAMP"/>
+        <result property="totalCnt" column="total_cnt" javaType="int" jdbcType="INTEGER"/>
     </resultMap>
 
     <!-- Store -->
-    <!-- 리뷰 관련 추가 필요 -->
     <resultMap type="com.placeHere.server.domain.Store" id="StoreResultMap">
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>
         <result property="userName" column="username" jdbcType="VARCHAR"/>
@@ -64,6 +72,7 @@
         <result property="storeStatus" column="store_status" jdbcType="INTEGER"/>
         <result property="reviewCnt" column="review_cnt" jdbcType="INTEGER"/>
         <result property="reviewScoreAvg" column="review_score_avg"/>
+        <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
 
         <association property="amenitiesNoList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getAmenitiesList"/>
         <association property="menuList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getMenuList"/>
@@ -90,8 +99,24 @@
         store_img1, store_img2, store_img3,
         store_img4, store_img5, hashtag)
         VALUES
-        (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storePhone},
-        #{storeInfo}, #{foodCategoryId}, #{specialMenuNo},
+        (#{userName}, #{businessNo}, #{storeName}, #{storeAddr},
+         <choose>
+             <when test="storePhone != null and storePhone != ''">
+                 #{storePhone},
+             </when>
+             <otherwise>
+                 NULL,
+             </otherwise>
+         </choose>
+         <choose>
+             <when test="storeInfo != null and storeInfo != ''">
+                 #{storePhone},
+             </when>
+             <otherwise>
+                 NULL,
+             </otherwise>
+         </choose>
+         #{foodCategoryId}, #{specialMenuNo},
         <choose>
             <when test="storeImgList[0] != null and storeImgList[0] != ''">
                 #{storeImgList[0]}
@@ -132,7 +157,15 @@
                 NULL
             </otherwise>
         </choose>,
-        #{hashtag})
+        <choose>
+            <when test="hashtag != null and hashtag != ''">
+                #{hashtag}
+            </when>
+            <otherwise>
+                NULL
+            </otherwise>
+        </choose>
+        )
 
     </insert>
 
@@ -140,10 +173,12 @@
     <!-- 등록된 가게 Id 얻기 -->
     <select id="getStoreId">
 
-        SELECT store_id
-        FROM store
-        WHERE business_no = #{businessNo}
-        AND store_status = 0
+        SELECT
+            COALESCE((SELECT store_id
+                        FROM store
+                        WHERE username = #{userName}
+                            AND store_status = 0
+                        LIMIT 1), 0) AS store_id
 
     </select>
 
@@ -162,31 +197,39 @@
                 GROUP BY reservation.store_id
             ) AS reviews ON s.store_id = reviews.store_id
         WHERE s.store_id = #{storeId}
+        AND s.store_status = 0
 
     </select>
 
     <!-- 가게 검색, 가게 목록 조회 -->
     <select id="getStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="StoreResultMap">
 
-        SELECT *
+        SELECT *, COUNT(*) OVER() AS total_cnt
         FROM
-        (SELECT *
-        FROM (SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
-        FROM store s
-        LEFT JOIN (
-        SELECT reservation.store_id,
-        COUNT(review.review_no) AS cnt_review,
-        ROUND(SUM(review.review_score) / CASE WHEN COUNT(review.review_no) = 0 THEN 1 ELSE COUNT(review.review_no) END, 1) AS review_score_avg
-        FROM review
-        JOIN reservation ON review.rsrv_no = reservation.rsrv_no
-        GROUP BY reservation.store_id
-        ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
-        WHERE store_name LIKE CONCAT('%',#{searchKeyword},'%')
-        OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-        OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
-        OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
-        OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))) AS store
+            (SELECT *
+            FROM
+                (SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
+                FROM store s
+                LEFT JOIN (
+                    SELECT reservation.store_id,
+                    COUNT(review.review_no) AS cnt_review,
+                    ROUND(SUM(review.review_score) / CASE WHEN COUNT(review.review_no) = 0 THEN 1 ELSE COUNT(review.review_no) END, 1) AS review_score_avg
+                    FROM review
+                    JOIN reservation ON review.rsrv_no = reservation.rsrv_no
+                    GROUP BY reservation.store_id
+                ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
+                <if test="searchKeyword != null and searchKeyword != ''">
+                    <where>
+                        store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+                        OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                    </where>
+                </if>
+            ) AS store
         <where>
+            store_status = 0
             <if test="regionList != null and !regionList.isEmpty()">
                 AND (<foreach collection="regionList" separator="OR" item="region">
                 store_addr Like CONCAT('%',#{region},'%')
@@ -198,9 +241,10 @@
             </if>
 
             <if test="hashtagList != null and !hashtagList.isEmpty()">
-                AND (<foreach collection="hashtagList" separator="OR" item="hashtag">
-                hashtag LIKE CONCAT('%',#{hashtag},'%')
-            </foreach>)
+                AND (
+                    <foreach collection="hashtagList" separator="OR" item="hashtag">
+                        <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
+                    </foreach>)
             </if>
             <if test="priceMin != 0 and priceMax!=0">
                 AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
@@ -214,60 +258,50 @@
             </if>
         </where>
         ORDER BY review_score_avg DESC, review_cnt DESC
-        LIMIT #{startRowNum}, #{listSize}
+        <!-- LIMIT #{startRowNum}, #{listSize} -->
 
     </select>
-<!--    <select id="getStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="StoreResultMap">-->
-
-<!--        SELECT *-->
-<!--        FROM-->
-<!--            (SELECT *-->
-<!--            FROM store-->
-<!--            WHERE store_name LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--            OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--            OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--            OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--            OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))) AS store-->
-<!--        <where>-->
-<!--            <if test="regionList != null and !regionList.isEmpty()">-->
-<!--                AND (<foreach collection="regionList" separator="OR" item="region">-->
-<!--                        store_addr Like CONCAT('%',#{region},'%')-->
-<!--                    </foreach>)-->
-<!--            </if>-->
-
-<!--            <if test='foodCategoryId != null and !foodCategoryId.equals("")'>-->
-<!--                AND food_category_id LIKE CONCAT('%',#{foodCategoryId},'%')-->
-<!--            </if>-->
-
-<!--            <if test="hashtagList != null and !hashtagList.isEmpty()">-->
-<!--                AND (<foreach collection="hashtagList" separator="OR" item="hashtag">-->
-<!--                        hashtag LIKE CONCAT('%',#{hashtag},'%')-->
-<!--                    </foreach>)-->
-<!--            </if>-->
-<!--            <if test="priceMin != 0 and priceMax!=0">-->
-<!--                AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})-->
-<!--            </if>-->
-
-<!--            <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">-->
-<!--                AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN-->
-<!--                                <foreach collection="amenitiesNoList" item="amenitiesNo" open="(" close=")" separator=",">-->
-<!--                                    #{amenitiesNo}-->
-<!--                                </foreach>)-->
-<!--            </if>-->
-<!--        </where>-->
-<!--        LIMIT #{startRowNum}, #{listSize}-->
-
-<!--    </select>-->
 
     <!-- 가게 수정 -->
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
 
         UPDATE store
-        SET store_name=#{storeName}, store_phone=#{storePhone}, store_info=#{storeInfo},
-        food_category_id=#{foodCategoryId}, special_menu_no=#{specialMenuNo},
-        store_img1=#{storeImgList[0]}, store_img2=#{storeImgList[1]}, store_img3=#{storeImgList[2]},
-        store_img4=#{storeImgList[3]}, store_img5=#{storeImgList[4]},
-        hashtag=#{hashtag}
+        SET store_name=#{storeName},
+            store_phone=
+                <choose>
+                    <when test="storePhone != null and storePhone != ''">
+                        #{storePhone}
+                    </when>
+                    <otherwise>
+                        NULL
+                    </otherwise>
+                </choose>,
+            store_info=
+                <choose>
+                    <when test="storeInfo != null and storeInfo != ''">
+                        #{storeInfo}
+                    </when>
+                    <otherwise>
+                        NULL
+                    </otherwise>
+                </choose>,
+            food_category_id=#{foodCategoryId}, special_menu_no=#{specialMenuNo},
+
+            <if test="storeImgList[0] != null and storeImgList[0] != ''">store_img1=#{storeImgList[0]},</if>
+            <if test="storeImgList[1] != null and storeImgList[1] != ''">store_img1=#{storeImgList[1]},</if>
+            <if test="storeImgList[2] != null and storeImgList[2] != ''">store_img1=#{storeImgList[2]},</if>
+            <if test="storeImgList[3] != null and storeImgList[3] != ''">store_img1=#{storeImgList[3]},</if>
+            <if test="storeImgList[4] != null and storeImgList[4] != ''">store_img1=#{storeImgList[4]},</if>
+
+            hashtag=
+                <choose>
+                    <when test="hashtag != null and hashtag != ''">
+                        #{hashtag}
+                    </when>
+                    <otherwise>
+                        NULL
+                    </otherwise>
+                </choose>
         WHERE store_id = #{storeId}
 
     </update>
@@ -298,6 +332,7 @@
         SELECT amenities_no
         FROM amenities
         WHERE store_id = #{storeId}
+        ORDER BY amenities_no
 
     </select>
 
@@ -311,6 +346,7 @@
 
     <!-- 메뉴 등록 -->
     <insert id="addMenu" parameterType="map">
+
         INSERT INTO Menu (store_id, menu_no, menu_img, menu_name, menu_price, menu_info)
         VALUES
         <foreach collection="menuList" item="menu" separator=",">
@@ -327,9 +363,17 @@
             </choose>,
             #{menu.menuName},
             #{menu.menuPrice},
-            #{menu.menuInfo}
+            <choose>
+                <when test="menu.menuInfo!= null and menu.menuInfo != ''">
+                    #{menu.menuInfo}
+                </when>
+                <otherwise>
+                    NULL
+                </otherwise>
+            </choose>
             )
         </foreach>
+
     </insert>
 
     <!-- 메뉴 목록 조회 -->
@@ -338,6 +382,7 @@
         SELECT *
         FROM menu
         WHERE store_id = #{storeId}
+        ORDER BY menu_no
 
     </select>
 
@@ -407,14 +452,23 @@
         INSERT INTO store_news
             (store_id, news_img, news_contents, reg_dt)
         VALUES
-            (#{storeId}, #{newsImg}, #{newsContents}, NOW())
+            (#{storeId},
+             <choose>
+                 <when test="newsImg != null and newsImg != ''">
+                     #{newsImg},
+                 </when>
+                 <otherwise>
+                     NULL,
+                 </otherwise>
+             </choose>
+             #{newsContents}, NOW())
 
     </insert>
 
     <!-- 매장 소식 목록 조회 -->
     <select id="getStoreNewsList" parameterType="map" resultMap="StoreNewsResultMap">
 
-        SELECT *
+        SELECT *, COUNT(*) OVER() AS total_cnt
         FROM store_news
         WHERE store_id = #{storeId}
         ORDER BY news_id DESC
@@ -426,7 +480,7 @@
     <update id="updateStoreNews" parameterType="com.placeHere.server.domain.StoreNews">
 
         UPDATE store_news
-        SET news_img=#{newsImg}, news_contents=#{newsContents}
+        SET <if test="newsImg != null and newsImg != ''">news_img=#{newsImg},</if> news_contents=#{newsContents}
         WHERE news_id = #{newsId}
 
     </update>
@@ -440,7 +494,7 @@
     </delete>
 
     <!-- 휴무일 등록 -->
-    <insert id="addCloseday" parameterType="map">
+    <insert id="addCloseday" parameterType="com.placeHere.server.domain.Closeday">
 
         INSERT INTO closeday(store_id, closeday)
         VALUES (#{storeId}, #{closeday})
@@ -448,9 +502,9 @@
     </insert>
 
     <!-- 휴무일 목록 조회 -->
-    <select id="getClosedayListBySearch" parameterType="map">
+    <select id="getClosedayListBySearch" parameterType="map" resultMap="ClosedayResultMap">
 
-        SELECT closeday
+        SELECT *, COUNT(*) OVER() AS total_cnt
         FROM closeday
         WHERE store_id = #{storeId}
           AND closeday BETWEEN #{search.startDate} AND #{search.endDate}

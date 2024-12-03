@@ -56,7 +56,30 @@ public class Search {
         startDate = dateFormat.format(today);
         endDate = dateFormat.format(today.plusMonths(1));
 
+        priceMin = 0;
+        priceMax = 100000;
+
         page = 1;
+    }
+
+    public Search(int pageSize, int listSize) {
+
+        System.out.println("new "+getClass().getSimpleName()+" Constructor(int, int)");
+
+        DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate today = LocalDate.now();
+
+        startDate = dateFormat.format(today);
+        endDate = dateFormat.format(today.plusMonths(1));
+
+        priceMin = 0;
+        priceMax = 100000;
+
+        page = 1;
+
+        this.pageSize = pageSize;
+        this.listSize = listSize;
+
     }
 
 

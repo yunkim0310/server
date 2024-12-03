@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>가게 목록 조회</title>
+
+    <div th:insert="~{test/store/importTest :: importFragment}"/>
+
+</head>
+<body>
+
+    <h1>가게 목록 조회</h1>
+    <hr/>
+
+    <table style="border-spacing: 10px;">
+        <thead>
+            <tr>
+                <th>검색</th>
+                <th th:text="'가게 목록  '+${totalCnt}">가게 목록&ensp;개수</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td style="vertical-align: top;">
+                    <!-- 검색창 -->
+                    <div th:insert="~{test/store/searchStoreTest}"/>
+                </td>
+
+                <td style="vertical-align: top;">
+                    <table style="border-spacing: 10px;">
+                        <thead>
+                            <tr>
+                                <th>No.</th>
+                                <th>가게 Id</th>
+                                <th>매장명</th>
+                                <th>별점</th>
+                                <th>주소</th>
+                                <th>대표메뉴</th>
+                                <th>해시태그</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr th:each="store, iterStat : ${storeList}">
+                                <td th:text="${iterStat.count}">번호</td>
+                                <td th:text="${store.storeId}">가게 Id</td>
+                                <td>
+                                    <a th:text="${store.storeName}" th:attr="href='/getStore?mode=info&storeId='+${store.storeId}">매장명</a>
+                                </td>
+                                <td th:text="'★ '+${store.reviewScoreAvg + ' (' +store.reviewCnt+ ')'}">리뷰 별점</td>
+                                <td th:text="${store.storeAddr}">매장 주소</td>
+                                <td th:text="${store.menuList[store.specialMenuNo -1].menuName + ' ('+store.menuList[store.specialMenuNo -1].menuPrice+')'}"></td>
+                                <td>
+                                    <div th:if="${store.hashtagList != null}">
+                                        <span th:each="hashtag : ${store.hashtagList}">
+                                            <a th:text="'#'+${hashtag}" th:attr="href='/getStoreList?mode=search&searchKeyword=&foodCategoryId=&priceMin=0&priceMax=100000&hashtagList='+${hashtag}">#해시태그</a>&nbsp;
+                                        </span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+
+    </table>
+
+
+
+
+
+</body>
+</html>

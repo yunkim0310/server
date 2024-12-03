@@ -21,11 +21,12 @@
         <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
         <result property="storeAddr" column="store_addr" jdbcType="VARCHAR"/>
         <result property="rsrvNumber" column="rsrv_number" jdbcType="VARCHAR"/>
+        <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
 
     </resultMap>
 
 
-    <insert id="addRsrv" parameterType="com.placeHere.server.domain.Reservation">
+    <insert id="addRsrv" parameterType="com.placeHere.server.domain.Reservation" useGeneratedKeys="true" keyProperty="rsrvNo">
         INSERT INTO reservation (
             store_id, user_name, rsrv_dt, rsrv_person, amount,
             rsrv_req, rsrv_create_time, store_name, store_addr, rsrv_status, rsrv_number
@@ -92,7 +93,7 @@
 
 
     <select id="getCountRsrv" parameterType="map" resultType="int">
-        SELECT SUM(rsrv_person)
+        SELECT COALESCE(SUM(rsrv_person), 0)
         FROM reservation
         WHERE rsrv_dt = #{rsrvDt}
           AND store_id = #{storeId}
@@ -101,7 +102,7 @@
 
 
     <select id="getCountDayRsrv" parameterType="map" resultType="int">
-        SELECT SUM(rsrv_person)
+        SELECT COALESCE(SUM(rsrv_person), 0)
         FROM reservation
         WHERE DATE(rsrv_dt) = DATE(#{rsrvDt})
           AND store_id = #{storeId}
@@ -113,8 +114,8 @@
         SELECT COUNT(*)
         FROM reservation
         WHERE user_name = #{userName}
-        AND DATE(rsrv_dt) > NOW()
-        AND rsrv_status IN ('예약 확정', '예약 요청');
+          AND DATE(rsrv_dt) > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
     </select>
 
 
@@ -137,9 +138,20 @@
     </select>
 
 
+    <select id="getRsrvList" resultMap="ReservationResultMap">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
+        FROM reservation
+        <where>
+            rsrv_status &lt;&gt; '결제 중'
+        </where>
+        ORDER BY
+        rsrv_dt DESC <!-- 내림차순 -->
+    </select>
+
+
 
     <select id="getRsrvUserList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             user_name = #{userName} <!-- 특정 유저 예약 -->
@@ -152,7 +164,7 @@
         </where>
         ORDER BY
         <if test="search.order == null or search.order == ''">
-            rsrv_no ASC <!-- 오름차순 -->
+            rsrv_no DESC <!-- 오름차순 -->
         </if>
         <if test="search.order == 'asc'">
             rsrv_no ASC <!-- 오름차순 -->
@@ -164,7 +176,7 @@
 
 
     <select id="getRsrvStoreList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             store_id = #{storeId} <!-- 점주 가게 ID -->
@@ -186,7 +198,7 @@
 
             <!-- 예약 상태 필터 -->
             <if test="search.searchStatuses == null or search.searchStatuses.isEmpty()">
-                AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '전화 예약')
+                AND rsrv_status IN ('예약 요청', '예약 확정', '이용 완료', '리뷰 완료', '예약 취소', '예약 거절', '전화 예약')
             </if>
             <if test="search.searchStatuses != null and !search.searchStatuses.isEmpty()">
                 AND rsrv_status IN
@@ -195,23 +207,8 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY rsrv_dt ASC <!-- 예약 일시 오름차순 -->
+        ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
     </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

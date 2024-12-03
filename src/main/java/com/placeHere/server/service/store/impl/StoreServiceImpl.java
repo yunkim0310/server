@@ -6,6 +6,7 @@ import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -21,6 +22,12 @@ public class StoreServiceImpl implements StoreService {
     @Qualifier("storeDao")
     private StoreDao storeDao;
 
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
+
     public StoreServiceImpl() {
         super();
     }
@@ -32,6 +39,13 @@ public class StoreServiceImpl implements StoreService {
     public int chkDuplicateBusinessNo(String businessNo) {
 
         return storeDao.chkDuplicateBusinessNo(businessNo);
+    }
+
+
+    // 가게 Id 조회
+    public int getStoreId(String userName) {
+
+        return storeDao.getStoreId(userName);
     }
 
 
@@ -59,7 +73,7 @@ public class StoreServiceImpl implements StoreService {
 
         // INSERT 되는 TABLE : store, amenities, menu
         storeDao.addStore(store);
-        int storeId = storeDao.getStoreId(store.getBusinessNo());
+        int storeId = storeDao.getStoreId(store.getUserName());
         System.out.println("\tstoreId= "+storeId);
         storeDao.addMenu(storeId, store.getMenuList());
 
@@ -76,23 +90,29 @@ public class StoreServiceImpl implements StoreService {
     public Store getStore(int storeId, Date effectDt) {
 
         Store store = storeDao.getStore(storeId);
-        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
 
-        List<String> regularClosedayList = new ArrayList<String>();
-        regularClosedayList.add(storeOperation.getRegularCloseday1());
-        regularClosedayList.add(storeOperation.getRegularCloseday2());
-        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        if (store != null) {
+            StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+            List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> storeImgList = new ArrayList<String>();
-        storeImgList.add(store.getStoreImg1());
-        storeImgList.add(store.getStoreImg2());
-        storeImgList.add(store.getStoreImg3());
-        storeImgList.add(store.getStoreImg4());
-        storeImgList.add(store.getStoreImg5());
+            List<String> regularClosedayList = new ArrayList<String>();
+            regularClosedayList.add(storeOperation.getRegularCloseday1());
+            regularClosedayList.add(storeOperation.getRegularCloseday2());
+            regularClosedayList.add(storeOperation.getRegularCloseday3());
 
-        storeOperation.setRegularClosedayList(regularClosedayList);
-        store.setStoreOperation(storeOperation);
-        store.setStoreImgList(storeImgList);
+            List<String> storeImgList = new ArrayList<String>();
+            storeImgList.add(store.getStoreImg1());
+            storeImgList.add(store.getStoreImg2());
+            storeImgList.add(store.getStoreImg3());
+            storeImgList.add(store.getStoreImg4());
+            storeImgList.add(store.getStoreImg5());
+
+            storeOperation.setRegularClosedayList(regularClosedayList);
+            storeOperation.setClosedayList(closedayList);
+            store.setStoreOperation(storeOperation);
+            store.setStoreImgList(storeImgList);
+            store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
+        }
 
         return store;
     }
@@ -103,23 +123,29 @@ public class StoreServiceImpl implements StoreService {
     public Store getStore(int storeId) {
 
         Store store = storeDao.getStore(storeId);
-        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
 
-        List<String> regularClosedayList = new ArrayList<String>();
-        regularClosedayList.add(storeOperation.getRegularCloseday1());
-        regularClosedayList.add(storeOperation.getRegularCloseday2());
-        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        if (store != null) {
+            StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+            List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> storeImgList = new ArrayList<String>();
-        storeImgList.add(store.getStoreImg1());
-        storeImgList.add(store.getStoreImg2());
-        storeImgList.add(store.getStoreImg3());
-        storeImgList.add(store.getStoreImg4());
-        storeImgList.add(store.getStoreImg5());
+            List<String> regularClosedayList = new ArrayList<String>();
+            regularClosedayList.add(storeOperation.getRegularCloseday1());
+            regularClosedayList.add(storeOperation.getRegularCloseday2());
+            regularClosedayList.add(storeOperation.getRegularCloseday3());
 
-        storeOperation.setRegularClosedayList(regularClosedayList);
-        store.setStoreOperation(storeOperation);
-        store.setStoreImgList(storeImgList);
+            List<String> storeImgList = new ArrayList<String>();
+            storeImgList.add(store.getStoreImg1());
+            storeImgList.add(store.getStoreImg2());
+            storeImgList.add(store.getStoreImg3());
+            storeImgList.add(store.getStoreImg4());
+            storeImgList.add(store.getStoreImg5());
+
+            storeOperation.setRegularClosedayList(regularClosedayList);
+            storeOperation.setClosedayList(closedayList);
+            store.setStoreOperation(storeOperation);
+            store.setStoreImgList(storeImgList);
+            store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
+        }
 
         return store;
     }
@@ -210,7 +236,9 @@ public class StoreServiceImpl implements StoreService {
         regularClosedayList.add(storeOperation.getRegularCloseday3());
         storeOperation.setRegularClosedayList(regularClosedayList);
 
-        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        storeOperation.setClosedayList(closedayList);
 
         return storeOperation;
     }
@@ -228,7 +256,9 @@ public class StoreServiceImpl implements StoreService {
         regularClosedayList.add(storeOperation.getRegularCloseday3());
         storeOperation.setRegularClosedayList(regularClosedayList);
 
-        storeOperation.setClosedayList(storeDao.getClosedayList(storeId));
+        List<String> closedayList = storeDao.getClosedayList(storeId);
+
+        storeOperation.setClosedayList(closedayList);
 
         return storeOperation;
     }
@@ -262,6 +292,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
+
     // 매장 소식 삭제 (DELETE) TEST
     @Override
     public void removeStoreNews(int newsId) {
@@ -273,20 +304,18 @@ public class StoreServiceImpl implements StoreService {
 
     // 휴무일 등록 TEST
     @Override
-    public void addCloseday(int storeId, Date closeday) {
+    public void addCloseday(Closeday closeday) {
 
-        storeDao.addCloseday(storeId, closeday);
+        storeDao.addCloseday(closeday);
 
     }
 
 
     // 휴무일 목록 조회 TEST
     @Override
-    public List<Date> getClosedayList(int storeId, Search search) {
+    public List<Closeday> getClosedayList(int storeId, Search search) {
 
-        List<Date> closedayList = storeDao.getClosedayListBySearch(storeId, search);
-
-        return closedayList;
+        return storeDao.getClosedayListBySearch(storeId, search);
     }
 
 

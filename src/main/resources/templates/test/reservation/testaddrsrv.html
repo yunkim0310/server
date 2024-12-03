@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Form</title>
+    <script src="https://js.tosspayments.com/v1"></script>
+    <script>
+        // JavaScript로 날짜 제한 및 이벤트 설정
+        document.addEventListener("DOMContentLoaded", function () {
+            const rsrvDt = document.getElementById("rsrvDt");
+            const operationDetails = document.getElementById("operationDetails");
+
+            // 현재 날짜와 시간
+            const now = new Date();
+            const nowISO = now.toISOString().slice(0, 16);
+
+            // 13일 후 날짜 계산
+            const futureDate = new Date();
+            futureDate.setDate(now.getDate() + 13);
+            const futureISO = futureDate.toISOString().slice(0, 16);
+
+            // min 및 max 속성 설정
+            rsrvDt.min = nowISO;
+            rsrvDt.max = futureISO;
+
+            // 날짜 변경 시 서버에서 운영 정보 가져오기
+            rsrvDt.addEventListener("change", function () {
+                const selectedDate = rsrvDt.value; // yyyy-MM-ddTHH:mm 형식
+
+                if (selectedDate) {
+                    // Ajax 요청으로 운영 정보 가져오기
+                    fetch(`/test/reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data) {
+                                // 운영 정보 출력
+                                operationDetails.innerHTML = `
+                                    <h3>Store Operation Details</h3>
+                                    <p>Open Time: ${data.openTime || "N/A"}</p>
+                                    <p>Close Time: ${data.closeTime || "N/A"}</p>
+                                    <p>Break Time Start: ${data.breakTimeStart || "N/A"}</p>
+                                    <p>Break Time End: ${data.breakTimeEnd || "N/A"}</p>
+                                    <p>Max Reservation Limit: ${data.rsrvLimit || "N/A"}</p>
+                                `;
+                            } else {
+                                operationDetails.innerHTML = `<p>No operation details found for the selected date.</p>`;
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error fetching operation details:", error);
+                            operationDetails.innerHTML = `<p>Error fetching operation details. Please try again later.</p>`;
+                        });
+                } else {
+                    operationDetails.innerHTML = `<p>Please select a valid date.</p>`;
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+<h1>Make a Reservation</h1>
+
+<!-- 가게 정보 -->
+<h2>Store Information</h2>
+<p>Store Name: <span th:text="${store.storeName}">[Store Name]</span></p>
+<p>Store Address: <span th:text="${store.storeAddr}">[Store Address]</span></p>
+
+<!-- 예약 입력 폼 -->
+<h2>Reservation Details</h2>
+<form action="/test/reservation/addRsrv" method="post">
+    <!-- 가게 ID 전달 -->
+    <input type="hidden" name="storeId" th:value="${store.storeId}" />
+    <input type="hidden" name="storeName" th:value="${store.storeName}" />
+    <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
+
+    <label for="userName">Your Name:</label>
+    <input type="text" id="userName" name="userName" required /><br><br>
+
+    <label for="rsrvPerson">Number of People:</label>
+    <input type="number" id="rsrvPerson" name="rsrvPerson" min="1" required /><br><br>
+
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount" min="5000" required /><br><br>
+
+    <label for="rsrvDt">Reservation Date & Time:</label>
+    <input type="datetime-local" id="rsrvDt" name="rsrvDt" required /><br><br>
+
+    <label for="rsrvReq">Request:</label>
+    <input type="text" id="rsrvReq" name="rsrvReq" required /><br><br>
+
+    <label for="rsrvNumber">Phone Number:</label>
+    <input type="tel" id="rsrvNumber" name="rsrvNumber" required pattern="[0-9]{10,11}" placeholder="01012345678" /><br><br>
+
+    <button type="submit" id="payButton">Submit Reservation</button>
+
+</form>
+
+<!-- 운영 정보 표시 -->
+<div id="operationDetails">
+    <h3>Store Operation Details</h3>
+    <p>Select a date to see operation details.</p>
+</div>
+
+
+</body>
+</html>
