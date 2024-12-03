@@ -28,7 +28,7 @@ public interface StoreService {
     public List<Store> getStoreList(Search search);
 
     // 가게 수정
-    public void updateStore(Store store);
+    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals);
 
     // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
     public void removeStore(int storeId);
