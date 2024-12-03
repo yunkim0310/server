@@ -10,7 +10,6 @@ import java.util.Map;
 @Service
 public class PaymentService {
 
-    private final String TOSS_SECRET_KEY = "test_sk_6bJXmgo28eNybbqJAlmY3LAnGKWx"; // 테스트 Secret Key
     private final String REFUND_API_URL = "https://api.tosspayments.com/v1/payments/{paymentKey}/cancel";
 
     public String refundPayment(String paymentKey, String reason) {

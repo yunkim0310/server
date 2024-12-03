@@ -21,4 +21,5 @@ public class Reservation {
     private String rsrvNumber;
 
     private int totalCnt;
+
 }

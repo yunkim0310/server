@@ -77,7 +77,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "test/reservation/listrsrvstore";
+        return "test/reservation/testlistrsrvstore";
     }
 
 
@@ -110,7 +110,7 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
 
-        return "test/reservation/listrsrvstore";
+        return "test/reservation/testlistrsrvstore";
     }
 
 

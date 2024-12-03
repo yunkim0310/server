@@ -114,8 +114,8 @@
         SELECT COUNT(*)
         FROM reservation
         WHERE user_name = #{userName}
-        AND DATE(rsrv_dt) > NOW()
-        AND rsrv_status IN ('예약 확정', '예약 요청');
+          AND DATE(rsrv_dt) > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
     </select>
 
 
@@ -145,7 +145,7 @@
             rsrv_status &lt;&gt; '결제 중'
         </where>
         ORDER BY
-            rsrv_dt DESC <!-- 내림차순 -->
+        rsrv_dt DESC <!-- 내림차순 -->
     </select>
 
 
@@ -209,21 +209,6 @@
         </where>
         ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
     </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
