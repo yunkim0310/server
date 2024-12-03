@@ -1,4 +1,4 @@
-package com.example.server.controller.chat;
+package com.placeHere.server.controller.chat;
 
 public class ChatController {
 }

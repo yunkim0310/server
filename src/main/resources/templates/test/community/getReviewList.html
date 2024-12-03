@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 리뷰 목록</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .review-container {
+            margin: 20px;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<h1>리뷰 목록</h1>
+
+<!-- 리뷰 정보를 반복하여 표시 -->
+<div th:each="review : ${reviews}"> <!-- "reviews"는 컨트롤러에서 추가한 모델 속성 -->
+    <div class="review-container">
+        <p>리뷰 번호: <span th:text="${review.reviewNo}"></span></p>
+        <p>리뷰 점수: <span th:text="${review.reviewScore}"></span></p>
+        <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+        <p>작성자: <span th:text="${review.userName}"></span></p>
+        <p>작성일: <span th:text="${#dates.format(review.reviewDt, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd HH:mm')}"></span></p>
+        <p>좋아요 수: <span th:text="${review.reviewLikeCnt}"></span></p>
+        <p>매장 이름: <span th:text="${review.storeName}"></span></p>
+    </div>
+</div>
+
+<a th:href="@{/review/addReview}">리뷰 추가하기</a> <!-- 추가하기 버튼 -->
+</body>

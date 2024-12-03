@@ -9,7 +9,104 @@
 </head>
 <body>
 
+    <p th:text="${like}"></p>
+
+    <hr/>
+
     <p th:text="${store}"></p>
+
+    <br/><hr/>
+
+    <a th:attr="href='/getStore?mode=info&storeId='+${store.storeId}">매장 정보</a>
+    &ensp;
+    <a th:attr="href='/getStore?mode=statistics&storeId='+${store.storeId}">예약 통계</a>
+    &ensp;
+    <a th:attr="href='/getStore?mode=review&storeId='+${store.storeId}">리뷰</a>
+    &ensp;
+    <a th:attr="href='/getStore?mode=nearby&storeId='+${store.storeId}">주변시설 추천</a>
+
+    <br/><hr/>
+
+    <div th:if="${mode == 'info'}">
+
+        <strong>매장 소식</strong>
+
+        <br/>
+
+        <table border="1" style="border-spacing: 10px">
+            <thead>
+            <tr>
+                <th>newsId</th>
+                <th>사진</th>
+                <th>내용</th>
+                <th>작성일</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="storeNews : ${store.storeNewsList}">
+                <td th:text="${storeNews.newsId}"></td>
+                <td th:attr="data-newsid=${storeNews.newsId}" th:text="${(storeNews.newsImg == null)? 'NULL': storeNews.newsImg}"></td>
+                <td th:text="${storeNews.newsContents}"></td>
+                <td th:text="${storeNews.regDt}"></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <br/><br/>
+
+        <strong>메뉴</strong>
+
+        <br/>
+
+        <table border="1" style="border-spacing: 10px">
+            <thead>
+                <tr>
+                    <th>번호</th>
+                    <th>사진</th>
+                    <th>이름</th>
+                    <th>가격</th>
+                    <th>설명</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="menu : ${store.menuList}">
+                    <td th:text="${menu.menuNo}"></td>
+                    <td th:text="${(menu.menuImg == null || memu.menuImg == '')? 'NULL' : menu.menuImg}"></td>
+                    <td th:text="${menu.menuName}"></td>
+                    <td th:text="${(menu.menuPrice == 0)? '시가' : menu.menuPrice}"></td>
+                    <td th:text="${menu.menuInfo}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br/><br/>
+
+        <strong>편의시설</strong>
+
+        <br/>
+
+        <div th:each="index : ${store.amenitiesNoList}">
+            <p th:text="${amenitiesNamList[index - 1]}"></p>
+        </div>
+
+        <br/><br/>
+
+    </div>
+
+    <div th:if="${mode == 'statistics'}">
+        <p th:text="${weekRsrv}"></p>
+        <p th:text="${rsrvAvg}"></p>
+        <p th:text="${percent}"></p>
+    </div>
+
+    <div th:if="${mode == 'review'}">
+        <div th:insert="~{test/store/getStoreReviewListTest}"/>
+    </div>
+
+    <div th:if="${mode == 'nearby'}">
+
+    </div>
 
 </body>
 </html>

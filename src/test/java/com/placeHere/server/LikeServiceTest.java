@@ -23,36 +23,46 @@ public class LikeServiceTest {
     private LikeDao likeDao;
 
     //좋아요 추가
-//    @Test
+    @Test
     public void testAddLike() throws Exception {
         Like like = new Like();
 
-        likeService.addLike("test마무리", 3, "store");
+        likeService.addLike("user04", 1, "store");
 
         System.out.println(like);
     }
 
     // 좋아요 취소
-//    @Test
+    @Test
     public void testRemoveLike() throws Exception {
 
         Like like = new Like();
-        like.setLikeId(19);
+        like.setLikeId(21);
 
         likeService.removeLike(like);
     }
 
-// 좋아요 토탈 카운트
+// 좋아요 토탈 카운트 ==> mapper에서 teart 0 번째만 가져옴 // if문 써서 변경 해보기
     @Test
     public void testTotalCount() throws  Exception {
 
-        likeService.totalCount(2);
+        int relationNoStore = 0;  // 'store' 에 대해 null과 같은 상태
+        String targetStore = "store";
+        Long totalCountStore = likeService.getTotalCount(relationNoStore, targetStore);
+        System.out.println("좋아요 토탈 카운트 (스토어) :: " + totalCountStore + "--- 타겟은 :: " + targetStore);
 
-        System.out.println("totalCount :: ");
+        int relationNoReview = 2;  // 'review'에 대해 2
+        String targetReview = "review";
+        Long totalCountReview = likeService.getTotalCount(relationNoReview, targetReview);
+        System.out.println("좋아요 토탈 카운트 (리뷰) :: " + totalCountReview + "--- 타겟은 :: " + targetReview);
+
+        int relationNoComment = 0;  // 'comment'에 대해 null 같은 상태
+        String targetComment = "comment";
+        Long totalCountComment = likeService.getTotalCount(relationNoComment, targetComment);
+        System.out.println("좋아요 토탈 카운트 (댓글) :: " + totalCountComment + "--- 타겟은 :: " + targetComment);
     }
-
-    //좋아요 리스트 -> 테스트 실패 (받아오는 값 다 null)
-//    @Test
+    //좋아요 리스트
+    @Test
     public void testLikeList() throws Exception{
 
         Like like = new Like();
@@ -72,7 +82,7 @@ public class LikeServiceTest {
         like.setRelationNo(1);
         like.setTarget("review");
 
-        likeService.checkLike(like);
+        likeService.chkLike(like);
         System.out.println("testCheck ::" + like);
 
     }

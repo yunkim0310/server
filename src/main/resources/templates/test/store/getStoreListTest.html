@@ -46,7 +46,7 @@
                                 <td th:text="${iterStat.count}">번호</td>
                                 <td th:text="${store.storeId}">가게 Id</td>
                                 <td>
-                                    <a th:text="${store.storeName}" th:attr="href='/getStore?storeId='+${store.storeId}">매장명</a>
+                                    <a th:text="${store.storeName}" th:attr="href='/getStore?mode=info&storeId='+${store.storeId}">매장명</a>
                                 </td>
                                 <td th:text="'★ '+${store.reviewScoreAvg + ' (' +store.reviewCnt+ ')'}">리뷰 별점</td>
                                 <td th:text="${store.storeAddr}">매장 주소</td>
