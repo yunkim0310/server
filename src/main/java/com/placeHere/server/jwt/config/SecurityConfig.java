@@ -100,7 +100,7 @@ public class SecurityConfig {
                         .requestMatchers("/").permitAll()
                         .requestMatchers("/login").permitAll()
 //                        .requestMatchers("/userView.html").permitAll()
-                        .requestMatchers("/user/userView").permitAll()
+//                        .requestMatchers("/user/userView").permitAll()
                         .requestMatchers("/user/**").permitAll()
                         // UserController에서 이미 권한을 관리하고 있기 때문에 여기서 우선 permitAll
 //                        .requestMatchers("/users/**").hasAnyRole("USER" , "ADMIN")
@@ -143,6 +143,21 @@ public class SecurityConfig {
          * 우리는 커스텀 방식으로 db조회해서 가져온다.
          */
         http.userDetailsService(customUserDetailService);
+
+        /**
+         * 세션 방식 추가
+         */
+        // 세션 고정 보호
+        // 세션 고정 공격을 보호하기 위한 로그인 성공 시 세션 설정 방법은
+        // sessionManageMent() 메서드의 sessionFixation() 메서드를 통해서 설정할 수 있다.
+
+        // sessionManagement().sessionFixation().none() : 로그인 시 세션 정보 변경 안함 -> 위험
+        // sessionManagement().sessionFixation().newSession() : 로그인 시 세션 새로 생성
+        // sessionManagement().sessionFixation().changeSessionId() : 로그인 시 동일한 세션에 대한 id 변경 => 많이 사용
+        http
+                .sessionManagement((session) -> session
+                        .sessionFixation().changeSessionId());
+
 
         return http.build();
     } // end of securityFilterChain

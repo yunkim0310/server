@@ -149,11 +149,10 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         // 💍 { Authorization : Bearer + {jwt} }
         response.addHeader(JwtConstants.TOKEN_HEADER, JwtConstants.TOKEN_PREFIX + jwt);
+        log.info( "[ RESPONSE ] Authorization :: " + response.getHeader("Authorization"));
+
         response.setStatus(200);
 
-        if ( user.getUser().getRole().equals("ROLE_USER") || user.getUser().getRole().equals("ROLE_STORE")) {
-            response.sendRedirect("/");
-        }
 
     }
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
 <head>
     <link rel="stylesheet" href="/css/common/header.css">
     <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
@@ -17,8 +18,8 @@
                     <li class="non-side-bar"><span id="username" class="text-white me-2">username</span></li>
                     <li id="btnLogin" class="non-side-bar">로그인</li>
                     <li id="logout"><a href="/logout">로그아웃</a></li>
-                    <li id="join"><a href="/join">회원가입</a></li>
-                    <li id="notice"><a href="/notice">고객센터</a></li>
+<!--                    <li id="join"><a href="/join">회원가입</a></li>-->
+                    <li id="btnSetting"><a href="/setting">설정</a></li>
                 </ul>
             </div>
         </div>
@@ -138,6 +139,7 @@
 <script type="text/javascript">
   $(document).ready(function() {
 
+    // 로그인 버튼 클릭
     $("#btnLogin").click(function(e) {
 
       e.preventDefault();
@@ -148,12 +150,35 @@
         success: function(response) {
 
           $('body').html(response);
+
         },
         error: function(xhr, status, error) {
           console.error("Error:", status, error);
         }
       });
     });
+
+    // 설정 버튼 클릭
+    $("#btnSetting").click(function(e) {
+
+      e.preventDefault();
+
+      $.ajax({
+
+        url: '/user/setting',
+        type: 'GET',
+        success: function(response) {
+
+          $('body').html(response);
+
+        },
+        error: function(xhr, status, error) {
+          console.error("Error:", status, error);
+        }
+
+      });
+    });
+
   });
 
 </script>

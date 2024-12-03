@@ -41,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // Bearer + {jwt} 체크
         // 토큰이 이상하면 다음 필터에게 넘김
 //        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) ) {
-        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) || (uri.equals("/login") && method.equals("GET") )) {
+        if ( header == null || header.length() == 0 || header.startsWith(JwtConstants.TOKEN_PREFIX ) ) {
             log.info("111");
             filterChain.doFilter(request, response);
             log.info("222");

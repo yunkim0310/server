@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/user/loginView.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Place Here</title>
+    <link rel="stylesheet" th:href="@{/css/login.css}">
+
+    <!-- 쿠키 라이브러리, 순서중요 -->
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+    <!-- 그 후 jQuery 로드 -->
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+
+    <script type="text/javascript">
+      $(document).ready(function() {
+
+        $("#btnLogin").click(function(e) {
+
+          let username = document.getElementById("username").value;
+          let password = document.getElementById("password").value;
+
+          let data = {};
+
+          data.username = username;
+          data.password = password;
+
+          console.log( "data chk :: " + JSON.stringify(data));
+
+          // 시작
+          // 로그인 버튼 클릭 시 AJAX로 /login 요청
+          e.preventDefault(); // 기본 a 태그 동작 방지
+
+          $.ajax({
+            url: 'login', // 로그인 페이지를 요청
+            type: 'POST', // GET 방식
+            data: data,
+            success: function(response, statusText, xhr) {
+              // 로그인 페이지 HTML을 받아오면 여기에 표시
+              // $('body').html(response);
+
+              const status = xhr.status;
+              const headers = xhr.getAllResponseHeaders();
+              const authorization = xhr.getResponseHeader('Authorization');
+
+              console.log("status :: ", status)
+              console.log("headers :: ", headers);
+              console.log("Authorization Header ::", authorization);
+              // Authorization Header :: Bearer eyJ0eXBlIjoiSldUIiwiYWxnIjoiSFM1MTIifQ.eyJleHAiOjE3MzM5ODg0NDIsInVzZXJuYW1lIjoidXNlciIsInJvbGUiOiJST0xFX1VTRVIifQ.mYPFTrKW6DMLGi1I6bDC1IaUm8l-Dw1c02_WY72j6JZp1hOOplcA9Xiweryhb32467KTXu6FO4mXtJPBlUSavA
+
+              // Bearer를 replace처리한 jwt
+              const accessToken = authorization.replace("Bearer ", "");
+
+              if ( status === 200 ) {
+
+                // $.cookie("accessToken", accessToken, { path: "/" });
+                Cookies.set('accessToken', accessToken, { path: '/' });
+
+                // 쿠키 확인
+                let token = Cookies.get('accessToken');
+                console.log( "btn login token chk :: " + token);
+
+                loginCheck();
+
+              }
+
+              // todo 윤지
+              window.location.href = '/';
+            },
+
+            error: function(xhr, status, error) {
+              console.error("Error:", status, error);
+            }
+          }); // end of ajax
+
+        });
+
+      });
+
+      // 로그인 요청 후
+      function loginCheck () {
+
+        // 쿠키 확인
+        const accessToken = Cookies.get("accessToken");
+
+        if( !accessToken ) {
+
+          console.log(`쿠키에 accessToken(jwt) 가 없음`);
+
+          // 로그아웃 세팅
+          // 더이상 로그인 처리를 진행하지 않음
+          // todo logout setting
+          // logoutSetting()
+          return;
+        }
+
+        console.log(`쿠키에 JWT(accessToken) 이 저장되어 있음`);
+
+        $.ajaxSetup({
+          headers: {
+            // Authorization: `Bearer ${accessToken}`
+            Authorization: `${accessToken}`
+          }
+        });
+
+        console.log("cookies set OK ");
+
+        $.ajax({
+          type: "GET",
+          url: "/user/info",
+          success: function (response) {
+            console.log( "res :: " + response);
+          },
+          error: function(xhr, status, error) {
+            console.log("Error:", status, error);
+          },
+          beforeSend: function(xhr) {
+            // 요청 전 헤더를 출력
+            // console.log( "Header 확인 :: " + xhr.getRequestHeader('Authorization'));
+            console.log( "Header 확인 :: " + xhr.getAllResponseHeaders());
+          }
+        }); // end of ajax (get)
+
+      }
+    </script>
+
+
+</head>
+<body>
+<div class="container">
+    <main>
+        <div class="login-form">
+            <h2>Place Here</h2>
+            <form th:action="@{/login}" method="post">
+                <div class="input-group">
+                    <label for="username">ID</label>
+                    <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">PASSWORD</label>
+                    <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
+                </div>
+                <button type="submit" id="btnLogin">로그인</button>
+            </form>
+            <div class="links">
+                <a href="/register">회원가입</a>
+                <a href="/reset-password">비밀번호 재설정</a>
+            </div>
+        </div>
+    </main>
+</div>
+</body>
+</html>
