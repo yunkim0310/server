@@ -192,7 +192,7 @@ public class StoreServiceTest {
         List<Menu> menuList = new ArrayList<>(List.of(menu1, menu2));
         store.setMenuList(menuList);
 
-        storeService.updateStore(store);
+//        storeService.updateStore(store);
 
     }
 

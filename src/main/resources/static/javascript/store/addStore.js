@@ -1,90 +1,100 @@
-
-
-let duplicateResult = "";
-
-function checkDuplicateBusinessNo(businessNo) {
-    var bNo = {"b_no": [businessNo]};
-    var apiKey = $("#apiKey").val();
-
-    $.ajax({
-        url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,
-        type: "POST",
-        data: JSON.stringify(bNo),
-        dataType: "JSON",
-        contentType: "application/json",
-        accept: "application/json",
-        success: function(result) {
-            console.log(result);
-
-            let btnActive = false;
-
-            let data = result.data[0];
-
-            let bState = data.b_stt_cd;
-            let taxType = data.tax_type_cd;
-
-            console.log((bState === "") ? "null" : bState);
-            console.log((taxType === "") ? "null" : taxType);
-
-            if (bState !== "01") {
-                duplicateResult = "휴업 또는 폐업상태입니다.";
-                btnActive = false;
-            }
-
-            if (taxType === "") {
-                duplicateResult = data.tax_type;
-                btnActive = false;
-            }
-
-            if (bState === "01" && taxType !== "") {2
-                duplicateResult = "사용가능한 사업자 번호입니다.";
-                btnActive = true;
-            }
-
-            if (btnActive) {
-                $("#useBusinessNo").prop("disabled", false);
-            } else {
-                $("#useBusinessNo").prop("disabled", true);
-            }
-
-            $("#duplicateResult").text(duplicateResult);
-        },
-        error: function(result) {
-            console.log(result.responseText);
-        }
-    });
-
-}
-
 $(function() {
 
     $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
+
+    let duplicateResult = "";
+
+    function checkDuplicateBusinessNo(businessNo) {
+        var bNo = {"b_no": [businessNo]};
+        var apiKey = $("#apiKey").val();
+
+        $.ajax({
+            url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,
+            type: "POST",
+            data: JSON.stringify(bNo),
+            dataType: "JSON",
+            contentType: "application/json",
+            accept: "application/json",
+            success: function(result) {
+                console.log(result);
+
+                let btnActive = false;
+
+                let data = result.data[0];
+
+                let bState = data.b_stt_cd;
+                let taxType = data.tax_type_cd;
+
+                console.log((bState === "") ? "null" : bState);
+                console.log((taxType === "") ? "null" : taxType);
+
+                if (bState !== "01") {
+                    duplicateResult = "휴업 또는 폐업상태입니다.";
+                    btnActive = false;
+                }
+
+                if (taxType === "") {
+                    duplicateResult = data.tax_type;
+                    btnActive = false;
+                }
+
+                if (bState === "01" && taxType !== "") {2
+                    duplicateResult = "사용가능한 사업자 번호입니다.";
+                    btnActive = true;
+                }
+
+                if (btnActive) {
+                    $("#useBusinessNo").prop("disabled", false);
+                } else {
+                    $("#useBusinessNo").prop("disabled", true);
+                }
+
+                $("#duplicateResult").text(duplicateResult);
+            },
+            error: function(result) {
+                console.log(result.responseText);
+            }
+        });
+
+    }
 
     // 사업자 정보 중복확인 및 상태 확인 메서드
     $("input[name='businessNo']").on('input', function () {
 
         let businessNo = $("input[name='businessNo']").val();
 
-        $.ajax({
-            url: "/api-store/chkDuplicateBusinessNo",
-            method: "GET",
-            data: {businessNo: businessNo},
-            dataType: "json",
-            headers: {
-                "Accept": "application/json"
-            },
-            success: function (response) {
-                if (response) {
-                    checkDuplicateBusinessNo(businessNo);
-                } else {
-                    duplicateResult = "중복된 사업자 번호입니다.";
-                    $("#duplicateResult").text(duplicateResult);
+        if (businessNo.length === 10) {
+
+            $.ajax({
+                url: "/api-store/chkDuplicateBusinessNo",
+                method: "GET",
+                data: {businessNo: businessNo},
+                dataType: "json",
+                headers: {
+                    "Accept": "application/json"
+                },
+                success: function (response) {
+                    if (response) {
+
+                        checkDuplicateBusinessNo(businessNo);
+
+                    } else {
+                        duplicateResult = "중복된 사업자 번호입니다.";
+                        $("#duplicateResult").text(duplicateResult);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.error("Request failed: " + status + ", " + error);
                 }
-            },
-            error: function (xhr, status, error) {
-                console.error("Request failed: " + status + ", " + error);
-            }
-        });
+            });
+
+        } else {
+            $("#useBusinessNo").prop("disabled", true);
+            duplicateResult = "사업자 번호는 하이픈(-) 제외 10글자 숫자입니다.";
+            $("#duplicateResult").text(duplicateResult);
+        }
+
+
     });
 
 
@@ -177,6 +187,7 @@ $(function() {
 
         if (selectedCategory3 != "전체") {
             $("#foodCategory4").css("display", "block");
+            $("input[name='foodCategory4']").focus();
         } else {
             $("#foodCategory4").css("display", "none");
         }
@@ -258,7 +269,7 @@ $(function() {
         // 컨테이너 생성
         const container = $(
             '<tbody class="addedMenuInput">' +
-                '<tr class="addedMenuInput">' +
+                '<tr>' +
                     '<td>&nbsp;</td>' +
                 '</tr>' +
                 '<tr>' +
@@ -266,12 +277,13 @@ $(function() {
                 '</tr>' +
                 '<tr>' +
                     '<td rowspan="6">' +
-                        '<input type="radio" name="specialMenuNo" value="'+(menuCnt+1)+'">' +
+                        `<input type="radio" name="specialMenuNo" value="${menuCnt + 1}">` +
+                        `<input type="hidden" name="menuList[${menuCnt}].menuNo" value="${menuCnt+1}">` +
                     '</td>' +
                     '<td>' +
                         '<div class="css-1pjgd36 e744wfw6">' +
                             '<div class="css-82a6rk e744wfw3">' +
-                                '<input type="file" accept="image/*" name="menuList['+menuCnt+'].menuImgFile">' +
+                                `<input type="file" accept="image/*" name="menuList[${menuCnt}].menuImgFile">` +
                             '</div>' +
                             '<div class="css-1w0ksfz e744wfw2">' +
                                 '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
@@ -292,7 +304,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList['+menuCnt+'].menuName">' +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName">` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -312,7 +324,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    '<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList['+menuCnt+'].menuPrice">' +
+                                    `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice">` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -331,16 +343,16 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    '<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList['+menuCnt+'].menuInfo">' +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo">` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
                     '</td>' +
                 '</tr>' +
             '</tbody>'
-            );
+        );
 
-        // hashtagInputs에 컨테이너 추가
+        // hashtagInputs 에 컨테이너 추가
         $('#menuInputs').append(container);
 
         menuCnt++;
