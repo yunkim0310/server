@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Product List</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+
+
+    <script type="text/javascript">
+
+        function fncGetList(order) {
+            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
+        }
+
+        $(function() {
+            // 조회 버튼 클릭
+            $("button.btn-primary.view").on("click", function () {
+                var prodNo = $(this).data("prod-no");
+                self.location = "/product/getProduct?prodNo=" + prodNo;
+            });
+
+            // 수정 버튼 클릭
+            $("button.btn-primary.edit").on("click", function () {
+                var prodNo = $(this).data("prod-no");
+                self.location = "/product/updateProduct?prodNo=" + prodNo;
+            });
+
+            $("button.btn-primary.confirm").on("click", function () {
+                self.location = "/product/listProduct";
+            });
+
+        });
+
+        $(function(){
+
+            $("#searchKeyword").autocomplete({
+                source: function(request, response) {
+
+                        $.ajax({
+                            url : "/product/json/getProductAutocomplete/"+ encodeURIComponent(request.term),
+                            method : "GET" ,
+                            dataType: "json",
+                            success : function(JSONData) {
+
+                                response(JSONData);
+                            }
+                        });
+                    }
+
+            });
+
+        });
+
+        $(function() {
+            // 라디오 버튼의 change 이벤트
+            $("input[name='order']").on("change", function() {
+                let order = $(this).val(); // 선택된 정렬 순서
+                fncGetList(order); // 페이지와 정렬 순서 전달
+            });
+        });
+
+        function sortProducts(selectedRadio) {
+            const order = selectedRadio.value;
+
+            // AJAX 요청
+            $.ajax({
+                url: "/product/listProduct",
+                type: "GET",
+                data: {
+                    order: order,
+                },
+                success: function(data) {
+                    // 데이터 업데이트 처리 (상품 목록 재구성)
+                    updateProductTable(data);
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error: " + error);
+                }
+            });
+        }
+    </script>
+
+</head>
+<body>
+<h1>포인트 상품 목록</h1>
+
+<!--<div class="page-header text-info">-->
+<!--    <h3>${ menu eq 'manage' ? '포인트 상품 수정' : '포인트 상품 목록 검색'}</h3>-->
+
+<div class="col-md-9 text-right">
+    <form class="form-inline" name="detailForm" th:action="@{/product/listProduct}" method="get">
+        <div class="form-group">
+            <div>
+                <strong>정렬 : </strong>
+                <label>
+                    <input type="radio" name="order" value="default" th:checked="${search.order == 'default'}"> 기본순
+                </label>
+                <label>
+                    <input type="radio" name="order" value="asc" th:checked="${search.order == 'asc'}"> 가격 낮은순
+                </label>
+                <label>
+                    <input type="radio" name="order" value="desc" th:checked="${search.order == 'desc'}"> 가격 높은순
+                </label>
+                <label>
+                    <input type="radio" name="order" value="current" th:checked="${search.order == 'current'}"> 최신순
+                </label>
+            </div>
+        </div> &nbsp;&nbsp;&nbsp;&nbsp;
+
+        <div class="form-group">
+            <strong>검색어 : </strong>
+            <input type="text" class="form-control" id="searchKeyword" name="searchKeyword" placeholder="상품명을 입력하세요"
+                   th:value="${search.searchKeyword != null ? search.searchKeyword : ''}">&nbsp;
+            <strong>가격 범위 : </strong>
+            <input type="text" id="priceMin" name="priceMin" class="form-control"placeholder="최소 금액" th:value="${search.priceMin}">~
+            <input type="text" id="priceMax" name="priceMax" class="form-control" placeholder="최고 금액" th:value="${search.priceMax}">&nbsp;
+            <button type="submit" class="btn btn-default">검색</button>&nbsp;
+            <button type="submit" class="btn-primary confirm">초기화</button>
+        </div> &nbsp;&nbsp;&nbsp;&nbsp;
+
+
+
+    </form>
+</div>
+
+
+</div>
+
+
+
+<table>
+    <thead>
+        <tr>
+            <th>상품 대표 이미지</th>
+            <th>상품명</th>
+            <th>상품 가격</th>
+            <th>판매 가능 상태</th>
+        </tr>
+    </thead>
+    <tbody>
+    <tr th:each="product : ${productList}">
+        <td th:text="${product.prodImg1}">상품 대표 이미지</td>
+        <td th:text="${product.prodName}">상품명</td>
+        <td th:text="${product.prodPrice}+P">상품 가격</td>
+        <td th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></td>
+        <td>
+            <button class="btn-primary view" th:data-prod-no="${product.prodNo}">조회</button>
+
+            <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

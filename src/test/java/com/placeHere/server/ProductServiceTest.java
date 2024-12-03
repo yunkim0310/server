@@ -79,7 +79,7 @@ public class ProductServiceTest {
     @Test
     public void testUpdateProduct() throws Exception {
         Product product = productService.getProduct(13);
-        product.setProdName("updatedName");
+        product.setProdName("후라보노1234");
         product.setProdStatus(false);
         productService.updateProduct(product);
 
@@ -106,13 +106,13 @@ public class ProductServiceTest {
     public void testGetProductList() throws Exception {
 
         Search search = new Search();
-        search.setSearchKeyword("배달");
+//        search.setSearchKeyword("배달");
 
-        Map<String, Object> map = productService.getProductList(search);
+        List<Product> productList = productService.getProductList(search);
 
-        List<Object> list = (List<Object>) map.get("list");
+//        List<Object> list = (List<Object>) map.get("list");
 
-        System.out.println("List : "+list);
+        System.out.println("ProductList : "+productList);
     }
 
 }

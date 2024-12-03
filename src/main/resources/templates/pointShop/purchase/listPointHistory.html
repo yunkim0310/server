@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>포인트 내역 목록</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+
+
+</head>
+<body>
+<h1>포인트 내역 목록</h1>
+
+<h3>현재 포인트</h3>
+<h3 th:text="${currPoint}+P">
+</h3>
+
+<table>
+    <thead>
+    <tr>
+        <th>포인트 내역 번호&nbsp;&nbsp;&nbsp;</th>
+        <th>거래 유형&nbsp;&nbsp;&nbsp;</th>
+        <th>거래 포인트&nbsp;&nbsp;&nbsp;</th>
+        <th>거래일&nbsp;&nbsp;&nbsp;</th>
+        <th>보유 포인트&nbsp;&nbsp;&nbsp;</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="point : ${pointHistoryList}">
+        <td th:text="${point.tranNo}">포인트 내역 번호</td>
+        <td th:text="${point.depType}">거래 유형</td>
+        <td th:text="${point.tranPoint}+P">거래 포인트</td>
+        <td th:text="${point.pointDt}">거래일</td>
+        <td th:text="${point.currPoint}">보유 포인트</td>
+        <td>
+            <input type="hidden" name="userName" th:value="${userName}">
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

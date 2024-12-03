@@ -107,11 +107,11 @@ public class PurchaseServiceTest {
 
 //        String userName = "user1";
 
-        Map<String, Object> purchaseList = purchaseService.getPurchaseList("user1");
+//        Map<String, Object> purchaseList = purchaseService.getPurchaseList("user1");
 
 
 
-        System.out.println("getPurchaseList : " + purchaseList);
+//        System.out.println("getPurchaseList : " + purchaseList);
     }
 
     @Transactional
@@ -147,7 +147,7 @@ public class PurchaseServiceTest {
 
         int wishCartNo = 10003;
 
-        purchaseService.removeWishCart(wishCartNo);
+//        purchaseService.removeWishCart(wishCartNo);
 
         System.out.println("Remove cart : " + wishCartNo);
     }

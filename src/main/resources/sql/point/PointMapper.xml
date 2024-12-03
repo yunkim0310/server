@@ -15,30 +15,32 @@
         <result property="pointDt" column="point_dt" jdbcType="DATE"/>
         <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
         <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
-        <association property="user" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
+<!--        <association property="user" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>-->
     </resultMap>
 
     <select id="getCurrentPoint" parameterType="String" resultType="int">
         SELECT curr_point
         FROM point_transaction
-        WHERE username = #{username}
+        WHERE username = #{userName}
         ORDER BY tran_no DESC LIMIT 1
     </select>
 
     <update id="updatePoint" parameterType="com.placeHere.server.domain.Point">
         UPDATE point_transaction
         SET curr_point = curr_point + #{tranPoint}
-        WHERE username = #{username} AND tran_no = #{tranNo}
+        WHERE username = #{userName}
+        ORDER BY tran_no DESC
+        LIMIT 1;
     </update>
 
     <insert id="addPointTransaction" parameterType="com.placeHere.server.domain.Point">
         INSERT INTO point_transaction
             (username, tran_point, point_dt, dep_type, curr_point, rel_no)
         VALUES
-            (#{username}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
+            (#{userName}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
     </insert>
 
-    <select id="getPointHistoryList" parameterType="String" resultType="com.placeHere.server.domain.Point">
+    <select id="getPointHistoryList" parameterType="String" resultMap="pointSelectMap">
         SELECT
             tran_no,
             username,
@@ -48,7 +50,7 @@
             curr_point,
             rel_no
         FROM point_transaction
-        WHERE username = #{username} AND barcode_no IS NULL
+        WHERE username = #{userName}
         ORDER BY tran_no DESC
     </select>
 

@@ -9,7 +9,8 @@
     <!-- resultMap -->
     <resultMap id="purchaseSelectMap" type="com.placeHere.server.domain.Purchase">
         <result property="tranNo" column="tran_no" jdbcType="INTEGER"/>
-        <!--        <result property="userName" column="username" jdbcType="VARCHAR"/>-->
+        <result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
         <result property="relNo" column="rel_no" jdbcType="INTEGER"/>
         <result property="barcodeNo" column="barcode_no" jdbcType="VARCHAR"/>
         <result property="barcodeName" column="barcode_img" jdbcType="VARCHAR"/>
@@ -26,10 +27,10 @@
 
     <insert id="addPurchase" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO Point_Transaction (
-            username, prod_no, barcode_no, barcode_img, cnt_prod, tran_point, point_dt, curr_point
+            username, prod_no, barcode_no, barcode_img, cnt_prod, tran_point, point_dt, dep_type, curr_point, rel_no
         )
         VALUES (
-                   #{user.username}, #{purchaseProd.prodNo}, #{barcodeNo}, #{barcodeName}, #{cntProd}, #{tranPoint}, CURRENT_DATE, #{currPoint}
+                   #{userName}, #{prodNo}, #{barcodeNo}, #{barcodeName}, #{purchaseProd.cntProd}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo}
                )
     </insert>
 
@@ -54,6 +55,7 @@
             pt.point_dt,
 #         pt.dep_type,
             pt.curr_point,
+            p.prod_no,
             p.prod_name,
             p.prod_detail,
             p.prod_price,
@@ -86,14 +88,19 @@
     <!--        SELECT UUID_SHORT()-->
     <!--    </select>-->
 
+    <select id="getNextBarcodeNumber" resultType="String">
+        SELECT MAX(barcode_no) + 1 FROM point_transaction
+    </select>
+
+
     <insert id="addCart" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{user.username}, #{purchaseProd.prodNo}, #{cntProd})
+        VALUES (#{userName}, #{prodNo}, #{cntProd})
     </insert>
 
     <insert id="addWish" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{user.username}, #{purchaseProd.prodNo}, 0)
+        VALUES (#{userName}, #{prodNo}, 0)
     </insert>
 
     <select id="getCartList" parameterType="String" resultMap="purchaseSelectMap">
@@ -117,19 +124,41 @@
             wc.prod_no,
             p.prod_name,
             p.prod_price,
+            wc.cnt_prod,
             p.prod_img1,
             p.prod_status
         FROM WishCart wc, Product p
         WHERE wc.prod_no = p.prod_no AND wc.username = #{user.username} AND wc.cnt_prod = 0
     </select>
 
-    <delete id="removeWishCart" parameterType="int">
-        DELETE FROM WishCart WHERE wishcart_no = #{wishCartNo}
+    <delete id="removeWishCart" parameterType="com.placeHere.server.domain.Purchase">
+        DELETE FROM WishCart
+        WHERE username = #{userName}
+          AND prod_no = #{prodNo}
+          AND cnt_prod = 0;
     </delete>
 
     <!--    찜 / 장바구니 삭제로 합쳐짐-->
     <!--    <delete id="removeWish" parameterType="int">-->
     <!--        DELETE FROM WishCart WHERE wishcart_no = #{wishCartNo}-->
     <!--    </delete>-->
+
+    <select id="isProductInWishList" parameterType="com.placeHere.server.domain.Purchase" resultType="int">
+        SELECT COUNT(*)
+        FROM WishCart
+        WHERE prod_no = #{prodNo} AND username = #{username} AND cnt_prod = 0
+    </select>
+
+    <select id="getWishListCount" resultType="int">
+        SELECT COUNT(*)
+        FROM wishcart
+        WHERE username = #{userName} AND cnt_prod = 0
+    </select>
+
+    <select id="getCartListCount" resultType="int">
+        SELECT COUNT(*)
+        FROM wishcart
+        WHERE username = #{userName} AND cnt_prod != 0
+    </select>
 
 </mapper>

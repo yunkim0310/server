@@ -3,6 +3,7 @@ package com.placeHere.server.dao.pointShop;
 import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,7 @@ public interface PurchaseDao {
 //    public int calcTranPoint(String userName)throws Exception;
 
     //바코드 번호
-//    public String getNextBarcodeNumber() throws Exception;
+    public String getNextBarcodeNumber() throws Exception;
 
     // 장바구니 추가
     public void addCart(Purchase purchase) throws Exception;
@@ -38,9 +39,15 @@ public interface PurchaseDao {
     public List<Purchase> getWishList(String userName) throws Exception;
 
     // 찜 / 장바구니 항목 삭제
-    public void removeWishCart(int wishCartNo) throws Exception;
+    public void removeWishCart(Purchase purchase) throws Exception;
 
 //    // 찜 목록 항목 삭제
 //    public void removeWish(int wishCartNo) throws Exception;
+
+    public int isProductInWishList(@Param("prodNo") int prodNo, @Param("username") String username);
+
+    public int getWishListCount(String userName);
+
+    public int getCartListCount(String userName);
 
 }

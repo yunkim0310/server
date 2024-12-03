@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 상세 정보</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        .btn-primary {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .fas, .far {
+            font-size: 30px;  /* 아이콘 크기 조정 */
+            margin: 10px;     /* 아이콘 간 간격 */
+            cursor: pointer; /* 클릭 가능하도록 스타일 */
+            pointer-events: auto; /* 클릭 이벤트를 받을 수 있도록 설정 */
+        }
+
+        .btn-primary i {
+            margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+        }
+
+        /* 빨간 하트 색상 */
+        .fas.fa-heart {
+            color: red;
+        }
+
+        /* 빈 하트 색상 (기본 하트 색상) */
+        .far.fa-heart {
+            color: #ddd; /* 빈 하트 기본 색상 */
+        }
+    </style>
+
+    <script type="text/javascript">
+    $(function() {
+
+        $("button.btn-primary.buy").on("click", function () {
+        var prodNo = $(this).data("prod-no");
+        self.location = "/purchase/addPurchase?prodNo=" + prodNo;
+        });
+
+        $("button.btn-primary.confirm").on("click", function () {
+        self.location = "/product/listProduct";
+        });
+
+        $("i.fas.fa-shopping-cart.addCart").on("click", function () {
+            var prodNo = $(this).data("prod-no");
+            $.ajax({
+                type: "POST",
+                url: "/purchase/addCart",
+                contentType: "application/json",
+                data: JSON.stringify({ prodNo: prodNo, cntProd: 1 }),
+                success: function(response) {
+                    alert("장바구니에 제품이 추가되었습니다.");
+                },
+                error: function(xhr, status, error) {
+                    alert("장바구니 추가 실패: " + error);
+                }
+            });
+        });
+
+        // $("button.btn-primary.addWish").on("click", function () {
+        //     var prodNo = $(this).data("prod-no");
+        //     $.ajax({
+        //         type: "POST",
+        //         url: "/purchase/addWish",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({ prodNo: prodNo }),
+        //         success: function(response) {
+        //             alert(response);
+        //         },
+        //         error: function(xhr, status, error) {
+        //             alert("찜 목록 추가 실패: " + error);
+        //         }
+        //     });
+        // });
+        //
+
+
+    });
+    $(function() {
+
+        // 찜하기 아이콘 클릭 시 AJAX 요청과 색상 변경을 동시에 처리
+        $("i.fas.fa-heart.addWish").on("click", function() {
+            var prodNo = $(this).data("prod-no");
+            var userName = $(this).data("user-name");
+
+            var wishCartData = {
+                prodNo: prodNo,
+                userName: userName
+            };
+
+            // AJAX 요청을 먼저 보내고,
+            $.ajax({
+                url: "/purchase/addWish",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(wishCartData),
+                success: function(response) {
+                    alert(response);  // 서버에서 받은 응답을 알림으로 표시
+                    // location.reload(); // 페이지 새로고침 (옵션)
+                    if (response === "찜 목록에 상품이 추가되었습니다.") {
+                        $this.removeClass('far').addClass('fas').css('color', 'red');  // 빨간색 하트
+                    } else if (response === "찜 목록에 상품이 삭제되었습니다.") {
+                        $this.removeClass('fas').addClass('far').css('color', '#ddd');  // 빈 하트 (회색)
+                    }
+                },
+                error: function(error) {
+                    alert("오류가 발생했습니다.");
+                }
+            });
+
+            // 하트 아이콘의 클래스를 toggle하여 빨간색 <-> 흰색 하트로 변경
+            $(this).toggleClass('fas far');  // 'fas'와 'far' 클래스를 토글
+            if ($(this).hasClass('fas')) {
+                $(this).css('color', 'red');  // 빨간색 하트
+            } else {
+                $(this).css('color', '#ddd');  // 빈 하트 색상 (회색)
+            }  // 'fas'와 'far' 클래스를 토글
+        });
+    });
+
+
+    </script>
+</head>
+<body>
+<div class="product-container">
+    <h1>상품 상세 정보</h1>
+
+    <div class="product-info">
+        <div>
+            <strong>상품 대표 이미지 : </strong>
+            <span class="value" th:text="${product.prodImg1}">상품 대표 이미지</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품명 : </strong>
+            <span class="value" th:text="${product.prodName}">상품명</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 설명 : </strong>
+            <span class="value" th:text="${product.prodDetail}">상품 설명</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 가격 : </strong>
+            <span class="value" th:text="${product.prodPrice}">상품 가격</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 카테고리 : </strong>
+            <span class="value" th:text="${product.prodCateName}">상품 카테고리</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 상세 이미지 : </strong>
+            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>
+            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 갯수 : </strong>
+            <span class="value" th:text="${product.cntProd}">상품 갯수</span>
+        </div>
+        <br/><br/>
+    </div>
+
+    <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
+        <strong th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></strong>
+    </div>
+    <br/><br/>
+
+    <div class="button-container">
+        <button class="btn-primary buy" th:data-prod-no="${product.prodNo}">구매</button>
+        <i class="fas fa-shopping-cart addCart" th:data-prod-no="${product.prodNo}" style="cursor: pointer;"></i>
+
+        <!-- 찜하기 아이콘 (하트 아이콘) -->
+        <i class="fas fa-heart addWish" th:data-prod-no="${product.prodNo}" th:data-user-name="${userName}" style="cursor: pointer;"></i>
+        <button class="btn-primary confirm">확인</button>
+    </div>
+
+</div>
+</body>
+</html>

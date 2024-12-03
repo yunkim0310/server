@@ -54,17 +54,15 @@ public class PurchaseServiceImpl implements PurchaseService {
 //        Product product = new Product();
 //        User user = new User();
 //
-        String username = "user1";
-        int tranPoint = -20000;
-        String depType = "상품 구매";
-        int currPoint = 23300;
-        int relNo = 9;
-
-        pointService.addPointTransaction(username, tranPoint, depType, currPoint, relNo);
-
-        pointService.updatePoint(username, tranPoint,30073);
-
-
+//        String username = "user1";
+//        int tranPoint = -20000;
+//        String depType = "상품 구매";
+//        int currPoint = 23300;
+//        int relNo = 9;
+//
+//        pointService.addPointTransaction(username, tranPoint, depType, currPoint, relNo);
+//
+//        pointService.updatePoint(username, tranPoint,30073);
 
     }
 
@@ -78,19 +76,16 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     // 구매한 상품 목록 조회 => 수정 필요
     @Override
-    public Map<String, Object> getPurchaseList(String userName) throws Exception{
+    public List<Purchase> getPurchaseList(String userName) throws Exception{
 
-//        List<Purchase> list = purchaseDao.getPurchaseList(search, userName);
+        List<Purchase> list = purchaseDao.getPurchaseList(userName);
 
-        Map<String, Object> map = new HashMap<String , Object>();
-        map.put("list", purchaseDao.getPurchaseList(userName));
-
-        return map;
+        return list;
     }
 
-//    public String getNextBarcodeNumber() throws Exception {
-//        return purchaseDao.getNextBarcodeNumber();
-//    }
+    public String getNextBarcodeNumber() throws Exception {
+        return purchaseDao.getNextBarcodeNumber();
+    }
 
     // 장바구니 추가
     @Override
@@ -121,8 +116,8 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     // 찜 / 장바구니 삭제
     @Override
-    public void removeWishCart(int wishCartNo) throws Exception {
-        purchaseDao.removeWishCart(wishCartNo);
+    public void removeWishCart(Purchase purchase) throws Exception {
+        purchaseDao.removeWishCart(purchase);
     }
 
     // 찜 목록 삭제
@@ -130,5 +125,23 @@ public class PurchaseServiceImpl implements PurchaseService {
 //    public void removeWish(int wishCartNo) throws Exception {
 //        purchaseDao.removeWish(wishCartNo);
 //    }
+
+    @Override
+    public boolean isProductInWishList(int prodNo, String username) throws Exception {
+        int count = purchaseDao.isProductInWishList(prodNo, username);
+        return count > 0;
+    }
+
+    @Override
+    public int getWishListCount(String userName) {
+
+        return purchaseDao.getWishListCount(userName);
+    }
+
+    @Override
+    public int getCartListCount(String userName) {
+
+        return purchaseDao.getCartListCount(userName);
+    }
 
 }

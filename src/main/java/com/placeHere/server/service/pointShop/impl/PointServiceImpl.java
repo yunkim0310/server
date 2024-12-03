@@ -32,23 +32,23 @@ public class PointServiceImpl implements PointService {
     // 보유 포인트 업데이트
     @Override
     public void updatePoint(@Param("username") String username,
-                            @Param("tranPoint") int tranPoint,
-                            @Param("tranNo")int tranNo) {
+                            @Param("tranPoint") int tranPoint) {
 
-        pointDao.updatePoint(username, tranPoint, tranNo);
+        pointDao.updatePoint(username, tranPoint);
     }
 
     // 현재 보유 포인트 조회
     @Override
     public int getCurrentPoint(String username) {
 
+
         return pointDao.getCurrentPoint(username);
     }
 
     // 포인트 내역 조회
     @Override
-    public List<Point> getPointHistoryList(String username) {
+    public List<Point> getPointHistoryList(String userName) {
 
-        return pointDao.getPointHistoryList(username);
+        return pointDao.getPointHistoryList(userName);
     }
 }

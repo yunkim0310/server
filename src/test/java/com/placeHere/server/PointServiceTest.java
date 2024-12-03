@@ -51,7 +51,7 @@ public class PointServiceTest {
         String username = "user1";
 
         int totalPoint = pointService.getCurrentPoint(username);
-        pointService.updatePoint("user1", -1000, 30029);
+        pointService.updatePoint("user1", -1000);
 
         int updatedPoint = pointService.getCurrentPoint(username);
 
