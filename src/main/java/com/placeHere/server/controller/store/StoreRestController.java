@@ -1,5 +1,7 @@
 package com.placeHere.server.controller.store;
 
+import com.placeHere.server.domain.Like;
+import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +14,9 @@ public class StoreRestController {
     // Field
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private LikeService likeService;
 
 
     // Constructor
@@ -35,22 +40,30 @@ public class StoreRestController {
 
 
     // 가게 좋아요 추가
-    @GetMapping("/addLikeStore")
-    public ResponseEntity<Boolean> addLikeStore(@RequestParam("storeId") int storeId) {
+    @GetMapping(value = "/addStoreLike", params = {"userName", "relationNo", "target"})
+    public ResponseEntity<Like> addLikeStore(@ModelAttribute Like like) throws Exception {
 
-        System.out.println("/api-store/addLikeStore/" + storeId);
+        System.out.println("/api-store/addLikeStore/");
+        System.out.println(like);
 
-        return null;
+        likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+
+        Like result = likeService.chkLike(like);
+
+        return ResponseEntity.ok(result);
     }
 
 
     // 가게 좋아요 취소
-    @GetMapping("/removeLikeStore")
-    public ResponseEntity<Boolean> removeLikeStore(@RequestParam("storeId") int storeId) {
+    @GetMapping(value = "/removeStoreLike", params = "likeId")
+    public ResponseEntity<Boolean> removeLikeStore(@ModelAttribute Like like) throws Exception {
 
-        System.out.println("/api-store/removeLikeStore/" + storeId);
+        System.out.println("/api-store/removeLikeStore/");
+        System.out.println(like);
 
-        return null;
+        boolean result = likeService.removeLike(like);
+
+        return ResponseEntity.ok(result);
     }
 
 }

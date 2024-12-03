@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>내 가게 리뷰 목록 조회</title>
+
+    <div th:insert="~{test/store/importTest :: importFragment}"/>
+
+</head>
+<body>
+
+<!--    <h1>내 가게 리뷰 목록</h1>-->
+<!--    <hr/>-->
+
+    <strong>리뷰 목록&ensp;<span th:text="${totalCnt}">리뷰 개수</span></strong>
+
+    <br/>
+
+    <table style="border-spacing: 10px">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>리뷰 번호</th>
+                <th>리뷰 사진</th>
+                <th>리뷰 내용</th>
+                <th>작성 일시</th>
+                <th>가게 Id</th>
+                <th>매장명</th>
+                <th>별점</th>
+                <th>좋아요 수</th>
+                <th>댓글 수</th>
+            </tr>
+        </thead>
+
+        <thead>
+            <tr th:each="review, iterStat : ${reviewList}">
+                <td th:text="${iterStat.count}"></td>
+                <td th:text="${review.reviewNo}"></td>
+                <td th:text="${review.reviewImg1 + ', ' + review.reviewImg2 + ', ' + review.reviewImg3}"></td>
+                <td th:text="${review.reviewContent}"></td>
+                <td th:text="${review.reviewDt}"></td>
+                <td th:text="${review.storeId}"></td>
+                <td th:text="${review.storeName}"></td>
+                <td th:text="${review.reviewScore}"></td>
+                <td th:text="${review.reviewLikeCnt}"></td>
+                <td th:text="${review.commentList.size()}"></td>
+            </tr>
+        </thead>
+    </table>
+
+
+</body>
+</html>

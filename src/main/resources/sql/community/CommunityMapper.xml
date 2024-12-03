@@ -6,30 +6,49 @@
 
 <mapper namespace="com.placeHere.server.dao.community.CommunityDao">
 
-    <!-- 리뷰 -->
-   <resultMap id="communityMap" type="com.placeHere.server.domain.Community">
-       <result property="reviewNo" column="review_no" jdbcType="INTEGER"/>
-       <result property="rsrvNo" column="rsrv_no" jdbcType="INTEGER"/>
-       <result property="reviewScore" column="review_score" jdbcType="INTEGER"/>
-       <result property="reviewImg1" column="review_img1" jdbcType="VARCHAR"/>
-       <result property="reviewImg2" column="review_img2" jdbcType="VARCHAR"/>
-       <result property="reviewImg3" column="review_img3" jdbcType="VARCHAR"/>
-       <result property="reviewContent" column="review_Content" jdbcType="VARCHAR" />
-       <result property="reviewDt" column="review_Dt" jdbcType="DATE" />
-       <result property="currReviewUpdate" column="currReview_Update" jdbcType="DATE"/>
-       <result property="reviewViewStatus" column="review_ViewStatus" jdbcType="BOOLEAN"/>
+   <!-- 댓글 -->
+    <resultMap id="CommentResultMap" type="com.placeHere.server.domain.Comment">
+        <result property="reviewNo" column="review_no" jdbcType="INTEGER"/>
+        <result property="commentNo" column="comment_no" jdbcType="INTEGER"/>
+        <result property="commentsContent" column="comments_content" jdbcType="VARCHAR"/>
+        <result property="commentsDt" column="comments_dt" jdbcType="DATE"/>
+        <result property="currCommentsUpdate" column="currcomments_update" jdbcType="DATE"/>
+        <result property="commentViewStatus" column="comments_viewstatus" jdbcType="BOOLEAN"/>
 
-       <!-- 댓글 -->
-       <result property="commentNo" column="comment_no" jdbcType="INTEGER"/>
-       <result property="commentContent" column="comments_content" jdbcType="VARCHAR"/>
-       <result property="commentDt" column="comments_dt" jdbcType="DATE"/>
-       <result property="currCommentUpdate" column="currcomments_update" jdbcType="DATE"/>
-       <result property="commentViewStatus" column="comments_viewstatus" jdbcType="BOOLEAN"/>
+        <result property="commentLikeCnt" column="comment_like_cnt" jdbcType="INTEGER"/>
+        <result property="profileImg" column="profile_img" jdbcType="VARCHAR"/>
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
+        <result property="commentTotalCnt" column="comment_total_cnt" jdbcType="INTEGER"/>
+
    </resultMap>
+
+    <!-- 리뷰 -->
+    <resultMap id="ReviewResultMap" type="com.placeHere.server.domain.Review">
+        <result property="reviewNo" column="review_no" jdbcType="INTEGER"/>
+        <result property="rsrvNo" column="rsrv_no" jdbcType="INTEGER"/>
+        <result property="reviewScore" column="review_score" jdbcType="INTEGER"/>
+        <result property="reviewImg1" column="review_img1" jdbcType="VARCHAR"/>
+        <result property="reviewImg2" column="review_img2" jdbcType="VARCHAR"/>
+        <result property="reviewImg3" column="review_img3" jdbcType="VARCHAR"/>
+        <result property="reviewContent" column="review_Content" jdbcType="VARCHAR" />
+        <result property="reviewDt" column="review_Dt" jdbcType="DATE" />
+        <result property="currReviewUpdate" column="currReview_Update" jdbcType="DATE"/>
+        <result property="reviewViewStatus" column="review_ViewStatus" jdbcType="BOOLEAN"/>
+
+        <result property="userName" column="username" jdbcType="VARCHAR"/>
+        <result property="profileImg" column="profile_img" jdbcType="VARCHAR"/>
+        <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
+        <result property="storeId" column="store_id" jdbcType="INTEGER"/>
+        <result property="reviewLikeCnt" column="review_like_cnt" jdbcType="INTEGER"/>
+
+        <result property="reviewTotalCnt" column="review_total_cnt" jdbcType="INTEGER"/>
+
+        <association property="commentList" column="review_no" select="com.placeHere.server.dao.community.CommunityDao.getCommentList"/>
+    </resultMap>
 
 
     <!-- 리뷰 추가 -->
-    <insert id="addReview" parameterType="com.placeHere.server.domain.Community">
+    <insert id="addReview" parameterType="com.placeHere.server.domain.Review">
         INSERT INTO review
         (rsrv_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt, currReview_Update, username)
         VALUES
@@ -45,73 +64,192 @@
         #{userName})
     </insert>
 
-<!--&lt;!&ndash; 리뷰 상세보기&ndash;&gt;-->
-    <select id="getReview" parameterType="int" resultMap="communityMap">
+    <!-- 리뷰 상세보기-->
+    <select id="getReview" parameterType="int" resultMap="ReviewResultMap">
+
         SELECT
-        review_no, review_score, review_img1, review_img2, review_img3, review_Content, review_Dt,
-        currReview_Update, review_ViewStatus
-        FROM Review
-        WHERE review_no = #{value}
+            review_user.*,
+            reservation.store_id,
+            reservation.store_name,
+            COUNT(likes.like_id) AS review_like_cnt
+        FROM
+            (SELECT review.*, user.profile_img
+            FROM review
+            JOIN user ON review.username = user.username
+            WHERE review.review_no = #{reviewNo}
+            AND review.review_Viewstatus = true) AS review_user
+            JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+            LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+        GROUP BY
+            review_user.review_no, reservation.store_id, reservation.store_name
+
+    </select>
+<!--    <select id="getReview" parameterType="int" resultMap="ReviewResultMap">-->
+
+<!--        SELECT review_user_store.*, COALESCE(COUNT(CASE WHEN likes.target = 'review' THEN likes.like_id END), 0) AS review_like_cnt-->
+<!--        FROM-->
+<!--        (SELECT review_user.*, reservation.store_id, reservation.store_name-->
+<!--        FROM-->
+<!--        (SELECT review.*, user.profile_img-->
+<!--        FROM review, user-->
+<!--        WHERE review.review_no = #{reviewNo}-->
+<!--        AND review.username = user.username) AS review_user,-->
+<!--        reservation-->
+<!--        WHERE reservation.rsrv_no = review_user.rsrv_no) AS review_user_store,-->
+<!--        likes-->
+<!--        WHERE review_user_store.review_no = likes.relation_no-->
+<!--        GROUP BY review_user_store.review_no-->
+
+<!--    </select>-->
+
+    <!--전체 리뷰 리스트 보기  -->
+    <select id="getReviewList" parameterType="com.placeHere.server.domain.Search" resultMap="ReviewResultMap">
+
+        SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
+        FROM
+            (SELECT review.*, user.profile_img
+            FROM review
+            JOIN user ON review.username = user.username
+            WHERE review.review_Viewstatus = true) AS review_user
+            JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+            LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+        GROUP BY review_user.review_no, reservation.store_id, reservation.store_name
+        ORDER BY review_user.review_no DESC
+        LIMIT #{startRowNum}, #{listSize}
+
     </select>
 
-<!--    &lt;!&ndash;전체 리뷰 리스트 보기  &ndash;&gt;-->
-    <select id="getReviewList" resultMap="communityMap">
-        SELECT
-        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,
-        currReview_update, review_Viewstatus
-        FROM Review
-        WHERE review_Viewstatus = true
-        ORDER BY review_Dt DESC
+<!--    <select id="getReviewList" resultMap="ReviewResultMap">-->
+<!--        SELECT-->
+<!--        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,-->
+<!--        currReview_update, review_Viewstatus, COUNT(*) OVER() AS total_cnt-->
+<!--        FROM Review-->
+<!--        WHERE review_Viewstatus = true-->
+<!--        ORDER BY review_Dt DESC-->
+<!--    </select>-->
+
+    <!--  특정 가게의 리뷰 리스트 조회  -->
+    <select id="getReviewListByStoreId" resultMap="ReviewResultMap">
+
+        SELECT *, COUNT(*) OVER() AS review_total_cnt
+        FROM
+            (SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
+            FROM
+                (SELECT review.*, user.profile_img
+                FROM review
+                JOIN user ON review.username = user.username
+                WHERE review.review_Viewstatus = true) AS review_user
+                JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+                LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+            GROUP BY review_user.review_no, reservation.store_id, reservation.store_name) AS review_info
+        WHERE review_info.store_id = #{storeId}
+        ORDER BY review_info.review_no DESC
+        LIMIT #{search.startRowNum}, #{search.listSize}
+
+    </select>
+
+    <!--  특정 회원들의 리뷰 리스트 조회  -->
+    <select id="getReviewListByUserName" resultMap="ReviewResultMap">
+
+        SELECT *
+        FROM
+            (SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
+            FROM
+                (SELECT review.*, user.profile_img
+                FROM review
+                JOIN user ON review.username = user.username
+                WHERE review.review_Viewstatus = true) AS review_user
+                JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+                LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+            GROUP BY review_user.review_no, reservation.store_id, reservation.store_name) AS review_info
+        WHERE review_info.username IN
+        <foreach collection="userNameList" item="userName" open="(" close=")" separator=",">
+            #{userName}
+        </foreach>
+        ORDER BY review_info.review_no DESC
+        LIMIT #{search.startRowNum}, #{search.listSize}
+
     </select>
 
 
-<!--    &lt;!&ndash; 리뷰 수정&ndash;&gt;-->
-    <update id="updateReview" parameterType="com.placeHere.server.domain.Community">
+    <!-- 리뷰 수정 -->
+    <update id="updateReview" parameterType="com.placeHere.server.domain.Review">
+
         UPDATE review
         SET
         review_score=#{reviewScore}, review_img1=#{reviewImg1}, review_img2=#{reviewImg2},
         review_img3=#{reviewImg3}, review_Content=#{reviewContent},  currReview_update = SYSDATE()
         WHERE review_no = #{reviewNo}
+
     </update>
 
-<!--    &lt;!&ndash; 리뷰 노출 여부 Update => 리뷰삭제 &ndash;&gt;-->
-    <update id="removeReview" parameterType="com.placeHere.server.domain.Community">
+    <!-- 리뷰 노출 여부 Update => 리뷰삭제 -->
+    <update id="removeReview" parameterType="com.placeHere.server.domain.Review">
+
         UPDATE review
         SET review_Viewstatus = 0
         WHERE review_no = #{reviewNo}
+
     </update>
 
-<!--    &lt;!&ndash; 댓글 추가 &ndash;&gt;-->
-    <insert id="addComment" parameterType="com.placeHere.server.domain.Community">
+    <!-- 댓글 추가 -->
+    <insert id="addComment" parameterType="com.placeHere.server.domain.Comment">
+
     INSERT INTO comment
         (review_no,username,comments_content, comments_dt)
         VALUES
         (
         #{reviewNo},
         #{userName},
-        #{commentContent},
+        #{commentsContent},
         CURRENT_DATE)
 
     </insert>
 
-    <!-- 댓글 불러오기 -->
-    <select id="getComment" parameterType="int" resultMap="communityMap">
-        SELECT
-        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus
-        FROM Comment
-        WHERE comment_no = #{commentNo}
-    </select>
+    <!-- 댓글 목록 불러오기 -->
+    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">
 
-<!--    &lt;!&ndash; 댓글 수정 &ndash;&gt;-->
-    <update id="updateComment" parameterType="com.placeHere.server.domain.Community">
+        SELECT comment_user.*, COUNT(likes.like_id) AS comment_like_cnt
+        FROM
+            (SELECT comment.*, user.profile_img, COUNT(comment.comment_no) OVER() AS comment_total_cnt
+            FROM comment
+            JOIN user ON comment.username = user.username
+            WHERE comment.review_no = #{reviewNo}
+            AND comment.comments_viewstatus = true ) AS comment_user
+        LEFT JOIN likes ON comment_user.comment_no = likes.relation_no AND likes.target = 'comment'
+        GROUP BY comment_user.comment_no, comment_user.username, comment_user.profile_img,
+                comment_user.review_no, comment_user.comments_viewstatus, comment_total_cnt
+        ORDER BY comment_user.comment_no DESC
+
+    </select>
+    <!-- LIMIT #{search.startRowNum}, #{search.commentSize} -->
+
+<!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
+<!--        SELECT comment_user.*-->
+<!--        (SELECT comment.*, user.profile_img, COUNT(comment.comment_no) OVER() comment_total_cnt-->
+<!--        FROM comment, user-->
+<!--        WHERE comment.username = user.username-->
+<!--        AND comment.review_no = #{reviewNo}-->
+<!--        AND comment.comments_viewstatus = true) AS comment_user-->
+
+<!--    </select>-->
+<!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
+<!--        SELECT-->
+<!--        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus-->
+<!--        FROM Comment-->
+<!--        WHERE comment_no = #{commentNo}-->
+<!--    </select>-->
+
+    <!-- 댓글 수정 -->
+    <update id="updateComment" parameterType="com.placeHere.server.domain.Comment">
         UPDATE comment
         SET
         comments_content=#{commentContent}, currcomments_update = CURRENT_DATE
         WHERE comment_no = #{commentNo}
     </update>
 
-<!--    &lt;!&ndash; 댓글 노출 여부 Update => 댓글삭제 &ndash;&gt;-->
-    <update id="removeComment" parameterType="com.placeHere.server.domain.Community">
+    <!-- 댓글 노출 여부 Update => 댓글삭제 -->
+    <update id="removeComment" parameterType="com.placeHere.server.domain.Comment">
         UPDATE comment
         SET comments_viewstatus = false
         WHERE comment_no = #{commentNo}
