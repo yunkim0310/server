@@ -284,6 +284,12 @@ public class CommunityController {
 //    }
 
 
+
+
+
+
+
+    //aaa.html을 위한..
     @GetMapping("/test")
     public String test(){
         return "test/community/aaa";

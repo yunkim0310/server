@@ -106,6 +106,11 @@
             .catch(error => {
                 alert(error.message);
             });
+
+            function editComment(commentNo, buttonElement){
+            const commentItem = buttonElement.parentElement;
+            const currentContent
+
         }
 
     </script>
@@ -146,11 +151,13 @@
 
 <div class="comment-section">
     <h2>댓글 목록</h2>
-    <ul class="comment-list">
+    <ul class="comment-list" id="commentList">
         <li th:each="comment : ${commentList}">
             <p><strong th:text="${comment.userName}"></strong></p>
             <p th:text="${comment.commentsContent}"></p>
             <p th:text="${#dates.format(comment.commentsDt, 'yyyy-MM-dd ')}"></p>
+            <button onclick="editComment([[${comment.commentNo}]], this)">수정</button>
+            <button onclick="deleteComment([[${comment.commentNo}]], this)">삭제</button>
             <hr/>
         </li>
     </ul>

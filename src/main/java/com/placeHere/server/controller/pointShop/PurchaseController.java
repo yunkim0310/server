@@ -62,7 +62,7 @@ public class PurchaseController {
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception{
 
-        String userName = "user1";
+        String userName = "user01";
 
         System.out.println("/purchase/addPurchase : GET");
 
@@ -177,7 +177,7 @@ public class PurchaseController {
 
         System.out.println("/purchase/addPurchase : POST");
 
-        String userName = "user1";
+        String userName = "user01";
 
         model.addAttribute("tranPoint", tranPoint);
 
@@ -215,7 +215,7 @@ public class PurchaseController {
 
         System.out.println("/product/getPurchase : GET");
 
-        String userName = "user1";
+        String userName = "user01";
 
         Purchase purchase = purchaseService.getPurchase(tranNo);
 
@@ -232,7 +232,7 @@ public class PurchaseController {
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
-        String userName = "user1";
+        String userName = "user01";
         // 장바구니 목록을 서비스에서 받아옴
         List<Purchase> cartList = purchaseService.getCartList(userName);
 
@@ -250,7 +250,7 @@ public class PurchaseController {
                             @ModelAttribute("purchase") Purchase purchase,
                             Model model) throws Exception {
 
-            String userName = "user1";
+            String userName = "user01";
             // 찜 목록을 서비스에서 받아옴
         List<Purchase> wishList = purchaseService.getWishList(userName);
 

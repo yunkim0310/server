@@ -167,8 +167,36 @@ public class CommunityRestController {
     }
 
 
-}
+    //댓글 수정
+    @PutMapping("/updateComment")
+    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
+        try {
+            communityService.updateComment(comment);
+            return ResponseEntity.ok(comment);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body(null);
+        }
+    }
 
+    // 댓글 삭제 -> 노출여부 T => F 로 변경
+    @DeleteMapping("/removeComment/{commentNo}")
+    public ResponseEntity<Void> removeComment(@RequestBody int commentNo) {
+        try {
+            // 댓글 객체 생성
+            Comment comment = new Comment();
+            comment.setCommentNo(commentNo);
+
+
+            // 삭제 처리
+            communityService.removeComment(comment);
+            return ResponseEntity.noContent().build(); // 204 No Content
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).build(); // 서버 오류 발생 시 500 상태 코드 반환
+        }
+    }
+}
 
 
 
