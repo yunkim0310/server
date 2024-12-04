@@ -15,7 +15,7 @@
 	<!-- 3. FQCN(Full Qualified Class Name) Alias(별칭관리) -->
 	<typeAliases>
 		<typeAlias alias="chat" type="com.placeHere.server.domain.Chat"/>
-		<typeAlias alias="community" type="com.placeHere.server.domain.Community"/>
+		<typeAlias alias="community" type="com.placeHere.server.domain.Review"/>
 		<typeAlias alias="friend" type="com.placeHere.server.domain.Friend"/>
 		<typeAlias alias="menu" type="com.placeHere.server.domain.Menu"/>
 		<typeAlias alias="point" type="com.placeHere.server.domain.Point"/>
