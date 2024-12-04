@@ -258,7 +258,9 @@
             </if>
         </where>
         ORDER BY review_score_avg DESC, review_cnt DESC
-        <!-- LIMIT #{startRowNum}, #{listSize} -->
+        <if test="listSize != null and listSize != 0">
+            LIMIT #{startRowNum}, #{listSize}
+        </if>
 
     </select>
 
