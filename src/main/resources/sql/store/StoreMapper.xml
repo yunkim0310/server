@@ -267,6 +267,7 @@
 
         UPDATE store
         SET store_name=#{storeName},
+            store_addr=#{storeAddr},
             store_phone=
                 <choose>
                     <when test="storePhone != null and storePhone != ''">
