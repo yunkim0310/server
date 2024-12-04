@@ -396,10 +396,12 @@ $(function() {
 
         // 매장 전화번호 합치기
         var phone1 = $("input[name='storePhone1']").val().replace(" ", "");
-        var phone2 = $("input[name='storePhone2']").val().replace(" ", "");
-        var phone3 = $("input[name='storePhone3']").val().replace(" ", "");
+        if (phone1 != null && phone1 !== "") {
+            var phone2 = $("input[name='storePhone2']").val().replace(" ", "");
+            var phone3 = $("input[name='storePhone3']").val().replace(" ", "");
 
-        $("input[name='storePhone']:hidden").val(phone1+'-'+phone2+'-'+phone3);
+            $("input[name='storePhone']:hidden").val(phone1+'-'+phone2+'-'+phone3);
+        }
 
         // 해시태그 변경 (공백, # 제거)
         $("input[name='hashtagList']").each(function () {
