@@ -161,9 +161,12 @@ public class StoreServiceImpl implements StoreService {
 
     // 가게 수정 TEST
     @Override
-    public void updateStore(Store store) {
+    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals) {
 
         System.out.println("\nStoreDao.updateStore()");
+
+        System.out.println("amenitiesEquals= "+amenitiesEquals);
+        System.out.println("menuEquals= "+menuEquals);
 
         // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
         List<String> storeImgList = store.getStoreImgList();
@@ -180,12 +183,22 @@ public class StoreServiceImpl implements StoreService {
 
         // UPDATE 되는 TABLE : store, amenities, menu
         storeDao.updateStore(store);
-        storeDao.removeAmenities(store.getStoreId());
-        storeDao.removeMenu(store.getStoreId());
-        storeDao.addMenu(store.getStoreId(), store.getMenuList());
 
-        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
-            storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
+        if (!amenitiesEquals) {
+
+            storeDao.removeAmenities(store.getStoreId());
+
+            if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
+                storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
+            }
+
+        }
+
+        if (!menuEquals) {
+
+            storeDao.removeMenu(store.getStoreId());
+            storeDao.addMenu(store.getStoreId(), store.getMenuList());
+
         }
 
     }
