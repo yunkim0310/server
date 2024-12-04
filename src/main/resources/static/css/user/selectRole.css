@@ -1,0 +1,82 @@
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f8f9fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    width: 360px;
+    background-color: #fff;
+    padding: 40px 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.title {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 40px;
+    text-align: center;
+}
+
+.optionLayout {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+}
+
+.button {
+    width: 45%;
+    padding: 20px 0;
+    border-radius: 15px;
+    text-align: center;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+}
+
+.button.user {
+    background: #3b82f6;
+    color: #fff;
+}
+
+.button.store {
+    background-color: #eaeaea;
+    color: #5a5a5a;
+}
+
+/* 클릭된 버튼의 스타일 */
+.button.active {
+    background: #2563eb;
+    color: #fff;
+}
+
+.submit {
+    display: flex;
+    justify-content: space-between;
+}
+
+.submit button {
+    width: 45%;
+    padding: 10px 0;
+    border: none;
+    border-radius: 15px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.submit .next {
+    background-color: #cbb8b3;
+    color: #fff;
+}
+
+.submit .cancel {
+    background-color: #eaeaea;
+    color: #5a5a5a;
+}

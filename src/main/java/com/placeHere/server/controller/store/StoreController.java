@@ -87,14 +87,19 @@ public class StoreController {
 
         System.out.println("/store/addStore : POST");
 
+        List<String> hashtagList = store.getHashtagList();
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+        store.setHashtagList(hashtagList);
+
+        int storeId = storeService.addStore(store);
+        store.setStoreId(storeId);
+
         System.out.println(store);
 
-//        int storeId = storeService.addStore(store);
-
         model.addAttribute("userName", store.getUserName());
-//        model.addAttribute("storeId", storeId);
+        model.addAttribute("storeId", storeId);
 
-        return "test/store/addOperationTest";
+        return "store/addOperation";
     }
 
 
@@ -112,6 +117,7 @@ public class StoreController {
 
         model.addAttribute("store", store);
 
+//        return "redirect:/store/getMyStore";
         return "test/store/addStoreTestResult";
     }
 
@@ -126,7 +132,7 @@ public class StoreController {
 
         if (storeId == 0) {
 
-            return null;
+            return "redirect:/store/addStore?userName=" + userName;
         }
 
         else {
@@ -142,19 +148,30 @@ public class StoreController {
             model.addAttribute("foodCategory", new FoodCategory());
             model.addAttribute("amenitiesNameList", amenitiesNameList);
 
-            return "test/store/updateStoreTest";
+            return "store/updateStore";
         }
 
     }
 
     @PostMapping("/store/updateStore")
     public String updateStore(@ModelAttribute Store store, Model model) {
-
+        
+        // TODO 사진 입력값이 없을 시 기존 사용하는 코드 추가 필요
+        
         System.out.println("/store/updateStore : POST");
 
+        List<String> hashtagList = store.getHashtagList();
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+        store.setHashtagList(hashtagList);
+
+        System.out.println("changeStore");
         System.out.println(store);
 
-        storeService.updateStore(store);
+        Store beforeStore = storeService.getStore(store.getStoreId());
+        boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
+        boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
+
+        storeService.updateStore(store, amenitiesEquals, menuEquals);
 
         StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
 
@@ -164,7 +181,7 @@ public class StoreController {
         model.addAttribute("userName", store.getUserName());
         model.addAttribute("storeId", store.getStoreId());
 
-        return "test/store/updateOperationTest";
+        return "store/updateOperation";
     }
 
 
@@ -361,7 +378,6 @@ public class StoreController {
         System.out.println("/searchStore : POST");
 
         System.out.println(search);
-
 
         return "test/store/getStoreListTest";
     }
