@@ -4,6 +4,7 @@ import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.Store;
 import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +36,9 @@ public class ReservationController {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private PaymentService paymentService;
 
 
     public ReservationController(){
@@ -73,7 +77,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "test/reservation/listrsrvstore";
+        return "test/reservation/testlistrsrvstore";
     }
 
 
@@ -106,19 +110,20 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
 
-        return "test/reservation/listrsrvstore";
+        return "test/reservation/testlistrsrvstore";
     }
 
 
 
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
+            @ModelAttribute Search search,
             @RequestParam("userName") String userName, // 가게 ID는 필수
             Model model) throws Exception {
 
+
         // 초기 Search 객체 설정 (기본값)
-        Search search = new Search();
-        search.setOrder(null); // 기본값 없음
+        search.setOrder("desc"); // 기본 정렬
         search.setSearchKeyword(null); // 모든 상태 포함
 
         // 서비스 호출
@@ -126,6 +131,7 @@ public class ReservationController {
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
+        model.addAttribute("search", search);
 
         // 뷰 반환
         return "test/reservation/listrsrvuser";
@@ -134,27 +140,25 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
     public String getRsrvUserList(
+            @ModelAttribute Search search,
             @RequestParam("userName") String userName,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
             @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
-        // Search 객체 생성
-        Search search = new Search();
 
         // 조건 설정: 값이 있을 때만 설정
-        if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            search.setSearchKeyword(searchKeyword);
-        }
-        if (order != null && !order.isEmpty()) {
-            search.setOrder(order);
-        }
+
+        search.setSearchKeyword(searchKeyword);
+
+        search.setOrder(order);
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
+        model.addAttribute("search", search);
 
         return "test/reservation/listrsrvuser";
     }
@@ -190,7 +194,7 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
-        return "test/reservation/addrsrv";
+        return "/test/reservation/testaddrsrv";
     }
 
 
@@ -218,6 +222,44 @@ public class ReservationController {
         // 예약 번호를 pay 페이지로 전달
         model.addAttribute("rsrvNo", rsrvNo);
 
+        return "test/reservation/redirectToPaycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.POST)
+    public String Paycheck(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : POST");
+        // 1. 예약 정보 조회
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        model.addAttribute("reservation", reservation);
+
+        return "test/reservation/paycheck";
+    }
+
+    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
+    public String Paycheck(@RequestParam("orderId") String orderId,
+                           @RequestParam("paymentKey") String paymentKey,
+                           @RequestParam int amount,
+                           Model model) throws Exception {
+
+        System.out.println("/reservation/Paycheck : GET");
+
+        String[] parts = orderId.split("_");
+
+        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+
+        paymentService.confirmPayment(paymentKey, orderId, amount);
+
+        String paymentId = paymentKey;
+
+
+        reservationService.updateRsrvpay(rsrvNo, paymentId);
+
+
+
+        model.addAttribute("rsrvNo", rsrvNo);
+
         return "test/reservation/pay";
     }
 
@@ -240,11 +282,13 @@ public class ReservationController {
 
         if (closedayList != null && closedayList.contains(reservationDate)) {
             // 예약 일자가 휴무일인 경우
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
-            return "test/reservation/fail";
+            return "test/reservation/testfail";
         }
 
         // 4. 현재 예약 일시의 예약 인수 계산
@@ -254,18 +298,24 @@ public class ReservationController {
         // 5. 예약 최대 인수 비교 및 처리
         if (totalReservationCount > maxCapacity) {
             // 예약 상태를 "예약 취소"로 변경
+
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
-            return "test/reservation/fail";
+            return "test/reservation/testfail";
         } else {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
             // success.html로 이동
-            return "test/reservation/success";
+            return "test/reservation/testsuccess";
         }
     }
+
+
+
+
 
 }

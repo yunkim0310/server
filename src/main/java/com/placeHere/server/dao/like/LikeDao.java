@@ -24,6 +24,8 @@ public interface LikeDao {
     // 좋아요 검증
     public Like chkLike(Like like) throws Exception;
 
+    // 가게 좋아요 목록 조회
+    public List<Like> getStoreLikeList(String userName) throws Exception;
 
 }
 

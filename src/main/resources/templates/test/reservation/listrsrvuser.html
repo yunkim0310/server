@@ -1,63 +1,225 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>User Reservation List</title>
+  <title>예약 목록</title>
+
+  <link rel="stylesheet" href="/css/templates/style.css">
+
+  <style>
+    .container {
+      margin: 0 auto;
+      width: 1400px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .rsrvstatus-table {
+      width: 80%;
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 10px;
+      margin-bottom: 20px; /* 예약 카드와의 간격 */
+      align-content: space-between;
+      flex-direction: column;
+    }
+
+    .pl {
+      width: 150px;
+      border: 1px solid #C4C4C4;
+      box-sizing: border-box;
+      border-radius: 10px;
+      padding: 5px 13px;
+      font-family: 'Roboto';
+      font-style: normal;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 16px;
+      text-align: center;
+      height: 30px;
+    }
+
+    .pl option {
+      text-align: center; /* 옵션 텍스트 중앙 정렬 */
+      padding: 5px;
+      direction: ltr;
+    }
+
+    .reservation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .reservation-item {
+      border: 1px solid #C4C4C4;
+      border-radius: 10px;
+      padding: 20px;
+      background-color: #F8F8F8;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      width: 500px;
+      max-width: 100%;
+    }
+
+    .reservation-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .reservation-header .reservation-date {
+      font-size: 30px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .reservation-header .reservation-number {
+      font-size: 16px;
+      color: #888;
+      text-align: right;
+    }
+
+    .reservation-body p {
+      margin: 10px 0;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .reservation-status {
+      display: flex;
+      justify-content: space-between; /* 좌우로 정렬 */
+      align-items: center; /* 세로 정렬 */
+      margin: 10px 0;
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+    }
+
+
+    .review-button {
+      background-color: #FF8080;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      display: block;
+    }
+
+    .review-button:hover {
+      background-color: #E04E4E;
+    }
+
+    .status-actions {
+      display: flex;
+      align-items: center;
+      min-height: 40px; /* 버튼이 없어도 일정한 공간 유지 */
+    }
+  </style>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const reservationItems = document.querySelectorAll(".reservation-item");
+
+      reservationItems.forEach(item => {
+        item.addEventListener("click", function (event) {
+
+          const reservationNumber = this.querySelector(".reservation-number").textContent.trim();
+          // 리뷰 작성 버튼 클릭 시 네비게이션 제외
+          if (event.target.classList.contains("review-button")) {
+
+            const review = `/review/addReview?rsrvNo=${reservationNumber}`; // 이동할 링크
+            return window.location.href = review; // 해당 링크로 네비게이션
+          }
+
+          // 예약 번호 가져오기
+          const destination = `/test/reservation/getRsrv?rsrvNo=${reservationNumber}`; // 이동할 링크
+          window.location.href = destination; // 해당 링크로 네비게이션
+        });
+      });
+    });
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const phoneElements = document.querySelectorAll("[data-phone]");
+
+      phoneElements.forEach(element => {
+        const originalNumber = element.textContent.trim(); // 원래 전화번호 가져오기
+        if (originalNumber.length >= 7) {
+          const maskedNumber = originalNumber.substring(0, 3) + "xxxx" + originalNumber.substring(7);
+          element.textContent = maskedNumber; // 마스킹된 번호로 교체
+        }
+      });
+    });
+
+    function autoSubmitForm() {
+      document.getElementById("searchForm").submit();
+    }
+
+  </script>
+
 </head>
 <body>
-<h1>User Reservation List</h1>
+<div th:insert="~{common/header}"></div>
+<h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
+<br/>
 
-<!-- 검색 폼 -->
-<form action="/test/reservation/getRsrvUserList" method="POST">
+<div class="container">
+  <!-- 검색 폼 -->
+  <form id="searchForm" action="/test/reservation/getRsrvUserList" method="POST" class="rsrvstatus-table">
+    <!-- 예약 상태 -->
     <!-- 유저 이름 (필수) -->
     <input type="hidden" name="userName" th:value="${param.userName}" />
 
-    <!-- 예약 상태 검색 -->
-    <label for="searchKeyword">Reservation Status:</label>
-    <select id="searchKeyword" name="searchKeyword">
-        <option value="" th:selected="${param.searchKeyword == null}">All</option>
-        <option value="예약 요청" th:selected="${param.searchKeyword == '예약 요청'}">예약 요청</option>
-        <option value="예약 확정" th:selected="${param.searchKeyword == '예약 확정'}">예약 확정</option>
-        <option value="이용 완료" th:selected="${param.searchKeyword == '이용 완료'}">이용 완료</option>
-        <option value="리뷰 완료" th:selected="${param.searchKeyword == '리뷰 완료'}">리뷰 완료</option>
-        <option value="예약 취소" th:selected="${param.searchKeyword == '예약 취소'}">예약 취소</option>
-        <option value="예약 거절" th:selected="${param.searchKeyword == '예약 거절'}">예약 거절</option>
+    <select id="searchKeyword" name="searchKeyword" class="pl" onchange="autoSubmitForm()">
+      <option value="" th:selected="${search.searchKeyword == null || search.searchKeyword == ''}">모든 상태</option>
+      <option value="예약 요청" th:selected="${search.searchKeyword =='예약 요청'? 'selected' : null}">예약 요청</option>
+      <option value="예약 확정" th:selected="${search.searchKeyword =='예약 확정'? 'selected' : null}">예약 확정</option>
+      <option value="이용 완료" th:selected="${search.searchKeyword =='이용 완료'? 'selected' : null}">이용 완료</option>
+      <option value="리뷰 완료" th:selected="${search.searchKeyword =='리뷰 완료'? 'selected' : null}">리뷰 완료</option>
+      <option value="예약 취소" th:selected="${search.searchKeyword =='예약 취소'? 'selected' : null}">예약 취소</option>
+      <option value="예약 거절" th:selected="${search.searchKeyword =='예약 거절'? 'selected' : null}">예약 거절</option>
     </select>
 
-    <!-- 정렬 방식 선택 -->
-    <label for="order">Order:</label>
-    <select id="order" name="order">
-        <option value="asc" th:selected="${param.order == 'asc'}">Ascending</option>
-        <option value="desc" th:selected="${param.order == 'desc'}">Descending</option>
+    <!-- 정렬 방식 -->
+    <select id="order" name="order" class="pl" onchange="autoSubmitForm()">
+      <option value="desc" th:selected="${search.order == 'desc'? 'selected' : null}">내림차순</option>
+      <option value="asc" th:selected="${search.order == 'asc'? 'selected' : null}">오름차순</option>
     </select>
+  </form>
 
-    <button type="submit">Search</button>
-</form>
+  <!-- 예약 리스트 -->
+  <div class="reservation-list">
+    <table>
+      <tbody>
+      <div class="reservation-item" th:each="reservation : ${reservations}" style="cursor: pointer;"><!-- 헤더 -->
+        <div class="reservation-header">
+          <span class="reservation-date" th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}"/>
+          <span class="reservation-number" th:text="${reservation.rsrvNo}"/>
+        </div>
 
-<!-- 결과 테이블 -->
-<table>
-    <thead>
-    <tr>
-        <th>Reservation Number</th>
-        <th>Store Name</th>
-        <th>Status</th>
-        <th>Reservation Day</th>
-        <th>Reservation Time</th>
-        <th>Person Count</th>
-        <th>Rsrv PhoneNumber</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="reservation : ${reservations}">
-        <td th:text="${reservation.rsrvNo}">[예약 번호]</td>
-        <td th:text="${reservation.storeName}">[매장 이름]</td>
-        <td th:text="${reservation.rsrvStatus}">[예약 상태]</td>
-        <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy-MM-dd')}">[예약 날짜]</td>
-        <td th:text="${#dates.format(reservation.rsrvDt, 'HH:mm:ss')}">[예약 시간]</td>
-        <td th:text="${reservation.rsrvPerson}">[예약 인원]</td>
-        <td th:text="${reservation.rsrvNumber}">[전화 번호]</td>
-    </tr>
-    </tbody>
-</table>
-
+        <!-- 본문 -->
+        <div class="reservation-body">
+          <p><strong>예약 시간&nbsp;&nbsp;&nbsp;</strong> <span th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}"/></p>
+          <p><strong>매 &nbsp;장&nbsp; 명&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.storeName}"/></p>
+          <p><strong>전화 번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvNumber}" data-phone/></p>
+          <p><strong>예약 인수&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvPerson}"/>명</p>
+        </div>
+        <!-- 상태 -->
+        <div class="reservation-status">
+          <span th:text="${reservation.rsrvStatus}"/>
+          <!-- 리뷰 작성 버튼 -->
+          <div class="status-actions">
+            <button class="review-button" th:if="${reservation.rsrvStatus == '예약 확정'}" th:text="'리뷰 작성'"></button>
+          </div>
+        </div>
+      </div>
+      </tbody>
+    </table>
+  </div>
+</div>
 </body>
 </html>

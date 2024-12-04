@@ -6,6 +6,7 @@ import com.placeHere.server.service.store.StoreService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -20,6 +21,12 @@ public class StoreServiceImpl implements StoreService {
     @Autowired
     @Qualifier("storeDao")
     private StoreDao storeDao;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
 
     public StoreServiceImpl() {
         super();
@@ -83,25 +90,29 @@ public class StoreServiceImpl implements StoreService {
     public Store getStore(int storeId, Date effectDt) {
 
         Store store = storeDao.getStore(storeId);
-        StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
-        List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> regularClosedayList = new ArrayList<String>();
-        regularClosedayList.add(storeOperation.getRegularCloseday1());
-        regularClosedayList.add(storeOperation.getRegularCloseday2());
-        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        if (store != null) {
+            StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
+            List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> storeImgList = new ArrayList<String>();
-        storeImgList.add(store.getStoreImg1());
-        storeImgList.add(store.getStoreImg2());
-        storeImgList.add(store.getStoreImg3());
-        storeImgList.add(store.getStoreImg4());
-        storeImgList.add(store.getStoreImg5());
+            List<String> regularClosedayList = new ArrayList<String>();
+            regularClosedayList.add(storeOperation.getRegularCloseday1());
+            regularClosedayList.add(storeOperation.getRegularCloseday2());
+            regularClosedayList.add(storeOperation.getRegularCloseday3());
 
-        storeOperation.setRegularClosedayList(regularClosedayList);
-        storeOperation.setClosedayList(closedayList);
-        store.setStoreOperation(storeOperation);
-        store.setStoreImgList(storeImgList);
+            List<String> storeImgList = new ArrayList<String>();
+            storeImgList.add(store.getStoreImg1());
+            storeImgList.add(store.getStoreImg2());
+            storeImgList.add(store.getStoreImg3());
+            storeImgList.add(store.getStoreImg4());
+            storeImgList.add(store.getStoreImg5());
+
+            storeOperation.setRegularClosedayList(regularClosedayList);
+            storeOperation.setClosedayList(closedayList);
+            store.setStoreOperation(storeOperation);
+            store.setStoreImgList(storeImgList);
+            store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
+        }
 
         return store;
     }
@@ -112,25 +123,29 @@ public class StoreServiceImpl implements StoreService {
     public Store getStore(int storeId) {
 
         Store store = storeDao.getStore(storeId);
-        StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
-        List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> regularClosedayList = new ArrayList<String>();
-        regularClosedayList.add(storeOperation.getRegularCloseday1());
-        regularClosedayList.add(storeOperation.getRegularCloseday2());
-        regularClosedayList.add(storeOperation.getRegularCloseday3());
+        if (store != null) {
+            StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
+            List<String> closedayList = storeDao.getClosedayList(storeId);
 
-        List<String> storeImgList = new ArrayList<String>();
-        storeImgList.add(store.getStoreImg1());
-        storeImgList.add(store.getStoreImg2());
-        storeImgList.add(store.getStoreImg3());
-        storeImgList.add(store.getStoreImg4());
-        storeImgList.add(store.getStoreImg5());
+            List<String> regularClosedayList = new ArrayList<String>();
+            regularClosedayList.add(storeOperation.getRegularCloseday1());
+            regularClosedayList.add(storeOperation.getRegularCloseday2());
+            regularClosedayList.add(storeOperation.getRegularCloseday3());
 
-        storeOperation.setRegularClosedayList(regularClosedayList);
-        storeOperation.setClosedayList(closedayList);
-        store.setStoreOperation(storeOperation);
-        store.setStoreImgList(storeImgList);
+            List<String> storeImgList = new ArrayList<String>();
+            storeImgList.add(store.getStoreImg1());
+            storeImgList.add(store.getStoreImg2());
+            storeImgList.add(store.getStoreImg3());
+            storeImgList.add(store.getStoreImg4());
+            storeImgList.add(store.getStoreImg5());
+
+            storeOperation.setRegularClosedayList(regularClosedayList);
+            storeOperation.setClosedayList(closedayList);
+            store.setStoreOperation(storeOperation);
+            store.setStoreImgList(storeImgList);
+            store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
+        }
 
         return store;
     }
@@ -146,9 +161,12 @@ public class StoreServiceImpl implements StoreService {
 
     // 가게 수정 TEST
     @Override
-    public void updateStore(Store store) {
+    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals) {
 
         System.out.println("\nStoreDao.updateStore()");
+
+        System.out.println("amenitiesEquals= "+amenitiesEquals);
+        System.out.println("menuEquals= "+menuEquals);
 
         // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
         List<String> storeImgList = store.getStoreImgList();
@@ -165,12 +183,22 @@ public class StoreServiceImpl implements StoreService {
 
         // UPDATE 되는 TABLE : store, amenities, menu
         storeDao.updateStore(store);
-        storeDao.removeAmenities(store.getStoreId());
-        storeDao.removeMenu(store.getStoreId());
-        storeDao.addMenu(store.getStoreId(), store.getMenuList());
 
-        if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
-            storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
+        if (!amenitiesEquals) {
+
+            storeDao.removeAmenities(store.getStoreId());
+
+            if (store.getAmenitiesNoList() !=null && !store.getAmenitiesNoList().isEmpty()) {
+                storeDao.addAmenities(store.getStoreId(), store.getAmenitiesNoList());
+            }
+
+        }
+
+        if (!menuEquals) {
+
+            storeDao.removeMenu(store.getStoreId());
+            storeDao.addMenu(store.getStoreId(), store.getMenuList());
+
         }
 
     }

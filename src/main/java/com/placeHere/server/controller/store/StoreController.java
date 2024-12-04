@@ -1,6 +1,8 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -11,10 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Controller
 public class StoreController {
@@ -23,6 +22,14 @@ public class StoreController {
     @Autowired
     @Qualifier("storeServiceImpl")
     private StoreService storeService;
+
+    @Autowired
+    @Qualifier("communityServiceImpl")
+    private CommunityService communityService;
+
+    @Autowired
+    @Qualifier("likeServiceImpl")
+    private LikeService likeService;
 
     @Value("${business_no_api}")
     private String apiKey;
@@ -59,7 +66,7 @@ public class StoreController {
         if (storeService.getStoreId(userName) != 0) {
 
             // 이미 등록된 가게가 있을시 어디로 보낼지 고민 TODO
-            return null;
+            return "redirect:/";
         }
 
         else {
@@ -71,7 +78,7 @@ public class StoreController {
             model.addAttribute("apiKey", apiKey);
             model.addAttribute("amenitiesNameList", amenitiesNameList);
 
-            return "test/store/addStoreTest";
+            return "store/addStore";
         }
     }
 
@@ -80,14 +87,19 @@ public class StoreController {
 
         System.out.println("/store/addStore : POST");
 
-        System.out.println(store);
+        List<String> hashtagList = store.getHashtagList();
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+        store.setHashtagList(hashtagList);
 
         int storeId = storeService.addStore(store);
+        store.setStoreId(storeId);
+
+        System.out.println(store);
 
         model.addAttribute("userName", store.getUserName());
         model.addAttribute("storeId", storeId);
 
-        return "test/store/addOperationTest";
+        return "store/addOperation";
     }
 
 
@@ -105,6 +117,7 @@ public class StoreController {
 
         model.addAttribute("store", store);
 
+//        return "redirect:/store/getMyStore";
         return "test/store/addStoreTestResult";
     }
 
@@ -119,7 +132,7 @@ public class StoreController {
 
         if (storeId == 0) {
 
-            return null;
+            return "redirect:/store/addStore?userName=" + userName;
         }
 
         else {
@@ -135,19 +148,30 @@ public class StoreController {
             model.addAttribute("foodCategory", new FoodCategory());
             model.addAttribute("amenitiesNameList", amenitiesNameList);
 
-            return "test/store/updateStoreTest";
+            return "store/updateStore";
         }
 
     }
 
     @PostMapping("/store/updateStore")
     public String updateStore(@ModelAttribute Store store, Model model) {
-
+        
+        // TODO 사진 입력값이 없을 시 기존 사용하는 코드 추가 필요
+        
         System.out.println("/store/updateStore : POST");
 
+        List<String> hashtagList = store.getHashtagList();
+        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+        store.setHashtagList(hashtagList);
+
+        System.out.println("changeStore");
         System.out.println(store);
 
-        storeService.updateStore(store);
+        Store beforeStore = storeService.getStore(store.getStoreId());
+        boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
+        boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
+
+        storeService.updateStore(store, amenitiesEquals, menuEquals);
 
         StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
 
@@ -157,7 +181,7 @@ public class StoreController {
         model.addAttribute("userName", store.getUserName());
         model.addAttribute("storeId", store.getStoreId());
 
-        return "test/store/updateOperationTest";
+        return "store/updateOperation";
     }
 
 
@@ -306,6 +330,7 @@ public class StoreController {
 
             case "add":
                 // 휴무일 등록
+                // TODO 예약이 있는지 확인하는 코드 추가 필요
                 System.out.println("addCloseday");
                 storeService.addCloseday(closeday);
                 break;
@@ -353,7 +378,6 @@ public class StoreController {
         System.out.println("/searchStore : POST");
 
         System.out.println(search);
-
 
         return "test/store/getStoreListTest";
     }
@@ -410,17 +434,147 @@ public class StoreController {
 
 
     // 가게 정보 조회
-    @GetMapping(value = "/getStore", params = "storeId")
-    public String getStore(@RequestParam("storeId") int storeId, Model model) {
+    @GetMapping(value = "/getStore", params = {"storeId"})
+    public String getStore(@RequestParam("storeId") int storeId,
+                           @RequestParam(value = "mode", required = false, defaultValue = "info") String mode,
+                           @ModelAttribute Search search,
+                           Model model) throws Exception {
 
         System.out.println("/getStore : GET");
+        System.out.println(storeId);
+        System.out.println("mode: " + mode);
 
         Store store = storeService.getStore(storeId);
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
 
         System.out.println(store);
 
-        model.addAttribute("store", store);
+        if (store == null) {
+            return null;
+        }
 
-        return "test/store/getStoreTest";
+        else {
+            // 회원의 좋아요 여부
+            // 로그인 중인 유저 아이디 얻어오기 TODO
+            String userName = "user01";
+            Like like = new Like(userName);
+            like.setRelationNo(storeId);
+            like.setTarget("store");
+
+            Like chkLike = likeService.chkLike(like);
+
+            model.addAttribute("like", chkLike);
+            model.addAttribute("store", store);
+            model.addAttribute("mode", mode);
+
+            switch (mode) {
+
+                case "info":
+                    // 가게 정보
+                    System.out.println("/getStore 가게 정보");
+
+                    model.addAttribute("amenitiesNamList", amenitiesNameList);
+
+                case "statistics":
+                    // 예약 통계
+                    System.out.println("/getStore 예약통계");
+                    Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
+
+                    model.addAttribute("weekRsrv", statistics.get("cntWeekRsrv"));
+                    model.addAttribute("rsrvAvg", statistics.get("cntRsrvAvg"));
+                    model.addAttribute("percent", statistics.get("calcRsrvPercent"));
+
+                    model.addAttribute("statistics", statistics);
+
+                    break;
+
+                case "review":
+                    // 가게 리뷰
+                    System.out.println("/getStore 가게 리뷰");
+                    List<Review> reviewList = communityService.getReviewList(storeId, search);
+                    int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
+
+                    model.addAttribute("reviewList", reviewList);
+                    model.addAttribute("totalCnt", totalCnt);
+
+                    break;
+
+                case "nearby":
+                    // 가게 주변시설 추천
+                    System.out.println("/getStore 주변시설 추천");
+
+                    break;
+            }
+
+            return "test/store/getStoreTest";
+        }
+    }
+
+
+    // 가게 좋아요 목록 조회
+    @GetMapping(value = "/getStoreLikeList", params = "userName")
+    public String getLikeStoreList(@RequestParam("userName") String userName, Model model) throws Exception {
+
+        System.out.println("/store/getLikeStoreList : GET");
+
+        List<Like> storeLikeList = likeService.getStoreLikeList(userName);
+
+        model.addAttribute("storeLikeList", storeLikeList);
+
+        return "test/store/getStoreLikeListTest";
+    }
+
+
+    // 점주 회원 마이페이지
+    @GetMapping(value = "/store/getMyStore")
+    public String getMyStore() {
+
+        System.out.println("/store/getMyStore : GET");
+        
+        // 로그인 중인 회원 아이디 가져오기 TODO
+        // 역할 확인
+        String userName = "store10";
+
+        int storeId = storeService.getStoreId(userName);
+
+        if (storeId == 0) {
+            return "redirect:/store/addStore?userName=" + userName;
+        }
+
+        else {
+            return "redirect:/store/getMyStoreReviewList?userName=" + userName;
+        }
+
+    }
+
+
+    // 내 가게 리뷰 목록 조회
+    @GetMapping(value = "/store/getMyStoreReviewList", params = "userName")
+    public String getMyStoreReviewList(@RequestParam("userName") String userName,
+                                       @ModelAttribute Search search,
+                                       Model model) {
+
+        System.out.println("/store/getMyStoreReviewList : GET");
+
+        int storeId = storeService.getStoreId(userName);
+
+        if (storeId == 0) {
+            return null;
+        }
+
+        else {
+            Store store = storeService.getStore(storeId);
+            search.setPageSize(pageSize);
+            search.setListSize(listSize);
+            List<Review> reviewList = communityService.getReviewList(storeId, search);
+            int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
+
+            model.addAttribute("store", store);
+            model.addAttribute("reviewList", reviewList);
+            model.addAttribute("totalCnt", totalCnt);
+
+            return "test/store/getStoreReviewListTest";
+        }
     }
 }

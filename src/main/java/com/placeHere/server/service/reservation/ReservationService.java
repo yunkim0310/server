@@ -24,6 +24,7 @@ public interface ReservationService {
     // 예약 결제 고유 ID 업데이트
     public void updateRsrvpay(int rsrvNo, String paymentId) throws Exception;
 
+
     // 예약 환불 사유 업데이트
     public void updateRsrvReason(int rsrvNo, String reason) throws Exception;
 

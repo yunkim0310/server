@@ -19,7 +19,7 @@ public interface UserService {
 
     public User getUser(String username) throws Exception;
 
-    public void updateUserStatus (String username) throws Exception;
+//    public void updateUserStatus (String username) throws Exception;
 
     public void updateLoginDt (String username) throws Exception;
 

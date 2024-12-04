@@ -21,6 +21,7 @@
         <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
         <result property="storeAddr" column="store_addr" jdbcType="VARCHAR"/>
         <result property="rsrvNumber" column="rsrv_number" jdbcType="VARCHAR"/>
+        <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
 
     </resultMap>
 
@@ -113,8 +114,8 @@
         SELECT COUNT(*)
         FROM reservation
         WHERE user_name = #{userName}
-        AND DATE(rsrv_dt) > NOW()
-        AND rsrv_status IN ('예약 확정', '예약 요청');
+          AND DATE(rsrv_dt) > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
     </select>
 
 
@@ -138,19 +139,19 @@
 
 
     <select id="getRsrvList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             rsrv_status &lt;&gt; '결제 중'
         </where>
         ORDER BY
-            rsrv_dt DESC <!-- 내림차순 -->
+        rsrv_dt DESC <!-- 내림차순 -->
     </select>
 
 
 
     <select id="getRsrvUserList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             user_name = #{userName} <!-- 특정 유저 예약 -->
@@ -175,7 +176,7 @@
 
 
     <select id="getRsrvStoreList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             store_id = #{storeId} <!-- 점주 가게 ID -->
@@ -208,21 +209,6 @@
         </where>
         ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
     </select>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

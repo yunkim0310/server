@@ -20,7 +20,7 @@ public interface ReservationDao {
     public void addRsrvStore(Reservation reservation) throws Exception;
 
     // 예약 정보 조회
-    public Reservation getRsrv(int rsrvNo) throws Exception;
+    public Reservation getRsrv(int rsrvNo);
 
     // 예약 상태 업데이트
     public void updateRsrvStatus(int rsrvNo, String rsrvStatus) throws Exception;

@@ -2,6 +2,7 @@ package com.placeHere.server;
 
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ReservationBLTest {
     @Autowired
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
+
+    @Autowired
+    private PaymentService paymentService;
 
     @Test
     public void test() {
@@ -267,9 +271,21 @@ public class ReservationBLTest {
         System.out.println("=== Reservations with Reservation and Search ===");
         reservations.forEach(System.out::println);
     }
+
+
+    @Test
+    public void testRefundPayment() {
+        // 테스트용 결제 고유 ID (paymentKey)와 환불 사유 (reason)
+        String testPaymentKey = "tviva20241202123534Ehlq6"; // 실제 테스트 키 사용
+        String testReason = "Test refund reason";
+
+        try {
+            String response = paymentService.refundPayment(testPaymentKey, testReason);
+            System.out.println("Refund successful! Response: " + response);
+        } catch (Exception e) {
+            System.err.println("Refund failed: " + e.getMessage());
+        }
+    }
+
+
 }
-
-
-
-
-

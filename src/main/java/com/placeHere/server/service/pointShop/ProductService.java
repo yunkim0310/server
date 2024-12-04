@@ -16,13 +16,13 @@ public interface ProductService {
     public Product getProduct(int prodNo) throws Exception;
 
     // 상품 목록 조회
-    public Map<String, Object> getProductList(Search search) throws Exception;
+    public List<Product> getProductList(Search search) throws Exception;
 
     // 상품 수정
     public void updateProduct(Product product) throws Exception;
 
-//    // 자동 입력
-//    public List<String> getAutocomplete(String prodName) throws Exception;
+    // 자동 입력
+    public List<String> getAutocomplete(String prodName) throws Exception;
 
 //    // 상품 검색
 //    public void searchProduct(Search search) throws Exception;
