@@ -19,7 +19,7 @@
 
         $("#btnSignin").click(function () {
           console.log("회원가입~~ ");
-          $("form").attr("method", "post").attr("action", "/user/addUser").submit();
+          $("form").attr("method", "post").attr("action", "/user/join").submit();
 
         });
 
@@ -40,7 +40,7 @@
         <!--    아이디 주석-->
         <div class="row mb-2 text-center">
             <div class="col-3">아이디</div>
-            <div class="col"><input type="text" class="form-control" name="userId"></div>
+            <div class="col"><input type="text" class="form-control" name="username"></div>
         </div>
         <!--        비밀번호 주석-->
         <div class="row mb-2 text-center">
@@ -60,7 +60,7 @@
         <!--    이메일 주석-->
         <div class="row mb-2 text-center">
             <div class="col-3">이메일</div>
-            <div class="col"><input type="text" placeholder="abc@abc.com" class="form-control" id="userinfo-email"></div>
+            <div class="col"><input type="text" placeholder="abc@abc.com" class="form-control" id="userinfo-email" name="email"></div>
             <!--            <div class="col-4><span class="input-group-text">@</span>-->
             <!--            </div>-->
             <!--            <div class="col-3">-->
@@ -74,6 +74,21 @@
             <!--            </div>-->
         </div>
 
+<!--        <div th:if="${param.role == 'user'}">-->
+        <div th:if="${#httpServletRequest.getParameter('role')}">
+            <!-- role이 'user'인 경우에만 보이는 내용 -->
+            <div class="row mb-2 text-center">
+                <div class="col-3">성별</div>
+                <button class="button" >남</button>
+                <button class="button" >여</button>
+
+                <div class="col-3">생년월일</div>
+                <input type="text" placeholder="abc@abc.com" class="form-control" id="birth" name="birth">
+            </div>
+        </div>
+
+
+        <span th:text="${param.role}"></span>
 
     </form>
 

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+<!--    <script type="text/javascript">-->
+<!--      $(document).ready(function () {-->
+
+<!--        $("#btnLogin").click(function () {-->
+<!--          console.log("로그인 버튼 클릭 ");-->
+<!--          $("form").attr("method", "post").attr("action", "/user/addUser").submit();-->
+
+<!--        });-->
+
+<!--      });-->
+
+<!--    </script>-->
+
+</head>
+<body>
+
+
+    <h1>로그인</h1>
+    <form th:action="@{/user/login}" method="post">
+        <label for="username">사용자 이름:</label>
+        <input type="text" id="username" name="username" required><br><br>
+
+        <label for="password">비밀번호:</label>
+        <input type="password" id="password" name="password" required><br><br>
+
+        <button id="btnLogin" type="submit">제출</button>
+    </form>
+
+
+</body>
+</html>
+
+
+
