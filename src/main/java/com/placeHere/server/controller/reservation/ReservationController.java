@@ -54,7 +54,7 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/getrsrv";
+        return "test/reservation/getRsrv";
     }
 
 

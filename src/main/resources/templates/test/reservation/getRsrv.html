@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>예약 상세 정보</title>
+
+        <link rel="stylesheet" href="/css/templates/style.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+        <style>
+            table {
+                border-spacing: 0 10px; /* 행 간 간격 */
+                border-collapse: separate; /* 셀 간 간격 유지 */
+                width: 100%; /* 테이블 전체 너비 */
+            }
+
+            th, td {
+                padding: 10px 15px; /* 셀 내부 여백 */
+                text-align: left; /* 텍스트를 왼쪽 정렬 */
+                vertical-align: top; /* 텍스트 수직 정렬 */
+                font-weight: bold;
+                word-wrap: break-word; /* 단어를 줄바꿈 */
+                word-break: break-word; /* 긴 단어를 자르고 줄바꿈 */
+                white-space: normal; /* 텍스트를 여러 줄로 표시 */
+                font-size: 18px;
+            }
+
+            th {
+                font-weight: bold; /* 제목 굵게 */
+            }
+        </style>
+
+
+        <script>
+
+        </script>
+
+    </head>
+
+    <body>
+        <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+        <br/>
+        <br/>
+        <h1 style="font-size: 27px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; color: black;"><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 상세 정보</h1>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <br/>
+        <div class="wrapper">
+            <table>
+                <tbody>
+                    <tr>
+                        <th style="width: 30%;">전화 번호</th>
+                        <td th:text="${reservation.rsrvNumber}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">예약 번호</th>
+                        <td th:text="${reservation.rsrvNo}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">매 장 명</th>
+                        <td th:text="${reservation.storeName}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">예약 날짜</th>
+                        <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">예약 시간</th>
+                        <td th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">예약 인수</th>
+                        <td th:text="${reservation.rsrvPerson} + '명'" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">상태</th>
+                        <td th:text="${reservation.rsrvStatus}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">요청 사항</th>
+                        <td th:text="${reservation.rsrvReq}" style="width: 80%;"></td>
+                    </tr>
+                    <tr>
+                        <th style="width: 30%;">매장 주소</th>
+                        <td th:text="${reservation.storeAddr}" style="width: 80%;"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </body>
+</html>
