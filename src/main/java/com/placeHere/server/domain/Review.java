@@ -45,6 +45,9 @@ public class Review {
         // 좋아요 개수
         private int reviewLikeCnt;
 
+        // 댓글 개수
+        private int reviewCommentCnt;
+
         // 댓글 리스트
         private List<Comment> commentList;
 

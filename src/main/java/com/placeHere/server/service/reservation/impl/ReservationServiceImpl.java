@@ -3,6 +3,7 @@ package com.placeHere.server.service.reservation.impl;
 import com.placeHere.server.dao.reservation.ReservationDao;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -19,6 +20,11 @@ public class ReservationServiceImpl implements ReservationService{
     @Autowired
     @Qualifier("reservationDao")
     ReservationDao reservationDao;
+
+    @Autowired
+    @Qualifier("pointServiceImpl")
+    PointService pointService;
+
 
 
     // 예약 정보 등록
@@ -44,6 +50,29 @@ public class ReservationServiceImpl implements ReservationService{
     // 예약 상태 업데이트
     public void updateRsrvStatus(int rsrvNo, String rsrvStatus) throws Exception {
         reservationDao.updateRsrvStatus(rsrvNo, rsrvStatus);
+        Reservation reservation = reservationDao.getRsrv(rsrvNo);
+
+        if("이용 완료".equals(rsrvStatus)){
+
+            String username = reservation.getUserName();
+            int tranPoint = 600;
+            String depType = "예약 이용 완료";
+            int currPoint = pointService.getCurrentPoint(username);
+
+            pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
+
+            pointService.updatePoint(username, tranPoint);
+        }else if("리뷰 작성".equals(rsrvStatus)){
+            String username = reservation.getUserName();
+            int tranPoint = 100;
+            String depType = "리뷰 작성";
+            int currPoint = pointService.getCurrentPoint(username);
+
+            pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
+
+            pointService.updatePoint(username, tranPoint);
+        }
+
     }
 
 

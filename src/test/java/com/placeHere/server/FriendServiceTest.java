@@ -18,7 +18,7 @@ import java.util.List;
 class FriendServiceTest {
 
     @Autowired
-    @Qualifier("friendServiceImpl")
+    @Qualifier("FriendServiceImpl")
     private FriendService friendService;
 
     //친구 신청
@@ -69,7 +69,8 @@ class FriendServiceTest {
     @Test
     public void testRemoveFriend() throws Exception{
 
-        friendService.removeFriendReq(27);
+        friendService.removeFriend(13);
+
 
         System.out.println("Remove Success !!!");
 

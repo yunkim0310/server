@@ -37,6 +37,8 @@ public class Search {
     private int pageSize;
     // 리스트가 보여지는 개수
     private int listSize;
+    // 댓글 사이즈
+    private int commentSize;
     // 시작하는 행의 값 (0부터 시작, LIMIT 에 들어가는 값)
     private int startRowNum;
     //예약 상태

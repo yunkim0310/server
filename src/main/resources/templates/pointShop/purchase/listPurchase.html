@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>구매한 상품 목록</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/css/templates/header.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+    <script type="text/javascript">
+
+        function fncGetList(order) {
+            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
+        }
+
+        $(function() {
+            // 조회 버튼 클릭
+            $("button.btn-primary.view").on("click", function () {
+                var tranNo = $(this).data("tran-no");
+                self.location = "/purchase/getPurchase?tranNo=" + tranNo;
+            });
+        });
+
+    </script>
+
+</head>
+<body>
+<br/><br/>
+<div th:insert="~{common/header}"></div>
+<h1>구매한 상품 목록</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>상품 대표 이미지</th>
+        <th>상품명</th>
+        <th>상품 가격</th>
+        <th>구매일</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="purchase : ${purchaseList}">
+        <td th:text="${purchase.purchaseProd.prodImg1}">상품 대표 이미지</td>
+        <td th:text="${purchase.purchaseProd.prodName}">상품명</td>
+        <td th:text="${purchase.purchaseProd.prodPrice}+P">상품 가격</td>
+        <td th:text="${purchase.pointDt}">구매일</td>
+        <td>
+            <input type="hidden" name="userName" th:value="${userName}">
+            <button class="btn-primary view" th:data-tran-no="${purchase.tranNo}">상품 보기</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

@@ -33,8 +33,6 @@ public class Purchase {
     private String barcodeName;
     //int 타입의 거래 포인트
     private int tranPoint;
-    //int 타입의 상품 수량
-    private int cntProd;
     //Date 타입의 거래 날짜
     private Date pointDt;
     //String 타입의 거래 유형
@@ -43,6 +41,9 @@ public class Purchase {
     private int currPoint;
 
     private int wishCartNo;
+
+    //int 타입의 상품 수량
+    private int cntProd;
 
 
 //    private String prodName;

@@ -54,7 +54,7 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/getrsrv";
+        return "test/reservation/getRsrv";
     }
 
 
@@ -117,12 +117,13 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
+            @ModelAttribute Search search,
             @RequestParam("userName") String userName, // 가게 ID는 필수
             Model model) throws Exception {
 
+
         // 초기 Search 객체 설정 (기본값)
-        Search search = new Search();
-        search.setOrder(null); // 기본값 없음
+        search.setOrder("desc"); // 기본 정렬
         search.setSearchKeyword(null); // 모든 상태 포함
 
         // 서비스 호출
@@ -130,6 +131,7 @@ public class ReservationController {
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
+        model.addAttribute("search", search);
 
         // 뷰 반환
         return "test/reservation/listrsrvuser";
@@ -138,27 +140,25 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
     public String getRsrvUserList(
+            @ModelAttribute Search search,
             @RequestParam("userName") String userName,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
             @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
-        // Search 객체 생성
-        Search search = new Search();
 
         // 조건 설정: 값이 있을 때만 설정
-        if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            search.setSearchKeyword(searchKeyword);
-        }
-        if (order != null && !order.isEmpty()) {
-            search.setOrder(order);
-        }
+
+        search.setSearchKeyword(searchKeyword);
+
+        search.setOrder(order);
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
+        model.addAttribute("search", search);
 
         return "test/reservation/listrsrvuser";
     }

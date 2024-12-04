@@ -32,6 +32,10 @@ public class Product {
     private Date regDt;
     //boolean 타입의 판매 가능 상태
     private boolean prodStatus;
+    //int 타입의 상품 수량
+    private int cntProd;
+    //
+
 
 
     //private String regDtString;
