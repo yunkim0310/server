@@ -22,18 +22,38 @@
                 $("input[name='searchKeyword']:hidden").val(searchKeyword);
 
                 if (category1 !== undefined) {
+
+                    if (category2 === undefined) {
+                        category2 = "전체";
+                    }
+
+                    if (category3 === undefined) {
+                        category3 = "전체";
+                    }
+
                     $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/");
                 }
 
-                $('input[name="hashtagList"]').each(function () {
+                // 해시태그 변경 (공백, # 제거)
+                $("input[name='hashtagList']").each(function () {
 
-                    const value = $(this).val();
+                    let hashtag = $(this).val();
 
-                    if (value.startsWith('#')) {
-                        // # 제거 후 값을 다시 설정
-                        $(this).val(value.replace(/^#+/, ''));
-                    }
+                    hashtag = hashtag.replace("#","").replace(" ", "");
+
+                    $(this).val(hashtag);
+
                 });
+
+                // $('input[name="hashtagList"]').each(function () {
+                //
+                //     const value = $(this).val();
+                //
+                //     if (value.startsWith('#')) {
+                //         // # 제거 후 값을 다시 설정
+                //         $(this).val(value.replace(/^#+/, ''));
+                //     }
+                // });
 
                 $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
             }
@@ -64,7 +84,7 @@
             });
 
             // 모달 닫기 버튼
-            $(".close").on("click", function () {
+            $("button[name='closeFilter']").on("click", function () {
                 // 모든 input, select, textarea 필드의 값을 비우기
                 $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
 
@@ -110,7 +130,8 @@
     <button type="button" name="searchStoreFilter">필터</button>
 
     <br/><hr/>
-    <div th:insert="~{test/store/modalStoreFilterTest}"></div>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <div th:insert="~{store/modalStoreFilter}"></div>
 
 </body>
 </html>

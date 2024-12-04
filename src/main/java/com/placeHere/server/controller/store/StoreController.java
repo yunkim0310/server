@@ -367,6 +367,7 @@ public class StoreController {
         model.addAttribute("regionList", regionList);
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
+        model.addAttribute("search", new Search());
 
         return "test/store/searchStoreTest";
     }
