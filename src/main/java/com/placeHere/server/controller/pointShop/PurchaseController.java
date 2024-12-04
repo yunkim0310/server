@@ -50,8 +50,8 @@ public class PurchaseController {
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
     }
 
-    @Value("${barcode_image_path}")
-    String barcodePath;
+//    @Value("${barcode_image_path}")
+//    String barcodePath;
 
     @Autowired
     ServletContext servletContext;
