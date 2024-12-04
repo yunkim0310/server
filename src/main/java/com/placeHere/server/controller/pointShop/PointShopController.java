@@ -1,4 +1,4 @@
-package com.example.server.controller.pointShop;
+package com.placeHere.server.controller.pointShop;
 
 public class PointShopController {
 }

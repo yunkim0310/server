@@ -24,5 +24,6 @@ public interface LikeDao {
     // 좋아요 검증
     public Like chkLike(Like like) throws Exception;
 
+
 }
 

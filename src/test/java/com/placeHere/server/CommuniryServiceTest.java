@@ -68,7 +68,7 @@ public class CommuniryServiceTest {
 
     @Test
     public void getCommentList() throws Exception{
-        int reviewNO = 42;
+        int reviewNO = 44;
         List<Comment> commentList  = communityService.getCommentList(reviewNO);
 
         System.out.println("test :: "  + commentList);
@@ -80,9 +80,9 @@ public class CommuniryServiceTest {
     public void addReview() throws Exception {
 
         Review review = new Review();
-        review.setRsrvNo(1);
+        review.setRsrvNo(12);
         review.setReviewScore(5);
-        review.setReviewContent("맛이 진하고 좋아요");
+        review.setReviewContent("Junit 으로 인서트 ");
         review.setUserName("user01");
 
         communityService.addReview(review);

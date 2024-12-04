@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>리뷰 상세보기</title>
+    <title>리뷰 상세보기 ==>  getReview.html</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,12 +20,19 @@
             color: red;
             margin-top: 10px;
         }
+
     </style>
     <script>
         function addComment(event) {
+            alert("댓글을 등록하시겠습니까");
             event.preventDefault(); // 기본 폼 제출 동작 방지
             const reviewNo = document.getElementById('reviewNo').value;
             const commentsContent = document.getElementById('commentsContent').value;
+            const username = "user01";
+
+            console.log("reviewNo chk :: ", reviewNo);
+            console.log("commentsContent chk :: ", commentsContent);
+            console.log("username chk :: ", username);
 
             fetch('/review/addComment', {
                 method: 'POST',
@@ -34,6 +41,7 @@
                 },
                 body: JSON.stringify({
                     reviewNo: reviewNo,
+                    username: username,
                     commentsContent: commentsContent
                 }),
             })
@@ -41,54 +49,109 @@
                 if (!response.ok) {
                     throw new Error('댓글 추가 실패');
                 }
-                return response.json();
+                return response.json(); // 댓글 추가 후 서버의 JSON 응답 파싱
             })
             .then(data => {
-                // 성공적으로 댓글이 추가되면 댓글 목록을 갱신
-                document.querySelector('.error-message').textContent = '';
+                // 댓글 목록 업데이트
                 const commentList = document.querySelector('.comment-list');
                 const newComment = document.createElement('li');
                 newComment.textContent = data.commentsContent; // 서버에서 응답받은 댓글 내용
                 commentList.appendChild(newComment);
                 document.getElementById('commentsContent').value = ''; // 입력란 초기화
+
+                const commentCountElement = document.querySelector('.review-container .comment-count');
+                let currentCount = parseInt(commentCountElement.textContent);
+                commentCountElement.textContent = currentCount + 1;
             })
             .catch(error => {
                 document.querySelector('.error-message').textContent = error.message;
             });
         }
+
+        function addLike(event) {
+            event.preventDefault(); // 기본 동작 방지
+            const reviewNo = document.getElementById('reviewNo').value;
+            const username = "user01"; // 사용자 이름을 여기에 삽입
+            const likeData = {
+            userName: username,
+            relationNo: reviewNo,
+            target: 'review'
+        };
+
+            fetch('/review/addLike', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+               body: JSON.stringify(likeData),
+                })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('좋아요 추가 실패');
+                }
+                return response.text();
+            })
+            .then(message => {
+                alert(message);
+
+                // 좋아요 카운트 업데이트
+                const likeCountElement = document.querySelector('.like-count');
+                let currentLikeCount = parseInt(likeCountElement.textContent);
+                likeCountElement.textContent = currentLikeCount + 1; // 좋아요 수 증가
+
+                  event.target.textContent = "좋아요 취소";
+            event.target.setAttribute('onclick', 'removeLike(event)'); // 나중에 취소 기능 추가 가능
+        })
+
+            .catch(error => {
+                alert(error.message);
+            });
+        }
+
     </script>
+
 </head>
 <body>
 
-<h1>리뷰 상세 정보</h1>
+<h1>리뷰 상세 정보 = getReview.htnl</h1>
 
 <div class="review-container">
     <h2>리뷰 점수: <span th:text="${review.reviewScore}"></span></h2>
     <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
     <p>작성자: <span th:text="${review.userName}"></span></p>
-    <p>작성일: <span th:text="${#dates.format(review.reviewDt, 'yyyy-MM-dd HH:mm')}"></span></p>
-    <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd HH:mm')}"></span></p>
+    <p>작성일: <span th:text="${#dates.format(review.reviewDt, 'yyyy-MM-dd ')}"></span></p>
+    <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd ')}"></span></p>
     <p>별점: <span th:text="${review.reviewScore}"></span>점</p>
     <p>매장 이름: <span th:text="${review.storeName}"></span></p>
-    <p>좋아요 수: <span th:text="${review.reviewLikeCnt}"></span></p>
-    <p>댓글 수: <span th:text="${#lists.size(review.commentList)}"></span></p>
+    <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>
+    <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
 </div>
 
 <div class="comment-section">
     <h2>댓글 작성하기</h2>
-    <form action="/review/addreview?reviewNo=${reviewNo}" method="post">
-        <input type="hidden" name="reviewNo" th:value="${review.reviewNo}" >
-        <textarea name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
+    <form onsubmit="addComment(event)">
+        <input type="hidden" name="reviewNo" th:value="${review.reviewNo}" id="reviewNo" />
+        <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
         <button type="submit">댓글 추가</button>
     </form>
-
     <!-- 에러 메시지 표시 -->
-    <div class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></div>
+    <div class="error-message"></div>
+</div>
 
+<div class="like-section">
+    <button onclick="addLike(event)">좋아요 등록</button>
+
+</div>
+
+
+<div class="comment-section">
     <h2>댓글 목록</h2>
-    <ul>
+    <ul class="comment-list">
         <li th:each="comment : ${commentList}">
+            <p><strong th:text="${comment.userName}"></strong></p>
             <p th:text="${comment.commentsContent}"></p>
+            <p th:text="${#dates.format(comment.commentsDt, 'yyyy-MM-dd ')}"></p>
+            <hr/>
         </li>
     </ul>
 </div>

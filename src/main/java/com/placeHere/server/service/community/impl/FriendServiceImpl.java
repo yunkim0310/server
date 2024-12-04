@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Setter
-@Service("friendServiceImpl")
+@Service("FriendServiceImpl")
 public class FriendServiceImpl implements FriendService {
 
     //Field
@@ -39,8 +39,21 @@ public class FriendServiceImpl implements FriendService {
     // 친구 신청을 거절 ( 친구신청취소 , 친구삭제 같이 묶음)
     @Override
     public boolean removeFriendReq(int friendNo) throws Exception {
-        return friendDao.removeFriendReq(friendNo);
+
+        //친구 요청을 가져옴
+        Friend friendRequest = friendDao.getFriendReq(friendNo);
+
+        // 요청이 존재하는지 확인
+        if (friendRequest != null) {
+            return friendDao.removeFriendReq(friendNo);
+        } else {
+            throw new IllegalArgumentException("ID에 대한 친구 요청을 찾을 수 없습니다_FriendServiceImpl" + friendNo);
+        }
     }
+
+
+
+
 //
 //    친구 신청을 취소
 //    @Override
@@ -50,13 +63,11 @@ public class FriendServiceImpl implements FriendService {
 //         }
 //        }
 //
-//    친구를 삭제하다
-//    @Override
-//         public void removeFriend(Friend friend) throws Exception{
-//        if(friend.isFriendStatus()){
-//            friendDao.removeFriend(friend);
-//        }
-//    }
+    @Override
+    public void removeFriend(int friendNo) throws Exception {
+        // 친구를 삭제하는 DAO 메서드 호출
+        friendDao.removeFriend(friendNo);
+    }
 //
 //    친구 아이디를 검색하다 ( 보류)
 //    @Override
@@ -80,5 +91,9 @@ public class FriendServiceImpl implements FriendService {
             friendDao.updateChkfriendReq(friendRes);
         }
 
+    //친구 상태 확인
+    public boolean chkFriend(String userNameA , String userNameB) throws Exception{
+        return friendDao.checkFriendStatus(userNameA, userNameB);
+    }
 
 }

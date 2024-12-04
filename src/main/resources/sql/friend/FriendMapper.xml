@@ -30,11 +30,11 @@
         SELECT Friend.*, User.username, User.profile_img
         FROM Friend
         JOIN User ON Friend.friend_req = User.username
-        WHERE friend_res = #{friendRes} AND friend_status = 0
+        WHERE friend_req = #{friendRes} AND friend_status = 0
     </select>
 
      <!-- 친구 수락 // 친구 수락시 쿼리문 2개 필요 => 1. 친구 상태값 변경 쿼리 2. 신청 확인 하는 쿼리 -->
-    <update id="addFriend" parameterType="com.placeHere.server.domain.Friend">
+    <update id="addFriend" parameterType="int">
         UPDATE Friend
         SET friend_status = 1
         WHERE friend_no = #{friendNo};
@@ -42,10 +42,10 @@
 
 
     <!-- 친구 신청 거절 -->
-        <delete id="removeFriendReq" parameterType="com.placeHere.server.domain.Friend">
+    <delete id="removeFriendReq" parameterType="int">
         DELETE FROM Friend
-        WHERE friend_no = #{friendNo}
-        </delete>
+        WHERE friend_no = #{friendNo};
+    </delete>
 
     <!--    친구 목록을 조회하다 -->
         <select id="getFriendList" parameterType="map" resultMap="friendMap">
@@ -71,5 +71,18 @@
     <!--        FROM Friend-->
     <!--        WHERE friend_res = #{friendRes} AND friend_status = 0-->
     <!--    </select>-->
+
+<!--    친구 상태 확인-->
+    <select id="checkFriendStatus" parameterType="map" >
+        SELECT friend_status
+        FROM friend
+        WHERE (friend_req = #{userNameA} AND friend_res = #{userNameB})
+        OR (friend_req = #{userNameB} AND friend_res = #{userNameA})
+    </select>
+
+    <delete id="removeFriend" parameterType="int">
+        DELETE FROM Friend
+        WHERE friend_no = #{friendNo};
+    </delete>
 
 </mapper>
