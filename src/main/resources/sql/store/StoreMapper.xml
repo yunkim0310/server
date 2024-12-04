@@ -246,9 +246,15 @@
                         <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
                     </foreach>)
             </if>
-            <if test="priceMin != 0 and priceMax!=0">
-                AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
-            </if>
+
+            <choose>
+                <when test="priceMax&lt;100000">
+                    AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
+                </when>
+                <otherwise>
+                    AND store_id IN (SELECT store_id FROM menu WHERE menu_price >= #{priceMin})
+                </otherwise>
+            </choose>
 
             <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">
                 AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN
