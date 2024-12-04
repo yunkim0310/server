@@ -284,9 +284,13 @@ public class CommunityController {
 //    }
 
 
-
-
-
-
-
+    @GetMapping("/test")
+    public String test(){
+        return "test/community/aaa";
     }
+}
+
+
+
+
+
