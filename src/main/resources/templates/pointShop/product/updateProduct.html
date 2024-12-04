@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>updateProduct</title>
+
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <link rel="stylesheet" href="/css/templates/header.css">
+  <link rel="stylesheet" href="/css/templates/collection_detail.css">
+  <link rel="stylesheet" href="/css/templates/regist_hp.css">
+  <script type="text/javascript">
+
+    $(function() {
+      $("button.btn-primary").on("click", function() {
+        fncUpdateProduct();
+      });
+
+    });
+
+    $(function() {
+      $("button.btn-confirm").on("click", function () {
+        history.go(-1);
+      });
+    });
+
+    function fncUpdateProduct() {
+      var prodName = $("input[name='prodName']").val();
+      var prodDetail = $("input[name='prodDetail']").val();
+      var prodImg1 = $("input[name='prodImg1']").val();
+      var prodPrice = $("input[name='prodPrice']").val();
+      var prodCateNo = $("select[name='prodCateNo']").val();
+
+      if (prodName == null || prodName.length < 1) {
+        alert("상품명은 반드시 입력하여야 합니다.");
+        return;
+      }
+
+      if (prodName.length > 20) {
+        alert("상품명은 20자까지 입력 가능합니다.");
+        return;
+      }
+
+      if (prodDetail == null || prodDetail.length < 1) {
+        alert("상품상세정보는 반드시 입력하여야 합니다.");
+        return;
+      }
+
+      if (prodDetail.length > 100) {
+        alert("상품 설명은 100자까지 입력 가능합니다.");
+        return;
+      }
+
+      if (prodImg1 == null || prodImg1.length < 1) {
+        alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
+        return;
+      }
+      if (prodPrice == null || prodPrice.length < 1) {
+        alert("가격은 반드시 입력하셔야 합니다.");
+        return;
+      }
+      if (prodCateNo == null || prodCateNo.length < 1) {
+        alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
+        return;
+      }
+
+      $("form").attr("method", "POST")
+              .attr("action", "/product/updateProduct")
+              .attr("enctype", "multipart/form-data")
+              .submit();
+    }
+  </script>
+</head>
+<body>
+<br/><br/>
+<div th:insert="~{common/header}"></div>
+<h1>상품 수정</h1>
+
+<form>
+
+  <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+
+  <label>
+    <strong>상품명 *</strong>
+    <input type="text" name="prodName" th:value="${product.prodName}">
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>상품 설명 *</strong>
+    <input type="text" name="prodDetail" th:value="${product.prodDetail}">
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>상품 가격 *</strong>
+    <input type="text" name="prodPrice" th:value="${product.prodPrice}">
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>판매 가능 상태 *</strong>
+    <input type="radio" name="prodStatus" th:value="1" th:checked="${product.prodStatus == true}">구매 가능
+    &nbsp;&nbsp;
+    <input type="radio" name="prodStatus" th:value="0" th:checked="${product.prodStatus == false}">판매 중지
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>상품 대표 이미지 *</strong>
+    <input type="text" name="prodImg1" th:value="${product.prodImg1}">
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>상품 상세 이미지</strong>
+    <input type="text" name="prodImg2" placeholder="1장 선택">
+    <input type="text" name="prodImg3" placeholder="1장 선택">
+  </label>
+
+  <br/><br/>
+
+  <label>
+    <strong>상품 카테고리 *</strong>
+    <select class="form-control" name="prodCateNo" id="prodCateNo">
+      <option value="0" th:selected="${product.prodCateNo == 0}">상품 카테고리</option>
+      <option value="1" th:selected="${product.prodCateNo == 1}">배달 상품권</option>
+      <option value="2" th:selected="${product.prodCateNo == 2}">베이커리 교환권</option>
+      <option value="3" th:selected="${product.prodCateNo == 3}">카페 교환권</option>
+      <option value="4" th:selected="${product.prodCateNo == 4}">아이스크림 교환권</option>
+      <option value="5" th:selected="${product.prodCateNo == 5}">치킨 교환권</option>
+      <option value="6" th:selected="${product.prodCateNo == 6}">버거/피자 교환권</option>
+      <option value="7" th:selected="${product.prodCateNo == 7}">편의점 교환권</option>
+    </select>
+  </label>
+
+<!--  <br/><br/>-->
+
+<!--  <label>-->
+<!--    <strong>상품 카테고리 번호 *</strong><br/>-->
+<!--    <input type="text" name="prodCateNo" th:value="${product.prodCateNo}">-->
+<!--  </label>-->
+
+<!--  <br/><br/>-->
+
+<!--  <label>-->
+<!--    <strong>상품 카테고리명 *</strong><br/>-->
+<!--    <input type="text" name="prodCateName" th:value="${product.prodCateName}">-->
+<!--  </label>-->
+
+  <br/><br/><br/>
+
+  <button type="submit" class="btn-primary">수&nbsp;정</button>
+  <button type="button" class="btn-confirm" >취&nbsp;소</button>
+</form>
+</body>
+</html>

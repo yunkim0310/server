@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>addPurchase</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="/css/templates/header.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+    <script type="text/javascript">
+        $(function() {
+
+            $("button.btn-primary.buy").on("click", function () {
+                fncAddPurchase();
+            });
+        });
+        $(function() {
+            $("button.btn-primary.confirm").on("click", function () {
+                // self.location = "/product/getProduct";
+                history.go(-1);
+            });
+        });
+        function fncAddPurchase() {
+            var tranPoint = Number($("input[name='tranPoint']").val());
+            var currPoint = Number($("input[name='currPoint']").val());
+
+            if (tranPoint > currPoint) {
+                alert("보유하신 포인트가 부족합니다.");
+                return;
+            }
+            $("form").attr("method", "POST")
+                .attr("action", "/purchase/addPurchase")
+                .attr("enctype", "multipart/form-data")
+                .submit();
+        }
+    </script>
+</head>
+<body>
+<br/><br/>
+<div th:insert="~{common/header}"></div>
+<div class="product-container">
+    <h1>상품 구매 확인</h1>
+    <br/>
+
+    <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
+    <h3>구매하시겠습니까?</h3>
+    <br/><br/>
+
+    <div class="product-info">
+        <div>
+            <strong>상품 대표 이미지 : </strong>
+            <span class="value" th:text="${product.prodImg1}">상품 대표 이미지</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품명 : </strong>
+            <span class="value" th:text="${product.prodName}">상품명</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 번호 : </strong>
+            <span class="value" th:text="${product.prodNo}">상품 번호</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 가격 : </strong>
+            <span class="value" th:text="${product.prodPrice}+P">상품 가격</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>상품 수량 : </strong>
+            <span class="value" th:text="${product.cntProd}">상품 수량</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>거래 포인트 : </strong>
+            <span class="value" th:text="${tranPoint}+P">결제 포인트</span>
+        </div>
+        <br/><br/>
+        <div>
+            <strong>보유 포인트 : </strong>
+            <span class="value" th:text="${currPoint}+P">보유 포인트</span>
+        </div>
+        <br/><br/>
+    </div>
+
+    <form>
+        <input type="hidden" name="userName" th:value="${userName}">
+        <input type="hidden" name="cntProd" th:value="${product.cntProd}">
+        <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+        <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+        <input type="hidden" name="currPoint" th:value="${currPoint}">
+        <input type="file" name="file" id="file" style="display:none;">
+
+        <div class="button-container">
+            <button type="button" class="btn-primary buy">구매</button>
+            <button type="button" class="btn-primary confirm">취소</button>
+        </div>
+    </form>
+
+
+
+</div>
+
+</body>
+</html>

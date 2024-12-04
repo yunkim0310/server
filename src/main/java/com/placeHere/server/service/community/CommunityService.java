@@ -40,4 +40,6 @@ public interface CommunityService {
 
     //댓글 삭제 -> 노출여부 T => F 로 변경
     public void removeComment(Comment comment) throws Exception;
+
+
 }

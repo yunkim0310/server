@@ -24,7 +24,7 @@ public interface FriendDao {
 //    public void cancelFriend(Friend friend) throws Exception;
 //
 ////    친구를 삭제하다
-//    public void removeFriend(Friend friend) throws Exception;
+    public void removeFriend(int friendNo) throws Exception;
 //
 ////    친구 아이디를 검색하다 ( 보류 )
 //    public List<Friend> searchFriend(Search search) throws Exception;
@@ -37,5 +37,8 @@ public interface FriendDao {
 
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
     public void updateChkfriendReq(String friendRes) throws Exception;
+
+    // 친구 상태 확인
+    public boolean checkFriendStatus(String userNameA, String userNameB) throws Exception;
 
     }

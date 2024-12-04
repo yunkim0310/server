@@ -18,17 +18,29 @@
         <result property="prodCateName" column="prod_category_name" jdbcType="VARCHAR"/>
         <result property="regDt" column="reg_dt" jdbcType="DATE"/>
         <result property="prodStatus" column="prod_status" jdbcType="BOOLEAN"/>
+        <result property="cntProd" column="cnt_prod" jdbcType="INTEGER"/>
     </resultMap>
 
     <insert id="addProduct"	parameterType="com.placeHere.server.domain.Product">
-        INSERT INTO product( prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no, prod_category_name, reg_dt
+        INSERT INTO product( prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no, prod_category_name, cnt_prod, reg_dt
         )
-        VALUES	 (	#{prodName} , #{prodDetail:VARCHAR} , #{prodPrice:INTEGER} , #{prodStatus:BOOLEAN} , #{prodImg1:VARCHAR} , #{prodImg2:VARCHAR} , #{prodImg3:VARCHAR} ,#{prodCateNo:INTEGER},#{prodCateName:VARCHAR}, CURRENT_DATE)
+        VALUES	 (	#{prodName} , #{prodDetail:VARCHAR} , #{prodPrice:INTEGER} , #{prodStatus:BOOLEAN} , #{prodImg1:VARCHAR} , #{prodImg2:VARCHAR} , #{prodImg3:VARCHAR} ,#{prodCateNo:INTEGER},#{prodCateName:VARCHAR},#{cnt_prod:INTEGER}, CURRENT_DATE)
     </insert>
 
     <select id="getProduct"	parameterType="int"	resultMap="productSelectMap">
         SELECT
-            prod_no , prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no ,prod_category_name, reg_dt
+            prod_no ,
+            prod_name ,
+            prod_detail ,
+            prod_price ,
+            prod_status ,
+            prod_img1,
+            prod_img2,
+            prod_img3,
+            prod_category_no ,
+            prod_category_name,
+            cnt_prod,
+            reg_dt
         FROM product
         WHERE prod_no = #{prodNo}
     </select>
@@ -38,8 +50,7 @@
 
     <update	id="updateProduct" parameterType="com.placeHere.server.domain.Product">
         UPDATE product
---         SET
-        <set>
+        SET
             prod_name = #{prodName},
             prod_detail	= #{prodDetail},
             prod_price = #{prodPrice},
@@ -49,37 +60,49 @@
             prod_img3 = #{prodImg3},
             prod_category_no = #{prodCateNo},
             prod_category_name = #{prodCateName}
-        </set>
         WHERE prod_no = #{prodNo}
     </update>
 
     <select id="getProductList" parameterType="com.placeHere.server.domain.Search" resultMap="productSelectMap">
         SELECT prod_no, prod_name, prod_price, prod_status, prod_img1
         FROM product
-        WHERE prod_name LIKE CONCAT('%',#{searchKeyword},'%')
-<!--        <if test="searchCondition != null">-->
-<!--            <where>-->
-<!--&#45;&#45;                 <if test="searchKeyword != null and searchKeyword != ''">-->
-<!--                    prod_name LIKE CONCAT('%',#{searchKeyword},'%')-->
-<!--&#45;&#45;                 </if>-->
-<!--                <if test="priceMin != 0">-->
-<!--                    AND prod_price &gt;= #{priceMin:INTEGER}-->
-<!--                </if>-->
-<!--                <if test="priceMax != 0">-->
-<!--                    AND prod_price &lt;= #{priceMax:INTEGER}-->
-<!--                </if>-->
-<!--            </where>-->
-<!--        </if>-->
-<!--        <if test="sortOrder == 'asc'">-->
-<!--            ORDER BY prod_price ASC-->
-<!--        </if>-->
-<!--        <if test="sortOrder == 'desc'">-->
-<!--            ORDER BY prod_price DESC-->
-<!--        </if>-->
-<!--        <if test="sortOrder == null">-->
-<!--            ORDER BY prod_no-->
-<!--        </if>-->
-        ORDER BY prod_no
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                prod_name LIKE CONCAT('%',#{searchKeyword},'%')
+            </if>
+            <if test="priceMin != 0 and priceMin != ''">
+                AND prod_price BETWEEN #{priceMin} AND #{priceMax}
+            </if>
+<!--            <if test="priceMin != 0">-->
+<!--                prod_price &gt;= #{priceMin}-->
+<!--            </if>-->
+<!--            <if test="priceMax != 0">-->
+<!--                prod_price &lt;= #{priceMax}-->
+<!--            </if>-->
+        </where>
+        <if test="order == 'asc'">
+            ORDER BY prod_price ASC
+        </if>
+        <if test="order == 'desc'">
+            ORDER BY prod_price DESC
+        </if>
+        <if test="order == 'current'">
+            ORDER BY reg_dt DESC
+        </if>
+        <if test="order == 'default'">
+            ORDER BY prod_category_no ASC , prod_price ASC
+        </if>
+        <if test="order == null">
+            ORDER BY prod_category_no ASC , prod_price ASC
+        </if>
     </select>
+
+    <select id="getAutocomplete" parameterType="String" resultType="String">
+        SELECT
+            prod_name
+        FROM product
+        WHERE prod_name LIKE #{value}
+    </select>
+
 
 </mapper>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>포인트 내역 목록</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/css/templates/header.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        /* 제목 스타일 */
+        h1, h3 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        /* 테이블 영역 스타일 */
+        .container {
+            width: 90%;
+            margin: 0 auto;
+            padding-top: 30px;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        td {
+            background-color: #fff;
+            color: #333;
+        }
+
+        td input[type="hidden"] {
+            display: none;
+        }
+
+        /* 색상 스타일 */
+        .red {
+            color: red;
+        }
+
+        .blue {
+            color: blue;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+
+        /* 포인트 내역 헤더 스타일 */
+        .point-header {
+            background-color: #dcdcdc; /* 더 진한 회색 */
+            color: #333; /* 텍스트 색상은 여전히 어두운 색 */
+            padding: 20px;
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+
+
+        /* 테이블 전체 텍스트 크기 */
+        .point-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem; /* 전체 테이블의 폰트 크기를 키움 */
+        }
+
+        .point-table th, .point-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+        }
+
+        /* 거래 포인트의 색상 */
+        .point-table .red {
+            color: red;
+            font-weight: bold;
+        }
+
+        .point-table .blue {
+            color: blue;
+            font-weight: bold;
+        }
+
+
+    </style>
+
+</head>
+<body>
+<br/><br/>
+<div class="header">
+    <div th:insert="~{common/header}"></div>
+    <br/><br/>
+    <h1>포인트 내역 목록</h1>
+</div>
+
+<div class="container">
+    <div class="point-header">
+        <h3>현재 포인트 : <span th:text="${currPoint} + 'P'"></span></h3>
+    </div>
+
+    <table class="point-table">
+        <thead>
+        <tr>
+            <th>거래 포인트</th>
+            <th>거래 유형</th>
+            <th>거래일</th>
+            <th>보유 포인트</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="point : ${pointHistoryList}">
+            <td th:text="${point.depType == '상품 구매' ? '-' + point.tranPoint + 'P' : '+' + point.tranPoint + 'P'}"
+                th:class="${point.depType == '상품 구매' ? 'red' : 'blue'}">거래 포인트</td>
+            <td th:text="${point.depType}">거래 유형</td>
+            <td th:text="${point.pointDt}">거래일</td>
+            <td th:text="${point.currPoint}">보유 포인트</td>
+            <td>
+                <input type="hidden" name="userName" th:value="${userName}">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

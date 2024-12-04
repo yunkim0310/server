@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+<link rel="stylesheet" href="/css/templates/header.css">
+<link rel="stylesheet" href="/css/templates/collection_detail.css">
+<link rel="stylesheet" href="/css/templates/regist_hp.css">
+<head>
+    <title>찜 목록</title>
+    <script type="text/javascript">
+
+        $(function() {
+            // 조회 버튼 클릭
+            $("button.btn-primary.view").on("click", function () {
+                var prodNo = $(this).data("prod-no");
+                self.location = "/product/getProduct?prodNo=" + prodNo;
+            });
+
+            // $("button.btn-primary.removeWishCart").on("click", function () {
+            //     var wishCartNo = $(this).data("wish-cart-no");
+            //     $.ajax({
+            //         type: "DELETE",
+            //         url: "/purchase/removeWishCart",
+            //         data: { wishCartNo: wishCartNo },
+            //         success: function(response) {
+            //             alert("찜 목록에서 상품이 삭제되었습니다.");
+            //             location.reload();
+            //         },
+            //         error: function(xhr, status, error) {
+            //             alert("찜 목록 삭제 실패함: " + error);
+            //         }
+            //     });
+            // });
+
+        });
+
+        // function removeWishCart(){
+        //
+        //     const query = 'input[name="chk"]:checked'
+        //     const selectedElements = document.querySelectorAll(query)
+        //
+        //     const selectedElementsCnt = selectedElements.length;
+        //
+        //     if(selectedElementsCnt == 0){
+        //         alert("삭제할 상품을 선택해주세요.")
+        //         return false;
+        //     }else{
+        //         const arr = new Array(selectedElementsCnt);
+        //
+        //         document.querySelectorAll('input[name="chk"]:checked').forEach(function(v,i){
+        //             arr[i] = v.value;
+        //         });
+        //
+        //         const form = document.createElement('form');
+        //         form.setAttribute('method', 'DELETE');
+        //         form.setAttribute('action', '/purchase/removeWishCart');
+        //
+        //         var input1 = document.createElement('input');
+        //         input1.setAttribute("type", "hidden");
+        //         input1.setAttribute("name", "wishCartNo");
+        //         input1.setAttribute("value", arr);
+        //         form.appendChild(input1);
+        //         console.log(form);
+        //         document.body.appendChild(form);
+        //         form.submit();
+        //
+        //     }
+        //
+        // }
+
+        function removeWishCart() {
+            // 체크된 상품들
+            const selectedElements = document.querySelectorAll('input[name="chk"]:checked');
+            const selectedElementsCnt = selectedElements.length;
+
+            // 체크된 항목이 없으면 삭제 불가 메시지 표시
+            if (selectedElementsCnt === 0) {
+                alert("삭제할 상품을 선택해주세요.");
+                return false;
+            } else {
+                const arr = [];
+                selectedElements.forEach(function(v, i) {
+                    arr[i] = v.value;  // 체크된 항목의 wishCartNo 값을 배열에 저장
+                });
+
+                // AJAX 요청을 보내서 서버에서 해당 상품들을 삭제하도록 함
+                $.ajax({
+                    url: '/purchase/removeWishCart',  // 서버의 삭제 처리 URL
+                    type: 'DELETE',  // HTTP DELETE 요청
+                    data: {
+                        wishCartNo: arr  // 삭제할 상품들의 wishCartNo를 배열로 전달
+                    },
+                    success: function(response) {
+                        alert("찜 목록에서 선택된 상품이 삭제되었습니다.");
+                        location.reload();  // 삭제 후 페이지 새로 고침
+                    },
+                    error: function(xhr, status, error) {
+                        alert("찜 목록 삭제 실패: " + error);  // 오류 발생 시 메시지 표시
+                    }
+                });
+            }
+        }
+
+
+        //체크박스 전체 선택 클릭 이벤트
+        function allChecked(target){
+
+            //전체 체크박스 버튼
+            const checkbox = document.getElementById('allCheckBox');
+
+            //전체 체크박스 버튼 체크 여부
+            const is_checked = checkbox.checked;
+
+            //전체 체크박스 제외한 모든 체크박스
+            if(is_checked){
+                //체크박스 전체 체크
+                chkAllChecked()
+            }
+
+            else{
+                //체크박스 전체 해제
+                chkAllUnChecked()
+            }
+        }
+        //자식 체크박스 클릭 이벤트
+        function chkClicked(){
+
+            //체크박스 전체개수
+            const allCount = document.querySelectorAll(".chk").length;
+
+            //체크된 체크박스 전체개수
+            const query = 'input[name="chk"]:checked'
+            const selectedElements = document.querySelectorAll(query)
+            const selectedElementsCnt = selectedElements.length;
+
+            //체크박스 전체개수와 체크된 체크박스 전체개수가 같으면 전체 체크박스 체크
+            if(allCount == selectedElementsCnt){
+                document.getElementById('allCheckBox').checked = true;
+            }
+
+            //같지않으면 전체 체크박스 해제
+            else{
+                document.getElementById('allCheckBox').checked = false;
+            }
+        }
+
+        //체크박스 전체 체크
+        function chkAllChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = true;
+            });
+        }
+
+        //체크박스 전체 체크 해제
+        function chkAllUnChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = false;
+            });
+        }
+    </script>
+</head>
+<body>
+<br/><br/>
+<div th:insert="~{common/header}"></div>
+<h1>찜 목록</h1>
+<form>
+<table>
+    <thead>
+    <tr>
+        <th>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="allCheckBox" onclick="allChecked()"> 전체 선택
+            </label>
+        </th>
+        <th>상품명</th>
+        <th>상품 가격</th>
+        <th>상품 대표 이미지</th>
+        <th>판매 가능 상태</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="purchase : ${wishList}">
+        <td>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="chk" class="chk" onclick="chkClicked()" th:value="${purchase.wishCartNo}">
+            </label>
+        </td>
+        <td th:text="${purchase.purchaseProd.prodName}"></td>
+        <td th:text="${purchase.purchaseProd.prodPrice}+P"></td>
+        <td><img th:src="${purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지" width="100"></td>
+        <td th:text="${purchase.purchaseProd.prodStatus}"></td>
+        <td>
+            <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
+            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">조회</button>
+<!--            <button class="btn-primary removeWishCart" th:data-wish-cart-no="${purchase.wishCartNo}">찜 목록 삭제</button>-->
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+    <div class="button-container">
+        <a href="javascript:void(0);" class="btn-primary removeWishCart" onclick="removeWishCart();">찜 목록 삭제</a>
+    </div>
+</form>
+</body>
+</html>

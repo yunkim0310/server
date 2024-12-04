@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>상품 등록 완료</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <link rel="stylesheet" href="/css/templates/header.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+    <script type="text/javascript">
+        $(function() {
+
+            $("button.btn-primary.confirm").on("click", function () {
+                self.location = "/product/listProduct";
+            });
+        });
+    </script>
+</head>
+<body>
+<br/><br/>
+<div th:insert="~{common/header}"></div>
+
+<h1>상품 등록 완료</h1>
+
+<div class="product-info">
+    <div>
+        <strong>상품 대표 이미지 : </strong>
+        <span class="value" th:text="${product.prodImg1}">상품 대표 이미지</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품 번호 : </strong>
+        <span class="value" th:text="${product.prodNo}">상품명</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품명 : </strong>
+        <span class="value" th:text="${product.prodName}">상품명</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품 설명 : </strong>
+        <span class="value" th:text="${product.prodDetail}">상품 설명</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품 가격 : </strong>
+        <span class="value" th:text="${product.prodPrice}">상품 가격</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품 카테고리 : </strong>
+        <span class="value" th:text="${product.prodCateName}">상품 카테고리</span>
+    </div>
+    <br/><br/>
+    <div>
+        <strong>상품 상세 이미지 : </strong>
+        <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>
+        <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>
+    </div>
+    <br/><br/>
+</div>
+
+<div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
+    <strong th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></strong>
+</div>
+
+<div class="button-container">
+    <button class="btn-primary confirm">확인</button>
+</div>
+
+</body>
+</html>
