@@ -72,8 +72,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 35; // 테스트용 예약 번호
-        String rsrvStatus = "예약 요청"; // 상태 업데이트 값
+        int rsrvNo = 1; // 테스트용 예약 번호
+        String rsrvStatus = "이용 완료"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);

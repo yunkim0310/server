@@ -134,7 +134,7 @@ public class ReservationController {
         model.addAttribute("search", search);
 
         // 뷰 반환
-        return "test/reservation/listrsrvuser";
+        return "test/reservation/listRsrvUser";
     }
 
 
@@ -160,7 +160,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
 
-        return "test/reservation/listrsrvuser";
+        return "test/reservation/listRsrvUser";
     }
 
 

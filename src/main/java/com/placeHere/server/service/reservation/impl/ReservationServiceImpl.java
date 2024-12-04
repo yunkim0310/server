@@ -27,6 +27,7 @@ public class ReservationServiceImpl implements ReservationService{
 
 
 
+
     // 예약 정보 등록
     public void addRsrv(Reservation reservation) throws Exception {
         reservation.setRsrvStatus("결제 중");
