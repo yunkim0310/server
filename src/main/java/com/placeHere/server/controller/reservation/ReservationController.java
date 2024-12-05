@@ -77,7 +77,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "test/reservation/testlistrsrvstore";
+        return "test/reservation/getRsrvStoreList";
     }
 
 
@@ -110,7 +110,7 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
 
-        return "test/reservation/testlistrsrvstore";
+        return "test/reservation/getRsrvStoreList";
     }
 
 
@@ -134,7 +134,7 @@ public class ReservationController {
         model.addAttribute("search", search);
 
         // 뷰 반환
-        return "test/reservation/listRsrvUser";
+        return "test/reservation/getRsrvUserList";
     }
 
 
@@ -160,7 +160,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
 
-        return "test/reservation/listRsrvUser";
+        return "test/reservation/getRsrvUserList";
     }
 
 
@@ -194,7 +194,7 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
-        return "/test/reservation/testaddrsrv";
+        return "/test/reservation/addRsrv";
     }
 
 
@@ -222,11 +222,11 @@ public class ReservationController {
         // 예약 번호를 pay 페이지로 전달
         model.addAttribute("rsrvNo", rsrvNo);
 
-        return "test/reservation/redirectToPaycheck";
+        return "/test/reservation/chkRsrv";
     }
 
-    @RequestMapping(value = "paycheck", method = RequestMethod.POST)
-    public String Paycheck(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+    @RequestMapping(value = "chkRsrv", method = RequestMethod.POST)
+    public String chkRsrv(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
 
         System.out.println("/reservation/Paycheck : POST");
         // 1. 예약 정보 조회
@@ -234,16 +234,33 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/paycheck";
+        return "/test/reservation/sendRsrv";
     }
 
-    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
-    public String Paycheck(@RequestParam("orderId") String orderId,
-                           @RequestParam("paymentKey") String paymentKey,
-                           @RequestParam int amount,
-                           Model model) throws Exception {
 
-        System.out.println("/reservation/Paycheck : GET");
+    @RequestMapping(value = "sendRsrv", method = RequestMethod.GET)
+    public String confirmPayGet(
+            @RequestParam("orderId") String orderId,
+            @RequestParam("paymentKey") String paymentKey,
+            @RequestParam int amount,
+            Model model) throws Exception {
+
+        // 필요한 데이터 모델에 추가
+        System.out.println("/reservation/sendRsrv : GET");
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("paymentKey", paymentKey);
+        model.addAttribute("amount", amount);
+
+
+        return "test/reservation/sendRsrv";
+    }
+
+
+    @RequestMapping(value = "addRsrvResult", method = RequestMethod.POST)
+    public String confirmPay(@RequestParam("orderId") String orderId,
+                             @RequestParam("paymentKey") String paymentKey,
+                             @RequestParam int amount,
+                             Model model) throws Exception {
 
         String[] parts = orderId.split("_");
 
@@ -257,15 +274,6 @@ public class ReservationController {
         reservationService.updateRsrvpay(rsrvNo, paymentId);
 
 
-
-        model.addAttribute("rsrvNo", rsrvNo);
-
-        return "test/reservation/pay";
-    }
-
-
-    @RequestMapping(value = "pay", method = RequestMethod.POST)
-    public String confirmPay(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
         // 1. 예약 정보 조회
         Reservation reservation = reservationService.getRsrv(rsrvNo);
 
@@ -283,12 +291,12 @@ public class ReservationController {
         if (closedayList != null && closedayList.contains(reservationDate)) {
             // 예약 일자가 휴무일인 경우
 
-            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.",null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
-            return "test/reservation/testfail";
+            return "test/reservation/failRsrv";
         }
 
         // 4. 현재 예약 일시의 예약 인수 계산
@@ -299,23 +307,47 @@ public class ReservationController {
         if (totalReservationCount > maxCapacity) {
             // 예약 상태를 "예약 취소"로 변경
 
-            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다." ,null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
-            return "test/reservation/testfail";
+            return "test/reservation/failRsrv";
         } else {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
             // success.html로 이동
-            return "test/reservation/testsuccess";
+            return "test/reservation/successRsrv";
         }
     }
 
 
-
+//    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
+//    public String Paycheck(@RequestParam("orderId") String orderId,
+//                           @RequestParam("paymentKey") String paymentKey,
+//                           @RequestParam int amount,
+//                           Model model) throws Exception {
+//
+//        System.out.println("/reservation/Paycheck : GET");
+//
+//        String[] parts = orderId.split("_");
+//
+//        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+//
+//        paymentService.confirmPayment(paymentKey, orderId, amount);
+//
+//        String paymentId = paymentKey;
+//
+//
+//        reservationService.updateRsrvpay(rsrvNo, paymentId);
+//
+//
+//
+//        model.addAttribute("rsrvNo", rsrvNo);
+//
+//        return "test/reservation/pay";
+//    }
 
 
 }

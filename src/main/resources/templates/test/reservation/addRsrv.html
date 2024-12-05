@@ -3,6 +3,7 @@
 <head>
     <title>Reservation Form</title>
     <script src="https://js.tosspayments.com/v1"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script>
         // JavaScript로 날짜 제한 및 이벤트 설정
         document.addEventListener("DOMContentLoaded", function () {
@@ -54,10 +55,49 @@
                 }
             });
         });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var today = new Date();
+            today.setHours(0, 0, 0, 0); // 오늘 자정 기준
+            var endDate = new Date(today);
+            endDate.setDate(today.getDate() + 14); // 14일 후
+
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                locale: "ko",
+                selectable: true,
+                // 비활성화할 날짜에 클래스 추가
+                dayCellClassNames: function(arg) {
+                    var cellDate = arg.date;
+                    if (cellDate < today || cellDate >= endDate) {
+                        return ['fc-disabled'];
+                    }
+                    return [];
+                },
+                // 비활성화된 날짜는 선택 방지
+                dateClick: function(info) {
+                    if (info.date >= today && info.date < endDate) {
+                        document.querySelectorAll('.fc-daygrid-day.fc-selected').forEach(function(day) {
+                            day.classList.remove('fc-selected');
+                        });
+                        info.dayEl.classList.add('fc-selected');
+                    }
+
+                    document.getElementById('time-table').classList.remove('no-display');
+
+                    selectedDate = info.dateStr;
+                    console.log(selectedDate);
+                }
+            });
+            calendar.render();
+        });
     </script>
 </head>
 <body>
 <h1>Make a Reservation</h1>
+
+<div id='calendar' style="width: 600px;"></div>
 
 <!-- 가게 정보 -->
 <h2>Store Information</h2>

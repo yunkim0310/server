@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Processing Payment</title>
+</head>
+<body>
+<form id="postForm" action="/test/reservation/addRsrvResult" method="POST">
+    <input type="hidden" name="orderId" th:value="${orderId}" />
+    <input type="hidden" name="paymentKey" th:value="${paymentKey}" />
+    <input type="hidden" name="amount" th:value="${amount}" />
+</form>
+<script>
+    document.getElementById("postForm").submit();
+</script>
+</body>
+</html>

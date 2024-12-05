@@ -211,6 +211,32 @@
     </select>
 
 
+    <select id="getPastRsrvNos" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE rsrv_status = '예약 확정'
+        AND rsrv_dt &lt; NOW()
+    </select>
+
+
+    <select id="getRemoveUserRsrvNos" parameterType="string" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE user_name = #{userName}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
+    <select id="getRemoveStoreRsrvNos" parameterType="int" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
 
 
 
