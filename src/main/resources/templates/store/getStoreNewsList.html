@@ -15,14 +15,14 @@
 
         <style>
 
-            .reservation-list {
+            .containerList {
                 display: flex;
                 flex-direction: column;
                 gap: 20px;
                 padding: 20px;
             }
 
-            .reservation-item {
+            .containerItem {
                 border: 1px solid #C4C4C4;
                 border-radius: 10px;
                 padding: 20px;
@@ -32,25 +32,25 @@
                 max-width: 100%;
             }
 
-            .reservation-header {
+            .containerHeader {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
             }
 
-            .reservation-header .reservation-date {
+            .containerHeader .containerData {
                 font-size: 30px;
                 font-weight: bold;
                 color: #333;
             }
 
-            .reservation-header .reservation-number {
+            .containerHeader .containerTitle {
                 font-size: 16px;
                 color: #888;
                 text-align: right;
             }
 
-            .button-container {
+            .btnContainer {
                 display: flex; /* 플렉스 컨테이너로 설정 */
             }
 
@@ -164,18 +164,18 @@
                 </div>
 
 
-                <div class="reservation-list">
-                    <div class="reservation-item" th:each="storeNews : ${storeNewsList}">
+                <div class="containerList">
+                    <div class="containerItem" th:each="storeNews : ${storeNewsList}">
                         <table>
                             <tbody>
 
                                 <tr>
                                     <td colspan="2">
-                                        <div class="reservation-header">
-                                            <span class="reservation-date" th:text="${storeNews.regDt}"/>
-                                            <div class="reservation-number">
+                                        <div class="containerHeader">
+                                            <span class="containerData" th:text="${storeNews.regDt}"/>
+                                            <div class="containerTitle">
                                                 <div class="css-1w0ksfz e744wfw2">
-                                                    <div class="button-container">
+                                                    <div class="btnContainer">
                                                     <button class="css-ufulao e4nu7ef3 checkBtn" name="updateStoreNewsForm" type="button"
                                                             th:attr="data-newsid=${storeNews.newsId}">
                                                         <span class="css-ymwvow e4nu7ef1 checked_nick_btn">수정</span>
@@ -212,7 +212,6 @@
                         </table>
                     </div>
                 </div>
-
 
             </form>
 
