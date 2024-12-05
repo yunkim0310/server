@@ -6,145 +6,156 @@
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
-    <script type="text/javascript">
+<!--    <script type="text/javascript">-->
 
-        $(function (){
+<!--        $(function (){-->
 
-            // action 맵핑
-            $("form").attr("action", "/store/getStoreNewsList").attr("method", "post").attr("enctype", "multipart/form-data");
+<!--            // action 맵핑-->
+<!--            $("form").attr("action", "/store/getStoreNewsList").attr("method", "post").attr("enctype", "multipart/form-data");-->
 
-            $("#addStoreNews").on("click", function () {
+<!--            $("#addStoreNews").on("click", function () {-->
 
-                $("form[name='addStoreNews']").submit();
+<!--                $("form[name='addStoreNews']").submit();-->
 
-            })
-
-
-            // 수정 폼 버튼
-            $(document).on("click", "button[name='updateStoreNewsForm']", function () {
-                var $row = $(this).closest("tr"); // 클릭한 버튼의 행을 가져옴
-                var newsId = $(this).data("newsid"); // 버튼의 data-newsid 값 가져옴
-
-                console.log("updateStoreNewsForm " + newsId);
-
-                // 기존에 열려 있던 수정 폼 복원
-                $("tr").each(function () {
-                    var $currentRow = $(this);
-                    if ($currentRow.data("originalImg")) {
-                        // 복원할 데이터가 있으면 복원
-                        var originalImg = $currentRow.data("originalImg");
-                        var originalContents = $currentRow.data("originalContents");
-                        var originalDt = $currentRow.data("originalDt");
-                        var currentNewsId = $currentRow.find("button[name='updateStoreNewsForm']").data("newsid");
-
-                        $currentRow.html(`
-                            <td>${currentNewsId}</td>
-                            <td>${originalImg}</td>
-                            <td>${originalContents}</td>
-                            <td>${originalDt}</td>
-                            <td>
-                                <button name="updateStoreNewsForm" data-newsid="${currentNewsId}" type="button">수정</button>
-                                <button name="removeStoreNews" data-newsid="${currentNewsId}" type="button">삭제</button>
-                            </td>
-                        `);
-
-                        $currentRow.removeData("originalImg");
-                        $currentRow.removeData("originalContents");
-                        $currentRow.removeData("originalDt");
-                    }
-                });
-
-                // 현재 행의 기존 데이터 저장
-                var originalImg = $row.find("td:eq(1)").text().trim(); // 첫 번째 열 (이미지)
-                var originalContents = $row.find("td:eq(2)").text().trim(); // 두 번째 열 (내용)
-                var originalDt = $row.find("td:eq(3)").text().trim();
-
-                $row.data("originalImg", originalImg);
-                $row.data("originalContents", originalContents);
-                $row.data("originalDt", originalDt);
-                $row.data("originNewsId", newsId);
-
-                // 행 내용을 수정 폼으로 변경
-                $row.html(`
-                    <td>${newsId}</td>
-                    <td>
-                        <input type="file" name="newsImgFile" accept="image/*">
-                    </td>
-                    <td>
-                        <textarea name="newsContents" rows="3" cols="30">${originalContents}</textarea>
-                    </td>
-                    <td>
-                        ${originalDt}
-                    </td>
-                    <td>
-                        <button name="updateStoreNews" data-newsid="${newsId}" type="button">저장</button>
-                        <button name="cancelEdit" type="button">취소</button>
-                    </td>
-                `);
-
-                console.log(`Editing row with newsId: ${newsId}`);
-            });
+<!--            })-->
 
 
-            // 수정 취소 버튼
-            $(document).on("click", "button[name='cancelEdit']", function () {
+<!--            // 수정 폼 버튼-->
+<!--            $(document).on("click", "button[name='updateStoreNewsForm']", function () {-->
+<!--                var $row = $(this).closest("tr"); // 클릭한 버튼의 행을 가져옴-->
+<!--                var newsId = $(this).data("newsid"); // 버튼의 data-newsid 값 가져옴-->
 
-                // 현재 행 가져오기
-                var $row = $(this).closest("tr");
+<!--                console.log("updateStoreNewsForm " + newsId);-->
 
-                // 저장된 원래 데이터를 읽어옴
-                var originalImg = $row.data("originalImg");
-                var originalContents = $row.data("originalContents");
-                var originalDt = $row.data("originalDt");
-                var newsId = $row.data("originNewsId");
+<!--                // 기존에 열려 있던 수정 폼 복원-->
+<!--                $("tr").each(function () {-->
+<!--                    var $currentRow = $(this);-->
+<!--                    if ($currentRow.data("originalImg")) {-->
+<!--                        // 복원할 데이터가 있으면 복원-->
+<!--                        var originalImg = $currentRow.data("originalImg");-->
+<!--                        var originalContents = $currentRow.data("originalContents");-->
+<!--                        var originalDt = $currentRow.data("originalDt");-->
+<!--                        var currentNewsId = $currentRow.find("button[name='updateStoreNewsForm']").data("newsid");-->
 
-                console.log("cancelEdit " + newsId);
+<!--                        $currentRow.html(`-->
+<!--                            <td>${currentNewsId}</td>-->
+<!--                            <td>${originalImg}</td>-->
+<!--                            <td>${originalContents}</td>-->
+<!--                            <td>${originalDt}</td>-->
+<!--                            <td>-->
+<!--                                <button name="updateStoreNewsForm" data-newsid="${currentNewsId}" type="button">수정</button>-->
+<!--                                <button name="removeStoreNews" data-newsid="${currentNewsId}" type="button">삭제</button>-->
+<!--                            </td>-->
+<!--                        `);-->
 
-                // 행 내용을 원래 데이터로 복원
-                $row.html(`
-                    <td>${newsId}</td>
-                    <td>${originalImg}</td>
-                    <td>${originalContents}</td>
-                    <td>${originalDt}</td>
-                    <td>
-                        <button name="updateStoreNewsForm" data-newsid="${newsId}" type="button">수정</button>
-                        <button name="removeStoreNews" data-newsid="${newsId}" type="button">삭제</button>
-                    </td>
-                `);
-            });
+<!--                        $currentRow.removeData("originalImg");-->
+<!--                        $currentRow.removeData("originalContents");-->
+<!--                        $currentRow.removeData("originalDt");-->
+<!--                    }-->
+<!--                });-->
+
+<!--                // 현재 행의 기존 데이터 저장-->
+<!--                var originalImg = $row.find("td:eq(1)").text().trim(); // 첫 번째 열 (이미지)-->
+<!--                var originalContents = $row.find("td:eq(2)").text().trim(); // 두 번째 열 (내용)-->
+<!--                var originalDt = $row.find("td:eq(3)").text().trim();-->
+
+<!--                $row.data("originalImg", originalImg);-->
+<!--                $row.data("originalContents", originalContents);-->
+<!--                $row.data("originalDt", originalDt);-->
+<!--                $row.data("originNewsId", newsId);-->
+
+<!--                // 행 내용을 수정 폼으로 변경-->
+<!--                $row.html(`-->
+<!--                    <td>${newsId}</td>-->
+<!--                    <td>-->
+<!--                        <input type="file" name="newsImgFile" accept="image/*">-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <textarea name="newsContents" rows="3" cols="30">${originalContents}</textarea>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        ${originalDt}-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <button name="updateStoreNews" data-newsid="${newsId}" type="button">저장</button>-->
+<!--                        <button name="cancelEdit" type="button">취소</button>-->
+<!--                    </td>-->
+<!--                `);-->
+
+<!--                console.log(`Editing row with newsId: ${newsId}`);-->
+<!--            });-->
 
 
-            // 소식 수정
-            $(document).on("click", "button[name='updateStoreNews']", function () {
+<!--            // 수정 취소 버튼-->
+<!--            $(document).on("click", "button[name='cancelEdit']", function () {-->
 
-                var newsId = $(this).data("newsid");
+<!--                // 현재 행 가져오기-->
+<!--                var $row = $(this).closest("tr");-->
 
-                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
-                $("input[name='mode']:hidden").val("update");
+<!--                // 저장된 원래 데이터를 읽어옴-->
+<!--                var originalImg = $row.data("originalImg");-->
+<!--                var originalContents = $row.data("originalContents");-->
+<!--                var originalDt = $row.data("originalDt");-->
+<!--                var newsId = $row.data("originNewsId");-->
 
-                console.log("updateStoreNews "+newsId);
+<!--                console.log("cancelEdit " + newsId);-->
 
-                $("form[name='updateAndRemoveStoreNews']").submit();
+<!--                // 행 내용을 원래 데이터로 복원-->
+<!--                $row.html(`-->
+<!--                    <td>${newsId}</td>-->
+<!--                    <td>${originalImg}</td>-->
+<!--                    <td>${originalContents}</td>-->
+<!--                    <td>${originalDt}</td>-->
+<!--                    <td>-->
+<!--                        <button name="updateStoreNewsForm" data-newsid="${newsId}" type="button">수정</button>-->
+<!--                        <button name="removeStoreNews" data-newsid="${newsId}" type="button">삭제</button>-->
+<!--                    </td>-->
+<!--                `);-->
+<!--            });-->
 
-            })
+
+<!--            // 소식 수정-->
+<!--            $(document).on("click", "button[name='updateStoreNews']", function () {-->
+
+<!--                var newsId = $(this).data("newsid");-->
+
+<!--                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);-->
+<!--                $("input[name='mode']:hidden").val("update");-->
+
+<!--                console.log("updateStoreNews "+newsId);-->
+
+<!--                $("form[name='updateAndRemoveStoreNews']").submit();-->
+
+<!--            })-->
 
 
-            // 소식 삭제
-            $("button[name='removeStoreNews']").on("click", function () {
+<!--            // 소식 삭제-->
+<!--            $("button[name='removeStoreNews']").on("click", function () {-->
 
-                var newsId = $(this).data("newsid");
+<!--                var newsId = $(this).data("newsid");-->
 
-                console.log(newsId);
+<!--                console.log(newsId);-->
 
-                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
-                $("input[name='mode']:hidden").val("remove");
+<!--                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);-->
+<!--                $("input[name='mode']:hidden").val("remove");-->
 
-                $("form[name='updateAndRemoveStoreNews']").submit();
-            })
+<!--                $("form[name='updateAndRemoveStoreNews']").submit();-->
+<!--            })-->
 
-        });
+<!--        });-->
 
-    </script>
+<!--    </script>-->
+
+    <style>
+        input, textarea {
+            border: 2px solid #cccccc; /* 테두리 두께와 색상 */
+            border-radius: 5px;       /* 모서리를 둥글게 만듦 */
+            padding: 10px;            /* 내부 여백 */
+            width: 100%;              /* 입력창 너비 */
+            box-sizing: border-box;   /* 패딩과 테두리를 포함한 너비 계산 */
+        }
+
+    </style>
 
 </head>
 <body>
@@ -160,7 +171,8 @@
 
     <form name="updateAndRemoveStoreNews">
 
-        <input type="hidden" name="mode">
+        <input type="hidden" name="mode" value="news">
+        <input type="hidden" name="fnc">
         <input type="hidden" name="newsId" disabled>
 
         <input type="text" name="userName" th:value="${userName}" readonly><br/>
@@ -201,7 +213,8 @@
 
         <input type="text" name="userName" th:value="${userName}" readonly><br/>
         <input type="text" name="storeId" th:value="${storeId}" readonly><br/>
-        <input type="text" name="mode" value="add" readonly>
+        <input type="text" name="mode" value="news" readonly>
+        <input type="text" name="fnc" value="add" readonly>
 
         <br/><br/>
 

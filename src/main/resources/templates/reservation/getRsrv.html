@@ -31,7 +31,17 @@
 
 
         <script>
+            document.addEventListener("DOMContentLoaded", function () {
+                const phoneElements = document.querySelectorAll("[data-phone]");
 
+                phoneElements.forEach(element => {
+                    const originalNumber = element.textContent.trim(); // 원래 전화번호 가져오기
+                    if (originalNumber.length >= 7) {
+                        const maskedNumber = originalNumber.substring(0, 3) + "xxxx" + originalNumber.substring(7);
+                        element.textContent = maskedNumber; // 마스킹된 번호로 교체
+                    }
+                });
+            });
         </script>
 
     </head>
@@ -51,7 +61,7 @@
                 <tbody>
                     <tr>
                         <th style="width: 30%;">전화 번호</th>
-                        <td th:text="${reservation.rsrvNumber}" style="width: 80%;"></td>
+                        <td th:text="${reservation.rsrvNumber}" style="width: 80%;" data-phone></td>
                     </tr>
                     <tr>
                         <th style="width: 30%;">예약 번호</th>

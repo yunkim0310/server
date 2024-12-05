@@ -1,0 +1,37 @@
+<ul class="css-1x9bshx ecbxmj2" th:fragment="getMyStoreAside">
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?storeId='+${store.storeId}">
+            내 가게 보기
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/store/updateStore?userName='+${store.userName}">
+            내 가게 수정
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=review&userName='+${store.userName}">
+            가게 리뷰
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=news&userName='+${store.userName}">
+            매장 소식
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=closeday&userName='+${store.userName}">
+            휴무일
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+</ul>

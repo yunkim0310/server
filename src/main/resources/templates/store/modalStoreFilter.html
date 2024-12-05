@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>PlaceHere</title>
+
+        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <link rel="stylesheet" href="/css/templates/filter.css">
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+        <script src="/javascript/store/modalStoreFilter.js"></script>
+
+    </head>
+
+    <style>
+
+        #header .container {
+            margin: 0 auto;
+            max-width: 800px; /* max-width 값을 늘려서 더 넓은 영역 확보 */
+            box-sizing: border-box;
+            position: relative;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            height: 48px;
+            width: 100%;
+            background: #fff;
+            border-bottom: 1px solid #fff;
+        }
+
+        .value {
+            color: #aaa;
+            font-size: 14px;
+            display: block;
+            margin-left: 35px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+        }
+
+        .filter {
+            margin-left: 35px;
+        }
+
+        .sticky-bottom-btns {
+            position: fixed;
+            bottom: 0;
+            z-index: 99;
+            width: auto;
+            max-width: 650px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 20px;
+            box-sizing: border-box;
+            width: 100vw;
+            background: rgba(255,255,255,.7);
+            -webkit-backdrop-filter: blur(2px);
+            backdrop-filter: blur(2px);
+            display: flex;
+        }
+
+    </style>
+
+    <body>
+
+        <form name="searchStore" id="filterModal" class="modal" style="display:none;">
+
+            <input type="hidden" name="mode" th:value="${mode}">
+            <input type="hidden" name="searchKeyword">
+
+            <div class="MuiPaper-root jss5 MuiDrawer-paper MuiDrawer-paperAnchorBottom MuiPaper-elevation0" tabindex="-1"
+                 style="transform: none; transition: transform 225ms cubic-bezier(0, 0, 0.2, 1) 0ms;">
+                <div id="root" style="height: 959px; overflow: auto; position: relative;">
+                    <div class="wrapper" style="box-shadow: none;">
+                        <header id="header" class="opaque" style="z-index: 0;">
+                            <div class="container">
+                                <div class="header-left">
+                                    <h1 class="page-title">필터</h1>
+                                </div>
+                                <div class="header-right">
+                                    <button name="resetFilter" class="btn-reset" style="cursor: pointer;" type="button">
+                                        초기화
+                                    </button>
+                                </div>
+                            </div>
+                        </header>
+                        <main id="main">
+                            <section class="section pt-30">
+                                <div class="container gutter-sm">
+                                    <div class="detailed-filter-list">
+
+                                        <!-- 지역 필터 -->
+                                        <button name="regionFilter" type="button" data-switchs="off">
+                                            <a href="#regionFilter">
+                                                <i class="area"></i>
+                                                <div class="__label">
+                                                    <span class="name">지역</span>
+                                                </div>
+                                            </a>
+                                        </button>
+
+                                        <span class="value" id="region">미선택</span>
+
+                                        <div id="regionFilter" style="display: none;" class="filter">
+
+                                            <table style="border-collapse: separate;border-spacing: 0 10px;">
+                                                <tbody>
+                                                <!-- 행 반복 (6개의 행) -->
+                                                <tr th:each="rowIndex : ${#numbers.sequence(0, 5)}">
+                                                    <!-- 열 반복 (4개의 열) -->
+                                                    <td th:each="colIndex : ${#numbers.sequence(0, 3)}"
+                                                        th:if="${rowIndex * 4 + colIndex < regionList.size()}">
+                                                        <input type="checkbox" name="regionList"
+                                                               th:value="${regionList[rowIndex * 4 + colIndex]}"
+                                                               th:id="'region'+${rowIndex * 4 + colIndex}"
+                                                               th:attr="checked=${(mode == 'result' && search.regionList != null && search.regionList.indexOf(regionList[rowIndex * 4 + colIndex]) != -1) ? 'checked' : null}" />
+                                                        &ensp;
+                                                        <label th:for="'region'+${rowIndex * 4 + colIndex}" th:text="${regionList[rowIndex * 4 + colIndex]}">지역이름(구)</label>
+                                                    </td>
+                                                </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                        <br/><br/>
+
+                                        <!-- 음식 카테고리 필터 -->
+                                        <button name="foodCategoryFilter" type="button" data-switchs="off">
+                                            <a href="#foodCategoryFilter">
+                                                <i class="food"></i>
+                                                <div class="__label">
+                                                    <span class="name">음식 카테고리</span>
+                                                </div>
+                                            </a>
+                                        </button>
+
+                                        <span class="value" id="foodCategory">미선택</span>
+
+                                        <div id="foodCategoryFilter" style="display: none;" class="filter">
+
+                                            <!-- searchStore -->
+                                            <div th:if="${mode == 'search'}" th:attr="disables=${(mode != 'search')? 'disable': null}" class="search">
+
+                                                <br/>
+
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 25%;">1차 분류</th>
+                                                            <th style="width: 25%;">2차 분류</th>
+                                                            <th style="width: 25%;">3차 분류</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td colspan="3">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+                                                                    <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}">
+                                                                    &ensp;
+                                                                    <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/><br/>
+                                                                </div>
+                                                            </td>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+                                                                    <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2__' + ${iterStat.index}">
+                                                                    &ensp;
+                                                                    <label th:text="${name}" th:for="'foodCategory2__' + ${iterStat.index}">2차 분류 이름</label><br/><br/>
+                                                                </div>
+                                                            </td>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="entry, iterStat : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+                                                                    <div th:each="detail : ${entry.value}">
+                                                                        <input type="radio" name="foodCategory3" th:value="${detail}" th:id="'foodCategory3__' + ${detail+iterStat.count}">
+                                                                        &ensp;
+                                                                        <label th:text="${detail}" th:for="'foodCategory3__' + ${detail+iterStat.count}">3차 분류 이름</label><br/><br/>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+                                            <!-- getStoreList -->
+                                            <div th:if="${mode == 'result'}" th:attr="disables=${(mode != 'result')? 'disable': null}" class="result">
+
+                                                <table>
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width: 25%;">1차 분류</th>
+                                                            <th style="width: 25%;">2차 분류</th>
+                                                            <th style="width: 25%;">3차 분류</th>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr>
+                                                            <td colspan="3">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="3">&nbsp;</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="name, iterStat : ${foodCategory.mainCategory}">
+                                                                    <input type="radio" name="foodCategory1" th:value="${name}" th:id="'foodCategory1_' + ${iterStat.index}"
+                                                                           th:attr="checked=${selectedCategoryList[0] == name ? 'checked' : null}">
+                                                                    &ensp;
+                                                                    <label th:text="${name}" th:for="'foodCategory1_' + ${iterStat.index}">1차 분류 이름</label><br/><br/>
+                                                                </div>
+                                                            </td>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="name, iterStat : ${foodCategory.subCategory}" style="display: none" th:id="'foodCategory2_' + ${iterStat.index}">
+                                                                    <input type="radio" name="foodCategory2" th:value="${name}" th:id="'foodCategory2__' + ${iterStat.index}"
+                                                                           th:attr="checked=${selectedCategoryList[1].replace(', ', '-') == name ? 'checked' : null}">
+                                                                    &ensp;
+                                                                    <label th:text="${name}" th:for="'foodCategory2__' + ${iterStat.index}">2차 분류 이름</label><br/><br/>
+                                                                </div>
+                                                            </td>
+                                                            <td style="vertical-align: top;">
+                                                                <div th:each="entry, iterStat : ${foodCategory.detailCategory}" style="display: none" th:id="'foodCategory3_' + ${entry.key}">
+                                                                    <div th:each="detail : ${entry.value}">
+                                                                        <input type="radio" name="foodCategory3" th:value="${detail}" th:id="'foodCategory3__' + ${detail+iterStat.count}"
+                                                                               th:attr="checked=${selectedCategoryList[2] == detail ? 'checked' : null}">
+                                                                        &ensp;
+                                                                        <label th:text="${detail}" th:for="'foodCategory3__' + ${detail+iterStat.count}">3차 분류 이름</label><br/><br/>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+
+                                        </div>
+
+                                        <input type="hidden" name="foodCategoryId">
+
+                                        <br/><br/>
+
+                                        <!-- 가격 필터 -->
+                                        <button name="priceFilter" type="button" data-switchs="off">
+                                            <a href="#">
+                                                <i class="price"></i>
+                                                <div class="__label">
+                                                    <span class="name">가격</span>
+                                                </div>
+                                            </a>
+                                        </button>
+
+                                        <span class="value" id="price">0 ~ 100,000</span>
+
+                                        <div id="priceFilter" style="display: none;" class="filter">
+
+                                            <br/>
+
+                                            <div class="css-82a6rk e744wfw3">
+                                                <div class="css-jmalg e1uzxhvi6">
+                                                    <div class="css-176lya2 e1uzxhvi3">
+                                                        <input type="number"
+                                                               class="css-1bkd15f e1uzxhvi2"
+                                                               style="width: 45%;text-align: center;"
+                                                               placeholder="최소 가격을 입력해주세요" name="priceMin"
+                                                               min="0" max="100000"
+                                                               th:value="${(search != null)? search.priceMin : 0}">
+                                                        ~
+                                                        <input type="number"
+                                                               class="css-1bkd15f e1uzxhvi2"
+                                                               style="width: 45%;text-align: center;"
+                                                               placeholder="최대 가격을 입력해주세요" name="priceMax"
+                                                               min="0" max="100000"
+                                                               th:value="${(search != null)? search.priceMax : 100000}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <br/><br/>
+
+                                        <!-- 해시태그 필터 -->
+                                        <button name="hashtagFilter" type="button" data-switchs="off">
+                                            <a href="#hashtagFilter">
+                                                <i class="mood"></i>
+                                                <div class="__label">
+                                                    <span class="name">해시태그</span>
+                                                </div>
+                                            </a>
+                                        </button>
+
+                                        <span class="value" id="hashtag">미선택</span>
+
+                                        <div id="hashtagFilter" style="display: none;margin-left: 15px;">
+
+                                            <div class="css-1pjgd36 e744wfw6">
+                                                <div class="css-82a6rk e744wfw3">
+                                                    <div class="css-jmalg e1uzxhvi6">
+                                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                                            <input type="text"
+                                                                   class="css-1bkd15f e1uzxhvi2"
+                                                                   placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList"
+                                                                   th:value="${(search.hashtagList != null && !search.hashtagList.isEmpty())? search.hashtagList.get(0) : null}">
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div class="css-1w0ksfz e744wfw2">
+                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="addHashtagInput" type="button">
+                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">추가</span>
+                                                    </button>
+                                                </div>
+                                                <br/>
+                                            </div>
+
+                                            <div id="hashtagInputs">
+                                                <div th:if="${search.hashtagList != null && search.hashtagList.size() > 1}">
+                                                    <div class="css-1pjgd36 e744wfw6 addedHashtagInput"
+                                                         th:each="hashtag, iterStat : ${search.hashtagList}"
+                                                         th:if="${iterStat.index > 0}">
+                                                        <div class="css-1y8737n e744wfw5">
+                                                            <label class="css-1obgjqh e744wfw4">&nbsp;</label>
+                                                        </div>
+                                                        <div class="css-82a6rk e744wfw3">
+                                                            <div class="css-jmalg e1uzxhvi6">
+                                                                <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                                                    <input type="text" class="css-1bkd15f e1uzxhvi2"
+                                                                           placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList"
+                                                                           th:value="${hashtag}">
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="css-1w0ksfz e744wfw2">
+                                                            <button class="css-ufulao e4nu7ef3 checkBtn" name="removeHashtagInput" type="button">
+                                                                <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
+                                                            </button>
+                                                        </div>
+                                                        <br/>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <input type="hidden" name="hashtagCnt"
+                                               th:value="${(search.hashtagList != null && !search.hashtagList.isEmpty())? search.hashtagList.size() : 0}">
+
+                                        <br/><br/>
+
+                                        <!-- 편의시설 필터 -->
+                                        <button name="amenitiesFilter" type="button" data-switchs="off">
+                                            <a href="#amenitiesFilter">
+                                                <i class="facility"></i>
+                                                <div class="__label">
+                                                    <span class="name">편의시설</span>
+                                                </div>
+                                            </a>
+                                        </button>
+
+                                        <span class="value" id="amenities">미선택</span>
+
+                                        <div id="amenitiesFilter" style="display: none;" class="filter">
+
+                                            <table style="border-collapse: separate; border-spacing: 0 10px;">
+                                                <tbody>
+                                                    <!-- 4개의 행 -->
+                                                    <tr th:each="rowIndex : ${#numbers.sequence(0, 3)}">
+                                                        <!-- 3개의 열 -->
+                                                        <td th:each="colIndex : ${#numbers.sequence(0, 2)}"
+                                                            th:if="${(rowIndex * 3 + colIndex) < amenitiesNameList.size()}">
+                                                            <input type="checkbox" name="amenitiesNoList"
+                                                                   th:value="${rowIndex * 3 + colIndex + 1}"
+                                                                   th:id="'amenities'+${rowIndex * 3 + colIndex + 1}"
+                                                                   th:attr="checked=${(mode == 'result' && search.amenitiesNoList != null && search.amenitiesNoList.indexOf(rowIndex * 3 + colIndex + 1) != -1) ? 'checked' : null}">
+                                                            &ensp;
+                                                            <label th:text="${amenitiesNameList[rowIndex * 3 + colIndex]}"
+                                                                   th:for="'amenities'+${rowIndex * 3 + colIndex + 1}">
+                                                                편의시설 이름
+                                                            </label>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+
+                                    <p>
+                                </div>
+                            </section>
+                            <hr class="space-40">
+                        </main>
+
+                        <br/><br/>
+
+                        <div class="sticky-bottom-btns" style="z-index: 0;">
+                            <button class="btn btn-lg btn-outline w-104"
+                                    name="closeFilter" type="button"
+                                    th:text="${(mode == 'search')? '취소' : '닫기'}">닫기</button>
+                            <button class="btn btn-lg btn-red" name="saveFilter" th:text="${(mode == 'search')? '저장' : '적용'}" type="button">적용</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+
+    </body>
+</html>
