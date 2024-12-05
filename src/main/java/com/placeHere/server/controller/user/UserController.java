@@ -75,28 +75,44 @@ public class UserController {
 
         model.addAttribute("role", role);
 
-        return "user/join?role="+role;
+        return "user/join";
     }
 
 
     @PostMapping("/join")
-    public String join(@ModelAttribute("user") User user) {
+    public String join( @ModelAttribute("user") User user ) throws Exception{
 
         log.info("join Controller - post 호출");
-
         log.info("User 객체 :: " + user);
 
+        userService.join(user);
 
-        return "/";
+        return "user/loginView";
     }
 
     @GetMapping("/getUser")
     public String getUser() {
 
-
-        
         log.info("getUser Controller - get 호출");
         return "test/user/getUserTest";
     }
+
+    @GetMapping("/resetPwdValidation")
+    public String resetPwdValidation() {
+
+        log.info("resetPwdValidation - get 요청");
+
+        return "user/resetPwdValidation";
+    }
+
+    @PostMapping("/resetPwdValidation")
+    public String resetPwdValidation( @ModelAttribute("user") User user, HttpSession session ) {
+
+        log.info("resetPassword - post 요청");
+        log.info("user 확인 :: " + user);
+
+        return "user/resetPwd";
+    }
+
 
 }
