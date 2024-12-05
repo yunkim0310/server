@@ -94,5 +94,19 @@
 --        ORDER BY reg_dt DESC
     </select>
 
+    <select id="resetPwdValidation" resultType="boolean">
+        SELECT COUNT(*)
+        FROM user
+        WHERE username = #{username}
+          AND   email = #{email}
+    </select>
+
+    <update id="updatePwd" parameterType="com.placeHere.server.domain.User">
+        UPDATE user
+        SET password = #{password},
+            update_dt = now()
+        WHERE username = #{username}
+    </update>
+
 
 </mapper>

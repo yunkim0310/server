@@ -39,7 +39,7 @@ public class User implements Serializable {
     // DELETED : 탈퇴상태
     private String activeStatus;
 
-    private String  recommendedId
+    private String  recommendedId;
 
 
 }

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Place Here</title>
     <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
-
+    <script src="/js/user.js"></script>
 
 </head>
 <body>
@@ -19,6 +19,8 @@
                     <img class="logoImg" src="/images/logo.png"/></a>
             </div>
 
+<!--            <form onsubmit=" return pwdValidation()">-->
+<!--            <form th:action="@{/user/resetPwdValidation}" method="post" onsubmit=" return pwdValidation()">-->
             <form th:action="@{/user/resetPwdValidation}" method="post">
                 <div class="input-group">
                     <label for="email">이메일</label>
@@ -30,16 +32,15 @@
                 </div>
 
 
-                <button type="submit" id="btnConfirm">확 인</button>
+                <button type="submit">확 인</button>
             </form>
 
-<!--            <div class="links">-->
-<!--                <a href="/user/selectRole">회원가입</a>-->
-<!--                <a href="/user/resetPwdValidation">비밀번호 재설정</a>-->
-<!--            </div>-->
 
         </div>
     </main>
 </div>
+
+
+
 </body>
 </html>

@@ -116,4 +116,30 @@ public class UserServiceImpl implements UserService {
     }
 
 
+    @Override
+    public boolean resetPwdValidation(User user) throws Exception {
+
+        log.info("resetPwdValidation call ");
+
+        String username = user.getUsername();
+        String email = user.getEmail();
+
+        log.info("username :: " + username);
+        log.info("email :: " + email);
+
+        boolean result = false;
+        result =  userDao.resetPwdValidation(user);
+
+        return result;
+    }
+
+    @Override
+    public int updatePwd(User user) throws Exception {
+
+        int result = 10;
+        result = userDao.updatePwd(user);
+        return result;
+    }
+
+
 }

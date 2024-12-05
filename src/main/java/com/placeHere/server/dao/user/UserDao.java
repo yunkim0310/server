@@ -24,4 +24,8 @@ public interface UserDao {
 
     public List<User> getUserList() throws Exception;
 
+    public boolean resetPwdValidation(User user) throws Exception;
+
+    public int updatePwd(User user) throws Exception;
+
 }

@@ -106,13 +106,81 @@ public class UserController {
     }
 
     @PostMapping("/resetPwdValidation")
-    public String resetPwdValidation( @ModelAttribute("user") User user, HttpSession session ) {
+    public String resetPwdValidation( @ModelAttribute("user") User user, HttpSession session, Model model) throws Exception{
 
         log.info("resetPassword - post 요청");
-        log.info("user 확인 :: " + user);
+        log.info(">>> INPUT USER CHECK :: " + user);
+
+        user = userService.getUser(user.getUsername());
+
+        boolean result = userService.resetPwdValidation(user);
+
+        if ( result ) {
+            log.info(" resetPwdValidation OK ");
+            log.info(" user chk :: " + user);
+            session.setAttribute("user", user);
+//            model.addAttribute("result", Boolean.valueOf(result) );
+            return "user/resetPwd";
+
+        } else {
+            log.info(" resetPwdValidation NOK ");
+            model.addAttribute("error", "정보가 일치하지 않습니다.");
+            return "user/resetPwd";
+        }
+    }
+
+    @GetMapping("/resetPwd")
+    public String resetPwd(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        session.getAttribute("user :: " + user);
+        log.info("resetPwd - get 요청");
+
 
         return "user/resetPwd";
     }
+
+    @PostMapping("/resetPwd")
+    public String resetPwd(@RequestParam("password") String password,
+                           HttpSession session, Model model) throws Exception {
+
+        log.info("resetPwd - post 요청");
+
+        // 세션에서 사용자 정보 가져오기
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+            return "user/resetPwdValidation";  // 세션에 사용자 정보가 없으면 다시 첫 번째 단계로 돌아감
+        } else {
+
+            log.info("user 정보 확인 ");
+            log.info( "username :: " + user.getUsername() );
+            log.info( "password :: " + user.getPassword() );
+
+            userService.updatePwd(user);
+        }
+
+
+        // 비밀번호 변경 후, 세션에서 사용자 정보 삭제
+        session.removeAttribute("user");
+
+        return "user/loginView";
+    }
+
+    @GetMapping("/setting")
+    public String setting(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        session.getAttribute("user :: " + user);
+        log.info("setting - get 요청");
+
+
+        return "user/setting";
+    }
+
 
 
 }
