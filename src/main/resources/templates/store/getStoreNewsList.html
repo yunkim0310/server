@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.na/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" xmlns="http://www.w3.org/1999/html">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>PlaceHere</title>
+
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+        <style>
+
+            .reservation-list {
+                display: flex;
+                flex-direction: column;
+                gap: 20px;
+                padding: 20px;
+            }
+
+            .reservation-item {
+                border: 1px solid #C4C4C4;
+                border-radius: 10px;
+                padding: 20px;
+                background-color: #F8F8F8;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                width: 800px;
+                max-width: 100%;
+            }
+
+            .reservation-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .reservation-header .reservation-date {
+                font-size: 30px;
+                font-weight: bold;
+                color: #333;
+            }
+
+            .reservation-header .reservation-number {
+                font-size: 16px;
+                color: #888;
+                text-align: right;
+            }
+
+            .button-container {
+                display: flex; /* 플렉스 컨테이너로 설정 */
+            }
+
+            .checkBtn {
+                display: inline-block;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div id="root">
+
+            <form name="addStoreNews">
+
+                <input type="hidden" name="userName" th:value="${store.userName}">
+                <input type="hidden" name="storeId" th:value="${store.storeId}">
+                <input type="hidden" name="mode" value="news">
+                <input type="hidden" name="fnc" value="add">
+
+                <div class="css-y8aj3r eo6ykj40">
+
+                    <!-- 매장 소식 등록 -->
+                    <div class="css-1pjgd36 e744wfw6">
+                        <div class="css-82a6rk e744wfw3">
+                            <h2>
+                                <label class="css-1obgjqh e744wfw4" style="font-size: 20px;">
+                                    매장 소식 등록
+                                    <p class="font-12 color-gray mt-10">매장 소식은 최신 5개만 노출됩니다.</p>
+                                </label>
+                            </h2>
+                        </div>
+                        <div class="css-1w0ksfz e744wfw2">
+                            <button class="css-ufulao e4nu7ef3 checkBtn" id="addStoreNews" name="addStoreNews" type="button">
+                                <span class="css-ymwvow e4nu7ef1 checked_nick_btn">등록</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="css-1pjgd36 e744wfw6">
+                        <div class="css-82a6rk e744wfw3">
+                            <div class="css-82a6rk e744wfw3">
+                                <div class="css-14wodj6 es1pbny0">
+                                    <table id="menuInputs">
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <div class="css-1pjgd36 e744wfw6">
+                                                        <div class="css-82a6rk e744wfw3">
+                                                            <input type="file" accept="image/*" name="newsImgFile">
+                                                            <span class="font-12 color-gray mt-10">매장 소식 사진을 골라주세요.</span>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+
+                                            <tr>
+                                                <td>
+                                                    <div class="css-82a6rk e744wfw3">
+                                                        <div class="css-jmalg e1uzxhvi6">
+                                                            <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                                                <textarea class="css-1bkd15f e1uzxhvi2"
+                                                                          placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
+                                                                          maxlength="200"
+                                                                          rows="10" cols="50" style="height: 100px;padding-top: 10px"></textarea>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <br/><br/><br/><br/>
+
+                </div>
+
+            </form>
+
+            <br/><br/><br/><br/>
+
+
+            <!-- 매장 소식 목록 -->
+            <form name="updateAndRemoveStoreNews">
+
+                <input type="hidden" name="mode" value="news">
+                <input type="hidden" name="fnc">
+                <input type="hidden" name="newsId" disabled>
+
+                <input type="hidden" name="userName" th:value="${store.userName}">
+                <input type="hidden" name="storeId" th:value="${store.storeId}">
+
+                <div class="css-y8aj3r eo6ykj40">
+
+                    <div class="css-1pjgd36 e744wfw6">
+                        <div class="css-82a6rk e744wfw3">
+                            <h2>
+                                <label class="css-1obgjqh e744wfw4" style="font-size: 20px;">
+                                    매장 소식 목록
+                                    <p class="font-12 color-gray mt-10">매장 소식은 최신 5개만 노출됩니다.</p>
+                                </label>
+                            </h2>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="reservation-list">
+                    <div class="reservation-item" th:each="storeNews : ${storeNewsList}">
+                        <table>
+                            <tbody>
+
+                                <tr>
+                                    <td colspan="2">
+                                        <div class="reservation-header">
+                                            <span class="reservation-date" th:text="${storeNews.regDt}"/>
+                                            <div class="reservation-number">
+                                                <div class="css-1w0ksfz e744wfw2">
+                                                    <div class="button-container">
+                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="updateStoreNewsForm" type="button"
+                                                            th:attr="data-newsid=${storeNews.newsId}">
+                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">수정</span>
+                                                    </button>
+                                                    &ensp;
+                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="removeStoreNews" type="button"
+                                                            th:attr="data-newsid=${storeNews.newsId}">
+                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr style="display: flex; align-items: flex-start;margin-top: 5%;">
+                                    <td style="flex-shrink: 0;width: 300px; height: 300px">
+                                        <img src="/images/store/storeNewsImgTest.jpg" th:alt="${storeNews.newsImg}"
+                                             width="300" height="300">
+                                    </td>
+                                    <td style="flex-grow: 1; padding-left: 20px;">
+                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                            <textarea class="css-1bkd15f e1uzxhvi2"
+                                                      placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
+                                                      maxlength="200"
+                                                      rows="10" cols="50" style="height: 300px; padding-top: 10px"
+                                                      th:text="${storeNews.newsContents}" disabled></textarea>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+
+            </form>
+
+        </div>
+
+    </body>
+
+</html>

@@ -6,13 +6,11 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
         <title>PlaceHere</title>
 
-        <link th:insert="~{test/store/importTest :: importFragment}">
-
         <link href="/css/templates/mypage.css" rel="stylesheet">
         <link href="/css/templates/collection_detail.css" rel="stylesheet">
         <link href="/css/templates/style.css" rel="stylesheet">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <link th:insert="~{test/store/importTest :: importFragment}">
 
 <!--        <script src="/javascript/templates/profileFollow.js"></script>-->
         <script src="/javascript/templates/script.js" type="text/javascript"></script>
@@ -140,10 +138,10 @@
                         <section class="section section-overflow-hidden">
                             <div class="profile-summary">
 
-                                <h1>여기서 부터 인클루드</h1>
+                                <br/>
 
                                 <!-- 매장 소식 -->
-                                <th:block th:if="${mode == 'news'}" th:insert="~{test/store/getStoreNewsListTest}"></th:block>
+                                <th:block th:if="${mode == 'news'}" th:insert="~{store/getStoreNewsList}"></th:block>
 
                                 <!-- 휴무일 -->
                                 <th:block th:if="${mode == 'closeday'}" th:insert="~{test/store/getClosedayListTest}"></th:block>

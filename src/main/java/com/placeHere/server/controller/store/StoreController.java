@@ -116,10 +116,7 @@ public class StoreController {
 
         Store store = storeService.getStore(storeOperation.getStoreId());
 
-        model.addAttribute("store", store);
-
-//        return "redirect:/store/getMyStore";
-        return "test/store/addStoreTestResult";
+        return "redirect:/store/getMyStore?userName=" + store.getUserName();
     }
 
 
@@ -580,8 +577,6 @@ public class StoreController {
                     List<StoreNews> storeNewsList = storeService.getStoreNewsList(storeId, search);
                     int newsTotalCnt = (storeNewsList.isEmpty()) ? 0 : storeNewsList.get(0).getTotalCnt();
 
-                    model.addAttribute("userName", userName);
-                    model.addAttribute("storeId", storeId);
                     model.addAttribute("storeNewsList", storeNewsList);
                     model.addAttribute("totalCnt", newsTotalCnt);
 
