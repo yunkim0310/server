@@ -12,8 +12,6 @@ import java.util.Date;
 
 
 @Data
-@Getter
-@Setter
 public class User implements Serializable {
 
     // Field
@@ -40,6 +38,8 @@ public class User implements Serializable {
     // INACTIVE : 휴면계정상태
     // DELETED : 탈퇴상태
     private String activeStatus;
+
+    private String  recommendedId
 
 
 }
