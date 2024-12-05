@@ -1,11 +1,17 @@
 package com.placeHere.server.controller.store;
 
-import com.placeHere.server.domain.Like;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api-store/*")
@@ -17,6 +23,14 @@ public class StoreRestController {
 
     @Autowired
     private LikeService likeService;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
+
+
 
 
     // Constructor
@@ -64,6 +78,36 @@ public class StoreRestController {
         boolean result = likeService.removeLike(like);
 
         return ResponseEntity.ok(result);
+    }
+
+    
+    // 가게 목록 조회
+    @GetMapping("/getStoreList")
+    public ResponseEntity<List<Store>> getStoreList(@ModelAttribute Search search,
+                               Model model) {
+
+        System.out.println("/api-store/getStoreList : GET");
+
+        List<Store> storeList = storeService.getStoreList(search);
+
+        System.out.println(storeList);
+
+        return ResponseEntity.ok(storeList);
+    }
+
+
+    // 가게 정보 조회
+    @GetMapping(value = "/getStore", params = {"storeId"})
+    public ResponseEntity<Store> getStore(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/getStore : GET");
+        System.out.println(storeId);
+
+        Store store = storeService.getStore(storeId);
+
+        System.out.println(store);
+
+        return ResponseEntity.ok(store);
     }
 
 }

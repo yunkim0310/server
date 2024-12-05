@@ -21,7 +21,7 @@ public class PurchaseRestController {
     @PostMapping("/addCart")
     public String addCart(@RequestBody Purchase purchase) {
         try {
-            String userName = "user1";
+            String userName = "user01";
             System.out.println("userName : " + userName);
             purchase.setUserName(userName);
             purchaseService.addCart(purchase);
@@ -36,7 +36,7 @@ public class PurchaseRestController {
     @PostMapping("/addWish")
     public String addWish(@RequestBody Purchase purchase) {
         try {
-            String userName = "user1";
+            String userName = "user01";
             System.out.println("userName : " + userName);
             purchase.setUserName(userName);
             boolean isWishExist = purchaseService.isProductInWishList(purchase.getProdNo(), userName);

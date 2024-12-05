@@ -114,7 +114,7 @@ public class ProductController {
 
         Product product = productService.getProduct(prodNo);
 
-        String userName = "user1";
+        String userName = "user01";
         model.addAttribute("userName", userName);
 
         Cookie[] cookies = request.getCookies();

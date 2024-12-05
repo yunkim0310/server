@@ -4,6 +4,7 @@ package com.placeHere.server.service.user.impl;
 import com.placeHere.server.dao.user.UserDao;
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 
+@Slf4j
 @Service("userServiceImpl")
 
 @Transactional()
@@ -59,37 +61,46 @@ public class UserServiceImpl implements UserService {
         System.out.println("user 확인 :: " + user);
 
         // 비밀번호 암호화
-        String rawPassword = user.getPassword();
+//        String rawPassword = user.getPassword();
 //        String encodedPassword = bCryptPasswordEncoder.encode(rawPassword); // 암호화
 
 //        user.setPassword(encodedPassword);
 
         userDao.join(user);
 
-        System.out.println("chk 11 :: " + rawPassword);
+//        System.out.println("chk 11 :: " + rawPassword);
 //        System.out.println("chk 11 :: " + encodedPassword);
 
     }
 
+    @Override
     public User login(String username) throws Exception {
-        userDao.updateLoginDt(username);
-        User user = userDao.login(username);
-
-        System.out.println( "login chk :: " + user);
-        return userDao.login(username);
+        return null;
     }
 
 
     public User getUser(String username) throws Exception {
-        System.out.println("service");
-        System.out.println("qqqqq :: " + username);
-        System.out.println(userDao.getUser(username));
-        userDao.updateLoginDt(username);
-        return userDao.getUser(username);
+
+        int result = 0;
+        result = userDao.updateLoginDt(username);
+
+        if (result == 1) {
+            return userDao.getUser(username);
+        }
+
+        return null;
     }
 
-    public void updateLoginDt (String username) throws Exception {
-        userDao.updateLoginDt(username);
+    @Override
+    public void updateUserStatus(String username) throws Exception {
+
+    }
+
+    public int updateLoginDt (String username) throws Exception {
+
+        int result = 0;
+        result = userDao.updateLoginDt(username);
+        return result;
     }
 
 //    public void updateUserStatus (String username) throws Exception {
