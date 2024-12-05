@@ -3,6 +3,7 @@ package com.placeHere.server.controller.store;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
+import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Date;
 import java.time.LocalDate;
 import java.util.*;
 
@@ -30,6 +32,10 @@ public class StoreController {
     @Autowired
     @Qualifier("likeServiceImpl")
     private LikeService likeService;
+
+    @Autowired
+    @Qualifier("reservationServiceImpl")
+    private ReservationService reservationService;
 
     @Value("${business_no_api}")
     private String apiKey;
@@ -313,7 +319,7 @@ public class StoreController {
                                   @ModelAttribute Search search,
                                   @RequestParam("userName") String userName,
                                   @RequestParam("mode") String mode,
-                                  RedirectAttributes redirectAttributes) {
+                                  RedirectAttributes redirectAttributes) throws Exception {
 
         System.out.println("/store/getClosedayList : POST");
 
@@ -327,9 +333,19 @@ public class StoreController {
 
             case "add":
                 // 휴무일 등록
-                // TODO 예약이 있는지 확인하는 코드 추가 필요
                 System.out.println("addCloseday");
-                storeService.addCloseday(closeday);
+
+                // TODO 예약이 있는지 확인하는 코드 추가 필요
+
+                int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
+                
+                // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
+                if (rsrvCnt == 0) {
+                    storeService.addCloseday(closeday);
+                } else {
+                    redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
+                }
+
                 break;
 
             case "get":
@@ -340,7 +356,7 @@ public class StoreController {
                 search.setListSize(listSize);
 
                 redirectAttributes.addFlashAttribute("search", search);
-                redirectAttributes.addFlashAttribute("userName", userName);
+
                 break;
 
             case "remove":
@@ -530,6 +546,7 @@ public class StoreController {
     public String getMyStore(@RequestParam("userName") String userName,
                              @RequestParam(value = "mode", required = false, defaultValue = "review") String mode,
                              @ModelAttribute("search") Search search,
+                             @ModelAttribute("message") String message,
                              Model model) {
 
         System.out.println("/store/getMyStore : GET");
@@ -590,12 +607,11 @@ public class StoreController {
                     List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
                     int closedayTotalCnt = (closedayList.isEmpty()) ? 0 : closedayList.get(0).getTotalCnt();
 
-                    model.addAttribute("userName", userName);
-                    model.addAttribute("storeId", storeId);
                     model.addAttribute("totalCnt", closedayTotalCnt);
                     model.addAttribute("closedayList", closedayList);
                     model.addAttribute("search", search);
                     model.addAttribute("today", LocalDate.now());
+                    model.addAttribute("message", message);
 
                     break;
 
@@ -613,7 +629,7 @@ public class StoreController {
                              @RequestParam("userName") String userName,
                              @ModelAttribute Closeday closeday,
                              @ModelAttribute Search search,
-                             RedirectAttributes redirectAttributes) {
+                             RedirectAttributes redirectAttributes) throws Exception {
 
         System.out.println("/store/getMyStore : POST");
         System.out.println(userName);
@@ -669,10 +685,19 @@ public class StoreController {
 
                     case "add":
                         // 휴무일 등록
-                        // TODO 예약이 있는지 확인하는 코드 추가 필요
                         System.out.println("addCloseday");
 
-                        storeService.addCloseday(closeday);
+                        // TODO 예약이 있는지 확인하는 코드 추가 필요
+                        int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
+
+                        System.out.println(rsrvCnt);
+
+                        // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
+                        if (rsrvCnt == 0) {
+                            storeService.addCloseday(closeday);
+                        } else {
+                            redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
+                        }
 
                         break;
 

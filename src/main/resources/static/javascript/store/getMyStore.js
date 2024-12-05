@@ -72,6 +72,7 @@ $(function() {
 
         // 취소 버튼 클릭 이벤트 처리
         $(document).on('click', 'button[name="cancelEdit"]', function () {
+
             const $reservationItem = $(this).closest('.reservation-item');
             const $currentTextarea = $reservationItem.find('textarea[name="newsContents"]');
             const $cancelBtn = $(this);
@@ -116,6 +117,7 @@ $(function() {
 
         // 소식 삭제 이벤트 처리
         $(document).on("click", "button[name='removeStoreNews']",function () {
+
             var newsId = $(this).data("newsid");
 
             alert(newsId);
@@ -132,6 +134,61 @@ $(function() {
     // 휴무일
     if (mode === 'closeday') {
 
+        const message = $("input[name='message']:hidden").val();
+
+        if (message != null && message.length > 0) {
+            alert(message);
+        }
+
+        // action 맵핑
+        $("form").attr("action", "/store/getMyStore").attr("method", "post");
+
+
+        // 휴무일 삭제 함수
+        $("button[name='removeCloseday']").on("click", function () {
+
+            var closedayId = $(this).data("closedayid");
+
+            console.log(closedayId);
+
+            $("input[name='fnc']:hidden").val("remove");
+            $("input[name='closedayId']:hidden").prop("disabled", null).val(closedayId);
+
+            $("form[name='getAndRemoveCloseday']").submit();
+
+        });
+
+
+        // 휴무일 검색 함수
+        $("button[name='getClosedayList']").on("click", function () {
+
+            $("input[name='fnc']:hidden").val("get");
+
+            $("form[name='getAndRemoveCloseday']").submit();
+
+        });
+
+
+        // 휴무일 등록 함수
+        $("button[name='addCloseday']").on("click", function () {
+
+            $("form[name='addCloseday']").submit();
+
+        });
+
+
+        // 휴무일 검색 범위 변경 이벤트 처리
+        $("input[name$='Date']").on('change', function () {
+
+            var $startDate = $("input[name='startDate']")
+            var $endDate = $("input[name='endDate']")
+            var startDate = $startDate.val();
+            var endDate = $endDate.val();
+
+            $startDate.attr("max", endDate);
+            $endDate.attr("min", startDate);
+
+        });
 
     }
 
