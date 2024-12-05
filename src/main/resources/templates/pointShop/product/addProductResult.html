@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>상품 등록 완료</title>
+    <title>PlaceHere</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="/css/templates/header.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
@@ -26,7 +26,8 @@
 <div class="product-info">
     <div>
         <strong>상품 대표 이미지 : </strong>
-        <span class="value" th:text="${product.prodImg1}">상품 대표 이미지</span>
+        <span class="value" th:if="${product.prodImg1 != null}" th:text="${product.prodImg1}">상품 대표 이미지</span>
+        <img th:src="@{'/uploads/' + ${product.prodImg1}}" alt="상품 이미지"/>
     </div>
     <br/><br/>
     <div>
@@ -56,8 +57,10 @@
     <br/><br/>
     <div>
         <strong>상품 상세 이미지 : </strong>
-        <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>
-        <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>
+        <span class="value" th:if="${product.prodImg2 != null}" th:text="${product.prodImg2}">상품 상세 이미지1</span>
+        <img th:src="@{'/uploads/' + ${product.prodImg2}}" alt="상품 이미지"/>
+        <span class="value" th:if="${product.prodImg3 != null}" th:text="${product.prodImg3}">상품 상세 이미지2</span>
+        <img th:src="@{'/uploads/' + ${product.prodImg3}}" alt="상품 이미지"/>
     </div>
     <br/><br/>
 </div>

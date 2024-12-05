@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <style>
+        .side-bar:before{
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 12px;
+            margin: 0 7px 0 3px;
+            background-color: #FFFFFF;
+            vertical-align: -1px;
+        }
+
+        /* 사이드 바 스타일 */
+        .side-bar {
+            position: fixed;  /* 고정 위치 */
+            bottom: 0;
+            left: 0;
+            height: 80vh;  /* 화면 전체 높이 */
+            width: 250px;  /* 사이드 바 너비 */
+            background-color: #fff;  /* 배경색 */
+            color: #fff;  /* 텍스트 색상 */
+            padding-top: 20px;
+        }
+
+        .side-bar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .side-bar .logoImg {
+            width: 150px;
+            height: auto;
+        }
+
+        .side-menu {
+            padding-left: 20px;
+        }
+
+        .menu-list {
+            list-style-type: none;  /* 기본 리스트 스타일 제거 */
+            padding: 0;
+        }
+
+        .menu-list li {
+            margin-bottom: 20px;  /* 항목 간 간격 */
+        }
+
+        .menu-list li a {
+            color: #333;  /* 링크 색상 */
+            font-size: 16px;
+            text-decoration: none;  /* 링크 밑줄 제거 */
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;  /* 배경색 변화 효과 */
+        }
+
+        .menu-list li a:hover {
+            color: #4880FF;  /* 마우스를 올렸을 때 텍스트 색상을 파란색으로 변경 */
+        }
+
+        .menu-list li a.active {
+            color: #4880FF;  /* 현재 페이지를 나타내는 색상 */
+        }
+
+        .header-line {
+            width: calc(70% - 20px);  /* 화면 너비에서 양쪽 여백을 빼줍니다 */
+            height: 2px;  /* 줄의 두께 */
+            background-color: #ccc;  /* 연한 회색 */
+            margin: 20px auto; /* 상단 20px, 하단 20px, 양쪽에 10px 여백 */
+        }
+    </style>
+
+</head>
+<body>
+<aside class="side-bar" style="color: #fff";>
+    <br/><br/><br/>
+    <div class="logo">
+        <a href="/product/listProduct" style="text-decoration: none; color: #4880FF; font-size: 24px; font-weight: bold;">포인트 상점</a>
+    </div>
+    <div class="header-line"></div>
+    <nav class="side-menu">
+        <ul class="menu-list">
+            <li><a href="/product/listProduct">포인트 상품 목록</a></li>
+            <li><a href="/product/addProduct">포인트 상품 등록</a></li>
+            <li><a href="/purchase/listCart">장바구니</a></li>
+            <li><a href="/purchase/listWish">찜 목록</a></li>
+            <li><a href="/purchase/listPointHistory?userName=user1">포인트 내역</a></li>
+            <li><a href="/purchase/listPurchase?userName=user1">구매한 상품</a></li>
+        </ul>
+    </nav>
+</aside>
+<!--<script>-->
+<!--    // 모든 메뉴 항목에 대해 클릭 이벤트를 추가합니다-->
+<!--    document.querySelectorAll('.menu-list li a').forEach(function(link) {-->
+<!--        link.addEventListener('click', function(event) {-->
+<!--            // 모든 링크에서 active 클래스를 제거합니다-->
+<!--            document.querySelectorAll('.menu-list li a').forEach(function(link) {-->
+<!--                link.classList.remove('active');-->
+<!--            });-->
+
+<!--            // 클릭한 링크에 active 클래스를 추가합니다-->
+<!--            event.target.classList.add('active');-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+</body>
+</html>

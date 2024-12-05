@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>포인트 상품 목록                                                                 </title>
+    <title>PlaceHere</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua7Kw1TIq0RtvO+fi6QxfhCpCz2vhK4U6Xvn8PBxJg4mtLOefW4Llmhks" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -230,7 +230,7 @@
         /* 기본 body 스타일 */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
         }
@@ -242,12 +242,10 @@
 
         /* 헤더 스타일 */
         .point-header {
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             padding: 30px;
             text-align: center;
             margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .point-header h1 {
@@ -288,20 +286,23 @@
         input[type="radio"] {
             cursor: pointer;
         }
+
+
     </style>
 
 </head>
 <body>
+<br/><br/>
 <div class="point-header">
     <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
     <br/><br/>
     <h1>포인트 상품 목록</h1>
 </div>
+<div class="header-line"></div>
   <!-- 원래 스타일의 헤더 -->
 
 <div class="container">
-
-
     <div class="container">
         <div class="row">
             <!-- 왼쪽 부분: 3컬럼 (정렬 및 검색폼) -->
@@ -352,7 +353,7 @@
                                 <p th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}">판매 상태</p>
                             </div>
                             <div class="product-actions">
-                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">조회</button>
+                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>
                                 <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>
                             </div>
                         </div>

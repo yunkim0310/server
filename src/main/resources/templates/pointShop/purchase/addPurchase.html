@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>addPurchase</title>
+    <title>PlaceHere</title>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="/css/templates/header.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
@@ -34,12 +34,113 @@
                 .submit();
         }
     </script>
+    <style>
+        /* 기본 스타일 */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+        }
+
+        .point-header {
+            background-color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .point-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        /* 상품 컨테이너 스타일 */
+        .product-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        strong {
+            font-weight: bold;  /* 글자를 굵게 설정 */
+            font-size: 1.2rem;   /* 폰트 크기 조정 (선택사항) */
+            color: #333;         /* 색상 조정 (선택사항) */
+        }
+
+        /* 상품 정보 스타일 */
+        .product-info {
+            margin-bottom: 30px;
+            width: 100%;
+        }
+
+        .product-info div {
+            margin: 10px 0;
+            font-size: 1.1rem;
+        }
+
+        strong {
+            font-weight: bold;
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        .value {
+            font-weight: bold;
+            color: #555;
+        }
+
+        /* 버튼 스타일 */
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
 </head>
 <body>
 <br/><br/>
-<div th:insert="~{common/header}"></div>
-<div class="product-container">
+<div class="point-header">
+    <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
+    <br/><br/>
     <h1>상품 구매 확인</h1>
+</div>
+<div class="header-line"></div>
+<div class="product-container">
     <br/>
 
     <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
@@ -48,37 +149,37 @@
 
     <div class="product-info">
         <div>
-            <strong>상품 대표 이미지 : </strong>
+            <strong>상품 대표 이미지</strong><br/><br/>
             <span class="value" th:text="${product.prodImg1}">상품 대표 이미지</span>
         </div>
         <br/><br/>
         <div>
-            <strong>상품명 : </strong>
+            <strong>상품명</strong><br/><br/>
             <span class="value" th:text="${product.prodName}">상품명</span>
         </div>
         <br/><br/>
         <div>
-            <strong>상품 번호 : </strong>
+            <strong>상품 번호</strong><br/><br/>
             <span class="value" th:text="${product.prodNo}">상품 번호</span>
         </div>
         <br/><br/>
         <div>
-            <strong>상품 가격 : </strong>
+            <strong>상품 가격</strong><br/><br/>
             <span class="value" th:text="${product.prodPrice}+P">상품 가격</span>
         </div>
         <br/><br/>
         <div>
-            <strong>상품 수량 : </strong>
+            <strong>상품 수량</strong><br/><br/>
             <span class="value" th:text="${product.cntProd}">상품 수량</span>
         </div>
         <br/><br/>
         <div>
-            <strong>거래 포인트 : </strong>
+            <strong>거래 포인트</strong><br/><br/>
             <span class="value" th:text="${tranPoint}+P">결제 포인트</span>
         </div>
         <br/><br/>
         <div>
-            <strong>보유 포인트 : </strong>
+            <strong>보유 포인트</strong><br/><br/>
             <span class="value" th:text="${currPoint}+P">보유 포인트</span>
         </div>
         <br/><br/>

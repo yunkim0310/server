@@ -35,7 +35,7 @@ public class ProductController {
 
     }
 
-    @Value("${store_upload_dir}")
+    @Value("${pointShop_upload_dir}")
     String path;
 
     @Autowired
@@ -77,7 +77,7 @@ public class ProductController {
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")
     public String addProductResult(
-//                            @RequestParam("file") MultipartFile file,
+                            @RequestParam(value = "file", required = false) MultipartFile file,
                              @ModelAttribute("product") Product product, Model model) throws Exception {
 
         System.out.println("/product/addProduct : POST");
@@ -85,17 +85,19 @@ public class ProductController {
         String prodCateName = getCategoryNameByNo(product.getProdCateNo());
         product.setProdCateName(prodCateName);
 
-//        String fileName = file.getOriginalFilename();
-//        String uploadPath = servletContext.getRealPath(path);
-//        String saveFile = uploadPath + fileName;
-//        System.out.println("Image upload path: " + uploadPath);
-//
-//        try {
-//            file.transferTo(new File(saveFile));
-//            product.setProdImg1(fileName);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        model.addAttribute("file", file);
+
+        String fileName = file.getOriginalFilename();
+        String uploadPath = servletContext.getRealPath(path);
+        String saveFile = uploadPath + fileName;
+        System.out.println("Image upload path: " + uploadPath);
+
+        try {
+            file.transferTo(new File(saveFile));
+            product.setProdImg1(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         productService.addProduct(product);
 
