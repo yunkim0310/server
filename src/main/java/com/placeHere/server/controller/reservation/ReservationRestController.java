@@ -13,7 +13,7 @@ import java.util.Map;
 
 
 @RestController
-@RequestMapping("test/reservation/*")
+@RequestMapping("/api-reservation/*")
 public class ReservationRestController {
 
     @Autowired

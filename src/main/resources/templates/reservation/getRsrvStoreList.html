@@ -14,7 +14,7 @@
             function updateRsrvStatus(rsrvNo, buttonElement) {
                 console.log("Reservation Number: ", rsrvNo); // 디버깅용 로그
                 $.ajax({
-                    url: '/test/reservation/updateRsrvStatus',
+                    url: '/api-reservation/updateRsrvStatus',
                     type: 'POST',
                     contentType: 'application/json',
                     data: JSON.stringify({
@@ -144,7 +144,7 @@
 </div>
 
 <!-- 검색 폼 -->
-<form action="/test/reservation/getRsrvStoreList" method="POST">
+<form action="/reservation/getRsrvStoreList" method="POST">
     <input type="hidden" name="storeId" th:value="${param.storeId}"/>
 
     <label for="startDate">Start Date:</label>

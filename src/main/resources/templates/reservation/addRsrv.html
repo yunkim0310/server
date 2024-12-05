@@ -29,7 +29,7 @@
 
                 if (selectedDate) {
                     // Ajax 요청으로 운영 정보 가져오기
-                    fetch(`/test/reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
+                    fetch(`/api-reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
                         .then(response => response.json())
                         .then(data => {
                             if (data) {
@@ -106,7 +106,7 @@
 
 <!-- 예약 입력 폼 -->
 <h2>Reservation Details</h2>
-<form action="/test/reservation/addRsrv" method="post">
+<form action="/reservation/addRsrv" method="post">
     <!-- 가게 ID 전달 -->
     <input type="hidden" name="storeId" th:value="${store.storeId}" />
     <input type="hidden" name="storeName" th:value="${store.storeName}" />

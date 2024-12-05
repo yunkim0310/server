@@ -138,7 +138,7 @@
             }
 
             // 예약 번호 가져오기
-            const destination = `/test/reservation/getRsrv?rsrvNo=${reservationNumber}`; // 이동할 링크
+            const destination = `/reservation/getRsrv?rsrvNo=${reservationNumber}`; // 이동할 링크
             window.location.href = destination; // 해당 링크로 네비게이션
           });
         });
@@ -169,7 +169,7 @@
 
     <div class="container">
       <!-- 검색 폼 -->
-      <form id="searchForm" action="/test/reservation/getRsrvUserList" method="POST" class="rsrvstatus-table">
+      <form id="searchForm" action="/reservation/getRsrvUserList" method="POST" class="rsrvstatus-table">
         <!-- 예약 상태 -->
         <!-- 유저 이름 (필수) -->
         <input type="hidden" name="userName" th:value="${param.userName}" />

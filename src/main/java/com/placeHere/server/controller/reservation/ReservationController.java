@@ -20,7 +20,7 @@ import java.util.List;
 
 
 @Controller
-@RequestMapping("test/reservation/*")
+@RequestMapping("reservation/*")
 public class ReservationController {
 
     @InitBinder
@@ -54,7 +54,7 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/getRsrv";
+        return "reservation/getRsrv";
     }
 
 
@@ -77,7 +77,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "test/reservation/getRsrvStoreList";
+        return "reservation/getRsrvStoreList";
     }
 
 
@@ -110,7 +110,7 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
 
-        return "test/reservation/getRsrvStoreList";
+        return "reservation/getRsrvStoreList";
     }
 
 
@@ -134,7 +134,7 @@ public class ReservationController {
         model.addAttribute("search", search);
 
         // 뷰 반환
-        return "test/reservation/getRsrvUserList";
+        return "reservation/getRsrvUserList";
     }
 
 
@@ -160,7 +160,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
 
-        return "test/reservation/getRsrvUserList";
+        return "reservation/getRsrvUserList";
     }
 
 
@@ -194,7 +194,7 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
-        return "/test/reservation/addRsrv";
+        return "reservation/addRsrv";
     }
 
 
@@ -222,7 +222,7 @@ public class ReservationController {
         // 예약 번호를 pay 페이지로 전달
         model.addAttribute("rsrvNo", rsrvNo);
 
-        return "/test/reservation/chkRsrv";
+        return "reservation/chkRsrv";
     }
 
     @RequestMapping(value = "chkRsrv", method = RequestMethod.POST)
@@ -234,7 +234,7 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "/test/reservation/sendRsrv";
+        return "reservation/sendRsrv";
     }
 
 
@@ -252,7 +252,7 @@ public class ReservationController {
         model.addAttribute("amount", amount);
 
 
-        return "test/reservation/sendRsrv";
+        return "reservation/sendRsrv";
     }
 
 
@@ -296,7 +296,7 @@ public class ReservationController {
 
             // fail.html로 이동
             model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
-            return "test/reservation/failRsrv";
+            return "reservation/failRsrv";
         }
 
         // 4. 현재 예약 일시의 예약 인수 계산
@@ -312,13 +312,13 @@ public class ReservationController {
 
             // fail.html로 이동
             model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
-            return "test/reservation/failRsrv";
+            return "reservation/failRsrv";
         } else {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
             // success.html로 이동
-            return "test/reservation/successRsrv";
+            return "reservation/successRsrv";
         }
     }
 

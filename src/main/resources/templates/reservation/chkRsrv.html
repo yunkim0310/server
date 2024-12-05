@@ -31,8 +31,8 @@
             amount: amount,
             orderId: orderId,
             orderName: 'Reservation Payment',
-            successUrl: window.location.origin +`/test/reservation/sendRsrv?`,
-            failUrl: window.location.origin +`/test/reservation/failRsrv`
+            successUrl: window.location.origin +`/reservation/sendRsrv?`,
+            failUrl: window.location.origin +`/reservation/failRsrv`
         }).catch(error => {
             console.error('결제 요청 실패:', error);
             alert('결제 요청 중 오류가 발생했습니다.');
