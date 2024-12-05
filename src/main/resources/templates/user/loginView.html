@@ -15,10 +15,11 @@
     <div class="login-form">
 
       <div class="logo">
-        <a id="home" href="/"><img class="logoImg" src="/images/logo.png"/></a>
+        <a id="home" href="/">
+        <img class="logoImg" src="/images/logo.png"/></a>
       </div>
 
-      <form th:action="@{/login}" method="post">
+      <form th:action="@{/user/login}" method="post">
         <div class="input-group">
           <label for="username">ID</label>
           <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
@@ -27,12 +28,17 @@
           <label for="password">PASSWORD</label>
           <input type="password" id="password" name="password" placeholder="비밀번호를 입력하세요" required>
         </div>
+
+
         <button type="submit" id="btnLogin">로그인</button>
       </form>
+
       <div class="links">
         <a href="/user/selectRole">회원가입</a>
-        <a href="/reset-password">비밀번호 재설정</a>
+        <a href="/user/resetPwdValidation">비밀번호 재설정</a>
       </div>
+
+
     </div>
   </main>
 </div>
