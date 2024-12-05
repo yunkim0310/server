@@ -331,6 +331,7 @@ $(function() {
 
         // 모든 입력 필드의 값을 가져와 리스트에 추가
         $("input[name='hashtagList']").each(function () {
+
             var hashtag = $(this).val();
 
             // 공백 및 # 제거
@@ -389,11 +390,11 @@ $(function() {
 
 
     // 필터 리셋 함수
-    $("button[name='resetFilter']").on('click', function () {
+    function resetFilter() {
 
         // 모든 input, select, textarea 리셋
         $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
-        
+
         // 가격 필터 값 리셋
         $("form[name='searchStore'] input[name='priceMin']").val(0);
         $("form[name='searchStore'] input[name='priceMax']").val(100000);
@@ -410,7 +411,7 @@ $(function() {
         $('#foodCategory').text('미선택');
         $("#foodCategoryFilter").css("display", "none");
         $("button[name='foodCategoryFilter']").data("switchs", "off");
-        
+
         // 음식 카테고리 2차 분류, 3차 분류 안 보이기
         $("div[id^='foodCategory2']").css("display", "none");
         $("div[id^='foodCategory3_']").css("display", "none");
@@ -424,7 +425,7 @@ $(function() {
         $('#hashtag').text('미선택');
         $("#hashtagFilter").css("display", "none");
         $("button[name='hashtagFilter']").data("switchs", "off");
-        
+
         // 해시태그 입력창 제거 후 추가버튼 리셋
         $(".addedHashtagInput").remove();
         hashtagCnt = 1;
@@ -435,6 +436,29 @@ $(function() {
         $("#amenitiesFilter").css("display", "none");
         $("button[name='amenitiesFilter']").data("switchs", "off");
 
+    }
+
+
+    // 초기화 버튼 이벤트 처리
+    $("button[name='resetFilter']").on('click', function () {
+        resetFilter();
+    });
+
+
+    // 필터 버튼 클릭 시 모달 표시
+    $("button[name='searchStoreFilter']").on("click", function () {
+        $("#filterModal").show();
+    });
+
+
+    // 모달 닫기 버튼
+    $("button[name='closeFilter']").on("click", function () {
+
+        if (mode === "search") {
+            resetFilter();
+        }
+
+        $("#filterModal").hide();  // 모달을 닫음
     });
 
 
