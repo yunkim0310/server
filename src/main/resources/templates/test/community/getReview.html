@@ -2,7 +2,8 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>리뷰 상세보기 ==>  getReview.html</title>
+    <title>리뷰 상세보기 ==> getReview.html</title>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -22,7 +23,57 @@
         }
 
     </style>
-    <script>
+    <script type="text/javascript">
+        $(function() {
+
+        $("button.btn-primary.edit").on("click", function() {
+
+            var commentNo = $(this).data("comment-no");
+            var currentContent = $(this).data("current-comment");
+            console.log("commentNo chk :: ", commentNo);
+
+            const newContent = prompt("댓글 내용을 수정하세요:", currentContent);
+           if(newContent === null) return; // 사용자가 취소 버튼 누른경우
+
+           const commentData = {
+
+               "commentNo": commentNo ,
+               "commentsContent": newContent
+           };
+
+            fetch('/api-review/updateComment', {
+               method: 'PUT',
+               headers: {
+                 'Content-Type': 'application/json'
+               },
+               body: JSON.stringify(commentData)
+           })
+
+<!--           .then(response => {-->
+<!--             if (!response.ok) {-->
+<!--                 throw new Error('댓글 수정 실패');-->
+<!--             }-->
+<!--             return response.json();-->
+
+<!--           })-->
+           .then(commentData => {
+           console.log("222222222"+commentData);
+<!--                commentItem.childNodes[1].textContent = data.commentsContent; // 수정된 댓글 내용으로 업데이트-->
+                alert("수정이 완료되었습니다.");
+                location.reload();
+           })
+           .catch(error => {
+             alert(error.message);
+           });
+
+
+            });
+
+
+
+        });
+
+
         function addComment(event) {
             alert("댓글을 등록하시겠습니까");
             event.preventDefault(); // 기본 폼 제출 동작 방지
@@ -30,11 +81,11 @@
             const commentsContent = document.getElementById('commentsContent').value;
             const username = "user01";
 
-            console.log("reviewNo chk :: ", reviewNo);
-            console.log("commentsContent chk :: ", commentsContent);
-            console.log("username chk :: ", username);
+              console.log("reviewNo chk :: ", reviewNo);
+              console.log("commentsContent chk :: ", commentsContent);
+              console.log("username chk :: ", username);
 
-            fetch('/review/addComment', {
+             fetch('/api-review/addComment', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,11 +103,15 @@
                 return response.json(); // 댓글 추가 후 서버의 JSON 응답 파싱
             })
             .then(data => {
+
                 // 댓글 목록 업데이트
                 const commentList = document.querySelector('.comment-list');
                 const newComment = document.createElement('li');
                 newComment.textContent = data.commentsContent; // 서버에서 응답받은 댓글 내용
+
+
                 commentList.appendChild(newComment);
+                location.reload();
                 document.getElementById('commentsContent').value = ''; // 입력란 초기화
 
                 const commentCountElement = document.querySelector('.review-container .comment-count');
@@ -73,18 +128,18 @@
             const reviewNo = document.getElementById('reviewNo').value;
             const username = "user01"; // 사용자 이름을 여기에 삽입
             const likeData = {
-            userName: username,
-            relationNo: reviewNo,
-            target: 'review'
-        };
+                userName: username,
+                relationNo: reviewNo,
+                target: 'review'
+            };
 
-            fetch('/review/addLike', {
+            fetch('/api-review/addLike', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-               body: JSON.stringify(likeData),
-                })
+                body: JSON.stringify(likeData),
+            })
             .then(response => {
                 if (!response.ok) {
                     throw new Error('좋아요 추가 실패');
@@ -92,27 +147,94 @@
                 return response.text();
             })
             .then(message => {
-                alert(message);
-
                 // 좋아요 카운트 업데이트
                 const likeCountElement = document.querySelector('.like-count');
                 let currentLikeCount = parseInt(likeCountElement.textContent);
-                likeCountElement.textContent = currentLikeCount + 1; // 좋아요 수 증가
 
-                  event.target.textContent = "좋아요 취소";
+                if (message === '1'){
+                     alert('좋아요 추가');
+                    likeCountElement.textContent = currentLikeCount + 1; // 좋아요 수 증가
+                    location.reload();
+                }else{
+                alert('좋아요 취소');
+                  likeCountElement.textContent = currentLikeCount - 1; // 좋아요 수 증가
+                  location.reload();
+                }
+
+
+                //likeCountElement.textContent = currentLikeCount + 1; // 좋아요 수 증가
+
+                //event.target.textContent = "좋아요 취소";
             event.target.setAttribute('onclick', 'removeLike(event)'); // 나중에 취소 기능 추가 가능
-        })
+          })
+          .catch(error => {
+              alert(error.message);
+          });
+      }
 
-            .catch(error => {
-                alert(error.message);
-            });
+      //   // 댓글 수정 함수
+<!--       function updateComment(commentNo, buttonElement) {-->
 
-            function editComment(commentNo, buttonElement){
-            const commentItem = buttonElement.parentElement;
-            const currentContent
+<!--           console.log("commentNo chk :: ", commentNo);-->
+<!--           const commentItem = buttonElement.parentElement;-->
+<!--           //현재 댓글 내용 가져옴-->
+<!--           const currentContent = commentItem.childNodes[1].textContent;-->
 
-        }
+<!--           const newContent = prompt("댓글 내용을 수정하세요:", currentContent);-->
+<!--           if(newContent === null) return; // 사용자가 취소 버튼 누른경우-->
 
+<!--           const commentData = {-->
+<!--&lt;!&ndash;               "commentNo": "commentNo" ,&ndash;&gt;-->
+<!--               "commentNo": commentNo ,-->
+<!--               "commentsContent": newContent-->
+<!--           };-->
+
+<!--            fetch('/api-review/updateComment', {-->
+<!--               method: 'PUT',-->
+<!--               headers: {-->
+<!--                 'Content-Type': 'application/json'-->
+<!--               },-->
+<!--               body: JSON.stringify(commentData)-->
+<!--           })-->
+
+<!--           .then(response => {-->
+<!--             if (!response.ok) {-->
+<!--                 throw new Error('댓글 수정 실패');-->
+<!--             }-->
+<!--             return response.json();-->
+
+<!--           })-->
+<!--           .then(data => {-->
+<!--           console.log("222222222"+data);-->
+<!--                commentItem.childNodes[1].textContent = data.commentsContent; // 수정된 댓글 내용으로 업데이트-->
+<!--           })-->
+<!--           .catch(error => {-->
+<!--             alert(error.message);-->
+<!--           });-->
+<!--           }-->
+
+
+
+
+
+                       // 댓글 삭제 함수
+   function removeComment(commentNo, buttonElement) {
+       if (confirm("정말로 댓글을 삭제하시겠습니까?")) {
+           fetch('/removeComment/' + commentNo, {
+               method: 'DELETE',
+           })
+           .then(response => {
+               if (!response.ok) {
+                   throw new Error('댓글 삭제 실패');
+               }
+               const commentItem = buttonElement.parentElement; // 삭제할 댓글 항목을 선택
+               commentItem.remove();
+           })
+           .catch(error => {
+               alert(error.message); // 오류 발생 시 경고 메시지 표시
+           });
+       }
+   }
     </script>
 
 </head>
@@ -135,16 +257,17 @@
 <div class="comment-section">
     <h2>댓글 작성하기</h2>
     <form onsubmit="addComment(event)">
-        <input type="hidden" name="reviewNo" th:value="${review.reviewNo}" id="reviewNo" />
+        <input id="reviewNo" name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
         <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
-        <button type="submit">댓글 추가</button>
+<!--        <button type="submit">댓글 추가</button>-->
+        <button onclick="addComment(event)">댓글 추가 </button>
     </form>
     <!-- 에러 메시지 표시 -->
     <div class="error-message"></div>
 </div>
 
 <div class="like-section">
-    <button onclick="addLike(event)">좋아요 등록</button>
+    <button onclick="addLike(event)">좋아요</button>
 
 </div>
 
@@ -155,9 +278,12 @@
         <li th:each="comment : ${commentList}">
             <p><strong th:text="${comment.userName}"></strong></p>
             <p th:text="${comment.commentsContent}"></p>
+            <p th:text="${comment.commentNo}"></p>
             <p th:text="${#dates.format(comment.commentsDt, 'yyyy-MM-dd ')}"></p>
-            <button onclick="editComment([[${comment.commentNo}]], this)">수정</button>
-            <button onclick="deleteComment([[${comment.commentNo}]], this)">삭제</button>
+<!--            <button onclick="updateComment('${comment.commentNo}', this)">수정</button>-->
+<!--            <button onclick="updateComment(${comment.commentNo}, this)">수정</button>-->
+            <button class="btn-primary edit" th:data-comment-no="${comment.commentNo}" th:data-current-comment="${comment.commentsContent}">수정</button>
+            <button class="btn-primary remove" th:data-comment-no="${comment.commentNo}" th:data-current-comment="${comment.commentsContent}">삭제</button>
             <hr/>
         </li>
     </ul>

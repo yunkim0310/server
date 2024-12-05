@@ -15,6 +15,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -92,30 +94,17 @@ public class CommunityController {
         }
 
 
-
         model.addAttribute("review", review);
         // 댓글 리스트 불러오는 거
         List<Comment> commentList = communityService.getCommentList(reviewNo);
         model.addAttribute("commentList", commentList);
 
+        System.out.println("cont" + review);
+
         return "test/community/getReview";
     }
 
-
-//    //리뷰 삭제
-//    @PostMapping("/removeReview")
-//    public String removeReview(@RequestParam("reviewNo") int reviewNo) throws Exception{
-//        Review review = new Review();
-//        review.setReviewNo(reviewNo);
-//
-//        //리뷰 삭제 메서드 => 리뷰 상테 값 변경
-//        communityService.removeReview(review);
-//
-//        return "redirect:/review/getReviewList";
-//    }
-
-
-    //   //getComment
+    //getComment
     @PostMapping("/getComment")
     public String getCommentList(@RequestParam("reviewNo") int reviewNo, Model model) throws Exception {
 
@@ -147,85 +136,93 @@ public class CommunityController {
         System.out.println("/review/updateReview : POST");
 
         communityService.updateReview(review);
-        return "redirect:/review/getReview?reviewNo=" + review.getReviewNo();
+        return "redirect:/review/getReviewList?type=my";
     }
 
 
-    //    // 리뷰 삭제
-//    @PostMapping("/removeReview")
-//    public String removeReview(@RequestParam("reviewNo") int reviewNo) throws Exception {
-//
-//        Review review = new Review();
-//        review.setReviewNo(reviewNo);
-//
-//        communityService.removeReview(review);
-//        return "redirect:/review/getReviewList"; // 리뷰 목록으로 리다이렉션
-//
-//    }
-//
-//
-//   //getReviewList
-////    @GetMapping("/getReviewList")
-////    public String getReviewList(Model model) throws Exception {
-////    System.out.println("/review/getReviewList : GET");
-////
-////
-////
-////        List<Review> getReviewList = communityService.;
-////        model.addAttribute("getReviewList", getReviewList);
-////        return "test/community/getReviewList";
-////
-////        }
-//
-    //getReviewList ( 리뷰 전체 목록 보기 + 친구 리뷰 불러오기  ==> todo 현재 user정보가 없어 하드코딩 함 )
+    // 리뷰 삭제
+    @PostMapping("/removeReview")
+    public String removeReivew(@RequestParam("reviewNo") int reviewNo) throws Exception {
+
+        Review review = new Review();
+        review.setReviewNo(reviewNo);
+
+        communityService.removeReview(review);
+        return "redirect:/review/getReviewList?type=my";
+
+    }
+
+
+    //getReviewList ( 리뷰 전체 목록 보기 + 친구 리뷰 불러오기 + 다른사람의 리뷰리스트 , My피드 리뷰리스트 ) ==> todo 현재 user정보가 없어 하드코딩 함 )
+    // getReviewList.html +  getMyReviewList.html + getFriendReviewList.html + getOtherFeedView.html
     @GetMapping("/getReviewList")
     public String getReviewList(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "10") int listSize,
+            //friendUsername = friendReq + friendRes / 즉 나와 친구인 username
             @RequestParam(value = "friendUsername", required = false) String friendUsername,
+            //type의 따라 조회하는 데이터 형태를 결정 ex) type=my : 나 / type=friend : 친구
+            @RequestParam(value = "type", required = false) String type,
             Model model
     ) {
         try {
+            System.out.println("요청된 페이지: " + page);
+            System.out.println("요청된 리스트 사이즈: " + listSize);
+            System.out.println("친구 사용자 이름: " + friendUsername);
+            System.out.println("요청 타입: " + type);
+
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             Search search = new Search();
             search.setPage(page); // 현재 페이지 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
 
-            List<Review> reviewList;
-            boolean chkFriend = false;
+            // 리뷰 리스트 초기화
+            List<Review> reviewList = new ArrayList<>();
 
-            if (friendUsername != null && !friendUsername.isEmpty()) {
-            boolean isFriend = friendService.chkFriend("user02", friendUsername);
-
+            //type = friend 이고 friendUsername 이 유효한 경우 친구의 리뷰를 조회
+            if ("friend".equals(type) && friendUsername != null && !friendUsername.isEmpty()) {
+                //친구 여부 확인
+                //현재 로그인한 사용자 이름
+                String currentUser = "user02";
+                boolean isFriend = friendService.chkFriend(currentUser, friendUsername);
                 model.addAttribute("isFriend", isFriend);
-                reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                if (isFriend) {
+//                    // 친구인 경우 친구의 리뷰 리스트 가져오기
+                    reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                } else {
+                    model.addAttribute("message", "해당 사용자는 친구가 아닙니다.");
+                }
+                model.addAttribute("reviewList", reviewList);
+                System.out.println("111111111111" + reviewList);
+                return "test/community/getFriendReviewList";
+
+            } else if ("my".equals(type)) {
+                // 타입이 "my"인 경우 내 리뷰 리스트 가져오기
+                String username = "user01";
+                reviewList = communityService.getReviewList(List.of(username), search);
+                model.addAttribute("reviewList", reviewList);
+                System.out.println("22222222" + reviewList);
+                return "test/community/getMyReviewList";
+
             } else {
+                // 친구가 아닌 일반 리뷰 조회
                 reviewList = communityService.getReviewList(search);
+                //리뷰 리스트와 친구 사용자 이름 추가
+                model.addAttribute("reviewList", reviewList);
+                model.addAttribute("friendUsername", friendUsername);
+                System.out.println("333333333" + reviewList);
+                return "test/community/getReviewList";
+
             }
-            model.addAttribute("reviewList", reviewList);
-            model.addAttribute("friendUsername", friendUsername); // 버튼에서 사용할 username 추가
-            return "test/community/getReviewList"; // 리뷰 리스트 화면
         } catch (Exception e) {
             e.printStackTrace();
-            return "error"; // 에러 발생 시 error.html로 이동
+            return "error";
         }
     }
 
-
-    // 내가 작성한 리뷰 리스트 보기
-    @GetMapping("/getMyReviewList")
-    public String getMyReviewList(Model model) {
-        String username = "user01"; // todo user정보 로그인 되기 전까지 하드코딩
-        Search search = new Search();
-        List<Review> myReview = communityService.getReviewList(List.of(username), search);
-        model.addAttribute("reviewList", myReview);
-        return "test/community/myReviewList";
-    }
-
-
     //친구 신청
     @PostMapping("/friend/request")
-    public String requestFriend(@RequestParam String  friendUsername){
+    public String requestFriend(@RequestParam String friendUsername) {
         try {
             Friend friend = new Friend();
             friend.setFriendReq("user02");   // todo 현재 하드 코딩
@@ -239,6 +236,29 @@ public class CommunityController {
             return "error"; // 오류 발생 시 에러 페이지로 이동
         }
     }
+
+    //댓글 수정
+//    @PutMapping("/updatecomment")
+//    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) throws Exception{
+//        // 댓글 수정
+//        communityService.updateComment(comment);
+//        System.out.println("11111" + comment);
+//
+//        // 수정된 댓글을 반환
+//        return ResponseEntity.ok(comment);
+//
+//    }
+
+//    // 댓글 수정 1
+//    @GetMapping("/updatecomment")
+//    public String updateComment(@RequestParam("comment") Comment comment, Model model) throws Exception {
+//        System.out.println("1111111111" + comment);
+//
+//        communityService.updateComment(comment);
+//        model.addAttribute("comment", comment);
+//        return "test/community/getReview";
+//    }
+
 
     // 친구 삭제 ( 친구삭제 버튼 안되는 거 )
 //    @PostMapping("/friend/remove")
@@ -284,14 +304,67 @@ public class CommunityController {
 //    }
 
 
+//    @PostMapping("/addComment")
+//    public String addComment(@ModelAttribute Comment comment, RedirectAttributes redirectAttributes){
+//        comment.setUserName("user01");
+//
+//        try{
+//            communityService.addComment(comment);
+//            comment.setCommentsDt(new Date(System.currentTimeMillis()));
+//
+//            redirectAttributes.addFlashAttribute("message", "댓글이 등록되었습니다.");
+//            return "redirect:/getReview"; // 리뷰 상세 페이지로 리다이렉트
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            redirectAttributes.addFlashAttribute("error", "댓글 등록에 실패했습니다.");
+//            return "redirect:/getReview";
+//        }
+//    }
+
+//            boolean chkFriend = false;
+//
+//            if (friendUsername != null && !friendUsername.isEmpty()) {
+//            boolean isFriend = friendService.chkFriend("user2", friendUsername);
+//
+//                model.addAttribute("isFriend", isFriend);
+//                reviewList = communityService.getReviewList(List.of(friendUsername), search);
+//            } else {
+//                reviewList = communityService.getReviewList(search);
+//            }
+//            model.addAttribute("reviewList", reviewList);
+//            model.addAttribute("friendUsername", friendUsername); // 버튼에서 사용할 username 추가
+//            return "test/community/getReviewList"; // 리뷰 리스트 화면
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "error"; // 에러 발생 시 error.html로 이동
+//        }
+//    }
 
 
-
+    // 내가 작성한 리뷰 리스트 보기
+//    @GetMapping("/getMyReviewList")
+//    public String getMyReviewList(Model model) {
+//        String username = "user01"; // todo user정보 로그인 되기 전까지 하드코딩
+//        Search search = new Search();
+//        List<Review> myReview = communityService.getReviewList(List.of(username), search);
+//
+//        System.out.println("사용자: " + username);
+//        System.out.println("가져온 리뷰 개수: " + myReview.size());
+//        myReview.forEach(review -> {
+//        System.out.println("리뷰 번호: " + review.getReviewNo());
+//        System.out.println("리뷰 내용: " + review.getReviewContent());
+//        System.out.println("작성자: " + review.getUserName());
+//        System.out.println("별점: " + review.getReviewScore());
+//        });
+//
+//        model.addAttribute("reviewList", myReview);
+//        return "test/community/getMyReviewList";
+//    }
 
 
     //aaa.html을 위한..
     @GetMapping("/test")
-    public String test(){
+    public String test() {
         return "test/community/aaa";
     }
 }

@@ -3,6 +3,7 @@ package com.placeHere.server.service.community;
 import com.placeHere.server.domain.Friend;
 
 import java.util.List;
+import java.util.Map;
 
 public interface FriendService {
 
@@ -38,4 +39,10 @@ public interface FriendService {
 
     // 친구 상태 확인
     public boolean chkFriend(String userNameA , String userNameB) throws Exception;
+
+    // 친구 상태 확인 메소드 추가
+    public int getFriendStatus(String currentUser, String targetUser) throws Exception;
+
+    // 친구 관계 조회 메소드 추가
+    public Friend findFriendRelation(Map<String, String> params) throws Exception;
 }

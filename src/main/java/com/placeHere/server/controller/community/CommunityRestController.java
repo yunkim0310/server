@@ -14,8 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Date;
+
 @RestController
-@RequestMapping("/review")
+@RequestMapping("/api-review")
 
 
 public class CommunityRestController {
@@ -29,39 +31,25 @@ public class CommunityRestController {
     @Autowired
     private FriendService friendService;
 
-    //댓글 작성
-    @PostMapping("/addComment")
-    public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
 
-        System.out.println("comment chk 11 :: " + comment);
-
-        comment.setUserName("user01");
-
-        System.out.println("comment chk 22 ::" + comment);
-
-
-        try {
-            communityService.addComment(comment);
-            return ResponseEntity.ok(comment);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body(null);
-        }
-    }
 
     //좋아요 추가
     @PostMapping("/addLike")
     public ResponseEntity<String> addLike(@RequestBody Like like) {
         try {
+            Like chkLike = likeService.chkLike(like);
             // 현재 사용자의 좋아요 상태 확인
-            if (likeService.chkLike(like) != null) {
+            if (chkLike != null) {
+
                 // 좋아요가 존재하면 취소
-                likeService.removeLike(like);
-                return ResponseEntity.ok("좋아요가 취소 되었습니다");
+                likeService.removeLike(chkLike);
+                //return ResponseEntity.ok("좋아요가 취소 되었습니다");
+                return ResponseEntity.ok("-1");
             } else {
                 //좋아요가 없으면 추가
                 likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
-                return ResponseEntity.ok("좋아요가 추가되었습니다.");
+                //return ResponseEntity.ok("좋아요가 추가되었습니다.");
+                return ResponseEntity.ok("1");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -169,19 +157,25 @@ public class CommunityRestController {
 
     //댓글 수정
     @PutMapping("/updateComment")
-    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) {
+    public ResponseEntity<Void> updateComment(@RequestBody Comment comment) {
+
+        System.out.println("민구찡");
+        
         try {
             communityService.updateComment(comment);
-            return ResponseEntity.ok(comment);
+            return ResponseEntity.ok().build();
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body(null);
         }
     }
 
-    // 댓글 삭제 -> 노출여부 T => F 로 변경
-    @DeleteMapping("/removeComment/{commentNo}")
-    public ResponseEntity<Void> removeComment(@RequestBody int commentNo) {
+
+
+
+//     댓글 삭제 -> 노출여부 T => F 로 변경
+    @DeleteMapping("/removeComment")
+    public ResponseEntity<Void> removeComment(@PathVariable int commentNo) {
         try {
             // 댓글 객체 생성
             Comment comment = new Comment();
@@ -196,7 +190,23 @@ public class CommunityRestController {
             return ResponseEntity.status(500).build(); // 서버 오류 발생 시 500 상태 코드 반환
         }
     }
-}
+
+
+
+//    @PutMapping("/updateComment")
+//    public ResponseEntity<Void> updateComment(@RequestParam Long commentNo, @RequestParam String commentsContent) {
+//        try {
+//            Comment comment = new Comment();
+//            comment.setCommentNo(commentNo);
+//            comment.setCommentsContent(commentsContent);
+//            communityService.updateComment(comment);
+//            return ResponseEntity.noContent().build();
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return ResponseEntity.status(500).body(null);
+//        }
+//    }
+
 
 
 
@@ -233,4 +243,24 @@ public class CommunityRestController {
 //    }
 
 
+////댓글 작성 ==> 리로드 시에만 잘 들어가짐 (Rest에서 그냥 컨트롤러로 변경 )
+@PostMapping("/addComment")
+public ResponseEntity<Comment> addComment(@RequestBody Comment comment) {
 
+    System.out.println("comment chk 11 :: " + comment);
+
+    comment.setUserName("user01");
+
+    System.out.println("comment chk 22 ::" + comment);
+
+
+    try {
+        communityService.addComment(comment);
+        comment.setCommentsDt(new Date(System.currentTimeMillis()));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.status(500).body(null);
+    }}
+}

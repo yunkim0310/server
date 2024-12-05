@@ -72,8 +72,8 @@
     <!--        WHERE friend_res = #{friendRes} AND friend_status = 0-->
     <!--    </select>-->
 
-<!--    친구 상태 확인-->
-    <select id="checkFriendStatus" parameterType="map" >
+<!--    친구 상태 확인 => friend_status 만을 구분-->
+    <select id="chkFriend" parameterType="map" >
         SELECT friend_status
         FROM friend
         WHERE (friend_req = #{userNameA} AND friend_res = #{userNameB})
@@ -84,5 +84,12 @@
         DELETE FROM Friend
         WHERE friend_no = #{friendNo};
     </delete>
+
+    <!-- 친구 요청 상태 확인  : friend_req, friend_res, chkfriend_req, friend_status 등 chkFriend 추가로 필요 지우지x-->
+    <select id="findFriendRelation" parameterType="map" resultMap="friendMap"> <!-- 추가된 부분 -->
+        SELECT * FROM Friend
+        WHERE (friend_req = #{userNameA} AND friend_res = #{userNameB})
+        OR (friend_req = #{userNameB} AND friend_res = #{userNameA});
+    </select>
 
 </mapper>
