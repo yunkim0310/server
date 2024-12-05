@@ -11,6 +11,13 @@ $(function() {
         // 초기 상태에서 선택된 1차, 2차, 3차 분류에 따라 표시 설정
         initCategoryDisplay();
 
+        // 필터 텍스트 적용
+        updateRegionText();
+        updateFoodCategoryText();
+        updatePriceText();
+        updateHashtagText();
+        updateAmenitiesText();
+
         // 1차 분류 변경 이벤트
         $("input[name='foodCategory1']").on("change", function () {
             var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
@@ -31,7 +38,7 @@ $(function() {
                 $("#foodCategory4").css("display", "none");
             }
 
-            updateCategoryText();
+            updateFoodCategoryText();
         });
 
 
@@ -55,13 +62,13 @@ $(function() {
                 $("#foodCategory4").css("display", "none");
             }
 
-            updateCategoryText();
+            updateFoodCategoryText();
         });
 
 
         // 3차 분류 이벤트 처리 함수
         $("input[name='foodCategory3']").on("change", function () {
-            updateCategoryText();
+            updateFoodCategoryText();
         });
 
 
@@ -139,7 +146,7 @@ $(function() {
                 $("div[id^='foodCategory3_']").css("display", "none");
             }
 
-            updateCategoryText();
+            updateFoodCategoryText();
 
         });
 
@@ -153,13 +160,13 @@ $(function() {
             $("input[name='foodCategory3']").prop("checked", false);
             $("#foodCategory4").css("display", "none");
 
-            updateCategoryText();
+            updateFoodCategoryText();
         });
 
 
         // 3차 분류 이벤트 처리 함수
         $("input[name='foodCategory3']").on("change", function () {
-            updateCategoryText();
+            updateFoodCategoryText();
         });
 
 
@@ -181,8 +188,8 @@ $(function() {
     }
 
 
-    // 카테고리 텍스트 업데이트 함수
-    function updateCategoryText() {
+    // 음식 카테고리 텍스트 업데이트 함수
+    function updateFoodCategoryText() {
 
         var selectedCategory1 = $("input[name='foodCategory1']:checked").val();
         var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
@@ -265,12 +272,12 @@ $(function() {
             $('button[name="addHashtagInput"]').prop("disabled", true);
         }
 
-        updateHashtagList();
+        updateHashtagText();
     });
 
 
-    // 지역 선택에 대한 이벤트 처리
-    $('input[name="regionList"]').on('change', function() {
+    function updateRegionText() {
+
         // 선택된 지역 목록을 담을 배열
         var selectedRegions = [];
 
@@ -289,11 +296,16 @@ $(function() {
         } else {
             $('#region').text('미선택');
         }
+    }
+
+
+    // 지역 선택에 대한 이벤트 처리
+    $('input[name="regionList"]').on('change', function() {
+        updateRegionText();
     });
 
 
-    // 가격 범위에 대한 이벤트 처리
-    $("input[name^='price']").on('input', function() {
+    function updatePriceText() {
 
         var priceMin = Number($("input[name='priceMin']").val());
         var priceMax = Number($("input[name='priceMax']").val());
@@ -303,11 +315,17 @@ $(function() {
 
         $("#price").text(priceMin.toLocaleString() + ' ~ ' + priceMax.toLocaleString());
 
+    }
+
+
+    // 가격 범위에 대한 이벤트 처리
+    $("input[name^='price']").on('input', function() {
+        updatePriceText();
     });
 
 
     // 입력된 해시태그들의 리스트 업데이트 함수
-    function updateHashtagList() {
+    function updateHashtagText() {
 
         var hashtagList = [];
 
@@ -337,12 +355,12 @@ $(function() {
 
     // 해시태그 입력에 대한 이벤트 처리
     $(document).on('input', "input[name='hashtagList']",function() {
-        updateHashtagList();
+        updateHashtagText();
     });
 
 
-    // 편의시설 선택에 대한 이벤트 처리
-    $('input[name="amenitiesNoList"]').on('change', function() {
+    function updateAmenitiesText() {
+
         // 선택된 지역 목록을 담을 배열
         var selectedAmenities = [];
 
@@ -361,6 +379,12 @@ $(function() {
         } else {
             $('#amenities').text('미선택');
         }
+    }
+
+
+    // 편의시설 선택에 대한 이벤트 처리
+    $('input[name="amenitiesNoList"]').on('change', function() {
+        updateAmenitiesText();
     });
 
 
