@@ -443,7 +443,7 @@ public class StoreController {
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
 
-        return "test/store/getStoreListTest";
+        return "store/getStoreList";
     }
 
 
@@ -687,7 +687,7 @@ public class StoreController {
                         // 휴무일 등록
                         System.out.println("addCloseday");
 
-                        // TODO 예약이 있는지 확인하는 코드 추가 필요
+                        // TODO 예약이 있는지 확인은 Rest로? 변경 생각해보기
                         int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
 
                         System.out.println(rsrvCnt);

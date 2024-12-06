@@ -22,7 +22,7 @@ $(function() {
 
             $("form[name='addStoreNews']").submit();
 
-        })
+        });
 
         let previousTextarea = null; // 이전에 활성화된 textarea
         let previousValue = "";      // 이전 textarea의 초기 값
@@ -192,5 +192,4 @@ $(function() {
 
     }
 
-    
 });

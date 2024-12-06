@@ -1,72 +1,9 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>PlaceHere</title>
-
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
-        <link rel="stylesheet" href="/css/templates/filter.css">
-        <link rel="stylesheet" href="/css/templates/collection_detail.css">
-        <link rel="stylesheet" href="/css/templates/regist_hp.css">
-
-        <script src="/javascript/store/modalStoreFilter.js"></script>
-
-    </head>
-
-    <style>
-
-        #header .container {
-            margin: 0 auto;
-            max-width: 800px; /* max-width 값을 늘려서 더 넓은 영역 확보 */
-            box-sizing: border-box;
-            position: relative;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 20px;
-            height: 48px;
-            width: 100%;
-            background: #fff;
-            border-bottom: 1px solid #fff;
-        }
-
-        .value {
-            color: #aaa;
-            font-size: 14px;
-            display: block;
-            margin-left: 35px;
-            margin-top: 5px;
-            margin-bottom: 10px;
-        }
-
-        .filter {
-            margin-left: 35px;
-        }
-
-        .sticky-bottom-btns {
-            position: fixed;
-            bottom: 0;
-            z-index: 99;
-            width: auto;
-            max-width: 650px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 20px;
-            box-sizing: border-box;
-            width: 100vw;
-            background: rgba(255,255,255,.7);
-            -webkit-backdrop-filter: blur(2px);
-            backdrop-filter: blur(2px);
-            display: flex;
-        }
-
-    </style>
 
     <body>
 
+        <div th:fragment="filterFragment" class="storeSearchFilter">
         <form name="searchStore" id="filterModal" class="modal" style="display:none;">
 
             <input type="hidden" name="mode" th:value="${mode}">
@@ -416,6 +353,8 @@
             </div>
 
         </form>
+
+        </div>
 
     </body>
 </html>

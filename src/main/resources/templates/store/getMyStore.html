@@ -59,11 +59,12 @@
     </head>
 
     <body>
-        <div id="root">
 
-            <header id="header">
-                <div th:insert="~{common/header}"></div>
-            </header>
+        <header id="header">
+            <div th:insert="~{common/header}"></div>
+        </header>
+
+        <div id="root">
 
             <input type="hidden" id="mode" th:value="${mode}">
 
