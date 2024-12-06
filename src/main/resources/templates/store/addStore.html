@@ -17,7 +17,7 @@
         <!-- 카카오 맵 주소 검색 -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-        <script src="/javascript/store/addStore.js"></script>
+        <script type="module" src="/javascript/store/addStore.js"></script>
 
     </head>
 
@@ -31,8 +31,8 @@
 
             <form>
 
-                <input type="hidden" id="apiKey" th:value="${apiKey}">
                 <input type="hidden" name="userName" th:value="${userName}">
+                <input type="hidden" name="storeLocation">
 
                 <div class="wrapper">
 
@@ -447,8 +447,8 @@
                             <div class="css-1eo0fey e1j7jtti0"></div>
 
                             <div class="css-137ca2h e1utgeno0">
-                                <button class="css-18m884r e4nu7ef3" id="submit" name="submit-button" type="submit" width="240"
-                                        height="56" radius="3" style="background-color: #4880FF">
+                                <button class="css-18m884r e4nu7ef3" id="submit" name="submitBtn" type="button" width="240"
+                                        height="56" radius="3" style="background-color: #4880FF;">
                                     <span class="css-ymwvow e4nu7ef1 submit-button-span">다음 단계</span>
                                 </button>
                             </div>

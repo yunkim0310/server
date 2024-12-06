@@ -65,6 +65,8 @@ public class Store {
     private int storeStatus;
     // 목록 조회 총 개수
     private int totalCnt;
+    // 가게 위치 (위도, 경도)
+    private String storeLocation;
 
 
     // Method

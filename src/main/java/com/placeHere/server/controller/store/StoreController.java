@@ -37,9 +37,6 @@ public class StoreController {
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
 
-    @Value("${business_no_api}")
-    private String apiKey;
-
     @Value("${store_upload_dir}")
     private String uploadDir;
 
@@ -82,7 +79,6 @@ public class StoreController {
 
             model.addAttribute("foodCategory", new FoodCategory());
             model.addAttribute("userName", userName);
-            model.addAttribute("apiKey", apiKey);
             model.addAttribute("amenitiesNameList", amenitiesNameList);
 
             return "store/addStore";
@@ -98,13 +94,13 @@ public class StoreController {
         hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
         store.setHashtagList(hashtagList);
 
-        int storeId = storeService.addStore(store);
-        store.setStoreId(storeId);
+//        int storeId = storeService.addStore(store);
+//        store.setStoreId(storeId);
 
         System.out.println(store);
 
         model.addAttribute("userName", store.getUserName());
-        model.addAttribute("storeId", storeId);
+//        model.addAttribute("storeId", storeId);
 
         return "store/addOperation";
     }
@@ -756,5 +752,13 @@ public class StoreController {
 
             return "store/getMyStore";
         }
+    }
+
+    // Test
+    @GetMapping("/store/test")
+    public String test() {
+
+
+        return "test/store/addrTest";
     }
 }

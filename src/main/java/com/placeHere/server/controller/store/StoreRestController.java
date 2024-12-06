@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,7 +31,14 @@ public class StoreRestController {
     @Value("${list_size}")
     private int listSize;
 
+    @Value("${business_no_api}")
+    private String businessNoApiKey;
 
+    @Value("${google_api}")
+    private String googleApiKey;
+
+    @Value("${kakao_api}")
+    private String kakaoApiKey;
 
 
     // Constructor
@@ -110,6 +118,21 @@ public class StoreRestController {
         System.out.println(store);
 
         return ResponseEntity.ok(store);
+    }
+
+
+    // API Key 전달
+    @GetMapping("/getApiKey")
+    public ResponseEntity<Map<String, String>> getApiKey() {
+
+        System.out.println("/api-store/getApiKey : GET");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("businessNo", businessNoApiKey);
+        response.put("google", googleApiKey);
+        response.put("kakao", kakaoApiKey);
+
+        return ResponseEntity.ok(response);
     }
 
 }
