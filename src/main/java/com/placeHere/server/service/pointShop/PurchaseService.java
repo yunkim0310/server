@@ -15,7 +15,7 @@ public interface PurchaseService {
     public Purchase getPurchase(int tranNo) throws Exception;
 
     //구매 상품 목록
-    public List<Purchase> getPurchaseList(String userName) throws Exception;
+    public List<Purchase> getPurchaseList(String username) throws Exception;
 
     //바코드 번호
     public String getNextBarcodeNumber() throws Exception;
@@ -27,22 +27,26 @@ public interface PurchaseService {
     public void addWish(Purchase purchase) throws Exception;
 
     // 장바구니 목록 조회
-    public List<Purchase> getCartList(String userName) throws Exception;
+    public List<Purchase> getCartList(String username) throws Exception;
 
     // 찜 목록 조회
-    public List<Purchase> getWishList(String userName) throws Exception;
+    public List<Purchase> getWishList(String username) throws Exception;
 
     // 찜 / 장바구니 삭제
-    public void removeWishCart(Purchase purchase) throws Exception;
+    public void removeWish(Purchase purchase) throws Exception;
 
     // 찜 목록 삭제
-//    public void removeWish(int wishCartNo) throws Exception;
+    public void removeCart(Purchase purchase) throws Exception;
 
     public boolean isProductInWishList(int prodNo, String username) throws Exception;
 
-    public int getWishListCount(String userName);
+    public int getWishListCount(String username);
 
-    public int getCartListCount(String userName);
+    public int getCartListCount(String username);
+
+    public void buySelectedItems(List<Purchase> selectedItems) throws Exception;
+
+    public void removeSelectedItems(List<Purchase> selectedItems) throws Exception;
 
 
 }

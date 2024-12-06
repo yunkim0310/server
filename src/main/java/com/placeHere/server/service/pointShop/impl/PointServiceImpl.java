@@ -39,7 +39,7 @@ public class PointServiceImpl implements PointService {
 
     // 현재 보유 포인트 조회
     @Override
-    public int getCurrentPoint(String username) {
+    public int getCurrentPoint(@Param("username") String username) {
 
 
         return pointDao.getCurrentPoint(username);
@@ -47,8 +47,8 @@ public class PointServiceImpl implements PointService {
 
     // 포인트 내역 조회
     @Override
-    public List<Point> getPointHistoryList(String userName) {
+    public List<Point> getPointHistoryList(String username) {
 
-        return pointDao.getPointHistoryList(userName);
+        return pointDao.getPointHistoryList(username);
     }
 }

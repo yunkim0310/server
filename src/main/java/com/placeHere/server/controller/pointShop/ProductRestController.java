@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 //==> 회원관리 RestController
 @RestController
-@RequestMapping("/product/*")
+@RequestMapping("/api-product/*")
 public class ProductRestController {
 
     ///Field

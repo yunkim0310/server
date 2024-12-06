@@ -20,7 +20,7 @@ public class Purchase {
     //String 타입의 회원 아이디
     private User user;
     //
-    private String userName;
+    private String username;
     //int 타입의 구매한 상품번호
     private Product purchaseProd;
     //
@@ -44,6 +44,9 @@ public class Purchase {
 
     //int 타입의 상품 수량
     private int cntProd;
+
+
+    private boolean selected;
 
 
 //    private String prodName;

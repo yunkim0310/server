@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/purchase")
+@RequestMapping("/api-purchase")
 public class PurchaseRestController {
 
     @Autowired
@@ -21,9 +21,9 @@ public class PurchaseRestController {
     @PostMapping("/addCart")
     public String addCart(@RequestBody Purchase purchase) {
         try {
-            String userName = "user01";
-            System.out.println("userName : " + userName);
-            purchase.setUserName(userName);
+            String username = "user1";
+            System.out.println("username : " + username);
+            purchase.setUsername(username);
             purchaseService.addCart(purchase);
             return "장바구니에 상품이 추가되었습니다.";
         } catch (Exception e) {
@@ -36,19 +36,19 @@ public class PurchaseRestController {
     @PostMapping("/addWish")
     public String addWish(@RequestBody Purchase purchase) {
         try {
-            String userName = "user01";
-            System.out.println("userName : " + userName);
-            purchase.setUserName(userName);
-            boolean isWishExist = purchaseService.isProductInWishList(purchase.getProdNo(), userName);
+            String username = "user1";
+            System.out.println("username : " + username);
+            purchase.setUsername(username);
+            boolean isWishExist = purchaseService.isProductInWishList(purchase.getProdNo(), username);
             System.out.println("prodNo : "+ purchase.getProdNo());
 
             if (isWishExist) {
-                purchaseService.removeWishCart(purchase);
+                purchaseService.removeWish(purchase);
 //                purchaseService.removeWishCart(10028);
                 return "찜 목록에 상품이 삭제되었습니다.";
             }
 
-            int wishListCount = purchaseService.getWishListCount(userName);
+            int wishListCount = purchaseService.getWishListCount(username);
             if(5 <= wishListCount){
                 return "찜 목록이 꽉찼습니다.";
             }else {
@@ -63,10 +63,29 @@ public class PurchaseRestController {
     }
 
     // 찜 목록에서 제품 삭제
-    @DeleteMapping("/removeWishCart")
-    public String removeWishCart(@ModelAttribute("purchase") Purchase purchase) {
+    @DeleteMapping("/removeWish")
+    public String removeWish(@ModelAttribute("purchase") Purchase purchase) {
+
+        System.out.println("removeWish");
+
         try {
-             purchaseService.removeWishCart(purchase);
+             purchaseService.removeWish(purchase);
+
+//            purchaseService.removeWishCart(wishCartNo);
+            return "상품이 삭제되었습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "찜 목록 삭제 실패: " + e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/removeCart")
+    public String removeCart(@ModelAttribute("purchase") Purchase purchase) {
+
+        System.out.println("removeCart");
+
+        try {
+            purchaseService.removeCart(purchase);
 
 //            purchaseService.removeWishCart(wishCartNo);
             return "상품이 삭제되었습니다.";

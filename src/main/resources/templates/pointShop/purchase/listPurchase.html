@@ -49,7 +49,7 @@
         <td th:text="${purchase.purchaseProd.prodPrice}+P">상품 가격</td>
         <td th:text="${purchase.pointDt}">구매일</td>
         <td>
-            <input type="hidden" name="userName" th:value="${userName}">
+            <input type="hidden" name="username" th:value="${username}">
             <button class="btn-primary view" th:data-tran-no="${purchase.tranNo}">상품 보기</button>
         </td>
     </tr>

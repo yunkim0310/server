@@ -11,8 +11,8 @@
         $(function() {
 
             $("button.btn-primary.confirm").on("click", function () {
-                var userName = $(this).data("user-name");
-                self.location = "/purchase/listPurchase?userName="+userName;
+                var username = $(this).data("user-name");
+                self.location = "/purchase/listPurchase?username="+username;
             });
         });
     </script>
@@ -79,7 +79,7 @@
     </div>
 
     <div class="button-container">
-        <button class="btn-primary confirm" th:data-user-name="${userName}">확인</button>
+        <button class="btn-primary confirm" th:data-user-name="${username}">확인</button>
     </div>
 
 </div>

@@ -20,7 +20,7 @@ public class Point {
     //String 타입의 회원 아이디
     private User user;
     //
-    private String userName;
+    private String username;
     //int 타입의 구매한 상품번호
     private Product purchaseProd;
     //

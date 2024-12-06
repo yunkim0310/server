@@ -62,11 +62,11 @@ public class PurchaseController {
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception{
 
-        String userName = "user01";
+        String username = "user1";
 
         System.out.println("/purchase/addPurchase : GET");
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
         Product product = productService.getProduct(prodNo);
 
@@ -82,7 +82,7 @@ public class PurchaseController {
         System.out.println("product.getProdPrice() : " + product.getProdPrice());
 
         model.addAttribute("currPoint", currPoint);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
         model.addAttribute("tranPoint", tranPoint);
         model.addAttribute("product", product);
         model.addAttribute("purchase", purchase);
@@ -177,24 +177,24 @@ public class PurchaseController {
 
         System.out.println("/purchase/addPurchase : POST");
 
-        String userName = "user01";
+        String username = "user1";
 
         model.addAttribute("tranPoint", tranPoint);
 
         purchaseService.addPurchase(purchase);
 
-        pointService.updatePoint(userName, -tranPoint);
+        pointService.updatePoint(username, -tranPoint);
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
         model.addAttribute("currPoint", currPoint);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "pointShop/purchase/addPurchaseResult";
     }
 
     @RequestMapping( value="listPurchase")
-    public String listPurchase(@RequestParam("userName") String userName,
+    public String listPurchase(@RequestParam("username") String username,
 //                               @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
@@ -202,10 +202,10 @@ public class PurchaseController {
 
 //        username = "user1";
 
-        List<Purchase> purchaseList = purchaseService.getPurchaseList(userName);
+        List<Purchase> purchaseList = purchaseService.getPurchaseList(username);
 
         model.addAttribute("purchaseList", purchaseList);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "/pointShop/purchase/listPurchase";
     }
@@ -215,11 +215,11 @@ public class PurchaseController {
 
         System.out.println("/product/getPurchase : GET");
 
-        String userName = "user01";
+        String username = "user1";
 
         Purchase purchase = purchaseService.getPurchase(tranNo);
 
-        model.addAttribute("userName" , userName);
+        model.addAttribute("username" , username);
         model.addAttribute("purchase" , purchase);
 
         return "/pointShop/purchase/getPurchase";
@@ -228,13 +228,13 @@ public class PurchaseController {
 
     @GetMapping("/listCart")
     public String getCartList(
-//            @RequestParam("userName") String userName,
+//            @RequestParam("username") String username,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
-        String userName = "user01";
+        String username = "user1";
         // 장바구니 목록을 서비스에서 받아옴
-        List<Purchase> cartList = purchaseService.getCartList(userName);
+        List<Purchase> cartList = purchaseService.getCartList(username);
 
         // 모델에 장바구니 목록을 추가하여 뷰로 전달
         model.addAttribute("cartList", cartList);
@@ -246,13 +246,13 @@ public class PurchaseController {
     // 찜 목록 조회
     @GetMapping("/listWish")
     public String getWishList(
-//                          @RequestParam("userName") String userName,
+//                          @RequestParam("username") String username,
                             @ModelAttribute("purchase") Purchase purchase,
                             Model model) throws Exception {
 
-            String userName = "user01";
+            String username = "user1";
             // 찜 목록을 서비스에서 받아옴
-        List<Purchase> wishList = purchaseService.getWishList(userName);
+        List<Purchase> wishList = purchaseService.getWishList(username);
 
         // 모델에 찜 목록을 추가하여 뷰로 전달
         model.addAttribute("wishList", wishList);
@@ -262,24 +262,61 @@ public class PurchaseController {
     }
 
     @RequestMapping("listPointHistory")
-    public String getPointHistoryList(@RequestParam("userName") String userName,
+    public String getPointHistoryList(@RequestParam("username") String username,
                                       Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-        System.out.println("userName: " + userName);
+        System.out.println("username: " + username);
 
 //        username = "user1";
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
-        List<Point> pointHistoryList = pointService.getPointHistoryList(userName);
+        List<Point> pointHistoryList = pointService.getPointHistoryList(username);
 
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("pointHistoryList", pointHistoryList);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "pointShop/purchase/listPointHistory";
+    }
+
+    // 선택된 상품들의 총 가격 계산
+    @PostMapping("/calculateTotal")
+    @ResponseBody
+    public double calculateTotal(@RequestBody List<Purchase> selectedItems) {
+        double total = 0;
+        for (Purchase purchase : selectedItems) {
+            if (purchase.isSelected()) {
+                total += purchase.getPurchaseProd().getProdPrice() * purchase.getPurchaseProd().getCntProd();
+            }
+        }
+        return total;
+    }
+
+    // 선택된 상품들 일괄 구매 처리
+    @PostMapping("/buy")
+    public String buySelectedItems(@RequestParam("username") String username, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+
+        username = "user1";
+
+        model.addAttribute("username", username);
+
+        purchaseService.buySelectedItems(selectedItems);
+        return "pointShop/purchase/listCart"; // 구매 후 장바구니 목록 페이지로 이동
+    }
+
+    // 선택된 상품들 삭제
+    @PostMapping("/removeSelected")
+    public String removeSelectedItems(@RequestParam("username") String username, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+
+        username = "user1";
+
+        model.addAttribute("username", username);
+
+        purchaseService.removeSelectedItems(selectedItems);
+        return "pointShop/purchase/listCart";
     }
 
 }

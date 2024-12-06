@@ -77,27 +77,28 @@ public class ProductController {
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")
     public String addProductResult(
-                            @RequestParam(value = "file", required = false) MultipartFile file,
+//                            @RequestParam(value = "file", required = false) MultipartFile file,
                              @ModelAttribute("product") Product product, Model model) throws Exception {
 
         System.out.println("/product/addProduct : POST");
 
         String prodCateName = getCategoryNameByNo(product.getProdCateNo());
         product.setProdCateName(prodCateName);
+        product.setCntProd(1);
 
-        model.addAttribute("file", file);
-
-        String fileName = file.getOriginalFilename();
-        String uploadPath = servletContext.getRealPath(path);
-        String saveFile = uploadPath + fileName;
-        System.out.println("Image upload path: " + uploadPath);
-
-        try {
-            file.transferTo(new File(saveFile));
-            product.setProdImg1(fileName);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//        model.addAttribute("file", file);
+//
+//        String fileName = file.getOriginalFilename();
+//        String uploadPath = servletContext.getRealPath(path);
+//        String saveFile = uploadPath + fileName;
+//        System.out.println("Image upload path: " + uploadPath);
+//
+//        try {
+//            file.transferTo(new File(saveFile));
+//            product.setProdImg1(fileName);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 
         productService.addProduct(product);
 
@@ -114,8 +115,8 @@ public class ProductController {
 
         Product product = productService.getProduct(prodNo);
 
-        String userName = "user01";
-        model.addAttribute("userName", userName);
+        String username = "user1";
+        model.addAttribute("username", username);
 
         Cookie[] cookies = request.getCookies();
         String history = "";

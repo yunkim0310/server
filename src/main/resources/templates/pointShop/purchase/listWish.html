@@ -18,25 +18,26 @@
                 self.location = "/product/getProduct?prodNo=" + prodNo;
             });
 
-            // $("button.btn-primary.removeWishCart").on("click", function () {
-            //     var wishCartNo = $(this).data("wish-cart-no");
-            //     $.ajax({
-            //         type: "DELETE",
-            //         url: "/purchase/removeWishCart",
-            //         data: { wishCartNo: wishCartNo },
-            //         success: function(response) {
-            //             alert("찜 목록에서 상품이 삭제되었습니다.");
-            //             location.reload();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             alert("찜 목록 삭제 실패함: " + error);
-            //         }
-            //     });
-            // });
+            $("button.btn-primary.removeWish").on("click", function () {
+                var username = $(this).data("user-name");
+                var prodNo = $(this).data("prod-no");
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api-purchase/removeWish",
+                    data: { username: username, prodNo: prodNo },
+                    success: function(response) {
+                        alert("찜 목록에서 상품이 삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("찜 목록 삭제 실패함: " + error);
+                    }
+                });
+            });
 
         });
 
-        // function removeWishCart(){
+        // function removeWish(){
         //
         //     const query = 'input[name="chk"]:checked'
         //     const selectedElements = document.querySelectorAll(query)
@@ -55,7 +56,7 @@
         //
         //         const form = document.createElement('form');
         //         form.setAttribute('method', 'DELETE');
-        //         form.setAttribute('action', '/purchase/removeWishCart');
+        //         form.setAttribute('action', '/purchase/removeWish');
         //
         //         var input1 = document.createElement('input');
         //         input1.setAttribute("type", "hidden");
@@ -70,7 +71,7 @@
         //
         // }
 
-        function removeWishCart() {
+        function removeWish() {
             // 체크된 상품들
             const selectedElements = document.querySelectorAll('input[name="chk"]:checked');
             const selectedElementsCnt = selectedElements.length;
@@ -87,7 +88,7 @@
 
                 // AJAX 요청을 보내서 서버에서 해당 상품들을 삭제하도록 함
                 $.ajax({
-                    url: '/purchase/removeWishCart',  // 서버의 삭제 처리 URL
+                    url: '/purchase/removeWish',  // 서버의 삭제 처리 URL
                     type: 'DELETE',  // HTTP DELETE 요청
                     data: {
                         wishCartNo: arr  // 삭제할 상품들의 wishCartNo를 배열로 전달
@@ -194,14 +195,14 @@
         <td>
             <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
             <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">조회</button>
-<!--            <button class="btn-primary removeWishCart" th:data-wish-cart-no="${purchase.wishCartNo}">찜 목록 삭제</button>-->
+            <button class="btn-primary removeWish" th:data-user-name="${purchase.username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
         </td>
     </tr>
     </tbody>
 </table>
 
     <div class="button-container">
-        <a href="javascript:void(0);" class="btn-primary removeWishCart" onclick="removeWishCart();">찜 목록 삭제</a>
+        <a href="javascript:void(0);" class="btn-primary removeWish" onclick="removeWish();">찜 목록 삭제</a>
     </div>
 </form>
 </body>

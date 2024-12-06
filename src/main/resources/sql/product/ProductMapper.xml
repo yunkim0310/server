@@ -24,7 +24,7 @@
     <insert id="addProduct"	parameterType="com.placeHere.server.domain.Product">
         INSERT INTO product( prod_name , prod_detail , prod_price , prod_status , prod_img1,prod_img2,prod_img3, prod_category_no, prod_category_name, cnt_prod, reg_dt
         )
-        VALUES	 (	#{prodName} , #{prodDetail:VARCHAR} , #{prodPrice:INTEGER} , #{prodStatus:BOOLEAN} , #{prodImg1:VARCHAR} , #{prodImg2:VARCHAR} , #{prodImg3:VARCHAR} ,#{prodCateNo:INTEGER},#{prodCateName:VARCHAR},#{cnt_prod:INTEGER}, CURRENT_DATE)
+        VALUES	 (	#{prodName} , #{prodDetail:VARCHAR} , #{prodPrice:INTEGER} , #{prodStatus:BOOLEAN} , #{prodImg1:VARCHAR} , #{prodImg2:VARCHAR} , #{prodImg3:VARCHAR} ,#{prodCateNo:INTEGER},#{prodCateName:VARCHAR},#{cntProd:INTEGER}, CURRENT_DATE)
     </insert>
 
     <select id="getProduct"	parameterType="int"	resultMap="productSelectMap">

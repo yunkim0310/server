@@ -25,7 +25,7 @@
         function fncAddProduct() {
             var prodName = $("textarea[name='prodName']").val();
             var prodDetail = $("textarea[name='prodDetail']").val();
-            var prodImg1 = $("input[name='file']").val();
+            var prodImg1 = $("textarea[name='prodImg1']").val();
             var prodPrice = $("textarea[name='prodPrice']").val();
             var prodCateNo = $("select[name='prodCateNo']").val();
 
@@ -48,11 +48,11 @@
                 alert("상품 설명은 100자까지 입력 가능합니다.");
                 return;
             }
-            //
-            // if (prodImg1 == null || prodImg1.length < 1) {
-            //     alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
-            //     return;
-            // }
+
+            if (prodImg1 == null || prodImg1.length < 1) {
+                alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
+                return;
+            }
             if (prodPrice == null || prodPrice.length < 1) {
                 alert("가격은 반드시 입력하셔야 합니다.");
                 return;
@@ -165,6 +165,7 @@
         .btn-confirm:hover {
             background-color: #d0d0d0;
         }
+
     </style>
 
 
@@ -175,49 +176,46 @@
     <div th:insert="~{common/header}"></div>
     <div th:insert="~{pointShop/menuBar}"></div>
     <br/><br/>
-    <h1>상품 등록</h1><br/>
+    <h1>상품 등록</h1><br/><br/>
     <span class="css-qq9ke6 e1yyjjij0">*</span> 필수입력사항
+    <div class="header-line"></div><br/><br/><br/><br/><br/>
 </div>
-<div class="header-line"></div><br/><br/>
+
 <div class="form-container">
     <form>
         <div class="form-group">
             <label for="prodName"><strong>상품명 </strong><span
                     class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
             <textarea name="prodName" id="prodName" placeholder="20자 이내 (공백 포함)" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div>
+        </div><br/>
 
         <div class="form-group">
             <label for="prodDetail"><strong>상품 설명 </strong><span
                     class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
             <textarea name="prodDetail" id="prodDetail" placeholder="100자 이내 (공백 포함)" rows="5" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div>
+        </div><br/>
 
 
         <div class="form-group">
             <label for="prodPrice"><strong>상품 가격 </strong><span
                     class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
             <textarea name="prodPrice" id="prodPrice" placeholder="숫자만 입력 가능합니다." rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div>
-
-        <div class="form-group">
-            <label><strong>판매 가능 상태 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <input type="radio" name="prodStatus" value="1" checked>구매 가능
-            <input type="radio" name="prodStatus" value="0">판매 중지
-        </div>
+        </div><br/>
 
         <div class="form-group">
             <label for="prodImg1"><strong>상품 대표 이미지 </strong><span
                     class="css-qq9ke6 e744wfw0">*</span><p class="font-12 color-gray mt-10">1장 필수</p></label>
-            <input type="file" accept="image/*" name="file" id="prodImg1" th:field="*{product.prodImg1}" placeholder="1장 필수">
-        </div>
+<!--            <input type="file" accept="image/*" name="file" id="prodImg1" th:field="*{product.prodImg1}" placeholder="1장 필수">-->
+            <textarea name="prodImg1" id="prodImg1" placeholder="1장 필수" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        </div><br/>
 
         <div class="form-group">
             <label for="prodImg2"><strong>상품 상세 이미지</strong><p class="font-12 color-gray mt-10">최대 2장</p></label>
-            <input type="file" accept="image/*" name="prodImg2" id="prodImg2" th:field="*{product.prodImg2}" placeholder="1장 선택"><br/><br/>
-            <input type="file" accept="image/*" name="prodImg3" id="prodImg3" th:field="*{product.prodImg3}" placeholder="1장 선택">
-        </div>
+<!--            <input type="file" accept="image/*" name="prodImg2" id="prodImg2" th:field="*{product.prodImg2}" placeholder="1장 선택"><br/><br/>-->
+<!--            <input type="file" accept="image/*" name="prodImg3" id="prodImg3" th:field="*{product.prodImg3}" placeholder="1장 선택">-->
+            <textarea name="prodImg2" id="prodImg2" placeholder="상세 이미지" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea><br/><br/>
+            <textarea name="prodImg3" id="prodImg3" placeholder="상세 이미지" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
+        </div><br/>
 
         <div class="form-group">
             <label for="prodCateNo"><strong>상품 카테고리 </strong><span
@@ -232,6 +230,13 @@
                 <option value="6">버거/피자 교환권</option>
                 <option value="7">편의점 교환권</option>
             </select>
+        </div><br/>
+
+        <div class="form-group">
+            <label><strong>판매 가능 상태 </strong><span
+                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
+            <input type="radio" name="prodStatus" value="1" checked>구매 가능&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="prodStatus" value="0">판매 중지
         </div><br/><br/>
 
         <div class="form-group button-group">
