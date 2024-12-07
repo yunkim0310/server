@@ -7,6 +7,7 @@ import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
@@ -348,6 +349,36 @@ public class ReservationController {
 //
 //        return "test/reservation/pay";
 //    }
+
+    @RequestMapping(value = "modalRsrvCancel", method = RequestMethod.POST)
+    public String modalRsrvCancel(@RequestParam("rsrvNo") int rsrvNo,
+                                  @RequestParam("role") String role,
+                                  @RequestParam("reason") String reason) throws Exception {
+        System.out.println("/reservation/modalRsrvCancel : POST");
+        System.out.println(role);
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+        if("ROLE_USER".equals(role))
+        {
+            if("예약 요청".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+            }else if("예약 확정".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,reservation.getRsrvDt(), reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+            }
+        }else if("ROLE_STORE".equals(role)){
+            if("예약 요청".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 거절");
+            }else if("예약 확정".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason, null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+            }
+        }
+        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+    }
 
 
 }
