@@ -1,9 +1,7 @@
 package com.placeHere.server.controller.reservation;
 
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.Store;
-import com.placeHere.server.domain.StoreOperation;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
@@ -14,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -168,7 +167,7 @@ public class ReservationController {
     public String addRsrv(
             @RequestParam("storeId") int storeId,
             @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
-            Model model) {
+            Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : GET");
 
@@ -194,13 +193,23 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
+        // 휴무요일
+        List<CloseDayOnEffectDay> closeDayOnEffectDayList = reservationService.getRsrvClose(storeId);
+        System.out.println(closeDayOnEffectDayList);
+        // JSON으로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonCloseDayOnEffectDayList = objectMapper.writeValueAsString(closeDayOnEffectDayList);
+
+        // JSON 데이터를 모델에 추가
+        model.addAttribute("closeDayOnEffectDayList", jsonCloseDayOnEffectDayList);
+
         return "reservation/addRsrv";
     }
 
 
     @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
     public String addRsrv(
-            @RequestParam("rsrvDt") String rsrvDtStr, // String으로 받기
+            @RequestParam("selectedDate") String rsrvDtStr, // String으로 받기
             @ModelAttribute("reservation") Reservation reservation,
             Model model) throws Exception {
 
@@ -348,6 +357,8 @@ public class ReservationController {
 //
 //        return "test/reservation/pay";
 //    }
+
+
 
 
 }

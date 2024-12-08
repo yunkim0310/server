@@ -240,6 +240,10 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+    public List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception{
+        return reservationDao.getRsrvClose(storeId);
+    }
+
 
 
 }

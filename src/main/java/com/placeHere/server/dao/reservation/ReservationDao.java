@@ -1,5 +1,6 @@
 package com.placeHere.server.dao.reservation;
 
+import com.placeHere.server.domain.CloseDayOnEffectDay;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.ReservationTimeStatus;
 import com.placeHere.server.domain.Search;
@@ -66,5 +67,7 @@ public interface ReservationDao {
     List<Integer> getRemoveStoreRsrvNos(int storeId) throws Exception;
 
     List<ReservationTimeStatus> getRsrvTimeStatus(Map<String, Object> params) throws Exception;
+
+    List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception;
 
 }

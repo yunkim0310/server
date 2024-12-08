@@ -1,9 +1,6 @@
 package com.placeHere.server.service.reservation;
 
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.ReservationTimeStatus;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.StoreReservation;
+import com.placeHere.server.domain.*;
 
 import java.util.Date;
 import java.util.List;
@@ -75,6 +72,7 @@ public interface ReservationService {
 
     StoreReservation getStoreReservation(Map<String, Object> params) throws Exception;
 
+    List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception;
 
 
 

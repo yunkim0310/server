@@ -2,278 +2,322 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Reservation Form</title>
-    <script src="https://js.tosspayments.com/v1"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <style>
+        .container {
+            margin: 0 auto;
+            width: 600px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .time-table {
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .time-row {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 10px;
+        }
+
+        .time {
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
+
+        .fc-day-disabled {
+            opacity: 0.5; /* 반투명 효과 */
+            pointer-events: none; /* 클릭 불가 */
+        }
+
+        .fc-day-selected {
+            background-color: yellow !important; /* 클릭된 날짜 배경색 */
+        }
+    </style>
+
+    <script th:inline="javascript">
+        var closeDayOnEffectDayList = [[${closeDayOnEffectDayList}]];
+        closeDayOnEffectDayList = JSON.parse(closeDayOnEffectDayList);
+        console.log(closeDayOnEffectDayList);
+        // [{"effectDt":"2024-12-08","day1":"금","day2":"","day3":null},{"effectDt":"2024-12-16","day1":null,"day2":null,"day3":null}]
+        // console.log(closeDayOnEffectDayList[0].effectDt);
+    </script>
+
     <script>
+        // 요일 매핑: "일", "월", "화", "수", "목", "금", "토" => 0 ~ 6
+        const dayMapping = { "일": 0, "월": 1, "화": 2, "수": 3, "목": 4, "금": 5, "토": 6 };
 
-        /*function generateTimeArray(openTime, closeTime, breakStart, breakEnd) {
-            const start = parseTime(openTime);
-            const end = parseTime(closeTime);
-            const breakStartTime = parseTime(breakStart);
-            const breakEndTime = parseTime(breakEnd);
-            const result = [];
+        // 유효 날짜 범위별 휴무일 데이터 계산
+        // 유효 날짜 범위별 휴무일 데이터 계산
+        const effectiveDays = [];
+        for (let i = 0; i < closeDayOnEffectDayList.length; i++) {
+            // ISO 8601 형식으로 변환 (UTC 기준 날짜만 포함)
+            const startDate = closeDayOnEffectDayList[i].effectDt;
 
-            while (start < end) {
-                // Check if the current time is within the break time range
-                if (start < breakStartTime || start >= breakEndTime) {
-                    result.push(formatTime(start));
+            const endDate = i + 1 < closeDayOnEffectDayList.length
+                ? closeDayOnEffectDayList[i + 1].effectDt
+                : null;
+
+            // 요일 데이터 추출
+            const closedDays = [closeDayOnEffectDayList[i].day1, closeDayOnEffectDayList[i].day2, closeDayOnEffectDayList[i].day3]
+                .filter(day => day && dayMapping[day] !== undefined)
+                .map(day => dayMapping[day]);
+
+            // 최종 데이터 구조에 push
+            effectiveDays.push({ startDate, endDate, closedDays });
+        }
+
+        console.log(effectiveDays);
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // 오늘 날짜 초기화
+            const fourteenDaysLater = new Date();
+            fourteenDaysLater.setDate(today.getDate() + 14);
+
+            const calendarEl = document.getElementById('calendar');
+            const selectedDateInput = document.getElementById('selectedDate');
+            const regularClosedayList = /*[[${regularClosedayList}]]*/ [] || []; // 휴무요일 (null 처리)
+            const closedayList = /*[[${closedayList}]]*/ [] || []; // 휴무일 (null 처리)
+            const effectDt = new Date(/*[[${store.storeOperation.effectDt}]]*/ '1970-01-01');
+            let selectedDate = ""; // 선택된 날짜
+            let selectedTime = ""; // 선택된 시간
+
+
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                timeZone: 'Asia/Seoul', // FullCalendar 시간대를 한국 표준 시간으로 설정
+                dateClick: function (info) {
+                    if (info.date >= today && info.date <= fourteenDaysLater) {
+                        selectedDate = info.dateStr;
+
+                        // 이전에 선택된 날짜 배경 초기화
+                        document.querySelectorAll('.fc-day-selected').forEach(el => el.classList.remove('fc-day-selected'));
+
+                        // 선택된 날짜 배경 변경
+                        info.dayEl.classList.add('fc-day-selected');
+
+                        // 서버 데이터 가져오기 및 시간 테이블 생성
+                        fetch(`/api-reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${info.dateStr}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    const openTime = data.storeOperation.openTime;
+                                    const closeTime = data.storeOperation.closeTime;
+                                    const breakStart = data.storeOperation.breakTimeStart;
+                                    const breakEnd = data.storeOperation.breakTimeEnd;
+
+                                    const timeArray = generateTimeArray(
+                                        openTime,
+                                        closeTime,
+                                        breakStart,
+                                        breakEnd,
+                                        data.reservationTimeStatusList,
+                                        data.storeOperation.rsrvLimit
+                                    );
+
+                                    generateTimeTable(timeArray);
+                                } else {
+                                    alert("No operation details found for the selected date.");
+                                }
+                            })
+                            .catch(error => console.error("Error fetching operation details:", error));
+                    }
+                },
+                validRange: {
+                    start: today.toISOString().split('T')[0],
+                    end: fourteenDaysLater.toISOString().split('T')[0]
+                },
+                dayCellDidMount: function (info) {
+                    const dateStr = info.date.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+
+                    // 휴무일 비활성화
+                    if (closedayList.includes(dateStr)) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    // 휴무요일 비활성화 (effectDt 이후부터 적용)
+                    const dayOfWeek = info.date.getDay(); // 일요일 = 0, 월요일 = 1, ...
+                    if (info.date >= effectDt && regularClosedayList.includes(dayOfWeek.toString())) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    // 기본 범위 외 비활성화
+                    if (info.date < today || info.date > fourteenDaysLater) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    /*var date = new Date(info.date);
+                    var day = date.getDay(); // 5: 금요일, 6: 토요일
+
+                    var startDate = new Date('2024-12-11');
+                    var endDate = new Date('2024-12-18');
+                    // 공휴요일 비활성화
+                    if (
+                        (day === 5 || day === 6) && // 금요일 또는 토요일
+                        date >= startDate &&
+                        date <= endDate
+                    ) {
+                        // info.el.style.pointerEvents = 'none';
+                        // info.el.style.backgroundColor = '#d3d3d3';
+                        // info.el.style.color = '#999';
+                        info.el.classList.add('fc-day-disabled');
+                    }*/
+
+                    /*const currentDate = info.date.toISOString().split('T')[0]; // ISO 날짜 형식으로 변환
+
+                    effectiveDays.forEach(period => {
+                        const startDate = period.startDate;
+                        const endDate = period.endDate;
+                        const closedDays = period.closedDays;
+
+                        // 날짜가 범위에 속하고 요일이 비활성화 목록에 포함된 경우
+                        if (
+                            currentDate >= startDate &&
+                            (!endDate || currentDate < endDate) &&
+                            closedDays.includes(info.date.getUTCDay()) // UTC 요일 비교
+                        ) {
+                            info.el.classList.add('fc-day-disabled'); // 비활성화 클래스 추가
+                        }
+                    });*/
+
+                    const currentDate = new Date(info.date); // info.date는 FullCalendar에서 제공하는 날짜 객체
+                    currentDate.setHours(currentDate.getHours() + 9); // UTC -> KST 변환
+
+                    effectiveDays.forEach(period => {
+                        const startDate = new Date(period.startDate);
+                        const endDate = period.endDate ? new Date(period.endDate) : null;
+
+                        startDate.setHours(0); // 시작 날짜 KST 기준
+                        if (endDate) {
+                            endDate.setHours(0); // 종료 날짜 KST 기준
+                        }
+
+                        const closedDays = period.closedDays;
+
+                        // 날짜가 범위에 속하고 요일이 비활성화 목록에 포함된 경우
+                        if (
+                            currentDate >= startDate &&
+                            (!endDate || currentDate < endDate) &&
+                            closedDays.includes(currentDate.getDay()) // KST 기준 요일 비교
+                        ) {
+                            info.el.classList.add('fc-day-disabled'); // 비활성화 클래스 추가
+                        }
+                    });
                 }
-                // Add 30 minutes
-                start.setMinutes(start.getMinutes() + 30);
+            });
+
+            calendar.render();
+
+            function generateTimeArray(openTime, closeTime, breakStart, breakEnd, reservationTimeStatusList, maxLimit) {
+                const start = parseTime(openTime);
+                const end = parseTime(closeTime);
+                const breakStartTime = breakStart ? parseTime(breakStart) : null;
+                const breakEndTime = breakEnd ? parseTime(breakEnd) : null;
+                const result = [];
+
+                while (start < end) {
+                    const currentTime = formatTime(start);
+
+                    const isReservedOverLimit = reservationTimeStatusList.some(reservation => {
+                        const reservationTime = formatTime(parseTime(reservation.rsrvDt.split(' ')[1]));
+                        return reservationTime === currentTime && reservation.rsrvPerson > maxLimit;
+                    });
+
+                    // Break time이 null인 경우 해당 조건 무시
+                    const isInBreakTime = breakStartTime && breakEndTime && (start >= breakStartTime && start < breakEndTime);
+
+                    if (!isInBreakTime && !isReservedOverLimit) {
+                        result.push(currentTime);
+                    }
+                    start.setMinutes(start.getMinutes() + 30);
+                }
+
+                return result;
             }
 
-            return result;
-        }*/
-        function generateTimeArray(openTime, closeTime, breakStart, breakEnd, reservationTimeStatusList, maxLimit) {
-            const start = parseTime(openTime);
-            const end = parseTime(closeTime);
-            const breakStartTime = parseTime(breakStart);
-            const breakEndTime = parseTime(breakEnd);
-            const result = [];
+            function parseTime(timeString) {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                const date = new Date();
+                date.setHours(hours, minutes, 0, 0);
+                return date;
+            }
 
-            // console.log(reservationTimeStatusList, maxLimit);
+            function formatTime(date) {
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
 
-            while (start < end) {
-                // 현재 시간 포맷
-                const currentTime = formatTime(start);
+            function generateTimeTable(timeArray) {
+                const timeTable = document.getElementById('time-table');
+                timeTable.innerHTML = '';
+                const maxPerRow = 5;
+                let currentRow;
 
-                // 예약 시간인지 확인
-                const isReservedOverLimit = reservationTimeStatusList.some(reservation => {
-                    const reservationTime = formatTime(parseTime(reservation.rsrvDt.split(' ')[1]));
-                    // console.log('reservationTime', reservationTime, reservation.rsrvPerson, maxLimit);
-                    return reservationTime === currentTime && reservation.rsrvPerson > maxLimit;
+                timeArray.forEach((time, index) => {
+                    if (index % maxPerRow === 0) {
+                        currentRow = document.createElement('div');
+                        currentRow.className = 'time-row';
+                        timeTable.appendChild(currentRow);
+                    }
+                    const button = document.createElement('button');
+                    button.className = 'time';
+                    button.textContent = time;
+
+                    button.addEventListener('click', function () {
+                        selectedTime = time;
+
+                        // 버튼 클릭 시 선택된 시간 표시
+                        document.querySelectorAll('.time').forEach(el => el.style.backgroundColor = "");
+                        button.style.backgroundColor = "yellow";
+
+                        // 날짜와 시간을 합쳐 selectedDateInput에 저장
+                        selectedDateInput.value = `${selectedDate}T${selectedTime}`;
+                    });
+
+                    currentRow.appendChild(button);
                 });
 
-                // Check if the current time is within the break time range and reservation limit
-                if ((start < breakStartTime || start >= breakEndTime) && !isReservedOverLimit) {
-                    result.push(currentTime);
-                }
-                // Add 30 minutes
-                start.setMinutes(start.getMinutes() + 30);
+                timeTable.classList.remove('no-display');
             }
-
-            return result;
-        }
-
-        // Helper function to parse time strings (e.g., "10:00") into Date objects
-        function parseTime(timeString) {
-            const [hours, minutes] = timeString.split(':').map(Number);
-            const date = new Date();
-            date.setHours(hours, minutes, 0, 0);
-            return date;
-        }
-
-        // Helper function to format Date objects into time strings (e.g., "10:00")
-        function formatTime(date) {
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${hours}:${minutes}`;
-        }
-
-        function generateTimeTable(timeArray) {
-            const timeTable = document.getElementById('time-table');
-            timeTable.innerHTML = ''; // Clear existing content
-            const maxPerRow = 5; // Maximum buttons per row
-            let currentRow;
-
-            timeArray.forEach((time, index) => {
-                if (index % maxPerRow === 0) {
-                    // Create a new row every 5 buttons
-                    currentRow = document.createElement('div');
-                    currentRow.className = 'time-row';
-                    timeTable.appendChild(currentRow);
-                }
-                // Create a button for the time slot
-                const button = document.createElement('button');
-                button.className = 'time';
-                button.textContent = time;
-                button.setAttribute('onclick', 'selectTime(this)');
-                currentRow.appendChild(button);
-            });
-
-            // Make the time table visible (if initially hidden)
-            timeTable.classList.remove('no-display');
-        }
-
-
-        // JavaScript로 날짜 제한 및 이벤트 설정
-        document.addEventListener("DOMContentLoaded", function () {
-            const rsrvDt = document.getElementById("rsrvDt");
-            const operationDetails = document.getElementById("operationDetails");
-
-            // 현재 날짜와 시간
-            const now = new Date();
-            const nowISO = now.toISOString().slice(0, 16);
-
-            // 13일 후 날짜 계산
-            const futureDate = new Date();
-            futureDate.setDate(now.getDate() + 13);
-            const futureISO = futureDate.toISOString().slice(0, 16);
-
-            // min 및 max 속성 설정
-            rsrvDt.min = nowISO;
-            rsrvDt.max = futureISO;
-
-            // 날짜 변경 시 서버에서 운영 정보 가져오기
-            rsrvDt.addEventListener("change", function () {
-                const selectedDate = rsrvDt.value; // yyyy-MM-ddTHH:mm 형식
-
-                if (selectedDate) {
-                    // Ajax 요청으로 운영 정보 가져오기
-                    fetch(`/api-reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${selectedDate.split("T")[0]}`)
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data) {
-                                // 운영 정보 출력
-                                operationDetails.innerHTML = `
-                                    <h3>Store Operation Details</h3>
-                                    <p>Open Time: ${data.storeOperation.openTime || "N/A"}</p>
-                                    <p>Close Time: ${data.storeOperation.closeTime || "N/A"}</p>
-                                    <p>Break Time Start: ${data.storeOperation.breakTimeStart || "N/A"}</p>
-                                    <p>Break Time End: ${data.storeOperation.breakTimeEnd || "N/A"}</p>
-                                    <p>Max Reservation Limit: ${data.storeOperation.rsrvLimit || "N/A"}</p>
-                                `;
-
-
-                                // Example Usage
-                                const openTime = data.storeOperation.openTime;
-                                const closeTime = data.storeOperation.closeTime;
-                                const breakStart = data.storeOperation.breakTimeStart;
-                                const breakEnd = data.storeOperation.breakTimeEnd;
-
-                                const timeArray = generateTimeArray(openTime, closeTime, breakStart, breakEnd, data.reservationTimeStatusList, data.storeOperation.rsrvLimit);
-                                console.log(timeArray);
-
-                                generateTimeTable(timeArray);
-
-                            } else {
-                                operationDetails.innerHTML = `<p>No operation details found for the selected date.</p>`;
-                            }
-                        })
-                        .catch(error => {
-                            console.error("Error fetching operation details:", error);
-                            operationDetails.innerHTML = `<p>Error fetching operation details. Please try again later.</p>`;
-                        });
-                } else {
-                    operationDetails.innerHTML = `<p>Please select a valid date.</p>`;
-                }
-            });
-        });
-
-        document.addEventListener('DOMContentLoaded', function() {
-            var calendarEl = document.getElementById('calendar');
-            var today = new Date();
-            today.setHours(0, 0, 0, 0); // 오늘 자정 기준
-            var endDate = new Date(today);
-            endDate.setDate(today.getDate() + 14); // 14일 후
-
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                locale: "ko",
-                selectable: true,
-                // 비활성화할 날짜에 클래스 추가
-                dayCellClassNames: function(arg) {
-                    var cellDate = arg.date;
-                    if (cellDate < today || cellDate >= endDate) {
-                        return ['fc-disabled'];
-                    }
-                    return [];
-                },
-                // 비활성화된 날짜는 선택 방지
-                dateClick: function(info) {
-                    if (info.date >= today && info.date < endDate) {
-                        document.querySelectorAll('.fc-daygrid-day.fc-selected').forEach(function(day) {
-                            day.classList.remove('fc-selected');
-                        });
-                        info.dayEl.classList.add('fc-selected');
-                    }
-
-                    document.getElementById('time-table').classList.remove('no-display');
-
-                    selectedDate = info.dateStr;
-                    console.log(selectedDate);
-                }
-            });
-            calendar.render();
         });
     </script>
-    <style>
-        .time-table { margin-top: 10px; width: 100%;}
-    </style>
 </head>
 <body>
-<h1>Make a Reservation</h1>
+<div class="container">
+    <h1 th:text="${store.storeName}"></h1>
+    <form action="/reservation/addRsrv" method="post">
+        <div id="calendar" style="width: 600px;"></div>
+        <div id="time-table" class="time-table no-display"></div>
 
-<div id='calendar' style="width: 600px;"></div>
+        <input type="hidden" name="storeId" th:value="${store.storeId}" />
+        <input type="hidden" name="storeName" th:value="${store.storeName}" />
+        <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
+        <input type="hidden" id="selectedDate" name="selectedDate" />
 
+        <label for="userName">Your Name:</label>
+        <input type="text" id="userName" name="userName" required /><br><br>
 
-<div id='time-table' class="time-table no-display">
-<!--    <div class="time-row">-->
-<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
-<!--    </div>-->
-<!--    <div class="time-row">-->
-<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
-<!--    </div>-->
-<!--    <div class="time-row">-->
-<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
-<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
-<!--    </div>-->
+        <label for="rsrvPerson">Number of People:</label>
+        <input type="number" id="rsrvPerson" name="rsrvPerson" min="1" required /><br><br>
+
+        <label for="amount">Amount:</label>
+        <input type="number" id="amount" name="amount" min="5000" required /><br><br>
+
+        <label for="rsrvReq">Request:</label>
+        <input type="text" id="rsrvReq" name="rsrvReq" /><br><br>
+
+        <label for="rsrvNumber">Phone Number:</label>
+        <input type="tel" id="rsrvNumber" name="rsrvNumber" required pattern="[0-9]{10,11}" placeholder="01012345678" /><br><br>
+
+        <button type="submit" id="payButton">Submit Reservation</button>
+    </form>
 </div>
-
-
-
-<!-- 가게 정보 -->
-<h2>Store Information</h2>
-<p>Store Name: <span th:text="${store.storeName}">[Store Name]</span></p>
-<p>Store Address: <span th:text="${store.storeAddr}">[Store Address]</span></p>
-
-<!-- 예약 입력 폼 -->
-<h2>Reservation Details</h2>
-<form action="/reservation/addRsrv" method="post">
-    <!-- 가게 ID 전달 -->
-    <input type="hidden" name="storeId" th:value="${store.storeId}" />
-    <input type="hidden" name="storeName" th:value="${store.storeName}" />
-    <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
-
-    <label for="userName">Your Name:</label>
-    <input type="text" id="userName" name="userName" required /><br><br>
-
-    <label for="rsrvPerson">Number of People:</label>
-    <input type="number" id="rsrvPerson" name="rsrvPerson" min="1" required /><br><br>
-
-    <label for="amount">Amount:</label>
-    <input type="number" id="amount" name="amount" min="5000" required /><br><br>
-
-    <label for="rsrvDt">Reservation Date & Time:</label>
-    <input type="datetime-local" id="rsrvDt" name="rsrvDt" required /><br><br>
-
-    <label for="rsrvReq">Request:</label>
-    <input type="text" id="rsrvReq" name="rsrvReq" required /><br><br>
-
-    <label for="rsrvNumber">Phone Number:</label>
-    <input type="tel" id="rsrvNumber" name="rsrvNumber" required pattern="[0-9]{10,11}" placeholder="01012345678" /><br><br>
-
-    <button type="submit" id="payButton">Submit Reservation</button>
-
-</form>
-
-<!-- 운영 정보 표시 -->
-<div id="operationDetails">
-    <h3>Store Operation Details</h3>
-    <p>Select a date to see operation details.</p>
-</div>
-
-
 </body>
 </html>
