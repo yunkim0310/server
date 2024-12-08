@@ -5,6 +5,97 @@
     <script src="https://js.tosspayments.com/v1"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <script>
+
+        /*function generateTimeArray(openTime, closeTime, breakStart, breakEnd) {
+            const start = parseTime(openTime);
+            const end = parseTime(closeTime);
+            const breakStartTime = parseTime(breakStart);
+            const breakEndTime = parseTime(breakEnd);
+            const result = [];
+
+            while (start < end) {
+                // Check if the current time is within the break time range
+                if (start < breakStartTime || start >= breakEndTime) {
+                    result.push(formatTime(start));
+                }
+                // Add 30 minutes
+                start.setMinutes(start.getMinutes() + 30);
+            }
+
+            return result;
+        }*/
+        function generateTimeArray(openTime, closeTime, breakStart, breakEnd, reservationTimeStatusList, maxLimit) {
+            const start = parseTime(openTime);
+            const end = parseTime(closeTime);
+            const breakStartTime = parseTime(breakStart);
+            const breakEndTime = parseTime(breakEnd);
+            const result = [];
+
+            // console.log(reservationTimeStatusList, maxLimit);
+
+            while (start < end) {
+                // 현재 시간 포맷
+                const currentTime = formatTime(start);
+
+                // 예약 시간인지 확인
+                const isReservedOverLimit = reservationTimeStatusList.some(reservation => {
+                    const reservationTime = formatTime(parseTime(reservation.rsrvDt.split(' ')[1]));
+                    // console.log('reservationTime', reservationTime, reservation.rsrvPerson, maxLimit);
+                    return reservationTime === currentTime && reservation.rsrvPerson > maxLimit;
+                });
+
+                // Check if the current time is within the break time range and reservation limit
+                if ((start < breakStartTime || start >= breakEndTime) && !isReservedOverLimit) {
+                    result.push(currentTime);
+                }
+                // Add 30 minutes
+                start.setMinutes(start.getMinutes() + 30);
+            }
+
+            return result;
+        }
+
+        // Helper function to parse time strings (e.g., "10:00") into Date objects
+        function parseTime(timeString) {
+            const [hours, minutes] = timeString.split(':').map(Number);
+            const date = new Date();
+            date.setHours(hours, minutes, 0, 0);
+            return date;
+        }
+
+        // Helper function to format Date objects into time strings (e.g., "10:00")
+        function formatTime(date) {
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${hours}:${minutes}`;
+        }
+
+        function generateTimeTable(timeArray) {
+            const timeTable = document.getElementById('time-table');
+            timeTable.innerHTML = ''; // Clear existing content
+            const maxPerRow = 5; // Maximum buttons per row
+            let currentRow;
+
+            timeArray.forEach((time, index) => {
+                if (index % maxPerRow === 0) {
+                    // Create a new row every 5 buttons
+                    currentRow = document.createElement('div');
+                    currentRow.className = 'time-row';
+                    timeTable.appendChild(currentRow);
+                }
+                // Create a button for the time slot
+                const button = document.createElement('button');
+                button.className = 'time';
+                button.textContent = time;
+                button.setAttribute('onclick', 'selectTime(this)');
+                currentRow.appendChild(button);
+            });
+
+            // Make the time table visible (if initially hidden)
+            timeTable.classList.remove('no-display');
+        }
+
+
         // JavaScript로 날짜 제한 및 이벤트 설정
         document.addEventListener("DOMContentLoaded", function () {
             const rsrvDt = document.getElementById("rsrvDt");
@@ -36,12 +127,25 @@
                                 // 운영 정보 출력
                                 operationDetails.innerHTML = `
                                     <h3>Store Operation Details</h3>
-                                    <p>Open Time: ${data.openTime || "N/A"}</p>
-                                    <p>Close Time: ${data.closeTime || "N/A"}</p>
-                                    <p>Break Time Start: ${data.breakTimeStart || "N/A"}</p>
-                                    <p>Break Time End: ${data.breakTimeEnd || "N/A"}</p>
-                                    <p>Max Reservation Limit: ${data.rsrvLimit || "N/A"}</p>
+                                    <p>Open Time: ${data.storeOperation.openTime || "N/A"}</p>
+                                    <p>Close Time: ${data.storeOperation.closeTime || "N/A"}</p>
+                                    <p>Break Time Start: ${data.storeOperation.breakTimeStart || "N/A"}</p>
+                                    <p>Break Time End: ${data.storeOperation.breakTimeEnd || "N/A"}</p>
+                                    <p>Max Reservation Limit: ${data.storeOperation.rsrvLimit || "N/A"}</p>
                                 `;
+
+
+                                // Example Usage
+                                const openTime = data.storeOperation.openTime;
+                                const closeTime = data.storeOperation.closeTime;
+                                const breakStart = data.storeOperation.breakTimeStart;
+                                const breakEnd = data.storeOperation.breakTimeEnd;
+
+                                const timeArray = generateTimeArray(openTime, closeTime, breakStart, breakEnd, data.reservationTimeStatusList, data.storeOperation.rsrvLimit);
+                                console.log(timeArray);
+
+                                generateTimeTable(timeArray);
+
                             } else {
                                 operationDetails.innerHTML = `<p>No operation details found for the selected date.</p>`;
                             }
@@ -93,11 +197,41 @@
             calendar.render();
         });
     </script>
+    <style>
+        .time-table { margin-top: 10px; width: 100%;}
+    </style>
 </head>
 <body>
 <h1>Make a Reservation</h1>
 
 <div id='calendar' style="width: 600px;"></div>
+
+
+<div id='time-table' class="time-table no-display">
+<!--    <div class="time-row">-->
+<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
+<!--    </div>-->
+<!--    <div class="time-row">-->
+<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
+<!--    </div>-->
+<!--    <div class="time-row">-->
+<!--        <button class="time" onclick="selectTime(this)">12:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">13:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">14:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">15:00</button>-->
+<!--        <button class="time" onclick="selectTime(this)">16:00</button>-->
+<!--    </div>-->
+</div>
+
+
 
 <!-- 가게 정보 -->
 <h2>Store Information</h2>

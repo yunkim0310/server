@@ -1,10 +1,10 @@
 package com.placeHere.server.service.reservation.impl;
 
 import com.placeHere.server.dao.reservation.ReservationDao;
+import com.placeHere.server.dao.store.StoreDao;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,8 @@ public class ReservationServiceImpl implements ReservationService{
     @Autowired
     PaymentService paymentService;
 
-
+    @Autowired
+    private StoreDao storeDao;
 
 
     // 예약 정보 등록
@@ -176,6 +177,18 @@ public class ReservationServiceImpl implements ReservationService{
     // 탈퇴 예정인 일반 회원의 예약 번호 리스트
     public List<Integer> getRemoveUserRsrvNos(String userName) throws Exception {
         return reservationDao.getRemoveUserRsrvNos(userName);
+    }
+
+    public StoreReservation getStoreReservation(Map<String, Object> params) throws Exception {
+        int storeId = (Integer) params.get("storeId");
+        String effectDt = (String) params.get("effectDt");
+        java.sql.Date sqlEffectDt = java.sql.Date.valueOf(effectDt); // String -> java.sql.Date 변환
+        StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
+        List<ReservationTimeStatus> reservationTimeStatusList = reservationDao.getRsrvTimeStatus(params);
+        StoreReservation storeReservation = new StoreReservation();
+        storeReservation.setStoreOperation(operation);
+        storeReservation.setReservationTimeStatusList(reservationTimeStatusList);
+        return storeReservation;
     }
 
 

@@ -237,6 +237,16 @@
     </select>
 
 
+    <select id="getRsrvTimeStatus" parameterType="map" resultType="com.placeHere.server.domain.ReservationTimeStatus">
+        SELECT rsrv_dt as rsrvDt, COALESCE(SUM(rsrv_person), 0) as rsrvPerson
+        FROM reservation
+        WHERE DATE(rsrv_dt) = DATE(#{effectDt})
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청')
+        group by rsrv_dt
+    </select>
+
+
 
 
 

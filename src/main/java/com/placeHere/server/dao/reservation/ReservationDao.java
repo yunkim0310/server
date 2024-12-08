@@ -1,6 +1,7 @@
 package com.placeHere.server.dao.reservation;
 
 import com.placeHere.server.domain.Reservation;
+import com.placeHere.server.domain.ReservationTimeStatus;
 import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -64,5 +65,6 @@ public interface ReservationDao {
     // 탈퇴 예정인 점주 회원의 예약 번호 리스트
     List<Integer> getRemoveStoreRsrvNos(int storeId) throws Exception;
 
+    List<ReservationTimeStatus> getRsrvTimeStatus(Map<String, Object> params) throws Exception;
 
 }
