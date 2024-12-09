@@ -203,6 +203,15 @@ public class ReservationController {
         // JSON 데이터를 모델에 추가
         model.addAttribute("closeDayOnEffectDayList", jsonCloseDayOnEffectDayList);
 
+
+        // 휴무일
+        List<String> storeClose = storeService.getStore(storeId).getStoreOperation().getClosedayList();
+        System.out.println(storeClose);
+
+        model.addAttribute("storeClose", storeClose);
+
+
+
         return "reservation/addRsrv";
     }
 
@@ -285,6 +294,8 @@ public class ReservationController {
 
         // 1. 예약 정보 조회
         Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        model.addAttribute("reservation", reservation);
 
         java.sql.Date sqlRsrvDt = new java.sql.Date(reservation.getRsrvDt().getTime());
 

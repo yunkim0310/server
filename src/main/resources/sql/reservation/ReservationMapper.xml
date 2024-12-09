@@ -250,7 +250,7 @@
     <select id="getRsrvClose" parameterType="int" resultType="com.placeHere.server.domain.CloseDayOnEffectDay">
         select effect_dt as effectDt, regular_closeday1 as day1, regular_closeday2 as day2, regular_closeday3 as day3
         from operation
-        where store_id = #{storeId} and effect_dt BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 14 DAY)
+        where store_id = #{storeId}
         order by effectDt
     </select>
 
