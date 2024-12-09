@@ -145,7 +145,7 @@
             rsrv_status &lt;&gt; '결제 중'
         </where>
         ORDER BY
-        rsrv_dt DESC <!-- 내림차순 -->
+        rsrv_dt DESC
     </select>
 
 

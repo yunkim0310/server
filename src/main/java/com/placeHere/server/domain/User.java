@@ -15,6 +15,9 @@ import java.util.Date;
 public class User implements Serializable {
 
     // Field
+    // 회원 인덱스
+    private Long id;
+
     // 회원어아디
     private String username;
     // 비밀번호

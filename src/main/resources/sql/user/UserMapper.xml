@@ -11,17 +11,18 @@
 
         <id property="username" column="username" />
 
-        <result property="username" 			column="username" 			jdbcType="VARCHAR"/>
+        <result property="id" 			        column="id" 			    jdbcType="BIGINT"  />
+        <result property="username" 			column="username" 			jdbcType="VARCHAR" />
         <result property="password"	            column="password" 		    jdbcType="VARCHAR" />
         <result property="email" 	            column="email" 		        jdbcType="VARCHAR" />
         <result property="role" 				column="role" 				jdbcType="VARCHAR" />
-        <result property="regDt" 				column="reg_dt" 			jdbcType="DATE" />
+        <result property="regDt" 				column="reg_dt" 			jdbcType="DATE"    />
         <result property="profileImg" 			column="profile_img" 		jdbcType="VARCHAR" />
-        <result property="loginDt" 				column="login_dt" 			jdbcType="DATE" />
-        <result property="updateDt" 			column="update_dt" 			jdbcType="DATE"  />
+        <result property="loginDt" 				column="login_dt" 			jdbcType="DATE"    />
+        <result property="updateDt" 			column="update_dt" 			jdbcType="DATE"    />
         <result property="gender" 		        column="gender" 			jdbcType="VARCHAR" />
-        <result property="birth" 		        column="birth" 			    jdbcType="DATE" />
-        <result property="activeStatus" 		column="activeStatus" 		jdbcType="VARCHAR" />
+        <result property="birth" 		        column="birth" 			    jdbcType="DATE"    />
+        <result property="activeStatus" 		column="active_status" 		jdbcType="VARCHAR" />
     </resultMap>
 
 
@@ -34,6 +35,7 @@
 
     <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
         SELECT
+            id,
             username,
             password,
             email,
@@ -78,6 +80,7 @@
 
     <select id="getUserList" resultType="com.placeHere.server.domain.User">
         SELECT
+            id,
             username,
             password,
             email,
@@ -90,6 +93,27 @@
             gender,
             birth
         FROM user
+        where role = 'ROLE_USER'
+        --         WHERE active_status = 'ACTIVE'
+--        ORDER BY reg_dt DESC
+    </select>
+
+    <select id="getStoreList" resultType="com.placeHere.server.domain.User">
+        SELECT
+            id,
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
+        FROM user
+        where role = 'ROLE_STORE'
         --         WHERE active_status = 'ACTIVE'
 --        ORDER BY reg_dt DESC
     </select>

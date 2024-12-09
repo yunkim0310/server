@@ -32,6 +32,7 @@
 	 <!-- SQL Definition :: file include -->
 	<mappers>
 		<mapper resource="sql/user/UserMapper.xml"/>
+		<mapper resource="sql/admin/AdminMapper.xml"/>
 		<mapper resource="sql/store/StoreMapper.xml"/>
         <mapper resource="sql/product/ProductMapper.xml"/>
         <mapper resource="sql/purchase/PurchaseMapper.xml"/>

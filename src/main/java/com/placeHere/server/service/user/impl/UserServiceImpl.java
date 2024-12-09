@@ -115,6 +115,12 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
+    public List<User> getStoreList() throws Exception {
+
+        List<User> user = userDao.getStoreList();
+        return user;
+    }
+
 
     @Override
     public boolean resetPwdValidation(User user) throws Exception {
