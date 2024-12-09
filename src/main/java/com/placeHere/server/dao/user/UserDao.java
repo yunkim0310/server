@@ -9,6 +9,7 @@ import java.util.List;
 public interface UserDao {
 
     /// Method
+
     public User getUser(String username) throws Exception;
 
     // 로그인
@@ -19,8 +20,12 @@ public interface UserDao {
 
     public void updateUserStatus (String username) throws Exception;
 
-    public void updateLoginDt (String username) throws Exception;
+    public int updateLoginDt (String username) throws Exception;
 
     public List<User> getUserList() throws Exception;
+
+    public boolean resetPwdValidation(User user) throws Exception;
+
+    public int updatePwd(User user) throws Exception;
 
 }

@@ -4,6 +4,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.placeHere.server.domain.User;
 //import com.placeHere.server.service.user.UserService;
 //import io.jsonwebtoken.lang.Assert;
+import com.placeHere.server.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,21 +13,46 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 public class UserBLTest {
 
-//    @Autowired
-//    @Qualifier("userServiceImpl")
-//    private UserService userService;
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
 
-        @Test
+    @Test
     public void test() {
         System.out.println("1234");
     }
 
-//    //    @Test
+    @Test
+    public void updatePwd() throws Exception {
+
+        User user = new User();
+        user.setUsername("user01");
+        user.setPassword("1111");
+
+        int result = userService.updatePwd(user);
+
+        assertEquals(1, result);
+
+    }
+
+    @Test
+    public void resetPwdValidation() throws Exception{
+        User user = new User();
+
+        user.setUsername("user01");
+        user.setEmail("user1@abc.com");
+
+        boolean result = userService.resetPwdValidation(user);
+
+        assertTrue(result, " RESETPWDVALIDATION TEST OK");
+    }
+
+//        @Test
 //    public void getUser() throws Exception{
 //        System.out.println("4567");
 //

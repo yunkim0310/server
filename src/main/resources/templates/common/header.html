@@ -13,12 +13,19 @@
             <div class="logo">
                 <a id="home" href="/"><img class="logoImg" src="/images/logo.png"/></a>
             </div>
-            <div class="login">
+
+
+            <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
-                    <li class="non-side-bar"><span id="username" class="text-white me-2">username</span></li>
+                    <li class="non-side-bar"><span id="username" class="text-white me-2">[[ ${session.user.username} ]]</span></li>
+                    <li id="/user/setting" class="non-side-bar"><a href="/user/setting">설정</a></li>
+                    <li id="logout"><a href="/user/logout">로그아웃</a></li>
+                </ul>
+            </div>
+
+            <div th:if="${session.user == null}" class="login">
+                <ul class="loginMenu">
                     <li id="login" class="non-side-bar"><a href="/user/login">로그인</a></li>
-<!--                    <li id="logout"><a href="/logout">로그아웃</a></li>-->
-                    <li id="join" class="non-side-bar"><a href="/user/join">회원가입</a></li>
                 </ul>
             </div>
         </div>

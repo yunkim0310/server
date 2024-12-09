@@ -5,14 +5,13 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
 
 
 @Data
-@Getter
-@Setter
 public class User implements Serializable {
 
     // Field
@@ -31,6 +30,7 @@ public class User implements Serializable {
     private Date updateDt;
     private String gender;
     // util의 데이터 타입
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
 
     // 회원 활동상태
@@ -38,6 +38,8 @@ public class User implements Serializable {
     // INACTIVE : 휴면계정상태
     // DELETED : 탈퇴상태
     private String activeStatus;
+
+    private String  recommendedId;
 
 
 }

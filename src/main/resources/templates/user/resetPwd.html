@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--  <link rel="stylesheet" href="/css/user/loginView.css">-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Place Here</title>
+    <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
+
+
+</head>
+<body>
+<div class="container">
+    <main>
+        <div class="login-form">
+
+            <div class="logo">
+                <a id="home" href="/">
+                    <img class="logoImg" src="/images/logo.png"/></a>
+            </div>
+
+<!--            <form th:action="@{/user/resetPwd}" method="post" onsubmit="return changePwd()">-->
+            <form th:action="@{/user/resetPwd}" method="post">
+                <div class="input-group">
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="8글자 이상 영문, 특수문자를 모두 사용해야 합니다." required>
+                </div>
+                <div class="input-group">
+                    <label for="passwordChk">비밀번호 확인</label>
+                    <input type="password" id="passwordChk" name="passwordChk" placeholder="입력하신 비밀번호와 동일하게 입력해주세요." required>
+                </div>
+
+
+                <button type="submit" id="btnConfirm">확 인</button>
+            </form>
+
+            <div th:if="${session.user != null}" class="login">
+                    [[ ${session.user.username} ]]
+                <input type="hidden" id="username" name="username">
+            </div>
+
+
+        </div>
+    </main>
+</div>
+
+<script src="/js/user.js"></script>
+
+</body>
+</html>

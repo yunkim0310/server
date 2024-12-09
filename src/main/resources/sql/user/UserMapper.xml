@@ -8,6 +8,9 @@
 
     <!--    <resultMap id="userSelectMap" type="user">-->
     <resultMap id="userSelectMap" type="com.placeHere.server.domain.User">
+
+        <id property="username" column="username" />
+
         <result property="username" 			column="username" 			jdbcType="VARCHAR"/>
         <result property="password"	            column="password" 		    jdbcType="VARCHAR" />
         <result property="email" 	            column="email" 		        jdbcType="VARCHAR" />
@@ -20,6 +23,14 @@
         <result property="birth" 		        column="birth" 			    jdbcType="DATE" />
         <result property="activeStatus" 		column="activeStatus" 		jdbcType="VARCHAR" />
     </resultMap>
+
+
+    <!--  로그인  -->
+    <update id="login" parameterType="java.lang.String">
+        UPDATE user
+        SET login_dt = now()
+        WHERE username = #{username};
+    </update>
 
     <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
         SELECT
@@ -82,6 +93,20 @@
         --         WHERE active_status = 'ACTIVE'
 --        ORDER BY reg_dt DESC
     </select>
+
+    <select id="resetPwdValidation" resultType="boolean">
+        SELECT COUNT(*)
+        FROM user
+        WHERE username = #{username}
+          AND   email = #{email}
+    </select>
+
+    <update id="updatePwd" parameterType="com.placeHere.server.domain.User">
+        UPDATE user
+        SET password = #{password},
+            update_dt = now()
+        WHERE username = #{username}
+    </update>
 
 
 </mapper>

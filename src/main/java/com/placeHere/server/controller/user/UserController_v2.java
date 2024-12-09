@@ -22,7 +22,7 @@
 //@Controller
 //@ResponseBody
 ////@RequestMapping("/user")
-//public class UserController {
+//public class placeHereontroller {
 //
 //    @Autowired
 //    @Qualifier("userServiceImpl")
