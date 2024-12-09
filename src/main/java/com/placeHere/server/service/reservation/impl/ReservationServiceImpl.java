@@ -1,10 +1,10 @@
 package com.placeHere.server.service.reservation.impl;
 
 import com.placeHere.server.dao.reservation.ReservationDao;
+import com.placeHere.server.dao.store.StoreDao;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,8 @@ public class ReservationServiceImpl implements ReservationService{
     @Autowired
     PaymentService paymentService;
 
-
+    @Autowired
+    private StoreDao storeDao;
 
 
     // 예약 정보 등록
@@ -178,6 +179,18 @@ public class ReservationServiceImpl implements ReservationService{
         return reservationDao.getRemoveUserRsrvNos(userName);
     }
 
+    public StoreReservation getStoreReservation(Map<String, Object> params) throws Exception {
+        int storeId = (Integer) params.get("storeId");
+        String effectDt = (String) params.get("effectDt");
+        java.sql.Date sqlEffectDt = java.sql.Date.valueOf(effectDt); // String -> java.sql.Date 변환
+        StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
+        List<ReservationTimeStatus> reservationTimeStatusList = reservationDao.getRsrvTimeStatus(params);
+        StoreReservation storeReservation = new StoreReservation();
+        storeReservation.setStoreOperation(operation);
+        storeReservation.setReservationTimeStatusList(reservationTimeStatusList);
+        return storeReservation;
+    }
+
 
     // 탈퇴 예정인 일반 회원의 일괄 환불
     public void getRemoveUserRefundPayment(String userName) throws Exception {
@@ -225,6 +238,10 @@ public class ReservationServiceImpl implements ReservationService{
         } else {
             System.out.println("예약 번호에서 환불할 내역이 없습니다.");
         }
+    }
+
+    public List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception{
+        return reservationDao.getRsrvClose(storeId);
     }
 
 

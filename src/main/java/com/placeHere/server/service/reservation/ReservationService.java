@@ -1,10 +1,10 @@
 package com.placeHere.server.service.reservation;
 
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 public interface ReservationService {
@@ -70,6 +70,9 @@ public interface ReservationService {
     // 탈퇴 예정인 점주 회원의 일괄 환불
     public void getRemoveStoreRefundPayment(int storeId) throws Exception;
 
+    StoreReservation getStoreReservation(Map<String, Object> params) throws Exception;
+
+    List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception;
 
 
 
