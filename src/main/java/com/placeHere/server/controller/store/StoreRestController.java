@@ -88,6 +88,8 @@ public class StoreRestController {
 
         System.out.println("/api-store/getStoreList : GET");
 
+        System.out.println(search);
+
         List<Store> storeList = storeService.getStoreList(search);
 
         System.out.println(storeList);

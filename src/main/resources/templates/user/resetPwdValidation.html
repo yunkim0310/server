@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--  <link rel="stylesheet" href="/css/user/loginView.css">-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Place Here</title>
+    <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
+    <script src="/js/user.js"></script>
+
+</head>
+<body>
+<div class="container">
+    <main>
+        <div class="login-form">
+
+            <div class="logo">
+                <a id="home" href="/">
+                    <img class="logoImg" src="/images/logo.png"/></a>
+            </div>
+
+<!--            <form onsubmit=" return pwdValidation()">-->
+<!--            <form th:action="@{/user/resetPwdValidation}" method="post" onsubmit=" return pwdValidation()">-->
+            <form th:action="@{/user/resetPwdValidation}" method="post">
+                <div class="input-group">
+                    <label for="email">이메일</label>
+                    <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" required>
+                </div>
+                <div class="input-group">
+                    <label for="username">아이디</label>
+                    <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                </div>
+
+
+                <button type="submit">확 인</button>
+            </form>
+
+
+        </div>
+    </main>
+</div>
+
+
+
+</body>
+</html>

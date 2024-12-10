@@ -18,7 +18,7 @@
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
                     <li class="non-side-bar"><span id="username" class="text-white me-2">[[ ${session.user.username} ]]</span></li>
-                    <li id="/setting" class="non-side-bar"><a href="/user/setting">설정</a></li>
+                    <li id="/user/setting" class="non-side-bar"><a href="/user/setting">설정</a></li>
                     <li id="logout"><a href="/user/logout">로그아웃</a></li>
                 </ul>
             </div>

@@ -1,26 +1,27 @@
 package com.placeHere.server.controller.reservation;
 
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.Store;
-import com.placeHere.server.domain.StoreOperation;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
 
 @Controller
-@RequestMapping("test/reservation/*")
+@RequestMapping("reservation/*")
 public class ReservationController {
 
     @InitBinder
@@ -46,21 +47,40 @@ public class ReservationController {
     }
 
     @RequestMapping( value="getRsrv", method=RequestMethod.GET )
-    public String getRsrv(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+    public String getRsrv(@RequestParam("rsrvNo") int rsrvNo, @SessionAttribute("user") User user, Model model, RedirectAttributes redirectAttributes) throws Exception {
+
+
+        System.out.println(user.getUsername());
 
         Reservation reservation = reservationService.getRsrv(rsrvNo);
+
 
         System.out.println("/reservation/getRsrv : GET");
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/getRsrv";
+        return "reservation/getRsrv";
+    }
+
+    @RequestMapping( value="updateRsrvStatus", method=RequestMethod.GET )
+    public String updateRsrvStatus(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        reservationService.updateRsrvStatus(rsrvNo, "예약 확정");
+
+        System.out.println("/reservation/updateRsrvStatus : GET");
+
+        model.addAttribute("reservation", reservation);
+
+        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
     }
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
             @RequestParam("storeId") int storeId, // 가게 ID는 필수
+            @SessionAttribute("user") User user,
             Model model) throws Exception {
 
         // 초기 Search 객체 설정 (기본값)
@@ -77,7 +97,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
 
         // 뷰 반환
-        return "test/reservation/testlistrsrvstore";
+        return "reservation/getRsrvStoreList";
     }
 
 
@@ -110,7 +130,7 @@ public class ReservationController {
 
         model.addAttribute("reservations", reservations);
 
-        return "test/reservation/testlistrsrvstore";
+        return "reservation/getRsrvStoreList";
     }
 
 
@@ -118,7 +138,8 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
             @ModelAttribute Search search,
-            @RequestParam("userName") String userName, // 가게 ID는 필수
+            @RequestParam("userName") String userName,
+            @SessionAttribute("user") User user,
             Model model) throws Exception {
 
 
@@ -134,7 +155,7 @@ public class ReservationController {
         model.addAttribute("search", search);
 
         // 뷰 반환
-        return "test/reservation/listrsrvuser";
+        return "reservation/getRsrvUserList";
     }
 
 
@@ -160,7 +181,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
 
-        return "test/reservation/listrsrvuser";
+        return "reservation/getRsrvUserList";
     }
 
 
@@ -168,7 +189,7 @@ public class ReservationController {
     public String addRsrv(
             @RequestParam("storeId") int storeId,
             @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
-            Model model) {
+            Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : GET");
 
@@ -194,17 +215,40 @@ public class ReservationController {
 
         model.addAttribute("store", store);
 
-        return "/test/reservation/testaddrsrv";
+        // 휴무요일
+        List<CloseDayOnEffectDay> closeDayOnEffectDayList = reservationService.getRsrvClose(storeId);
+        System.out.println(closeDayOnEffectDayList);
+        // JSON으로 변환
+        ObjectMapper objectMapper = new ObjectMapper();
+        String jsonCloseDayOnEffectDayList = objectMapper.writeValueAsString(closeDayOnEffectDayList);
+
+        // JSON 데이터를 모델에 추가
+        model.addAttribute("closeDayOnEffectDayList", jsonCloseDayOnEffectDayList);
+
+
+        // 휴무일
+        List<String> storeClose = storeService.getStore(storeId).getStoreOperation().getClosedayList();
+        System.out.println(storeClose);
+
+        model.addAttribute("storeClose", storeClose);
+
+
+
+        return "reservation/addRsrv";
     }
 
 
     @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
     public String addRsrv(
-            @RequestParam("rsrvDt") String rsrvDtStr, // String으로 받기
+            @RequestParam("selectedDate") String rsrvDtStr, // String으로 받기
+            @RequestParam("storeId") int storeId,
             @ModelAttribute("reservation") Reservation reservation,
+            @SessionAttribute("user") User user,
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : POST");
+
+        Store store = storeService.getStore(storeId);
 
         // "yyyy-MM-dd'T'HH:mm" 형식의 rsrvDt를 java.util.Date로 변환
         SimpleDateFormat dateTimeFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
@@ -212,6 +256,11 @@ public class ReservationController {
 
         // java.sql.Date 또는 java.sql.Timestamp로 변환 필요
         reservation.setRsrvDt(new java.sql.Date(parsedDate.getTime())); // java.sql.Date 사용 시
+
+        if (store.getUserName().equals(user.getUsername())) {
+            reservationService.addRsrvStore(reservation);
+            return "redirect:/reservation/getRsrvStoreList?storeId=" + storeId;
+        }
 
         // Business Logic
         reservationService.addRsrv(reservation);
@@ -222,11 +271,11 @@ public class ReservationController {
         // 예약 번호를 pay 페이지로 전달
         model.addAttribute("rsrvNo", rsrvNo);
 
-        return "test/reservation/redirectToPaycheck";
+        return "reservation/chkRsrv";
     }
 
-    @RequestMapping(value = "paycheck", method = RequestMethod.POST)
-    public String Paycheck(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+    @RequestMapping(value = "chkRsrv", method = RequestMethod.POST)
+    public String chkRsrv(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
 
         System.out.println("/reservation/Paycheck : POST");
         // 1. 예약 정보 조회
@@ -234,16 +283,33 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "test/reservation/paycheck";
+        return "reservation/sendRsrv";
     }
 
-    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
-    public String Paycheck(@RequestParam("orderId") String orderId,
-                           @RequestParam("paymentKey") String paymentKey,
-                           @RequestParam int amount,
-                           Model model) throws Exception {
 
-        System.out.println("/reservation/Paycheck : GET");
+    @RequestMapping(value = "sendRsrv", method = RequestMethod.GET)
+    public String confirmPayGet(
+            @RequestParam("orderId") String orderId,
+            @RequestParam("paymentKey") String paymentKey,
+            @RequestParam int amount,
+            Model model) throws Exception {
+
+        // 필요한 데이터 모델에 추가
+        System.out.println("/reservation/sendRsrv : GET");
+        model.addAttribute("orderId", orderId);
+        model.addAttribute("paymentKey", paymentKey);
+        model.addAttribute("amount", amount);
+
+
+        return "reservation/sendRsrv";
+    }
+
+
+    @RequestMapping(value = "addRsrvResult", method = RequestMethod.POST)
+    public String confirmPay(@RequestParam("orderId") String orderId,
+                             @RequestParam("paymentKey") String paymentKey,
+                             @RequestParam int amount,
+                             Model model) throws Exception {
 
         String[] parts = orderId.split("_");
 
@@ -257,17 +323,10 @@ public class ReservationController {
         reservationService.updateRsrvpay(rsrvNo, paymentId);
 
 
-
-        model.addAttribute("rsrvNo", rsrvNo);
-
-        return "test/reservation/pay";
-    }
-
-
-    @RequestMapping(value = "pay", method = RequestMethod.POST)
-    public String confirmPay(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
         // 1. 예약 정보 조회
         Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        model.addAttribute("reservation", reservation);
 
         java.sql.Date sqlRsrvDt = new java.sql.Date(reservation.getRsrvDt().getTime());
 
@@ -283,12 +342,12 @@ public class ReservationController {
         if (closedayList != null && closedayList.contains(reservationDate)) {
             // 예약 일자가 휴무일인 경우
 
-            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.",null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약이 불가능한 날짜(휴무일)입니다.");
-            return "test/reservation/testfail";
+            return "reservation/failRsrv";
         }
 
         // 4. 현재 예약 일시의 예약 인수 계산
@@ -299,21 +358,78 @@ public class ReservationController {
         if (totalReservationCount > maxCapacity) {
             // 예약 상태를 "예약 취소"로 변경
 
-            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.");
+            paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다." ,null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
 
             // fail.html로 이동
             model.addAttribute("message", "예약 인원이 가게의 최대 예약 인원을 초과했습니다.");
-            return "test/reservation/testfail";
+            return "reservation/failRsrv";
         } else {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
             // success.html로 이동
-            return "test/reservation/testsuccess";
+            return "reservation/successRsrv";
         }
     }
 
+    @RequestMapping(value = "modalRsrvCancel", method = RequestMethod.POST)
+    public String modalRsrvCancel(@RequestParam("rsrvNo") int rsrvNo,
+                                  @RequestParam("role") String role,
+                                  @RequestParam("reason") String reason) throws Exception {
+        System.out.println("/reservation/modalRsrvCancel : POST");
+        System.out.println(role);
+        Reservation reservation = reservationService.getRsrv(rsrvNo);
+        reservationService.updateRsrvReason(rsrvNo, reason);
+        if("ROLE_USER".equals(role))
+        {
+            if("예약 요청".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+            }else if("예약 확정".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,reservation.getRsrvDt(), reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+            }
+        }else if("ROLE_STORE".equals(role)){
+            if("예약 요청".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 거절");
+            }else if("예약 확정".equals(reservation.getRsrvStatus())){
+                paymentService.refundPayment(reservation.getPaymentId(), reason, null, reservation.getAmount());
+                reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
+            }
+        }
+        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+    }
+
+
+//    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
+//    public String Paycheck(@RequestParam("orderId") String orderId,
+//                           @RequestParam("paymentKey") String paymentKey,
+//                           @RequestParam int amount,
+//                           Model model) throws Exception {
+//
+//        System.out.println("/reservation/Paycheck : GET");
+//
+//        String[] parts = orderId.split("_");
+//
+//        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+//
+//        paymentService.confirmPayment(paymentKey, orderId, amount);
+//
+//        String paymentId = paymentKey;
+//
+//
+//        reservationService.updateRsrvpay(rsrvNo, paymentId);
+//
+//
+//
+//        model.addAttribute("rsrvNo", rsrvNo);
+//
+//        return "test/reservation/pay";
+//    }
 
 
 

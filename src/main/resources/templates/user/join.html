@@ -36,30 +36,32 @@
     <div class="row mb-4 text-center">
         <h3>회원가입</h3>
     </div>
-    <form>
+    <form th:action="@{/user/join}" method="post">
+
+        <input type="hidden" id="role" name="role" th:value="${role}">
         <!--    아이디 주석-->
         <div class="row mb-2 text-center">
-            <div class="col-3">아이디</div>
+            <div class="col-3">아이디*</div>
             <div class="col"><input type="text" class="form-control" name="username"></div>
         </div>
         <!--        비밀번호 주석-->
         <div class="row mb-2 text-center">
-            <div class="col-3">비밀번호</div>
+            <div class="col-3">비밀번호*</div>
             <div class="col"><input type="password" placeholder="password" class="form-control" name="password">
             </div>
         </div>
 
         <!--    비밀번호 확인 주석-->
         <div class="row mb-2 text-center">
-            <div class="col-3">비밀번호확인</div>
+            <div class="col-3">비밀번호확인*</div>
             <div class="col">
-                <input type="password" placeholder="비밀번호확인" class="form-control" id="userinfo-repassword" name="password2">
+                <input type="password" placeholder="비밀번호확인" class="form-control" id="userinfo-repassword">
             </div>
         </div>
 
         <!--    이메일 주석-->
         <div class="row mb-2 text-center">
-            <div class="col-3">이메일</div>
+            <div class="col-3">이메일*</div>
             <div class="col"><input type="text" placeholder="abc@abc.com" class="form-control" id="userinfo-email" name="email"></div>
             <!--            <div class="col-4><span class="input-group-text">@</span>-->
             <!--            </div>-->
@@ -75,27 +77,28 @@
         </div>
 
 <!--        <div th:if="${param.role == 'user'}">-->
-        <div th:if="${#httpServletRequest.getParameter('role')}">
+        <div th:if="${role} == 'user'">
             <!-- role이 'user'인 경우에만 보이는 내용 -->
             <div class="row mb-2 text-center">
                 <div class="col-3">성별</div>
-                <button class="button" >남</button>
-                <button class="button" >여</button>
+                <input type="button" class="button" value="M"></input>
+                <input type="button" class="button" value="F"></input>
 
                 <div class="col-3">생년월일</div>
-                <input type="text" placeholder="abc@abc.com" class="form-control" id="birth" name="birth">
+                <input type="date" class="form-control" id="birth" name="birth">
             </div>
         </div>
 
-
-        <span th:text="${param.role}"></span>
+<!--        <span th:text="${param.role}"></span>-->
 
     </form>
 
 
     <div id="edit-footer" class="container-fluid text-center">
         <button type="button" class="btn btn-primary" id="btnSignin">등록</button>
-        <button type="button" class="btn btn-outline-secondary">취소</button>
+        <button type="button" class="btn btn-outline-secondary" >
+            <a href="/">취소</a>
+        </button>
     </div>
 </div>
 </body>

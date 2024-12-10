@@ -72,8 +72,8 @@ public class ReservationBLTest {
     @Test
     public void updateRsrvStatus() throws Exception {
         // Given: 테스트할 예약 번호와 변경할 상태 값
-        int rsrvNo = 35; // 테스트용 예약 번호
-        String rsrvStatus = "예약 요청"; // 상태 업데이트 값
+        int rsrvNo = 5; // 테스트용 예약 번호
+        String rsrvStatus = "예약 확정"; // 상태 업데이트 값
 
         // When: 예약 상태를 업데이트
         reservationService.updateRsrvStatus(rsrvNo, rsrvStatus);
@@ -280,11 +280,93 @@ public class ReservationBLTest {
         String testReason = "Test refund reason";
 
         try {
-            String response = paymentService.refundPayment(testPaymentKey, testReason);
+            String response = paymentService.refundPayment(testPaymentKey, testReason, null, 5000);
             System.out.println("Refund successful! Response: " + response);
         } catch (Exception e) {
             System.err.println("Refund failed: " + e.getMessage());
         }
+    }
+
+
+    @Test
+    public void testGetPastRsrvNos() throws Exception {
+        // 메서드 호출
+        List<Integer> pastRsrvNos = reservationService.getPastRsrvNos();
+
+        // NULL 처리
+        if (pastRsrvNos == null) {
+            System.out.println("결과가 NULL입니다. 확인이 필요합니다.");
+        } else if (pastRsrvNos.isEmpty()) {
+            System.out.println("결과가 빈 리스트입니다. 조건에 맞는 데이터가 없습니다.");
+        } else {
+            System.out.println("지나간 예약 확정 예약 번호들: " + pastRsrvNos);
+        }
+    }
+
+
+    @Test
+    public void updateRsrvStatusDay() throws Exception {
+
+        reservationService.updateRsrvStatusDay();
+
+    }
+
+
+    @Test
+    public void getRemoveUserRsrvNos() throws Exception {
+
+        String userName = "user12";
+
+        // 메서드 호출
+        List<Integer> removeUserRsrvNos = reservationService.getRemoveUserRsrvNos(userName);
+
+        // NULL 처리
+        if (removeUserRsrvNos == null) {
+            System.out.println("결과가 NULL입니다. 확인이 필요합니다.");
+        } else if (removeUserRsrvNos.isEmpty()) {
+            System.out.println("결과가 빈 리스트입니다. 조건에 맞는 데이터가 없습니다.");
+        } else {
+            System.out.println("탈퇴 예정인 예약 번호들: " + removeUserRsrvNos);
+        }
+    }
+
+
+    @Test
+    public void getRemoveUserRefundPayment() throws Exception {
+
+        String userName = "user12";
+
+        reservationService.getRemoveUserRefundPayment(userName);
+
+    }
+
+
+    @Test
+    public void getRemoveStoreRsrvNos() throws Exception {
+
+        int storeId = 2;
+
+        // 메서드 호출
+        List<Integer> removeStoreRsrvNos = reservationService.getRemoveStoreRsrvNos(storeId);
+
+        // NULL 처리
+        if (removeStoreRsrvNos == null) {
+            System.out.println("결과가 NULL입니다. 확인이 필요합니다.");
+        } else if (removeStoreRsrvNos.isEmpty()) {
+            System.out.println("결과가 빈 리스트입니다. 조건에 맞는 데이터가 없습니다.");
+        } else {
+            System.out.println("탈퇴 예정인 예약 번호들: " + removeStoreRsrvNos);
+        }
+    }
+
+
+    @Test
+    public void getRemoveStoreRefundPayment() throws Exception {
+
+        int StoreId = 2;
+
+        reservationService.getRemoveStoreRefundPayment(StoreId);
+
     }
 
 

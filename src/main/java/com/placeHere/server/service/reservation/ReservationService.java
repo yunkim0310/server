@@ -1,10 +1,10 @@
 package com.placeHere.server.service.reservation;
 
-import com.placeHere.server.domain.Reservation;
-import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 public interface ReservationService {
@@ -51,6 +51,28 @@ public interface ReservationService {
 
     // 탈퇴할 점주 회원의 전화 예약 권수 카운팅
     public int getCountRsrvNumber(int storeId) throws Exception;
+
+    // 예약 확정이면서 예약 일시가 지나간 예약 번호 리스트
+    List<Integer> getPastRsrvNos() throws Exception;
+
+    // 예약 확정이면서 예약 일시가 지나간 예약 업데이트
+    public void updateRsrvStatusDay() throws Exception;
+
+    // 탈퇴 예정인 일반 회원의 예약 번호 리스트
+    List<Integer> getRemoveUserRsrvNos(String userName) throws Exception;
+
+    // 탈퇴 예정인 일반 회원의 일괄 환불
+    public void getRemoveUserRefundPayment(String userName) throws Exception;
+
+    // 탈퇴 예정인 점주 회원의 예약 번호 리스트
+    List<Integer> getRemoveStoreRsrvNos(int storeId) throws Exception;
+
+    // 탈퇴 예정인 점주 회원의 일괄 환불
+    public void getRemoveStoreRefundPayment(int storeId) throws Exception;
+
+    StoreReservation getStoreReservation(Map<String, Object> params) throws Exception;
+
+    List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception;
 
 
 

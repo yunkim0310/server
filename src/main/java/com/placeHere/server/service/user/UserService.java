@@ -21,7 +21,15 @@ public interface UserService {
 
 //    public void updateUserStatus (String username) throws Exception;
 
+    void updateUserStatus(String username) throws Exception;
+
     public int updateLoginDt (String username) throws Exception;
 
     public List<User> getUserList() throws Exception;
+
+    public List<User> getStoreList() throws Exception;
+
+    public boolean resetPwdValidation(User user) throws Exception;
+
+    public int updatePwd(User user) throws Exception;
 }
