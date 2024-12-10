@@ -34,7 +34,7 @@
             <div class="category">
                 <ul class="categoryList">
                     <li><a href="/searchStore">가게 검색</a></li>
-                    <li><a href="#">커뮤니티</a></li>
+                    <li><a href="/review/getReviewList">커뮤니티</a></li>
                     <li>
                         <div th:if="${session.user != null}" >
                             <a th:if="${session.user.role == 'ROLE_USER'}" href="/reservation/getRsrvUserList">예약</a>
