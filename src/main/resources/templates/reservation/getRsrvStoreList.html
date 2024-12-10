@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>점주 회원 예약 목록</title>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+        <link rel="stylesheet" href="/css/templates/header.css">
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+        <script>
+            // AJAX로 예약 상태 업데이트
+            function updateRsrvStatus(rsrvNo, buttonElement) {
+                console.log("Reservation Number: ", rsrvNo); // 디버깅용 로그
+                $.ajax({
+                    url: '/api-reservation/updateRsrvStatus',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        rsrvNo: rsrvNo,
+                        rsrvStatus: '예약 확정'
+                    }),
+                    success: function(response) {
+                        const row = $(buttonElement).closest('tr');
+                        row.find('.status-cell').text('예약 확정');
+                        row.find('.action-cell').empty();
+                    },
+                    error: function() {
+                        alert('Failed to update reservation status.');
+                    }
+                });
+            }
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const phoneElements = document.querySelectorAll("[data-phone]");
+
+                phoneElements.forEach(element => {
+                    const originalNumber = element.textContent.trim(); // 원래 전화번호 가져오기
+                    if (originalNumber.length >= 7) {
+                        const maskedNumber = originalNumber.substring(0, 3) + "xxxx" + originalNumber.substring(7);
+                        element.textContent = maskedNumber; // 마스킹된 번호로 교체
+                    }
+                });
+            });
+        </script>
+
+        <style>
+            /* 기본 스타일 */
+            body {
+                font-family: 'Arial', sans-serif;
+                background-color: #FFFFFF;
+                margin: 0;
+                padding: 0;
+                color: #333;
+            }
+
+            /* 제목 스타일 */
+            h1 {
+                font-size: 27px;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: bold;
+                color: black;
+            }
+
+            /* 테이블 스타일 */
+            table {
+                width: 50%;
+                border-collapse: collapse;
+                margin: 0 auto; /* 테이블 수평 가운데 정렬 */
+                margin-bottom: 20px;
+                background-color: #fff;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            th, td {
+                padding: 12px 20px;
+                text-align: center;
+                font-size: 1rem;
+                border-bottom: 1px solid #ddd;
+            }
+
+            th {
+                background-color: #f5f5f5;
+                font-weight: bold;
+                color: #333;
+            }
+
+            td {
+                background-color: #fff;
+                color: #333;
+            }
+
+            td input[type="hidden"] {
+                display: none;
+            }
+
+            /* 반응형 디자인 */
+            @media (max-width: 768px) {
+                table {
+                    font-size: 0.9rem;
+                }
+
+                th, td {
+                    padding: 8px 12px;
+                }
+
+                h1 {
+                    font-size: 2rem;
+                }
+
+                h3 {
+                    font-size: 1.2rem;
+                }
+            }
+
+
+            .point-table th, .point-table td {
+                padding: 10px;
+                text-align: center;
+                font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+            }
+
+            /* 거래 포인트의 색상 */
+            .point-table .red {
+                color: red;
+                font-weight: bold;
+            }
+
+            .point-table .blue {
+                color: blue;
+                font-weight: bold;
+            }
+
+    </style>
+
+</head>
+<body>
+
+<div class="header">
+    <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+    <br/><br/>
+    <h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
+</div>
+
+<!-- 검색 폼 -->
+<form action="/reservation/getRsrvStoreList" method="POST">
+    <input type="hidden" name="storeId" th:value="${param.storeId}"/>
+
+    <label for="startDate">Start Date:</label>
+    <input type="date" id="startDate" name="startDate" />
+
+    <label for="endDate">End Date:</label>
+    <input type="date" id="endDate" name="endDate" />
+
+    <div id="searchStatuses">
+        <label>
+            <input type="checkbox" name="searchStatuses" value="예약 요청" /> 예약 요청
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="예약 확정" /> 예약 확정
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="이용 완료" /> 이용 완료
+        </label><br />
+        <label>
+            <input type="checkbox" name="searchStatuses" value="전화 예약" /> 전화 예약
+        </label>
+    </div>
+
+    <button type="submit">Search</button>
+</form>
+
+<!-- 결과 테이블 -->
+<table>
+    <thead>
+    <tr>
+        <th>예약 상태</th>
+        <th>전화 번호</th>
+        <th>인원 수</th>
+        <th>요청 사항</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="reservation : ${reservations}">
+        <td class="status-cell" th:text="${reservation.rsrvStatus}">[예약 상태]</td>
+        <td th:text="${reservation.rsrvNumber}" data-phone>[전화 번호]</td>
+        <td th:text="${reservation.rsrvPerson} + '명'">[예약 인원]</td>
+        <td>
+            <span th:if="${reservation.rsrvReq != null && !reservation.rsrvReq.isEmpty()}" th:text="'✔'"></span>
+            <span th:if="${reservation.rsrvReq == null || reservation.rsrvReq.isEmpty()}"></span>
+        </td>
+        <td class="action-cell" th:if="${reservation.rsrvStatus != '예약 요청'}" style="padding: 0; text-align: center; width: 120px; height: 40px; border-bottom: 1px solid #ddd;">
+            <!-- 예약 수락 버튼 없는 경우에도 최소한의 공간을 유지 -->
+            <div style="height: 100%;">&nbsp;</div>
+        </td>
+
+        <td class="action-cell" th:if="${reservation.rsrvStatus == '예약 요청'}" style="padding: 0; text-align: center; width: 120px; height: 40px; border-bottom: 1px solid #ddd;">
+            <div class="css-1w0ksfz e744wfw2" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <button class="css-ufulao e4nu7ef3 checkBtn" type="button"
+                        style="font-size: 0.8rem; padding: 5px 10px; height: 25px; width: auto;"
+                        th:attr="onclick='updateRsrvStatus(' + ${reservation.rsrvNo} + ', this)'">
+                    <span class="css-ymwvow e4nu7ef1 checked_nick_btn">예약 수락</span>
+                </button>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<br/>
+<br/>
+<br/>
+
+</body>
+</html>

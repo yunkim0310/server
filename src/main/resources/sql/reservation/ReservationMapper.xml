@@ -145,7 +145,7 @@
             rsrv_status &lt;&gt; '결제 중'
         </where>
         ORDER BY
-        rsrv_dt DESC <!-- 내림차순 -->
+        rsrv_dt DESC
     </select>
 
 
@@ -210,6 +210,49 @@
         ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
     </select>
 
+
+    <select id="getPastRsrvNos" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE rsrv_status = '예약 확정'
+        AND rsrv_dt &lt; NOW()
+    </select>
+
+
+    <select id="getRemoveUserRsrvNos" parameterType="string" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE user_name = #{userName}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
+    <select id="getRemoveStoreRsrvNos" parameterType="int" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
+
+
+    <select id="getRsrvTimeStatus" parameterType="map" resultType="com.placeHere.server.domain.ReservationTimeStatus">
+        SELECT rsrv_dt as rsrvDt, COALESCE(SUM(rsrv_person), 0) as rsrvPerson
+        FROM reservation
+        WHERE DATE(rsrv_dt) = DATE(#{effectDt})
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청')
+        group by rsrv_dt
+    </select>
+
+
+    <select id="getRsrvClose" parameterType="int" resultType="com.placeHere.server.domain.CloseDayOnEffectDay">
+        select effect_dt as effectDt, regular_closeday1 as day1, regular_closeday2 as day2, regular_closeday3 as day3
+        from operation
+        where store_id = #{storeId}
+        order by effectDt
+    </select>
 
 
 

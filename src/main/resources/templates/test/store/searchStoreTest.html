@@ -22,17 +22,26 @@
                 $("input[name='searchKeyword']:hidden").val(searchKeyword);
 
                 if (category1 !== undefined) {
+
+                    if (category2 === undefined) {
+                        category2 = "전체";
+                    }
+
+                    if (category3 === undefined) {
+                        category3 = "전체";
+                    }
+
                     $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/");
                 }
 
-                $('input[name="hashtagList"]').each(function () {
+                // 해시태그 변경 (공백, # 제거)
+                $("input[name='hashtagList']").each(function () {
 
-                    const value = $(this).val();
+                    var hashtag = $(this).val();
 
-                    if (value.startsWith('#')) {
-                        // # 제거 후 값을 다시 설정
-                        $(this).val(value.replace(/^#+/, ''));
-                    }
+                    // 공백 및 # 제거
+                    hashtag = hashtag.replace("#", "").replace(/\s+/g, "");
+                    $(this).val(hashtag);
                 });
 
                 $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
@@ -40,9 +49,7 @@
 
             // 검색 버튼
             $("button[name='searchStore']").on("click", function () {
-
                 search();
-
             });
 
             // 엔터 검색
@@ -57,25 +64,6 @@
             var mode = $("input[name='mode']:hidden").val();
 
             console.log(mode);
-
-            // 필터 버튼 클릭 시 모달 표시
-            $("button[name='searchStoreFilter']").on("click", function () {
-                $("#filterModal").show();  // 모달을 보이게 함
-            });
-
-            // 모달 닫기 버튼
-            $(".close").on("click", function () {
-                // 모든 input, select, textarea 필드의 값을 비우기
-                $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
-
-                $("form[name='searchStore'] input[name='priceMin']").val(0);
-                $("form[name='searchStore'] input[name='priceMax']").val(100000);
-
-                // 추가적으로 체크박스나 라디오 버튼의 선택을 해제하려면
-                $("form[name='searchStore'] input[type='checkbox'], form[name='searchStore'] input[type='radio']").prop('checked', false);
-
-                $("#filterModal").hide();  // 모달을 닫음
-            });
 
             // 필터 적용 후 제출 (모달 내의 폼 제출)
             $("button[name='saveFilter']").on("click", function (e) {
@@ -110,7 +98,8 @@
     <button type="button" name="searchStoreFilter">필터</button>
 
     <br/><hr/>
-    <div th:insert="~{test/store/modalStoreFilterTest}"></div>
+    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <div th:insert="~{store/modalStoreFilter}"></div>
 
 </body>
 </html>

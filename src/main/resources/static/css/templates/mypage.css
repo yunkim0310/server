@@ -7,15 +7,6 @@
     /* margin: 0; */
 }
 
-*, :after, :before, legend, td, th {
-    padding: 0;
-}
-
-*, :after, :before {
-    box-sizing: border-box;
-    /* margin: 0; */
-}
-
 html {
     line-height: 1.15;
     -webkit-tap-highlight-color: transparent;

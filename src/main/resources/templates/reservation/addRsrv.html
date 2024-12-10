@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Reservation Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+    <style>
+        .container {
+            margin: 0 auto;
+            width: 800px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 2px solid #ccc; /* 기본 테두리 */
+        }
+
+        #time-table {
+            margin: 30px auto; /* 수평 가운데 정렬 */
+            width: 85%; /* 부모 요소에 맞는 너비 */
+            display: flex; /* 내부 요소를 flex로 처리 */
+            flex-direction: column; /* 세로로 정렬 */
+            align-items: center; /* 수평 가운데 정렬 */
+        }
+
+        .time-row {
+            display: flex; /* 행의 블럭들을 flex로 배치 */
+            justify-content: center; /* 블럭을 가운데 정렬 */
+            gap: 30px; /* 블럭 간격 */
+            margin-bottom: 25px; /* 행 간 간격 */
+            width: 100%; /* 행 너비를 부모에 맞춤 */
+        }
+
+        .time {
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            width: 100px;
+            text-align: center;
+        }
+
+        .fc-day-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+
+        }
+
+        .fc-day-selected {
+            background-color: yellow !important;
+        }
+
+        .amount-box {
+            background-color: #e0e0e0; /* 박스 배경색 */
+            border-radius: 10px; /* 둥근 테두리 */
+            padding: 15px 20px; /* 안쪽 여백 */
+            font-size: 20px; /* 글꼴 크기 */
+            font-weight: bold; /* 글꼴 굵기 */
+            color: #000; /* 글자 색 */
+            text-align: center; /* 가운데 정렬 */
+            width: 300px; /* 고정된 박스 너비 */
+            display: inline-block; /* 인라인 블록 */
+            margin-top: 10px; /* 위 간격 */
+        }
+
+        table {
+            border-spacing: 0 10px; /* 행 간 간격 */
+            border-collapse: separate; /* 셀 간 간격 유지 */
+            width: 100%; /* 테이블 전체 너비 */
+        }
+
+        th, td {
+            padding: 10px 15px; /* 셀 내부 여백 */
+            text-align: left; /* 텍스트를 왼쪽 정렬 */
+            vertical-align: top; /* 텍스트 수직 정렬 */
+            font-weight: bold;
+            word-wrap: break-word; /* 단어를 줄바꿈 */
+            word-break: break-word; /* 긴 단어를 자르고 줄바꿈 */
+            white-space: normal; /* 텍스트를 여러 줄로 표시 */
+            font-size: 18px;
+        }
+
+        th {
+            font-weight: bold; /* 제목 굵게 */
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* 가운데 정렬 */
+            margin-top: 20px; /* 간격 추가 */
+            width: 100%; /* 가로를 100%로 설정 */
+        }
+
+        .form-group label, .form-group select, .form-group input, .form-group div {
+            text-align: center; /* 텍스트 가운데 정렬 */
+            width: auto; /* 요소 크기 조정 */
+            margin: 5px 0; /* 요소 간 간격 추가 */
+        }
+
+        .form-group button {
+            margin-top: 20px; /* 버튼 위 간격 추가 */
+        }
+        .form-group-horizontal {
+            display: flex;
+            align-items: center; /* 수직 가운데 정렬 */
+            justify-content: center; /* 가로 정렬 */
+            gap: 10px; /* 요소 간 간격 */
+            margin-bottom: 20px; /* 아래쪽 간격 */
+        }
+
+        .form-group-horizontal label {
+            font-weight: bold;
+            margin-right: 5px; /* 라벨과 select 간의 간격 */
+        }
+
+        .phone-input-group {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .phone-input-group select, .phone-input-group input {
+            width: 80px;
+            height: 40px;
+            border: 1px solid #000;
+            border-radius: 20px;
+            text-align: center;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .phone-input-group span {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #calendar {
+            margin: 0 auto; /* 수평 가운데 정렬 */
+            width: 100%; /* 달력의 너비를 부모 요소에 맞춤 */
+            max-width: 700px; /* 달력의 최대 너비 설정 */
+        }
+
+        #rsrvPerson {
+            width: 100px; /* 너비를 크게 설정 */
+            height: 30px; /* 높이를 크게 설정 */
+            font-size: 16px; /* 글자 크기 */
+            border: 1px solid #000; /* 테두리 추가 */
+            border-radius: 5px; /* 둥근 테두리 */
+            padding: 5px; /* 안쪽 여백 */
+            text-align: center; /* 텍스트 가운데 정렬 */
+        }
+
+        #payButton {
+            width: 200px; /* 버튼 너비 */
+            height: 60px; /* 버튼 높이 */
+            font-size: 20px; /* 글자 크기 */
+            font-weight: bold; /* 글자 굵게 */
+            background-color: #4CAF50; /* 버튼 배경색 */
+            color: white; /* 글자 색상 */
+            border: none; /* 기본 테두리 제거 */
+            border-radius: 10px; /* 둥근 테두리 */
+            cursor: pointer; /* 클릭 시 손가락 커서 */
+        }
+    </style>
+
+    <script th:inline="javascript">
+        var closeDayOnEffectDayList = [[${closeDayOnEffectDayList}]];
+        closeDayOnEffectDayList = JSON.parse(closeDayOnEffectDayList);
+
+        const storeClose = /*[[${storeClose}]]*/ [];
+        const pricePerPerson = /*[[${store.getStoreOperation().getSecurity()}]]*/ 0;
+    </script>
+
+    <script>
+        const dayMapping = { "일": 0, "월": 1, "화": 2, "수": 3, "목": 4, "금": 5, "토": 6 };
+
+        const effectiveDays = [];
+        for (let i = 0; i < closeDayOnEffectDayList.length; i++) {
+            const startDate = closeDayOnEffectDayList[i].effectDt;
+
+            const endDate = i + 1 < closeDayOnEffectDayList.length
+                ? closeDayOnEffectDayList[i + 1].effectDt
+                : null;
+
+            const closedDays = [closeDayOnEffectDayList[i].day1, closeDayOnEffectDayList[i].day2, closeDayOnEffectDayList[i].day3]
+                .filter(day => day && dayMapping[day] !== undefined)
+                .map(day => dayMapping[day]);
+
+            effectiveDays.push({ startDate, endDate, closedDays });
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            const fourteenDaysLater = new Date();
+            fourteenDaysLater.setDate(today.getDate() + 13);
+
+            const calendarEl = document.getElementById('calendar');
+            const selectedDateInput = document.getElementById('selectedDate');
+            const rsrvPersonSelect = document.getElementById('rsrvPerson'); // 예약 인원 필드
+            const amountBox = document.getElementById('amount-box');
+            const amountInput = document.getElementById('amount'); // 추가된 금액 필드
+            const regularClosedayList = /*[[${regularClosedayList}]]*/ [] || [];
+            const closedayList = /*[[${closedayList}]]*/ [] || [];
+            const form = document.querySelector("form");
+            const part1 = document.getElementById("phone-part1");
+            const part2 = document.getElementById("phone-part2");
+            const part3 = document.getElementById("phone-part3");
+            const rsrvReqInput = document.getElementById("rsrvReq");
+            const charCountDisplay = document.getElementById("charCount");
+            storeClose.forEach(date => closedayList.push(date));
+
+            let selectedDate = "";
+            let selectedTime = "";
+
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: "ko",
+                initialView: 'dayGridMonth',
+                timeZone: 'Asia/Seoul',
+                height: 'auto', // 달력 높이 자동 조정
+                contentHeight: 'auto', // 콘텐츠 높이 자동 조정
+                dateClick: function (info) {
+                    if (!info.dayEl.classList.contains('fc-day-disabled') && info.date >= today && info.date <= fourteenDaysLater) {
+                        selectedDate = info.dateStr;
+
+                        document.querySelectorAll('.fc-day-selected').forEach(el => el.classList.remove('fc-day-selected'));
+                        info.dayEl.classList.add('fc-day-selected');
+
+                        fetch(`/api-reservation/getOperationByDate?storeId=${document.querySelector('[name="storeId"]').value}&effectDt=${info.dateStr}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data) {
+                                    const openTime = data.storeOperation.openTime;
+                                    const closeTime = data.storeOperation.closeTime;
+                                    const breakStart = data.storeOperation.breakTimeStart;
+                                    const breakEnd = data.storeOperation.breakTimeEnd;
+
+                                    const timeArray = generateTimeArray(
+                                        openTime,
+                                        closeTime,
+                                        breakStart,
+                                        breakEnd,
+                                        data.reservationTimeStatusList,
+                                        data.storeOperation.rsrvLimit
+                                    );
+
+                                    generateTimeTable(timeArray, data.storeOperation.rsrvLimit, data.reservationTimeStatusList);
+                                } else {
+                                    alert("No operation details found for the selected date.");
+                                }
+                            })
+                            .catch(error => console.error("Error fetching operation details:", error));
+                    }
+                },
+                dayCellDidMount: function (info) {
+                    const dateStr = info.date.toISOString().split('T')[0];
+
+                    if (closedayList.includes(dateStr)) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    const dayOfWeek = info.date.getDay();
+                    if (info.date >= today && regularClosedayList.includes(dayOfWeek.toString())) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    if (info.date < today || info.date > fourteenDaysLater) {
+                        info.el.classList.add('fc-day-disabled');
+                    }
+
+                    const currentDate = new Date(info.date);
+                    currentDate.setHours(currentDate.getHours() + 9);
+
+                    effectiveDays.forEach(period => {
+                        const startDate = new Date(period.startDate);
+                        const endDate = period.endDate ? new Date(period.endDate) : null;
+
+                        startDate.setHours(0);
+                        if (endDate) {
+                            endDate.setHours(0);
+                        }
+
+                        const closedDays = period.closedDays;
+
+                        if (
+                            currentDate >= startDate &&
+                            (!endDate || currentDate < endDate) &&
+                            closedDays.includes(currentDate.getDay())
+                        ) {
+                            info.el.classList.add('fc-day-disabled');
+                        }
+                    });
+                },
+                datesSet: function () {
+                    // 월이 바뀔 때마다 비활성화 논리를 적용
+                    const allCells = calendarEl.querySelectorAll('.fc-daygrid-day');
+                    allCells.forEach(cell => {
+                        const date = cell.getAttribute('data-date');
+                        if (date) {
+                            const info = { date: new Date(date), el: cell };
+                            applyDisabledDates(info);
+                        }
+                    });
+                },
+            });
+
+            calendar.render();
+
+            function applyDisabledDates(info) {
+                const dateStr = info.date.toISOString().split('T')[0];
+
+                // 일반 휴무일 처리
+                if (closedayList.includes(dateStr)) {
+                    info.el.classList.add('fc-day-disabled');
+                }
+
+                // 정기 휴무일 처리
+                const dayOfWeek = info.date.getDay();
+                if (regularClosedayList.includes(dayOfWeek.toString())) {
+                    info.el.classList.add('fc-day-disabled');
+                }
+
+                // 유효 날짜 범위 밖 처리
+                if (info.date < today || info.date > fourteenDaysLater) {
+                    info.el.classList.add('fc-day-disabled');
+                }
+            }
+
+            function generateTimeArray(openTime, closeTime, breakStart, breakEnd, reservationTimeStatusList, maxLimit) {
+                const start = parseTime(openTime);
+                const end = parseTime(closeTime);
+                const breakStartTime = breakStart ? parseTime(breakStart) : null;
+                const breakEndTime = breakEnd ? parseTime(breakEnd) : null;
+                const result = [];
+
+                while (start < end) {
+                    const currentTime = formatTime(start);
+
+                    const isReservedOverLimit = reservationTimeStatusList.some(reservation => {
+                        const reservationTime = formatTime(parseTime(reservation.rsrvDt.split(' ')[1]));
+                        return reservationTime === currentTime && reservation.rsrvPerson >= maxLimit;
+                    });
+
+                    const isInBreakTime = breakStartTime && breakEndTime && (start >= breakStartTime && start < breakEndTime);
+
+                    if (!isInBreakTime && !isReservedOverLimit) {
+                        result.push(currentTime);
+                    }
+                    start.setMinutes(start.getMinutes() + 30);
+                }
+
+                return result;
+            }
+
+            function generateTimeTable(timeArray, maxLimit, reservationTimeStatusList) {
+                const timeTable = document.getElementById('time-table');
+                timeTable.innerHTML = '';
+                const maxPerRow = 5;
+                let currentRow;
+
+                timeArray.forEach((time, index) => {
+                    if (index % maxPerRow === 0) {
+                        currentRow = document.createElement('div');
+                        currentRow.className = 'time-row';
+                        timeTable.appendChild(currentRow);
+                    }
+                    const button = document.createElement('div');
+                    button.className = 'time';
+                    button.textContent = time;
+
+                    button.addEventListener('click', function () {
+                        selectedTime = time;
+
+                        document.querySelectorAll('.time').forEach(el => el.style.backgroundColor = "");
+                        button.style.backgroundColor = "yellow";
+
+                        selectedDateInput.value = `${selectedDate}T${selectedTime}`;
+
+                        const reservedCount = reservationTimeStatusList.find(
+                            res => formatTime(parseTime(res.rsrvDt.split(' ')[1])) === time
+                        )?.rsrvPerson || 0;
+
+                        updateRsrvPersonOptions(maxLimit - reservedCount);
+                    });
+
+                    currentRow.appendChild(button);
+                });
+
+                timeTable.classList.remove('no-display');
+            }
+
+            function updateRsrvPersonOptions(availableSlots) {
+                rsrvPersonSelect.innerHTML = '';
+                for (let i = 1; i <= availableSlots; i++) {
+                    const option = document.createElement('option');
+                    option.value = i;
+                    option.textContent = i;
+                    rsrvPersonSelect.appendChild(option);
+                }
+                // 예약 인원 옵션이 변경될 때 금액 필드 업데이트
+                const selectedPersons = parseInt(rsrvPersonSelect.value, 10) || 0;
+                amountInput.value = selectedPersons * pricePerPerson;
+            }
+
+            function parseTime(timeString) {
+                const [hours, minutes] = timeString.split(':').map(Number);
+                const date = new Date();
+                date.setHours(hours, minutes, 0, 0);
+                return date;
+            }
+
+            function formatTime(date) {
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${hours}:${minutes}`;
+            }
+
+            // 예약 인원 변경 시 금액 자동 업데이트
+            rsrvPersonSelect.addEventListener('change', function () {
+                const selectedPersons = parseInt(rsrvPersonSelect.value, 10) || 0;
+                const totalAmount = selectedPersons * pricePerPerson;
+                amountBox.innerText = `${totalAmount.toLocaleString()} 원`;
+                amountInput.value = totalAmount;
+            });
+
+            form.addEventListener("submit", function (event) {
+
+                let isValid = true;
+                let errorMessage = "예약 정보가 입력이 부족합니다.\n";
+
+                // 예약 인수 확인
+                if (!rsrvPersonSelect.value) {
+                    isValid = false;
+                    errorMessage += "- 예약 인수를 선택해주세요.\n";
+                }
+
+                const part1Value = part1.value;
+                const part2Value = part2.value;
+                const part3Value = part3.value;
+
+                if (!/^\d{3,4}$/.test(part2Value) || !/^\d{4}$/.test(part3Value)) {
+                    alert("전화번호를 올바르게 입력하세요.");
+                    event.preventDefault();
+                    return;
+                }
+
+                if (!isValid) {
+                    alert(errorMessage);
+                    event.preventDefault();
+                }
+
+                const phoneNumber = `${part1Value}${part2Value}${part3Value}`;
+                console.log("Phone Number:", phoneNumber);
+
+                const hiddenPhoneField = document.createElement("input");
+                hiddenPhoneField.type = "hidden";
+                hiddenPhoneField.name = "rsrvNumber";
+                hiddenPhoneField.value = phoneNumber;
+                form.appendChild(hiddenPhoneField);
+            });
+
+            rsrvReqInput.addEventListener("input", function () {
+                const currentLength = rsrvReqInput.value.length;
+
+                // 현재 입력 길이를 표시
+                charCountDisplay.textContent = `${currentLength} / 100`;
+
+                // 100자 초과 시 제한
+                if (currentLength > 100) {
+                    rsrvReqInput.value = rsrvReqInput.value.slice(0, 100);
+                    charCountDisplay.textContent = "100 / 100";
+                }
+            });
+
+
+        });
+    </script>
+</head>
+<body>
+<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+
+<div class="container">
+    <h1 th:text="${store.storeName}"></h1>
+    <form action="/reservation/addRsrv" method="post">
+        <div id="calendar" style="width: 700px;"></div>
+        <div id="time-table" class="time-table no-display"></div>
+        <input type="hidden" name="storeId" th:value="${store.storeId}" />
+        <input type="hidden" name="storeName" th:value="${store.storeName}" />
+        <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
+        <input type="hidden" id="selectedDate" name="selectedDate" />
+        <input type="hidden" id="amount" name="amount" required readonly/>
+        <input type="hidden" id="userName" name="userName" />
+
+        <div class="form-group">
+
+            <div class="form-group-horizontal">
+            <label for="rsrvPerson">예약 인수</label>
+            <select id="rsrvPerson" name="rsrvPerson" required></select><br><br>
+                </div>
+
+            <div class="form-group-horizontal">
+                <label>전화 번호</label>
+                <div class="phone-input-group">
+                    <select id="phone-part1" required>
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select>
+                    <span>-</span>
+                    <input type="text" id="phone-part2" required pattern="[0-9]{3,4}" placeholder="1234" maxlength="4" />
+                    <span>-</span>
+                    <input type="text" id="phone-part3" required pattern="[0-9]{4}" placeholder="5678" maxlength="4" />
+                </div>
+            </div>
+
+            <label for="rsrvReq">요청 사항</label>
+            <textarea id="rsrvReq" name="rsrvReq" maxlength="100" rows="4" placeholder="요청 사항을 입력하세요 (최대 100자)" style="width: 60%;"></textarea>
+            <p id="charCount" style="font-size: 14px; color: gray;">0 / 100</p>
+            <br><br>
+
+            <div id="amount-box" class="amount-box"
+                 th:text="${store.getStoreOperation().getSecurity()} + ' 원'">0 원</div><br><br>
+
+            <button type="submit" id="payButton">결제</button>
+
+
+</div>
+        <br/><br/><br/>
+    </form>
+</div>
+</body>
+</html>

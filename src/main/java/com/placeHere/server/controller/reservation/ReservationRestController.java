@@ -2,6 +2,7 @@ package com.placeHere.server.controller.reservation;
 
 import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.StoreOperation;
+import com.placeHere.server.domain.StoreReservation;
 import com.placeHere.server.service.reservation.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,18 +10,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 
 @RestController
-@RequestMapping("test/reservation/*")
+@RequestMapping("/api-reservation/*")
 public class ReservationRestController {
 
     @Autowired
     private ReservationService reservationService;
 
-    @Autowired
-    private StoreDao storeDao;
+//    @Autowired
+//    private StoreDao storeDao;
 
 
     public ReservationRestController(){
@@ -48,14 +50,19 @@ public class ReservationRestController {
 
     // 가게 운영 정보 조회 API
     @GetMapping("/getOperationByDate")
-    public ResponseEntity<StoreOperation> getOperationByDate(@RequestParam("storeId") int storeId,
+    public ResponseEntity<StoreReservation> getOperationByDate(@RequestParam("storeId") int storeId,
                                                              @RequestParam("effectDt") String effectDt) {
         try {
-            Date sqlEffectDt = Date.valueOf(effectDt); // String -> java.sql.Date 변환
-            StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
+            /*Date sqlEffectDt = Date.valueOf(effectDt); // String -> java.sql.Date 변환
+            StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);*/
 
-            if (operation != null) {
-                return ResponseEntity.ok(operation);
+            Map<String, Object> map = new HashMap<>();
+            map.put("storeId", storeId);
+            map.put("effectDt", effectDt);
+            StoreReservation storeReservation = reservationService.getStoreReservation(map);
+
+            if (storeReservation != null) {
+                return ResponseEntity.ok(storeReservation);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
             }
@@ -63,6 +70,8 @@ public class ReservationRestController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
+
+
 
 
 
