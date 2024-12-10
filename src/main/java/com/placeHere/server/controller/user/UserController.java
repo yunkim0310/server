@@ -1,5 +1,6 @@
 package com.placeHere.server.controller.user;
 
+import com.google.zxing.qrcode.decoder.Mode;
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -47,7 +48,8 @@ public class UserController {
             session.setAttribute("user", dbUser);
         }
 
-        return "/index";
+//        return "/index";
+        return "index";
     }
 
     @GetMapping("/logout")
@@ -56,7 +58,8 @@ public class UserController {
         log.info("logout Controller - get 호출");
         session.invalidate();
 
-        return "/index";
+//        return "/index";
+        return "index";
     }
 
     @GetMapping("/selectRole")
@@ -91,9 +94,11 @@ public class UserController {
     }
 
     @GetMapping("/getUser")
-    public String getUser() {
+    public String getUser(@ModelAttribute("user") User user) {
 
         log.info("getUser Controller - get 호출");
+        log.info("user :: " + user);
+
         return "test/user/getUserTest";
     }
 
@@ -170,13 +175,13 @@ public class UserController {
     }
 
     @GetMapping("/setting")
-    public String setting(HttpSession session) {
+    public String setting(HttpSession session, Model model) {
 
+        log.info("setting - get 요청");
         User user = (User) session.getAttribute("user");
 
-        session.getAttribute("user :: " + user);
-        log.info("setting - get 요청");
-
+        session.getAttribute("setting user chk :: " + user);
+        model.addAttribute("user", user);
 
         return "user/setting";
     }

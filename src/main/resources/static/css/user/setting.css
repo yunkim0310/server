@@ -360,38 +360,46 @@ h6 {
         display: table;
         table-layout: fixed;
         width: 1024px;
-        height: 100%;
+        /*height: 100%;*/
+        height: 50%;
         margin: 0 auto;
     }
+
     .naverid::after {
         content: "";
         position: absolute;
         top: 0;
         left: -75%;
         right: 0;
-        height: 100%;
+        /*height: 100%;*/
         width: 75%;
         background-color: #fff;
     }
+
     .naverid .header {
         position: relative;
         display: table-cell;
         width: 395px;
+        height: 20px;
         background-color: #fff;
         box-shadow: 5px 1px 8px 0 rgba(0, 0, 0, 0.06);
         border-left: 1px solid rgba(0, 0, 0, 0.08);
         vertical-align: top;
         z-index: 1;
     }
+
     .naverid .container {
         display: table-cell;
         width: 100%;
         vertical-align: top;
     }
 }
+    /*지금여기*/
 @media all and (min-width: 1200px) {
     .naverid {
         width: 1200px;
+        background-color: red;
+        /*margin-top: 165px;*/
     }
 }
 .is_fixed {
@@ -603,6 +611,7 @@ h6 {
 @media all and (min-width: 1024px) {
     .profile_area .profile_inner {
         width: 100%;
+        margin-top: 70%;
     }
 }
 .profile_area .photo {
@@ -660,14 +669,31 @@ h6 {
         padding: 6px 0 40px;
     }
 }
-.profile_area .profile .useid {
+
+/*회원이름*/
+.profile_area .profile .username {
     font-size: 26px;
     font-weight: 700;
     line-height: 32px;
     letter-spacing: -0.67px;
     word-break: break-all;
 }
-.profile_area .profile .usemail {
+/*이메일*/
+.profile_area .profile .email {
+    font-size: 15px;
+    line-height: 19px;
+    color: #929294;
+    word-break: break-all;
+}
+/*성별*/
+.profile_area .profile .gender {
+    font-size: 15px;
+    line-height: 19px;
+    color: #929294;
+    word-break: break-all;
+}
+/*생년월일*/
+.profile_area .profile .birth {
     font-size: 15px;
     line-height: 19px;
     color: #929294;
@@ -1319,6 +1345,7 @@ h6 {
 .path_area {
     display: none;
     font-size: 0;
+    margin-top: 50%;
 }
 @media all and (min-width: 1024px) {
     .path_area {
