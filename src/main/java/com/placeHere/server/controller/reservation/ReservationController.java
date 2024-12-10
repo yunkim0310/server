@@ -73,17 +73,20 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
-            @RequestParam("storeId") int storeId, // 가게 ID는 필수
             @SessionAttribute("user") User user,
             Model model) throws Exception {
 
         // 초기 Search 객체 설정 (기본값)
+        System.out.println("/reservation/getRsrvStoreList : GET");
+
+        int storeId = storeService.getStoreId(user.getUsername());
+
         Search search = new Search();
         search.setStartDate(null); // 기본값 없음
         search.setEndDate(null); // 기본값 없음
@@ -103,11 +106,13 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
     public String getRsrvStoreList(
-            @RequestParam("storeId") int storeId,
+            @SessionAttribute("user") User user,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
             @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             Model model) throws Exception {
+
+        int storeId = storeService.getStoreId(user.getUsername());
 
         // Search 객체 생성
         Search search = new Search();
@@ -138,10 +143,10 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
             @ModelAttribute Search search,
-            @RequestParam("userName") String userName,
             @SessionAttribute("user") User user,
             Model model) throws Exception {
 
+        String userName = user.getUsername();
 
         // 초기 Search 객체 설정 (기본값)
         search.setOrder("desc"); // 기본 정렬
@@ -162,11 +167,13 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
     public String getRsrvUserList(
             @ModelAttribute Search search,
-            @RequestParam("userName") String userName,
+            @SessionAttribute("user") User user,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
             @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
+
+        String userName = user.getUsername();
 
         // 조건 설정: 값이 있을 때만 설정
 
@@ -259,7 +266,7 @@ public class ReservationController {
 
         if (store.getUserName().equals(user.getUsername())) {
             reservationService.addRsrvStore(reservation);
-            return "redirect:/reservation/getRsrvStoreList?storeId=" + storeId;
+            return "redirect:/reservation/getRsrvStoreList";
         }
 
         // Business Logic
@@ -386,11 +393,11 @@ public class ReservationController {
             if("예약 요청".equals(reservation.getRsrvStatus())){
                 paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
-                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+                return "redirect:/reservation/getRsrvUserList";
             }else if("예약 확정".equals(reservation.getRsrvStatus())){
                 paymentService.refundPayment(reservation.getPaymentId(), reason,reservation.getRsrvDt(), reservation.getAmount());
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
-                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+                return "redirect:/reservation/getRsrvUserList";
             }
         }else if("ROLE_STORE".equals(role)){
             if("예약 요청".equals(reservation.getRsrvStatus())){
@@ -401,7 +408,7 @@ public class ReservationController {
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
             }
         }
-        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 
