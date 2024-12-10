@@ -1,26 +1,24 @@
 package com.placeHere.server.controller.community;
 
-import com.placeHere.server.dao.community.CommunityDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.community.FriendService;
-import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
-import org.apache.ibatis.annotations.Delete;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
-@RequestMapping("/review")
+@RequestMapping("/review/*")
 public class CommunityController {
 
     //Field
@@ -36,11 +34,20 @@ public class CommunityController {
     @Qualifier("FriendServiceImpl")
     private FriendService friendService;
 
+    @Value("${page_size}")
+    private int pageSize;
 
+    @Value("${list_size}")
+    private int listSize;
+
+
+    // Constructor
     public CommunityController() {
         System.out.println(this.getClass());
     }
 
+
+    // Method
     //  @RequestMapping (value = "/addReview.do" , method = RequestMethod.GET)
     @GetMapping("/addReview")
     public String addReview(@RequestParam("rsrvNo") int rsrvNo,
@@ -74,11 +81,13 @@ public class CommunityController {
     }
 
     @PostMapping("/addReview")
-    public String addReview(@ModelAttribute("review") Review review) throws Exception {
+    public String addReview(@RequestParam("rsrvNo") int rsrvNo, @ModelAttribute("review") Review review) throws Exception {
 
         System.out.println("/addReview.do" + review.toString());
         // B/L
         communityService.addReview(review);
+
+        reservationService.updateRsrvStatus(rsrvNo,"리뷰 작성");
 
         return "redirect:/review/getReviewList";
     }
@@ -136,7 +145,7 @@ public class CommunityController {
         System.out.println("/review/updateReview : POST");
 
         communityService.updateReview(review);
-        return "redirect:/review/getReviewList?type=my";
+        return "redirect:/review/getReviewList?type=myFeed";
     }
 
 
@@ -148,96 +157,330 @@ public class CommunityController {
         review.setReviewNo(reviewNo);
 
         communityService.removeReview(review);
-        return "redirect:/review/getReviewList?type=my";
+        return "redirect:/review/getReviewList?type=myFeed";
 
     }
 
 
-    //getReviewList ( 리뷰 전체 목록 보기 + 친구 리뷰 불러오기 + 다른사람의 리뷰리스트 , My피드 리뷰리스트 ) ==> todo 현재 user정보가 없어 하드코딩 함 )
+    //getReviewList ( 리뷰 전체 목록 보기(ok) + 친구 리뷰 불러오기 + 다른사람의 리뷰리스트 , My피드 리뷰리스트(ok) ) ==> todo 현재 user정보가 없어 하드코딩 함 )
     // getReviewList.html +  getMyReviewList.html + getFriendReviewList.html + getOtherFeedView.html
     @GetMapping("/getReviewList")
     public String getReviewList(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "size", defaultValue = "10") int listSize,
+            @ModelAttribute Search search,
             //friendUsername = friendReq + friendRes / 즉 나와 친구인 username
             @RequestParam(value = "friendUsername", required = false) String friendUsername,
             //type의 따라 조회하는 데이터 형태를 결정 ex) type=my : 나 / type=friend : 친구
-            @RequestParam(value = "type", required = false) String type,
-            Model model
-    ) {
+            @RequestParam(value = "type", required = false, defaultValue = "") String type,
+            Model model) {
+
+        System.out.println("/review/getReviewList : GET");
+
         try {
-            System.out.println("요청된 페이지: " + page);
-            System.out.println("요청된 리스트 사이즈: " + listSize);
+            System.out.println("요청된 페이지: " + search.getPage());
             System.out.println("친구 사용자 이름: " + friendUsername);
             System.out.println("요청 타입: " + type);
 
+            // TODO Search 에 page 가 바인딩 되어오지 않으면 추가 코드 필요
+
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
-            Search search = new Search();
-            search.setPage(page); // 현재 페이지 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
+            search.setPageSize(pageSize);
 
             // 리뷰 리스트 초기화
-            List<Review> reviewList = new ArrayList<>();
+            List<Review> reviewList;
 
-            //type = friend 이고 friendUsername 이 유효한 경우 친구의 리뷰를 조회
-            if ("friend".equals(type) && friendUsername != null && !friendUsername.isEmpty()) {
-                //친구 여부 확인
-                //현재 로그인한 사용자 이름
-                String currentUser = "user02";
-                boolean isFriend = friendService.chkFriend(currentUser, friendUsername);
-                model.addAttribute("isFriend", isFriend);
-                if (isFriend) {
-//                    // 친구인 경우 친구의 리뷰 리스트 가져오기
-                    reviewList = communityService.getReviewList(List.of(friendUsername), search);
-                } else {
-                    model.addAttribute("message", "해당 사용자는 친구가 아닙니다.");
-                }
-                model.addAttribute("reviewList", reviewList);
-                System.out.println("111111111111" + reviewList);
-                return "test/community/getFriendReviewList";
+            String currentUser = "user01";
 
-            } else if ("my".equals(type)) {
-                // 타입이 "my"인 경우 내 리뷰 리스트 가져오기
-                String username = "user01";
-                reviewList = communityService.getReviewList(List.of(username), search);
-                model.addAttribute("reviewList", reviewList);
-                System.out.println("22222222" + reviewList);
-                return "test/community/getMyReviewList";
+            switch (type) {
 
-            } else {
-                // 친구가 아닌 일반 리뷰 조회
-                reviewList = communityService.getReviewList(search);
-                //리뷰 리스트와 친구 사용자 이름 추가
-                model.addAttribute("reviewList", reviewList);
-                model.addAttribute("friendUsername", friendUsername);
-                System.out.println("333333333" + reviewList);
-                return "test/community/getReviewList";
+                case "allList":
+                    // 전체 리뷰 리스트 가져오기
+                    reviewList = communityService.getReviewList(search);
+                    model.addAttribute("reviewList", reviewList);
+                    return "test/community/getReviewList";
 
+                case "friendList":
+                    if (friendUsername != null && !friendUsername.isEmpty()) {
+                        Friend friend = new Friend();
+                        friend.setFriendReq(currentUser);
+                        friend.setFriendRes(friendUsername);
+                        System.out.println("friendUsername : "+friendUsername);
+
+                        // 친구 여부 확인
+                        Friend friendCheck = friendService.chkFriend(friend);
+
+                        // friendCheck가 null이 아닐 경우 친구
+                        boolean isFriend = (friendCheck != null && friendCheck.isFriendStatus());
+
+                        model.addAttribute("isFriend", isFriend);
+
+                        // 친구가 아닐 경우 메시지 처리
+                        if (isFriend) {
+                            // 친구의 리뷰 리스트 가져오기
+                            reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                        } else {
+                            reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                            model.addAttribute("message", "친구가 아닙니다.");
+                        }
+                        model.addAttribute("reviewList", reviewList);
+                        return "test/community/getFriendReviewList"; // 친구 리뷰 페이지로 이동
+                    }
+                    break;
+
+                case "myFeed":
+                    // 나의 리뷰 리스트 가져오기
+                    reviewList = communityService.getReviewList(List.of(currentUser), search);
+                    model.addAttribute("reviewList", reviewList);
+                    return "test/community/getMyReviewList";
+
+                case "otherFeed":
+                    // 다른 사람 리뷰 리스트 가져오기
+                    if (friendUsername != null && !friendUsername.isEmpty()) {
+                        reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                        model.addAttribute("reviewList", reviewList);
+                        return "test/community/getOtherFeedView";
+                    }
+                    break;
+
+                default:
+                    // 전체 리뷰 리스트 가져오기 (디폴트 행동)
+                    reviewList = communityService.getReviewList(search);
+                    model.addAttribute("reviewList", reviewList);
+                    return "test/community/getReviewList";
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error";
+        }
+        return "error";
+    }
+
+
+    //댓글 삭제
+    @PostMapping("/removeComment")
+    public String removeComment(@RequestParam("commentNo") int commentNo,
+                                @RequestParam("reviewNo") int reviewNo,
+                                Model model
+    ) throws Exception {
+
+        Comment comment = new Comment();
+        comment.setCommentNo(commentNo);
+
+        System.out.println("reviewNo : " + reviewNo);
+
+        communityService.removeComment(comment);
+
+        Review review = communityService.getReview(reviewNo);
+        model.addAttribute("review", review);
+
+        List<Comment> commentList = communityService.getCommentList(reviewNo);
+        model.addAttribute("commentList", commentList);
+
+        return "redirect:/review/getReview?reviewNo=" + reviewNo;
+
+    }
+
+    //친구 신청
+    @PostMapping("/sendFriendReq")
+    public String sendFriendReq(@ModelAttribute Friend friend, Model model,
+                                HttpSession session,
+                                RedirectAttributes redirectAttributes) {
+
+        String friendUsername = friend.getFriendRes();
+        friend.setFriendRes(friendUsername);
+        System.out.println("friendRes : "+friendUsername);
+
+        System.out.println("111111" + friendUsername);
+
+        System.out.println("/review/sendFriendReq : POST");
+
+        // TODO Session
+//        User user = (User) (session.getAttribute("user"));
+
+        try {
+
+            String friendReq = "user01";
+            friend.setFriendReq(friendReq);
+//            String friendReq = friend.getFriendReq();
+//            String friendReq = user.getUsername();
+            System.out.println("222222" + friendReq);
+//            String friendRes = "";
+
+
+            System.out.println("friendRes : "+friendUsername);
+
+            // 친구 신청
+//            Friend friend = new Friend(friendReq, friendRes);
+            friendService.sendFriendReq(friend);
+
+            Friend chkFriend = friendService.chkFriend(friend);
+
+            // 여기여기
+            return "redirect:/review/getReviewList?";
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+            return "error";
+        }
+    }
+
+
+
+//    //친구삭제
+    @PostMapping("/remove")
+    public String removeFriend(@ModelAttribute Friend friend, Model model) {
+
+        System.out.println("2222222  ::: " + friend);
+        try {
+            // 친구 삭제 로직 (서비스 호출)
+            friendService.removeFriend(friend);
+//            model.addAttribute("friendNo", friend);
+            System.out.println("3333333 ::" + friend);
+
+            return "test/community/getOtherFeedView";
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
         }
     }
 
-    //친구 신청
-    @PostMapping("/friend/request")
-    public String requestFriend(@RequestParam String friendUsername) {
-        try {
-            Friend friend = new Friend();
-            friend.setFriendReq("user02");   // todo 현재 하드 코딩
-            friend.setFriendRes(friendUsername);
 
-            //친구 신청 메서드 호출
-            friendService.sendFriendReq(friend);
-            return "redirect:/review/getReviewList?page=1&size=10&friendUsername=" + friendUsername; // 리뷰 목록으로 리다이렉트
+    //친구 요청 목록을 확인하다 (getFriendReq 합침)
+    @GetMapping(value = "/getFriendReqStatus")
+    public String getFriendReqList(HttpSession session, Model model) throws Exception {
+        System.out.println("getFriendReqList 컨트롤러 까지 도달 ");
+
+        String userName = "user01"; // 세션에서 사용자 이름을 가져오는 것이 좋음
+
+        Search search = new Search();
+        search.setListSize(10);
+        search.setStartRowNum(0);
+
+        try {
+            System.out.println("친구 요청 목록을 가져옴. 사용자: " + userName);
+
+            // 친구 요청 목록
+            List<Friend> friendRequests = friendService.getFriendReqList(userName, search);
+            // 수신된 친구 요청 목록
+            List<Friend> receivedRequests = friendService.getFriendResList(userName, search);
+
+            model.addAttribute("friendRequests", friendRequests);
+            model.addAttribute("receivedRequests", receivedRequests);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("message", "친구 요청을 가져오는 데 오류가 발생했습니다.");
+        }
+
+        return "test/community/getFriendReqStatus";
+    }
+
+    //친구 신청을 수락하다
+    @PostMapping("/addFriend")
+    public String addFriend(@RequestParam int friendNo, RedirectAttributes redirectAttributes) {
+        try {
+            boolean success = friendService.addFriend(friendNo); // 친구 추가 메서드 호출
+            if (success) {
+                redirectAttributes.addFlashAttribute("message", "친구 요청이 수락되었습니다.");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "친구 요청 수락에 실패했습니다.");
+            }
+            return "redirect:/review/getFriendList";
         } catch (Exception e) {
             e.printStackTrace();
             return "error"; // 오류 발생 시 에러 페이지로 이동
         }
     }
 
-    //댓글 수정
+    // 친구 요청 거절
+    @PostMapping("/removeFriendReq")
+    public String removeFriendReq(@RequestParam int friendNo, RedirectAttributes redirectAttributes) {
+        try {
+
+            Friend friend = new Friend();
+            friend.setFriendNo(friendNo);
+
+            boolean success = friendService.removeFriendReq(friend);
+            if (success) {
+                redirectAttributes.addFlashAttribute("message", "친구 요청이 거절되었습니다.");
+            } else {
+                redirectAttributes.addFlashAttribute("message", "친구 요청 거절에 실패했습니다.");
+            }
+            return "redirect:/review/getFriendReqStatus";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error"; //
+        }
+    }
+
+//    // 친구 목록 조회
+    @GetMapping("/getFriendList")
+    public String getFriendList(Model model) {
+        try {
+//            String username = (String)model.getAttribute("keyword");
+            String username = "user01";
+            int startRowNum = 0;
+            int listSize = 10;
+
+            // 친구 목록 가져오기
+            List<Friend> friends = friendService.getFriendList(username, new Search(startRowNum, listSize));
+
+//            // friendStatus가 true인 친구 필터링
+//            List<Friend> filteredFriends = friends.stream()
+//                    .filter(friend -> friend.isFriendStatus())
+//                    .collect(Collectors.toList());
+
+            // 필터링된 친구 목록 추가
+            model.addAttribute("friends", friends);
+            return "test/community/getFriendList";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "error"; // 오류 발생 시 에러 페이지로 이동
+        }
+    }
+
+    //aaa.html을 위한..
+    @GetMapping("/test")
+    public String test() {
+        return "test/community/aaa";
+    }
+}
+
+
+
+
+
+
+//    @PostMapping("/remove")
+//    public String removeFriend(@RequestParam(required = false) Integer friendNo, Model model) {
+//        if (friendNo == null || friendNo <= 0) {
+//            // friendNo가 null이거나 유효하지 않은 경우 어떤 동작을 취할지 처리
+//            System.out.println("friendNo가 비었거나 잘못되었습니다.");
+//            return "redirect:/error"; // 또는 적절한 경로로 리다이렉트
+//        }
+//
+//        try {
+//            System.out.println("2222222  ::: " + friendNo);
+//            // 친구 삭제 로직 (서비스 호출)
+//            friendService.removeFriend(friendNo);
+//            model.addAttribute("friendNo", friendNo);
+//            System.out.println("3333333 ::" + friendNo);
+//
+//            return "redirect:/getOtherFeedView";
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "error"; // 오류 발생 시 에러 페이지로 이동
+//        }
+//    }
+
+
+
+//친구 목록 조회
+
+//댓글 수정
 //    @PutMapping("/updatecomment")
 //    public ResponseEntity<Comment> updateComment(@RequestBody Comment comment) throws Exception{
 //        // 댓글 수정
@@ -260,7 +503,7 @@ public class CommunityController {
 //    }
 
 
-    // 친구 삭제 ( 친구삭제 버튼 안되는 거 )
+// 친구 삭제 ( 친구삭제 버튼 안되는 거 )
 //    @PostMapping("/friend/remove")
 //    public String removeFriend(@RequestParam String friendUsername){
 //        try {
@@ -282,7 +525,7 @@ public class CommunityController {
 //    }
 
 
-    //친구 삭제 도전 1 => 실패 // Rest 로 다시 도전 )
+//친구 삭제 도전 1 => 실패 // Rest 로 다시 도전 )
 
 //        @PostMapping("/remove")
 //        public String removeFriend(@RequestParam("friendNo")  String friendNoStr, RedirectAttributes redirectAttributes) {
@@ -341,7 +584,7 @@ public class CommunityController {
 //    }
 
 
-    // 내가 작성한 리뷰 리스트 보기
+// 내가 작성한 리뷰 리스트 보기
 //    @GetMapping("/getMyReviewList")
 //    public String getMyReviewList(Model model) {
 //        String username = "user01"; // todo user정보 로그인 되기 전까지 하드코딩
@@ -361,15 +604,84 @@ public class CommunityController {
 //        return "test/community/getMyReviewList";
 //    }
 
+//    //친구 신청
+//    @PostMapping("/friend/request")
+//    public String requestFriend(@RequestParam String friendUsername) {
+//        try {
+//            Friend friend = new Friend();
+//            friend.setFriendReq("user02");   // todo 현재 하드 코딩
+//            friend.setFriendRes(friendUsername);
+//
+//            //친구 신청 메서드 호출
+//            friendService.sendFriendReq(friend);
+//            return "redirect:/review/getReviewList?page=1&size=10&friendUsername=" + friendUsername; // 리뷰 목록으로 리다이렉트
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "error"; // 오류 발생 시 에러 페이지로 이동
+//        }
+//    }
 
-    //aaa.html을 위한..
-    @GetMapping("/test")
-    public String test() {
-        return "test/community/aaa";
-    }
-}
+//    //getOtherFeedView에서 친구 상태값을 위한 컨트롤러
+//    @GetMapping("/getOtherFeedView")
+//    public String getOtherFeedView(Model model) {
+//
+//        // 하드코딩된 사용자
+//        String currentUser = "user01"; // 현재 나
+//        String friendUser = "user06"; // 친구 요청 받을 사람
+//
+//        // 친구 상태 설정 (1: 친구, 0: 친구 x)
+//        int friendStatus = (currentUser.equals("user01") && friendUser.equals("user06")) ? 1 : 0; // 하드코딩 예시
+//
+////        model.addAttribute("friendNo", friendNo);
+//        model.addAttribute("friendStatus", friendStatus);
+//        model.addAttribute("friendUsername", friendUser);
+//        System.out.println("친구 상태: " + friendStatus);
+//
+//        return "test/community/getOtherFeedView";
+//    }
 
-
+//
+//            //type = friend 이고 friendUsername 이 유효한 경우 친구의 리뷰를 조회
+//            if (type.equals("friend") && friendUsername != null && !friendUsername.isEmpty()) {
+//                //친구 여부 확인
+//                //현재 로그인한 사용자 이름
+//                String currentUser = "user01";
+//
+//                // 친구 여부 확인
+//                boolean isFriend = friendService.chkFriend(currentUser, friendUsername);
+//                model.addAttribute("isFriend", isFriend);
+//
+//                if (isFriend) {
+//                    //친구의 리뷰 리스트 가져오기
+//                    reviewList = communityService.getReviewList(List.of(friendUsername), search);
+//                } else {
+////                  //일반 사용자의 리뷰를 가져오기
+//                    reviewList = communityService.getReviewList(List.of(friendUsername), search);
+//                    model.addAttribute("message", "지정된 사용자는 친구가 아님.");
+//                }
+//                model.addAttribute("reviewList", reviewList);
+//                return "test/community/getOtherFeedView";
+//
+//            } else if ("my".equals(type)) {
+//                // 타입이 "my"인 경우 내 리뷰 리스트 가져오기
+//                String username = "user01";
+//                reviewList = communityService.getReviewList(List.of(username), search);
+//                model.addAttribute("reviewList", reviewList);
+//                return "test/community/getMyReviewList";
+//
+//            } else {
+//                //전체 리뷰 가져오기
+//                reviewList = communityService.getReviewList(search);
+//                //리뷰 리스트와 친구 사용자 이름 추가
+//                model.addAttribute("reviewList", reviewList);
+//                return "test/community/getReviewList";
+//
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return "error";
+//        }
+//    }
 
 
 

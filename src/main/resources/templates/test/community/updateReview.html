@@ -3,31 +3,177 @@
 <head>
     <meta charset="UTF-8">
     <title>리뷰 수정</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+        }
+
+        form {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            padding: 25px;
+            width: 100%;
+            max-width: 500px;
+            position: relative;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input[type="number"],
+        input[type="text"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin: 5px 0 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            font-size: 1rem;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .file-upload {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 10px 0 20px;
+        }
+
+        .file-upload label {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        .file-upload label:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .file-upload span {
+            font-size: 0.9rem;
+            color: #555;
+            font-style: italic;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .return-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .return-link a {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .return-link a:hover {
+            color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-<h1>리뷰 수정</h1>
+<div th:include="~{common/header}"></div>
+<div th:include="~{community/menuBar}"></div>
 
-<form action="/review/updateReview" method="post" th:object="${review}">
+
+<form action="/review/updateReview" method="post" th:object="${review}" enctype="multipart/form-data">
+    <h1>리뷰 수정</h1>
     <input type="hidden" th:field="*{reviewNo}" />
 
     <label for="score">리뷰 점수:</label>
-    <input type="number" id="score" min="1" max="5" th:field="*{reviewScore}" required /><br/>
+    <input type="number" id="score" min="1" max="5" th:field="*{reviewScore}" required />
 
     <label for="content">리뷰 내용:</label>
-    <textarea id="content" th:field="*{reviewContent}" required></textarea><br/>
+    <textarea id="content" th:field="*{reviewContent}" required></textarea>
 
-    <label for="img1">이미지 1:</label>
-    <input type="text" id="img1" th:field="*{reviewImg1}" /><br/>
+    <label>이미지 업로드:</label>
 
-    <label for="img2">이미지 2:</label>
-    <input type="text" id="img2" th:field="*{reviewImg2}" /><br/>
+    <!-- 이미지 1 -->
+    <div class="file-upload">
+        <label for="img1-upload">이미지 1 선택</label>
+        <input type="file" id="img1-upload" name="reviewImg1" th:field="*{reviewImg1}" />
+        <span id="img1-name">선택된 파일 없음</span>
+    </div>
 
-    <label for="img3">이미지 3:</label>
-    <input type="text" id="img3" th:field="*{reviewImg3}" /><br/>
+    <!-- 이미지 2 -->
+    <div class="file-upload">
+        <label for="img2-upload">이미지 2 선택</label>
+        <input type="file" id="img2-upload" name="reviewImg2" th:field="*{reviewImg2}" />
+        <span id="img2-name">선택된 파일 없음</span>
+    </div>
+
+    <!-- 이미지 3 -->
+    <div class="file-upload">
+        <label for="img3-upload">이미지 3 선택</label>
+        <input type="file" id="img3-upload" name="reviewImg3" th:field="*{reviewImg3}" />
+        <span id="img3-name">선택된 파일 없음</span>
+    </div>
 
     <button type="submit">리뷰 업데이트</button>
+
+    <div class="return-link">
+        <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+    </div>
 </form>
 
-<a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a> <!-- 리뷰 목록 페이지로 돌아가기 링크 -->
+<script>
+    document.querySelectorAll('input[type="file"]').forEach(input => {
+        input.addEventListener('change', (event) => {
+            const fileName = event.target.files[0]?.name || '선택된 파일 없음';
+            event.target.nextElementSibling.textContent = fileName;
+        });
+    });
+</script>
 </body>
 </html>

@@ -2,9 +2,11 @@ package com.placeHere.server.service.community.impl;
 
 import com.placeHere.server.dao.community.CommunityDao;
 import com.placeHere.server.domain.Comment;
+import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Review;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.reservation.ReservationService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +23,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Autowired
     @Qualifier("communityDao")
     private CommunityDao communityDao;
+
+    @Autowired
+    @Qualifier("reservationServiceImpl")
+    private ReservationService reservationService;
 
     @Value("${page_size}")
     private int pageSize;
@@ -45,6 +51,12 @@ public class CommunityServiceImpl implements CommunityService {
         System.out.println("addReview(review)");
 
         communityDao.addReview(review);
+
+        int rsrvNo = review.getRsrvNo();
+        System.out.println("rsrvNo : "+rsrvNo);
+
+        reservationService.updateRsrvStatus(rsrvNo, "리뷰 작성");
+
     }
 
 

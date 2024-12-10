@@ -105,7 +105,6 @@
 
     <!--전체 리뷰 리스트 보기  -->
     <select id="getReviewList" parameterType="com.placeHere.server.domain.Search" resultMap="ReviewResultMap">
-
         SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
         FROM
             (SELECT review.*, user.profile_img
@@ -117,8 +116,47 @@
         GROUP BY review_user.review_no, reservation.store_id, reservation.store_name
         ORDER BY review_user.review_no DESC
         LIMIT #{startRowNum}, #{listSize}
-
     </select>
+
+
+<!--    친구 리뷰 리스트 보기-->
+    <select id="getFriendReviewList" parameterType="hashmap" resultMap="ReviewResultMap">
+        SELECT review_user.*,
+        reservation.store_id,
+        reservation.store_name,
+        COUNT(likes.like_id) AS review_like_cnt
+        FROM
+        (SELECT
+            review.*,
+            user.profile_img
+        FROM review
+        JOIN
+            user ON review.username = user.username
+        JOIN
+        friend ON friend.friend_res = review.username
+        WHERE
+            review.review_ViewStatus = 1
+        AND
+            friend.friend_status != 0
+        And friend.friend_req = #{friendReq}) AS review_user
+        JOIN
+            reservation ON reservation.rsrv_no = review_user.rsrv_no
+        LEFT JOIN
+            likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+        GROUP BY
+            review_user.review_no,
+            reservation.store_id,
+            reservation.store_name
+        ORDER BY
+            review_user.review_no DESC
+        LIMIT #{startRowNum}, #{listSize}
+    </select>
+
+
+
+
+
+
 
 <!--    <select id="getReviewList" resultMap="ReviewResultMap">-->
 <!--        SELECT-->
@@ -163,7 +201,7 @@
                 JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
                 LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
             GROUP BY review_user.review_no, reservation.store_id, reservation.store_name) AS review_info
-        WHERE review_info.username =
+        WHERE review_info.username IN
         <foreach collection="userNameList" item="userName" open="(" close=")" separator=",">
             #{userName}
         </foreach>

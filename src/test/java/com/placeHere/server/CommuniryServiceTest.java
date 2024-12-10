@@ -78,9 +78,9 @@ public class CommuniryServiceTest {
     public void addReview() throws Exception {
 
         Review review = new Review();
-        review.setRsrvNo(12);
+        review.setRsrvNo(1);
         review.setReviewScore(5);
-        review.setReviewContent("Junit 으로 인서트 ");
+        review.setReviewContent("Junit 으로 인서트ㅋㅋ ");
         review.setUserName("user01");
 
         communityService.addReview(review);
@@ -120,7 +120,7 @@ public class CommuniryServiceTest {
     @Test
     public void testUpdateComment() throws Exception {
         Comment comment = new Comment();
-        comment.setCommentNo("1");
+        comment.setCommentNo(1);
         comment.setCommentsContent("수정 테스트 ");
 
         communityService.updateComment(comment);

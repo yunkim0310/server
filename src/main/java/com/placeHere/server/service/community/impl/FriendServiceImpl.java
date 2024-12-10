@@ -2,6 +2,7 @@ package com.placeHere.server.service.community.impl;
 
 import com.placeHere.server.dao.community.FriendDao;
 import com.placeHere.server.domain.Friend;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.community.FriendService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,74 +25,117 @@ public class FriendServiceImpl implements FriendService {
     //Method
     //친구 신청을 요청하다
     public void sendFriendReq(Friend friend) throws Exception {
+
+        System.out.println("sendFriendReq");
+
         friendDao.sendFriendReq(friend);
     }
 
-    // 친구 신청 확인
-    public Friend getFriendReq(int friendNo) throws Exception{
-        return friendDao.getFriendReq(friendNo);
+
+    // 친구 신청 목록 (내가 friendReq)
+    @Override
+    public List<Friend> getFriendReqList(String userName, Search search) throws Exception {
+
+        System.out.println("getFriendReqList");
+
+        return friendDao.getFriendReqList(userName, search);
     }
+
+
+    // 친구 신청 받은 목록 (내가 friendRes)
+    @Override
+    public List<Friend> getFriendResList(String userName, Search search) throws Exception {
+
+        System.out.println("getFriendResList");
+
+        return friendDao.getFriendResList(userName, search);
+    }
+
 
     //친구 신청을 수락
     @Override
     public boolean addFriend(int friendNo) throws Exception {
+
+        System.out.println("addFriend 친구 수락");
+        
         return friendDao.addFriend(friendNo) ;
     }
 
+
     // 친구 신청을 거절 ( 친구신청취소 , 친구삭제 같이 묶음)
     @Override
-    public boolean removeFriendReq(int friendNo) throws Exception {
+    public boolean removeFriendReq(Friend friend) throws Exception {
 
-        //친구 요청을 가져옴
-        Friend friendRequest = friendDao.getFriendReq(friendNo);
+        System.out.println("removeFriendReq 친구 신청 거절");
 
-        // 요청이 존재하는지 확인
-        if (friendRequest != null) {
-            return friendDao.removeFriendReq(friendNo);
-        } else {
-            throw new IllegalArgumentException("ID에 대한 친구 요청을 찾을 수 없습니다_FriendServiceImpl" + friendNo);
-        }
+        return friendDao.removeFriendReq(friend);
     }
 
 
+    //친구 삭제
     @Override
-    public void removeFriend(int friendNo) throws Exception {
+    public void removeFriend(Friend friend) throws Exception {
+
+        System.out.println("removeFriend :: " + friend.getFriendNo());
+
         // 친구를 삭제하는 DAO 메서드 호출
-        friendDao.removeFriend(friendNo);
+        friendDao.removeFriend(friend);
     }
-    //친구 목록을 조회하다
-        public List<Friend> getFriendList(String friendReq , int startRowNum, int listSize) throws Exception {
-        return friendDao.getFriendList(friendReq, startRowNum, listSize);
+
+
+    // 친구 목록 조회
+    @Override
+    public List<Friend> getFriendList(String userName, Search search) throws Exception {
+
+        System.out.println("getFriendList 친구 목록 조회");
+
+        return friendDao.getFriendList(userName, search);
     }
 
 
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
-        public void updateChkfriendReq(String friendRes)throws Exception{
-            friendDao.updateChkfriendReq(friendRes);
-        }
+    public void updateChkfriendReq(String userName)throws Exception{
 
-    //친구 상태 확인
-    public boolean chkFriend(String userNameA , String userNameB) throws Exception{
-        return friendDao.checkFriendStatus(userNameA, userNameB);
+        System.out.println("updateChkfriendReq 친구 요청 확인");
+
+        friendDao.updateChkfriendReq(userName);
     }
 
-    @Override
-    public int getFriendStatus(String currentUser, String targetUser) throws Exception {
-        Map<String, String> params = new HashMap<>();
-        params.put("userNameA", currentUser);
-        params.put("userNameB", targetUser);
-        return friendDao.getFriendStatus(params); // DAO를 통해 친구 상태 조회
-    }
 
-    @Override
-    public Friend findFriendRelation(Map<String, String> params) throws Exception {
-        return friendDao.findFriendRelation(params);
+    // 친구 상태 확인 => friend_status =1 만을 구분
+    // friendReq 는 내 아이디, friendRes 는 상대 아이디
+    public Friend chkFriend(Friend friend) throws Exception {
+
+        System.out.println("chkFriend 친구 상태 확인");
+
+        return friendDao.chkFriend(friend);
     }
 
 
 
 
 
+
+//    @Override
+//    public int getFriendStatus(String currentUser, String targetUser) throws Exception {
+//        Map<String, String> params = new HashMap<>();
+//        params.put("userNameA", currentUser);
+//        params.put("userNameB", targetUser);
+//        return friendDao.getFriendStatus(params); // DAO를 통해 친구 상태 조회
+//    }
+
+//    @Override
+//    public Friend findFriendRelation(Map<String, String> params) throws Exception {
+//        return friendDao.findFriendRelation(params);
+//    }
+
+
+
+
+//    // 친구 신청 확인
+//    public List<Friend> getFriendReq(String friendReq,int startRowNum, int listSize, String friendRes, String username) throws Exception{
+//        return friendDao.getFriendReq(friendReq,startRowNum,  listSize, friendRes, username);
+//    }
     //친구 요청을 확인하다   => 필요  X getFriendReq 합침
 //        public List<Friend> checkFriendReq(String friendRes) throws Exception{
 //            return friendDao.checkFriendReq(friendRes);
