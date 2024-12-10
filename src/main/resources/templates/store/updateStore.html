@@ -17,7 +17,7 @@
         <!-- 카카오 맵 주소 검색 -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-        <script src="/javascript/store/updateStore.js"></script>
+        <script type="module" src="/javascript/store/updateStore.js"></script>
 
     </head>
     <body>
@@ -30,6 +30,7 @@
 
                 <input type="hidden" name="userName" th:value="${store.userName}">
                 <input type="hidden" name="storeId" th:value="${store.storeId}">
+                <input type="hidden" name="storeLocation" th:value="${store.storeLocation}">
 
                 <div class="wrapper">
 

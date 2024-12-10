@@ -98,10 +98,11 @@
         <p th:text="${weekRsrv}"></p>
         <p th:text="${rsrvAvg}"></p>
         <p th:text="${percent}"></p>
+        <br/><br/><br/>
     </div>
 
     <div th:if="${mode == 'review'}">
-        <div th:insert="~{test/store/getStoreReviewListTest}"/>
+        <div th:insert="~{test/store/getStoreReviewListTest}"></div>
     </div>
 
     <div th:if="${mode == 'nearby'}">

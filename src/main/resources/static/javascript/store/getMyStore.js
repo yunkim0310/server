@@ -31,7 +31,7 @@ $(function() {
         // 수정 버튼 클릭 이벤트 처리
         $(document).on('click', 'button[name="updateStoreNewsForm"]',function () {
 
-            const $reservationItem = $(this).closest('.reservation-item');
+            const $reservationItem = $(this).closest('.containerItem');
             const $currentTextarea = $reservationItem.find('textarea[name="newsContents"]');
             const $deleteBtn = $reservationItem.find('button[name="removeStoreNews"]');
             const $updateBtn = $(this); // 현재 수정 버튼
@@ -73,7 +73,7 @@ $(function() {
         // 취소 버튼 클릭 이벤트 처리
         $(document).on('click', 'button[name="cancelEdit"]', function () {
 
-            const $reservationItem = $(this).closest('.reservation-item');
+            const $reservationItem = $(this).closest('.containerItem');
             const $currentTextarea = $reservationItem.find('textarea[name="newsContents"]');
             const $cancelBtn = $(this);
             const $updateBtn = $reservationItem.find('button[name="updateStoreNews"]'); // 수정 버튼

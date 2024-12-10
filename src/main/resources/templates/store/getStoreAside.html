@@ -1,0 +1,38 @@
+<ul class="css-1x9bshx ecbxmj2" th:fragment="getStoreAside">
+
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='info')? 'bold;': 'normal'}">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=info&storeId='+${store.storeId}">
+            매장 정보
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='statistics')? 'bold;': 'normal'}">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=statistics&storeId='+${store.storeId}">
+            예약 통계
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='review')? 'bold;': 'normal'}">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=review&storeId='+${store.storeId}">
+            리뷰
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='nearby')? 'bold;': 'normal'}">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=nearby&storeId='+${store.storeId}">
+            주변시설 추천
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+    <li class="css-0 ecbxmj1">
+        <a class="css-pi3u6r ecbxmj0" th:href="'/reservation/addRsrv?storeId='+${store.storeId}">
+            예약하기
+            <span class="css-e41glx e1x0rfoo0"></span>
+        </a>
+    </li>
+
+</ul>

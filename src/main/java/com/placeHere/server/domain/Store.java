@@ -24,6 +24,8 @@ public class Store {
     private String storeName;
     // 매장 주소
     private String storeAddr;
+    // 가게 위치 (위도, 경도)
+    private String storeLocation;
     // 매장 전화번호
     private String storePhone;
     // 매장 사진 목록 (매장 대표 사진은 첫번째꺼)
@@ -65,8 +67,6 @@ public class Store {
     private int storeStatus;
     // 목록 조회 총 개수
     private int totalCnt;
-    // 가게 위치 (위도, 경도)
-    private String storeLocation;
 
 
     // Method

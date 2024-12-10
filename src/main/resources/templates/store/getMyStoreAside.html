@@ -14,21 +14,21 @@
         </a>
     </li>
 
-    <li class="css-0 ecbxmj1">
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='review')? 'bold;': 'normal'}">
         <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=review&userName='+${store.userName}">
             가게 리뷰
             <span class="css-e41glx e1x0rfoo0"></span>
         </a>
     </li>
 
-    <li class="css-0 ecbxmj1">
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='news')? 'bold;': 'normal'}">
         <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=news&userName='+${store.userName}">
             매장 소식
             <span class="css-e41glx e1x0rfoo0"></span>
         </a>
     </li>
 
-    <li class="css-0 ecbxmj1">
+    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='closeday')? 'bold;': 'normal'}">
         <a class="css-pi3u6r ecbxmj0" th:href="'/store/getMyStore?mode=closeday&userName='+${store.userName}">
             휴무일
             <span class="css-e41glx e1x0rfoo0"></span>

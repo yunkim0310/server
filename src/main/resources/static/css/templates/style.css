@@ -2288,7 +2288,7 @@ hr {
     position: relative;
     width: 260px;
     box-sizing: border-box;
-    height: 180px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2308,11 +2308,15 @@ hr {
     font-size: 14px;
     line-height: 160%;
     letter-spacing: -.02em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
+    white-space: normal; /* 줄바꿈 허용 */
+    overflow: visible; /* 오버플로우 제거 */
+    text-overflow: clip; /* 텍스트 잘림 없음 */
+    word-break: break-word; /* 긴 단어 강제 줄바꿈 */
 }
 .__restaurant-notice-v2 .__restaurant-notice-v2-item .__notice-content .__desc .__more {
     display: block;
@@ -2438,6 +2442,7 @@ hr {
     overflow: hidden;
     display: flex;
     align-items: center;
+    text-align: center;
     line-height: 160%;
 }
 .__menupan-item .__name h4 {

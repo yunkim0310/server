@@ -5,6 +5,7 @@ import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +53,9 @@ public class StoreController {
     @Value("${region_list}")
     private List<String> regionList;
 
+    @Value("${google_api}")
+    private String googleApi;
+
 
     // Constructor
     public StoreController() {
@@ -62,27 +66,65 @@ public class StoreController {
     // Method
     // TODO 가게 등록 중간에 닫어버리면?
     // 가게 기본 정보 등록
-    @GetMapping(value="/store/addStore", params = "userName")
-    public String addStore(@RequestParam("userName") String userName, Model model) {
+    @GetMapping(value="/store/addStore")
+    public String addStore(HttpSession session, Model model, @RequestParam("userName") String userName) {
 
         System.out.println("/store/addStore : GET");
 
-        if (storeService.getStoreId(userName) != 0) {
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-            // TODO 이미 등록된 가게가 있을시 어디로 보낼지 고민
-            return "redirect:/store/getMyStore?userName=" + userName;
+        if (user == null) {
+            user = new User();
+            user.setUsername(userName);
+            user.setRole("ROLE_STORE");
+        }
+        
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/login";
+            
+        // 점주 회원의 경우
+        } else if (user.getRole().equals("ROLE_STORE")) {
+
+            int storeId = storeService.getStoreId(user.getUsername());
+            
+            // 등록된 가게가 있는 경우
+            if (storeId != 0) {
+
+                Store store = storeService.getStore(storeId);
+
+                // 등록된 가게 운영이 있는 경우
+                if (store.getStoreOperation() != null) {
+
+                    return "redirect:/store/getMyStore";
+                }
+
+                // 등록된 가게 운영이 없는 경우
+                else {
+
+                    return "redirect:/store/addOperation";
+                }
+                
+            }
+            
+            // 등록된 가게가 없는 경우
+            else {
+
+                model.addAttribute("foodCategory", new FoodCategory());
+                model.addAttribute("userName", user.getUsername());
+                model.addAttribute("amenitiesNameList", amenitiesNameList);
+
+                return "store/addStore";
+            }
+        
+        // 일반 회원의 경우
+        } else {
+
+            return "redirect:/";
         }
 
-        else {
-
-            System.out.println(userName);
-
-            model.addAttribute("foodCategory", new FoodCategory());
-            model.addAttribute("userName", userName);
-            model.addAttribute("amenitiesNameList", amenitiesNameList);
-
-            return "store/addStore";
-        }
     }
 
     @PostMapping("/store/addStore")
@@ -94,19 +136,71 @@ public class StoreController {
         hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
         store.setHashtagList(hashtagList);
 
-//        int storeId = storeService.addStore(store);
-//        store.setStoreId(storeId);
+        int storeId = storeService.addStore(store);
+        store.setStoreId(storeId);
 
         System.out.println(store);
 
-        model.addAttribute("userName", store.getUserName());
-//        model.addAttribute("storeId", storeId);
-
-        return "store/addOperation";
+        return "redirect:/store/addOperation";
     }
 
 
     // 가게 운영 정보 등록
+    @GetMapping("/store/addOperation")
+    public String addOperation(HttpSession session, Model model, @RequestParam("userName") String userName) {
+
+        System.out.println("/store/addOperation : GET");
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        if (user == null) {
+            user = new User();
+            user.setUsername(userName);
+            user.setRole("ROLE_STORE");
+        }
+        
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/login";
+        
+        // 점주 회원의 경우
+        } else if (user.getRole().equals("ROLE_STORE")) {
+
+            int storeId = storeService.getStoreId(user.getUsername());
+            Store store = storeService.getStore(storeId);
+            
+            // 등록된 가게가 있는 경우
+            if (storeId != 0) {
+                
+                // 등록된 가게 운영이 없는 경우
+                if (store.getStoreOperation() == null) {
+
+                    model.addAttribute("userName", store.getUserName());
+                    model.addAttribute("storeId", storeId);
+
+                    return "store/addOperation";
+                
+                // 등록된 가게 운영이 있는 경우
+                } else {
+
+                    return "redirect:/store/getMyStore";
+                }
+            
+            // 등록된 가게가 없는 경우
+            } else {
+
+                return "redirect:/store/addStore";
+            }
+        
+        // 일반 회원의 경우
+        } else {
+
+            return "redirect:/";
+        }
+    }
+
     @PostMapping("/store/addOperation")
     public String addOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
@@ -116,39 +210,72 @@ public class StoreController {
 
         storeService.addOperation(storeOperation);
 
-        Store store = storeService.getStore(storeOperation.getStoreId());
-
-        return "redirect:/store/getMyStore?userName=" + store.getUserName();
+        return "redirect:/store/getMyStore";
     }
 
 
     // 가게 기본 정보 수정
-    @GetMapping(value = "/store/updateStore", params = "userName")
-    public String updateStore(@RequestParam("userName") String userName, Model model) {
+    @GetMapping(value = "/store/updateStore")
+    public String updateStore(HttpSession session, @RequestParam("userName") String userName, Model model) {
 
         System.out.println("/store/updateStore : GET");
 
-        int storeId = storeService.getStoreId(userName);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        if (storeId == 0) {
-
-            return "redirect:/store/addStore?userName=" + userName;
+        if (user == null) {
+            user = new User();
+            user.setUsername(userName);
+            user.setRole("ROLE_STORE");
         }
 
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/login";
+        }
+
+        // 점주 회원의 경우
+        else if (user.getRole().equals("ROLE_STORE")) {
+
+            int storeId = storeService.getStoreId(userName);
+            
+            // 등록된 가게가 없는 경우
+            if (storeId == 0) {
+
+                return "redirect:/store/addStore";
+
+            } else {
+
+                Store store = storeService.getStore(storeId);
+
+                if (store.getStoreOperation() == null) {
+
+                    return "redirect:/store/addOperation";
+                }
+
+                else {
+
+                    List<String> selectedCategoryList = Arrays.asList(store.getFoodCategoryId().split("/"));
+
+                    System.out.println(store);
+                    System.out.println(selectedCategoryList);
+
+                    model.addAttribute("store", store);
+                    model.addAttribute("selectedCategoryList", selectedCategoryList);
+                    model.addAttribute("foodCategory", new FoodCategory());
+                    model.addAttribute("amenitiesNameList", amenitiesNameList);
+
+                    return "store/updateStore";
+                }
+            }
+
+        }
+
+        // 일반 회원의 경우
         else {
 
-            Store store = storeService.getStore(storeId);
-            List<String> selectedCategoryList = Arrays.asList(store.getFoodCategoryId().split("/"));
-
-            System.out.println(store);
-            System.out.println(selectedCategoryList);
-
-            model.addAttribute("store", store);
-            model.addAttribute("selectedCategoryList", selectedCategoryList);
-            model.addAttribute("foodCategory", new FoodCategory());
-            model.addAttribute("amenitiesNameList", amenitiesNameList);
-
-            return "store/updateStore";
+            return "redirect:/";
         }
 
     }
@@ -173,19 +300,77 @@ public class StoreController {
 
         storeService.updateStore(store, amenitiesEquals, menuEquals);
 
-        StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
-
-        System.out.println(storeOperation);
-
-        model.addAttribute("storeOperation", storeOperation);
-        model.addAttribute("userName", store.getUserName());
-        model.addAttribute("storeId", store.getStoreId());
-
-        return "store/updateOperation";
+        return "redirect:/store/updateOperation";
     }
 
 
     // 가게 운영 정보 수정
+    @GetMapping("/store/updateOperation")
+    public String updateOperation(HttpSession session, Model model) {
+
+        System.out.println("/store/updateOperation : GET");
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        if (user == null) {
+            user = new User();
+            user.setUsername(user.getUsername());
+            user.setRole("ROLE_STORE");
+        }
+        
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/login";
+        }
+        
+        // 점주 회원의 경우
+        else if (user.getRole().equals("ROLE_STORE")) {
+
+            int storeId = storeService.getStoreId(user.getUsername());
+
+            if (storeId == 0) {
+
+                return "redirect:/store/addStore";
+
+            }
+
+            else {
+
+                Store store = storeService.getStore(storeId);
+
+                StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
+
+                System.out.println(storeOperation);
+
+                if (storeOperation == null) {
+
+                    return "redirect:/store/addOperation";
+
+                }
+
+                else {
+
+                    model.addAttribute("storeOperation", storeOperation);
+                    model.addAttribute("userName", store.getUserName());
+                    model.addAttribute("storeId", store.getStoreId());
+
+                    return "store/updateOperation";
+                }
+
+            }
+
+        }
+        
+        // 일반 회원의 경우
+        else {
+
+            return "redirect:/";
+        }
+
+    }
+
     @PostMapping("/store/updateOperation")
     public String updateOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
@@ -199,178 +384,18 @@ public class StoreController {
 
         model.addAttribute("store", store);
 
-        return "test/store/updateStoreTestResult";
+        return "redirect:/store/getMyStore";
     }
 
-
-    // 매장 소식 목록 조회
-    @GetMapping(value = "/store/getStoreNewsList", params = "userName")
-    public String getStoreNewsList(@RequestParam("userName") String userName, Model model) {
-
-        System.out.println("/store/getStoreNewsList : GET");
-
-        int storeId = storeService.getStoreId(userName);
-
-        // 가게 미등록시
-        if (storeId == 0) {
-            return null;
-        }
-
-        else {
-            Search search = new Search(pageSize, listSize);
-
-            List<StoreNews> storeNewsList = storeService.getStoreNewsList(storeId, search);
-            int totalCnt = (storeNewsList.isEmpty()) ? 0 : storeNewsList.get(0).getTotalCnt();
-
-            model.addAttribute("userName", userName);
-            model.addAttribute("storeId", storeId);
-            model.addAttribute("storeNewsList", storeNewsList);
-            model.addAttribute("totalCnt", totalCnt);
-
-            return "test/store/getStoreNewsListTest";
-        }
-
-    }
-
-    // 매장 소식 목록 추가, 수정, 삭제
-    @PostMapping("/store/getStoreNewsList")
-    public String getStoreNewsList(@ModelAttribute StoreNews storeNews,
-                                   @RequestParam("mode") String mode,
-                                   @RequestParam("userName") String userName,
-                                   Model model) {
-
-        System.out.println("/store/getStoreNewsList : POST");
-
-        System.out.println(mode);
-        System.out.println(storeNews);
-
-        switch (mode) {
-
-            case "add":
-                // 매장 소식 등록
-                System.out.println("addStoreNews");
-                System.out.println(storeNews.getNewsId());
-                storeService.addStoreNews(storeNews);
-                break;
-
-            case "update":
-                // 매장 소식 수정
-                System.out.println("updateStoreNews");
-                System.out.println(storeNews.getNewsId());
-                storeService.updateStoreNews(storeNews);
-                break;
-
-            case "remove":
-                // 매장 소식 삭제
-                System.out.println("removeStoreNews");
-                System.out.println(storeNews.getNewsId());
-                storeService.removeStoreNews(storeNews.getNewsId());
-                break;
-
-        }
-
-        return "redirect:/store/getStoreNewsList?userName=" + userName;
-    }
-
-
-    // 휴무일 목록 조회
-    @GetMapping(value = "/store/getClosedayList", params = "userName")
-    public String getClosedayList(@RequestParam("userName") String userName,
-                                  @ModelAttribute("search") Search search,
-                                  Model model) {
-
-        System.out.println("/store/getClosedayList : GET");
-
-        int storeId = storeService.getStoreId(userName);
-
-        // 가게 미등록시
-        if (storeId == 0) {
-            return null;
-        }
-
-        else {
-
-            search.setPageSize(pageSize);
-            search.setListSize(listSize);
-            System.out.println(search);
-
-            List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
-            int totalCnt = (closedayList.isEmpty()) ? 0 : closedayList.get(0).getTotalCnt();
-
-            model.addAttribute("userName", userName);
-            model.addAttribute("storeId", storeId);
-            model.addAttribute("totalCnt", totalCnt);
-            model.addAttribute("closedayList", closedayList);
-            model.addAttribute("search", search);
-            model.addAttribute("today", LocalDate.now().toString());
-
-            return "test/store/getClosedayListTest";
-        }
-
-    }
-
-    // 휴무일 추가, 삭제
-    @PostMapping(value = "/store/getClosedayList", params = "userName")
-    public String getClosedayList(@ModelAttribute Closeday closeday,
-                                  @ModelAttribute Search search,
-                                  @RequestParam("userName") String userName,
-                                  @RequestParam("mode") String mode,
-                                  RedirectAttributes redirectAttributes) throws Exception {
-
-        System.out.println("/store/getClosedayList : POST");
-
-        System.out.println(mode);
-        System.out.println(closeday);
-        if (mode.equals("get")) {
-            System.out.println(search);
-        }
-
-        switch (mode) {
-
-            case "add":
-                // 휴무일 등록
-                System.out.println("addCloseday");
-
-                // TODO 예약이 있는지 확인하는 코드 추가 필요
-
-                int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
-                
-                // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
-                if (rsrvCnt == 0) {
-                    storeService.addCloseday(closeday);
-                } else {
-                    redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
-                }
-
-                break;
-
-            case "get":
-                // 휴무일 목록 조회
-                System.out.println("getClosedayList");
-
-                search.setPageSize(pageSize);
-                search.setListSize(listSize);
-
-                redirectAttributes.addFlashAttribute("search", search);
-
-                break;
-
-            case "remove":
-                // 휴무일 삭제
-                System.out.println("removeCloseday");
-                System.out.println(closeday.getClosedayId());
-                storeService.removeCloseday(closeday.getClosedayId());
-                break;
-        }
-
-        return "redirect:/store/getClosedayList?userName=" + userName;
-    }
 
     // 가게 검색
     @GetMapping("/searchStore")
-    public String searchStore(Model model) {
+    public String searchStore(HttpSession session, Model model) {
 
         System.out.println("/searchStore : GET");
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
@@ -378,27 +403,20 @@ public class StoreController {
         model.addAttribute("amenitiesNameList", amenitiesNameList);
         model.addAttribute("search", new Search());
 
-        return "test/store/searchStoreTest";
-    }
-
-    @PostMapping("/searchStore")
-    public String searchStore(@ModelAttribute Search search,
-                              Model model) {
-
-        System.out.println("/searchStore : POST");
-
-        System.out.println(search);
-
-        return "test/store/getStoreListTest";
+        return "store/searchStore";
     }
 
 
     // 가게 목록 조회
     @GetMapping("/getStoreList")
     public String getStoreList(@ModelAttribute Search search,
+                               HttpSession session,
                                Model model) {
 
         System.out.println("/getStoreList : GET");
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         search.setPageSize(pageSize);
         search.setListSize(listSize);
@@ -439,6 +457,9 @@ public class StoreController {
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
 
+        // 구글 맵
+        model.addAttribute("googleApi", googleApi);
+
         return "store/getStoreList";
     }
 
@@ -448,11 +469,15 @@ public class StoreController {
     public String getStore(@RequestParam("storeId") int storeId,
                            @RequestParam(value = "mode", required = false, defaultValue = "info") String mode,
                            @ModelAttribute Search search,
+                           HttpSession session,
                            Model model) throws Exception {
 
         System.out.println("/getStore : GET");
         System.out.println(storeId);
         System.out.println("mode: " + mode);
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
         Store store = storeService.getStore(storeId);
         search.setPageSize(pageSize);
@@ -485,6 +510,9 @@ public class StoreController {
                     System.out.println("/getStore 가게 정보");
 
                     model.addAttribute("amenitiesNamList", amenitiesNameList);
+                    model.addAttribute("googleApi", googleApi);
+
+                    break;
 
                 case "statistics":
                     // 예약 통계
@@ -517,103 +545,158 @@ public class StoreController {
                     break;
             }
 
-            return "test/store/getStoreTest";
+            return "store/getStore";
         }
     }
 
 
     // 가게 좋아요 목록 조회
-    @GetMapping(value = "/getStoreLikeList", params = "userName")
-    public String getLikeStoreList(@RequestParam("userName") String userName, Model model) throws Exception {
+    @GetMapping("/getStoreLikeList")
+    public String getLikeStoreList(HttpSession session,
+                                   @RequestParam("userName") String userName,
+                                   Model model) throws Exception {
 
         System.out.println("/store/getLikeStoreList : GET");
 
-        List<Like> storeLikeList = likeService.getStoreLikeList(userName);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        model.addAttribute("storeLikeList", storeLikeList);
+        if (user != null) {
 
-        return "test/store/getStoreLikeListTest";
+            if (user.getRole().equals("ROLE_USER")) {
+
+                List<Like> storeLikeList = likeService.getStoreLikeList(userName);
+
+                model.addAttribute("storeLikeList", storeLikeList);
+
+                return "test/store/getStoreLikeListTest";
+
+            }
+
+            else {
+
+                return "redirect:/";
+            }
+        }
+
+        else {
+            return "redirect:/login";
+        }
+
     }
 
 
     // TODO 내 가게 리뷰보기, 매장 소식 보기, 휴무일 보기 합치기
     // 점주 회원 마이페이지 (가게 관리)
-    @GetMapping(value = "/store/getMyStore", params = "userName")
-    public String getMyStore(@RequestParam("userName") String userName,
-                             @RequestParam(value = "mode", required = false, defaultValue = "review") String mode,
+    @GetMapping("/store/getMyStore")
+    public String getMyStore(@RequestParam(value = "mode", required = false, defaultValue = "review") String mode,
                              @ModelAttribute("search") Search search,
                              @ModelAttribute("message") String message,
-                             Model model) {
+                             HttpSession session,
+                             Model model,
+                             @RequestParam("userName") String userName) {
 
         System.out.println("/store/getMyStore : GET");
         System.out.println(userName);
         System.out.println("mode: " + mode);
         
         // TODO 로그인 중인 회원 아이디 가져오기, 역할 확인
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        search.setPageSize(pageSize);
-        search.setListSize(listSize);
+        if (user == null) {
+            user = new User();
+            user.setUsername(userName);
+            user.setRole("ROLE_STORE");
+        }
 
-        int storeId = storeService.getStoreId(userName);
+        if (user == null) {
 
-        if (storeId == 0) {
-            return "redirect:/store/addStore?userName=" + userName;
+            return "redirect:/login";
+        }
+
+        else if (user.getRole().equals("ROLE_STORE")) {
+
+            search.setPageSize(pageSize);
+            search.setListSize(listSize);
+
+            int storeId = storeService.getStoreId(userName);
+
+            if (storeId == 0) {
+
+                return "redirect:/store/addStore";
+            }
+
+            else {
+
+                Store store = storeService.getStore(storeId);
+
+                if (store.getStoreOperation() == null) {
+
+                    return "redirect:/store/addOperation";
+                }
+
+                else {
+
+                    model.addAttribute("store", store);
+                    model.addAttribute("mode", mode);
+
+                    switch (mode) {
+
+                        case "review":
+
+                            // 내 가게 리뷰 목록 조회
+                            System.out.println("내 가게 리뷰 목록 조회");
+
+                            List<Review> reviewList = communityService.getReviewList(storeId, search);
+                            int reviewTotalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
+
+                            model.addAttribute("reviewList", reviewList);
+                            model.addAttribute("totalCnt", reviewTotalCnt);
+
+                            break;
+
+                        case "news":
+
+                            // 매장 소식 목록 조회
+                            System.out.println("내 매장 소식 목록 조회");
+
+                            List<StoreNews> storeNewsList = storeService.getStoreNewsList(storeId, search);
+                            int newsTotalCnt = (storeNewsList.isEmpty()) ? 0 : storeNewsList.get(0).getTotalCnt();
+
+                            model.addAttribute("storeNewsList", storeNewsList);
+                            model.addAttribute("totalCnt", newsTotalCnt);
+
+                            break;
+
+                        case "closeday":
+
+                            // 휴무일 목록 조회
+                            System.out.println("내 가게 휴무일 목록 조회");
+
+                            List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
+                            int closedayTotalCnt = (closedayList.isEmpty()) ? 0 : closedayList.get(0).getTotalCnt();
+
+                            model.addAttribute("totalCnt", closedayTotalCnt);
+                            model.addAttribute("closedayList", closedayList);
+                            model.addAttribute("search", search);
+                            model.addAttribute("today", LocalDate.now());
+                            model.addAttribute("message", message);
+
+                            break;
+
+                    }
+
+                    return "store/getMyStore";
+                }
+
+            }
+
         }
 
         else {
 
-            Store store = storeService.getStore(storeId);
-
-            model.addAttribute("store", store);
-            model.addAttribute("mode", mode);
-
-            switch (mode) {
-
-                case "review":
-
-                    // 내 가게 리뷰 목록 조회
-                    System.out.println("내 가게 리뷰 목록 조회");
-
-                    List<Review> reviewList = communityService.getReviewList(storeId, search);
-                    int reviewTotalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
-
-                    model.addAttribute("reviewList", reviewList);
-                    model.addAttribute("totalCnt", reviewTotalCnt);
-
-                    break;
-
-                case "news":
-
-                    // 매장 소식 목록 조회
-                    System.out.println("내 매장 소식 목록 조회");
-
-                    List<StoreNews> storeNewsList = storeService.getStoreNewsList(storeId, search);
-                    int newsTotalCnt = (storeNewsList.isEmpty()) ? 0 : storeNewsList.get(0).getTotalCnt();
-
-                    model.addAttribute("storeNewsList", storeNewsList);
-                    model.addAttribute("totalCnt", newsTotalCnt);
-
-                    break;
-
-                case "closeday":
-
-                    // 휴무일 목록 조회
-                    System.out.println("내 가게 휴무일 목록 조회");
-
-                    List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
-                    int closedayTotalCnt = (closedayList.isEmpty()) ? 0 : closedayList.get(0).getTotalCnt();
-
-                    model.addAttribute("totalCnt", closedayTotalCnt);
-                    model.addAttribute("closedayList", closedayList);
-                    model.addAttribute("search", search);
-                    model.addAttribute("today", LocalDate.now());
-                    model.addAttribute("message", message);
-
-                    break;
-
-            }
-
-            return "store/getMyStore";
+            return "redirect:/";
         }
 
     }
@@ -622,10 +705,10 @@ public class StoreController {
     public String getMyStore(@ModelAttribute StoreNews storeNews,
                              @RequestParam("mode") String mode,
                              @RequestParam(value = "fnc", required = false) String fnc,
-                             @RequestParam("userName") String userName,
                              @ModelAttribute Closeday closeday,
                              @ModelAttribute Search search,
-                             RedirectAttributes redirectAttributes) throws Exception {
+                             RedirectAttributes redirectAttributes,
+                             @RequestParam("userName") String userName) throws Exception {
 
         System.out.println("/store/getMyStore : POST");
         System.out.println(userName);
@@ -721,44 +804,7 @@ public class StoreController {
                 break;
         }
 
-        return "redirect:/store/getMyStore?mode=" + mode + "&userName=" + userName;
+        return "redirect:/store/getMyStore?mode=" + mode;
     }
 
-
-    // 내 가게 리뷰 목록 조회
-    @GetMapping(value = "/store/getMyStoreReviewList", params = "userName")
-    public String getMyStoreReviewList(@RequestParam("userName") String userName,
-                                       @ModelAttribute Search search,
-                                       Model model) {
-
-        System.out.println("/store/getMyStoreReviewList : GET");
-
-        int storeId = storeService.getStoreId(userName);
-
-        if (storeId == 0) {
-            return null;
-        }
-
-        else {
-            Store store = storeService.getStore(storeId);
-            search.setPageSize(pageSize);
-            search.setListSize(listSize);
-            List<Review> reviewList = communityService.getReviewList(storeId, search);
-            int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
-
-            model.addAttribute("store", store);
-            model.addAttribute("reviewList", reviewList);
-            model.addAttribute("totalCnt", totalCnt);
-
-            return "store/getMyStore";
-        }
-    }
-
-    // Test
-    @GetMapping("/store/test")
-    public String test() {
-
-
-        return "test/store/addrTest";
-    }
 }
