@@ -44,4 +44,7 @@ public interface CommunityDao {
 
     //댓글 삭제 -> 노출여부 T => F 로 변경
     public void removeComment(Comment comment) throws Exception;
+
+    // 댓글 조회 메서드
+    public Comment getCommentById(int commentNo);
 }

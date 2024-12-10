@@ -95,7 +95,9 @@ public class CommunityController {
 
     // getReview
     @GetMapping("/getReview")
-    public String getReview(@RequestParam("reviewNo") int reviewNo, Model model) throws Exception {
+    public String getReview(@RequestParam("reviewNo") int reviewNo,
+                            Model model,
+                            @SessionAttribute("user") User user) throws Exception {
 
         Review review = communityService.getReview(reviewNo);
         if (review == null) {
@@ -107,6 +109,10 @@ public class CommunityController {
         // 댓글 리스트 불러오는 거
         List<Comment> commentList = communityService.getCommentList(reviewNo);
         model.addAttribute("commentList", commentList);
+
+        model.addAttribute("user", user);
+
+        System.out.println("getReview컨트롤러 user == "+ user);
 
         System.out.println("cont" + review);
 
@@ -169,6 +175,7 @@ public class CommunityController {
             @ModelAttribute Search search,
             //friendUsername = friendReq + friendRes / 즉 나와 친구인 username
             @RequestParam(value = "friendUsername", required = false) String friendUsername,
+            @SessionAttribute("user") User user,
             //type의 따라 조회하는 데이터 형태를 결정 ex) type=my : 나 / type=friend : 친구
             @RequestParam(value = "type", required = false, defaultValue = "") String type,
             Model model) {
@@ -189,7 +196,9 @@ public class CommunityController {
             // 리뷰 리스트 초기화
             List<Review> reviewList;
 
-            String currentUser = "user01";
+
+            String currentUser = user.getUsername();
+            System.out.println("currentUser : "+currentUser);
 
             switch (type) {
 
@@ -222,6 +231,10 @@ public class CommunityController {
                             reviewList = communityService.getReviewList(List.of(friendUsername), search);
                             model.addAttribute("message", "친구가 아닙니다.");
                         }
+
+                        //친구 신청 시 res 값 넣어줌
+                        model.addAttribute("friendUsername", friendUsername);
+
                         model.addAttribute("reviewList", reviewList);
                         return "test/community/getFriendReviewList"; // 친구 리뷰 페이지로 이동
                     }
@@ -280,50 +293,29 @@ public class CommunityController {
 
     }
 
-    //친구 신청
+    //친구신청
     @PostMapping("/sendFriendReq")
-    public String sendFriendReq(@ModelAttribute Friend friend, Model model,
-                                HttpSession session,
-                                RedirectAttributes redirectAttributes) {
+    public String sendFriendReq(@RequestParam(value = "friendRes") String friendRes, Model model,
+                                @SessionAttribute("user") User user) throws  Exception {
 
-        String friendUsername = friend.getFriendRes();
+        System.out.println("friendRes : " + friendRes);
+
+        Friend friend = new Friend();
+
+        String friendReq = user.getUsername();
+        String friendUsername = friendRes ; // 입력받은 친구의 사용자 이름
+        friend.setFriendReq(friendReq);
         friend.setFriendRes(friendUsername);
-        System.out.println("friendRes : "+friendUsername);
+        System.out.println("friendRes : " + friendUsername);
 
-        System.out.println("111111" + friendUsername);
-
-        System.out.println("/review/sendFriendReq : POST");
-
-        // TODO Session
-//        User user = (User) (session.getAttribute("user"));
-
-        try {
-
-            String friendReq = "user01";
-            friend.setFriendReq(friendReq);
-//            String friendReq = friend.getFriendReq();
-//            String friendReq = user.getUsername();
-            System.out.println("222222" + friendReq);
-//            String friendRes = "";
+        friendService.sendFriendReq(friend);
 
 
-            System.out.println("friendRes : "+friendUsername);
+        // 로그 추가
+        System.out.println("친구 신청 요청: " + user.getUsername() + " -> " + friendUsername);
 
-            // 친구 신청
-//            Friend friend = new Friend(friendReq, friendRes);
-            friendService.sendFriendReq(friend);
+        return "redirect:/review/getFriendReqStatus";
 
-            Friend chkFriend = friendService.chkFriend(friend);
-
-            // 여기여기
-            return "redirect:/review/getReviewList?";
-
-        } catch (Exception e) {
-
-            e.printStackTrace();
-
-            return "error";
-        }
     }
 
 
@@ -349,10 +341,13 @@ public class CommunityController {
 
     //친구 요청 목록을 확인하다 (getFriendReq 합침)
     @GetMapping(value = "/getFriendReqStatus")
-    public String getFriendReqList(HttpSession session, Model model) throws Exception {
+    public String getFriendReqList( @SessionAttribute("user") User user, Model model) throws Exception {
         System.out.println("getFriendReqList 컨트롤러 까지 도달 ");
 
-        String userName = "user01"; // 세션에서 사용자 이름을 가져오는 것이 좋음
+
+        String userName = user.getUsername();
+        System.out.println("userName : "+userName);
+
 
         Search search = new Search();
         search.setListSize(10);
@@ -418,10 +413,14 @@ public class CommunityController {
 
 //    // 친구 목록 조회
     @GetMapping("/getFriendList")
-    public String getFriendList(Model model) {
+    public String getFriendList(@SessionAttribute("user") User user, Model model) {
         try {
 //            String username = (String)model.getAttribute("keyword");
-            String username = "user01";
+
+            String username = user.getUsername();
+            System.out.println("username : "+username);
+
+
             int startRowNum = 0;
             int listSize = 10;
 

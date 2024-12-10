@@ -102,6 +102,8 @@
         FROM friend
         WHERE ((friend_req = #{friendReq} AND friend_res = #{friendRes})
         OR (friend_req = #{friendRes} AND friend_res = #{friendReq}))
+        ORDER BY friend_dt DESC
+        LIMIT 1
     </select>
 
 

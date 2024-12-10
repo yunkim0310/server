@@ -295,5 +295,10 @@
         WHERE comment_no = #{commentNo}
     </update>
 
+<!--        &lt;!&ndash; 댓글 조회 &ndash;&gt;-->
+        <select id="getCommentById"  parameterType="com.placeHere.server.domain.Comment">
+            SELECT * FROM comment WHERE comment_no = #{commentNo}
+        </select>
+
 
 </mapper>

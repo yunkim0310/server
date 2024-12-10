@@ -162,4 +162,10 @@ public class CommunityServiceImpl implements CommunityService {
         communityDao.removeComment(comment);
     }
 
+    //댓글 존재 여부 확인 메서드
+    @Override
+    public Comment getComment (int commentNo) throws  Exception{
+        return communityDao.getCommentById(commentNo);
+    }
+
 }
