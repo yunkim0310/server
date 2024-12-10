@@ -111,6 +111,7 @@
 
 /* 메인헤더 드롭다운 css*/
 .header-wrap{
+  padding: 10px;
   position: relative;
 }
 

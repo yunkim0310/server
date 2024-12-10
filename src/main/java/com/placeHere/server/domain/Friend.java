@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+
 import java.sql.Date;
 
 @Getter
@@ -31,6 +32,19 @@ public class Friend {
     //회원프로필
     private String profileImg;
     //회원아이디
-    private String userName;
+    // 윤지 수정
+    private String username;
+
+    private int startRowNum;
+    private int listSize;
+
+
+    // Constructor
+    public Friend (String friendReq, String friendRes) {
+        this.friendReq = friendReq;
+        this.friendRes = friendRes;
+    }
+
+
 
 }

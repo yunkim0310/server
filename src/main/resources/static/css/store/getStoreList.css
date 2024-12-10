@@ -1,0 +1,103 @@
+body {
+    scrollbar-color: white;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow-x: hidden;
+}
+
+.page_nation {
+    display: flex;
+    justify-content: center;
+}
+
+.page_nation a {
+    display: block;
+    margin: 0 3px;
+    float: left;
+    border: 1px solid #e6e6e6;
+    width: 35px;
+    height: 35px;
+    line-height: 34px;
+    text-align: center;
+    background-color: #fff;
+    font-size: 18px;
+    color: #999999;
+    text-decoration: none;
+}
+
+.page_nation a.page-prev {
+    background: url("/images/templates/icon.svg") no-repeat center center;
+    -moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    margin-left: 7px;
+    background-size: 10px;
+}
+
+.page_nation a.page-next {
+    background: url("/images/templates/icon.svg") no-repeat center center;
+    margin-left: 7px;
+    background-size: 10px;
+}
+
+.active {
+    background-color: rgb(236 78 39) !important;
+    color: #fff !important;
+    border: 1px solid rgb(236 78 39) !important;
+}
+
+.page_nation a.page-disabled {
+    pointer-events: none;
+}
+
+select {
+    width: 100%;
+    height: 100%;
+    padding: 0 28px 0 10px;
+    font-size: 15px;
+    border: 0;
+    -webkit-appearance: none; /* for chrome */
+    -moz-appearance: none; /*for firefox*/
+    appearance: none;
+    box-sizing: border-box;
+    appearance: none;
+    background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNiIgaGVpZ2h0PSIxNiIgdmlld0JveD0iMCAwIDE2IDE2Ij4KICAgIDxnIGZpbGw9Im5vbmUiIGZpbGwtcnVsZT0iZXZlbm9kZCI+CiAgICAgICAgPHBhdGggZD0iTTAgMEgxNlYxNkgweiIvPgogICAgICAgIDxwYXRoIHN0cm9rZT0iI0ZGM0QwMCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBzdHJva2Utd2lkdGg9IjEuNSIgZD0iTTYuMTM3IDQuNjYzTDkuODEgOC4zMzcgNi4xMzcgMTIuMDEiIHRyYW5zZm9ybT0icm90YXRlKDkwIDcuOTczIDguMzM3KSIvPgogICAgPC9nPgo8L3N2Zz4K') no-repeat right 10px center;
+}
+
+select::-ms-expand {
+    display: none;
+}
+
+
+/* 추가 */
+
+.layout-container {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+}
+
+#map-container {
+    flex-grow: 2;  /* 지도 영역이 더 많이 커지도록 설정 */
+    flex-shrink: 1; /* 필요에 따라 줄어들 수 있음 */
+    max-width: 50%; /* 최대 너비를 설정 */
+    height: 600px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    padding-top: 7.2%;
+}
+
+#store-list-container {
+    flex-grow: 1;  /* 가게 목록 영역은 상대적으로 덜 커지도록 설정 */
+    flex-shrink: 1; /* 필요에 따라 줄어들 수 있음 */
+    max-width: 50%; /* 최대 너비를 설정 */
+}
+
+#map {
+    width: 100%;
+    height: 600px;
+    background-color: #e0e0e0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}

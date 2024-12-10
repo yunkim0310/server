@@ -68,11 +68,12 @@
         <result property="specialMenuNo" column="special_menu_no" jdbcType="INTEGER"/>
         <result property="portOneStoreId" column="portone_store_id" jdbcType="VARCHAR"/>
         <result property="foodCategoryId" column="food_category_id" jdbcType="VARCHAR"/>
-        <result property="foodCategory" column="food_category" jdbcType="VARCHAR"/>
+<!--        <result property="foodCategory" column="food_category" jdbcType="VARCHAR"/>-->
         <result property="storeStatus" column="store_status" jdbcType="INTEGER"/>
         <result property="reviewCnt" column="review_cnt" jdbcType="INTEGER"/>
         <result property="reviewScoreAvg" column="review_score_avg"/>
         <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
+        <result property="storeLocation" column="store_location" jdbcType="VARCHAR"/>
 
         <association property="amenitiesNoList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getAmenitiesList"/>
         <association property="menuList" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getMenuList"/>
@@ -94,12 +95,12 @@
     <insert id="addStore" parameterType="com.placeHere.server.domain.Store" useGeneratedKeys="true" keyProperty="storeId" keyColumn="store_id">
 
         INSERT INTO store
-        (username, business_no, store_name, store_addr, store_phone,
+        (username, business_no, store_name, store_addr, store_location, store_phone,
         store_info, food_category_id, special_menu_no,
         store_img1, store_img2, store_img3,
         store_img4, store_img5, hashtag)
         VALUES
-        (#{userName}, #{businessNo}, #{storeName}, #{storeAddr},
+        (#{userName}, #{businessNo}, #{storeName}, #{storeAddr}, #{storeLocation},
          <choose>
              <when test="storePhone != null and storePhone != ''">
                  #{storePhone},
@@ -270,12 +271,88 @@
 
     </select>
 
+    <!-- 가게 목록 위치 조회 -->
+    <select id="getStoreLocationList" parameterType="com.placeHere.server.domain.Search">
+
+        SELECT CAST(store_id AS CHAR) AS storeId, store_name AS storeName, store_location AS storeLocation
+        FROM
+        (SELECT *
+        FROM
+        (SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
+        FROM store s
+        LEFT JOIN (
+        SELECT reservation.store_id,
+        COUNT(review.review_no) AS cnt_review,
+        ROUND(SUM(review.review_score) / CASE WHEN COUNT(review.review_no) = 0 THEN 1 ELSE COUNT(review.review_no) END, 1) AS review_score_avg
+        FROM review
+        JOIN reservation ON review.rsrv_no = reservation.rsrv_no
+        GROUP BY reservation.store_id
+        ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
+        <if test="searchKeyword != null and searchKeyword != ''">
+            <where>
+                store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+                OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+                OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+            </where>
+        </if>
+        ) AS store
+        <where>
+            store_status = 0
+            <if test="regionList != null and !regionList.isEmpty()">
+                AND (<foreach collection="regionList" separator="OR" item="region">
+                store_addr Like CONCAT('%',#{region},'%')
+            </foreach>)
+            </if>
+
+            <if test='foodCategoryId != null and !foodCategoryId.equals("")'>
+                AND food_category_id LIKE CONCAT('%',#{foodCategoryId},'%')
+            </if>
+
+            <if test="hashtagList != null and !hashtagList.isEmpty()">
+                AND (
+                <foreach collection="hashtagList" separator="OR" item="hashtag">
+                    <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
+                </foreach>)
+            </if>
+
+            <choose>
+                <when test="priceMax&lt;100000">
+                    AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
+                </when>
+                <otherwise>
+                    AND store_id IN (SELECT store_id FROM menu WHERE menu_price >= #{priceMin})
+                </otherwise>
+            </choose>
+
+            <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">
+                AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN
+                <foreach collection="amenitiesNoList" item="amenitiesNo" open="(" close=")" separator=",">
+                    #{amenitiesNo}
+                </foreach>)
+            </if>
+        </where>
+        ORDER BY review_score_avg DESC, review_cnt DESC
+
+    </select>
+
+    <!-- 가게 목록 위치 조회 -->
+    <select id="getStoreLocation">
+
+        SELECT CAST(store_id AS CHAR) AS storeId, store_name AS storeName, store_location AS storeLocation
+        FROM store
+        WHERE store_id = #{storeId}
+
+    </select>
+
     <!-- 가게 수정 -->
     <update id="updateStore" parameterType="com.placeHere.server.domain.Store">
 
         UPDATE store
         SET store_name=#{storeName},
             store_addr=#{storeAddr},
+            store_location=#{storeLocation},
             store_phone=
                 <choose>
                     <when test="storePhone != null and storePhone != ''">
@@ -656,6 +733,19 @@
         ORDER BY FIELD(x,
         '10대 남성', '20대 남성', '30대 남성', '40대 남성', '50대 남성', '60대이상 남성',
         '10대 여성', '20대 여성', '30대 여성', '40대 여성', '50대 여성', '60대이상 여성');
+
+    </select>
+
+    <!-- 인기 가게 찾기용 -->
+    <select id="getStoreListById" resultMap="StoreResultMap">
+
+        SELECT *
+        FROM store
+        WHERE store_id IN (
+            <foreach collection="storeIdList" item="storeId" separator=",">
+                #{storeId}
+            </foreach>
+        )
 
     </select>
 

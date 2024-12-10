@@ -7,6 +7,7 @@ import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.time.LocalDate;
 import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -40,6 +43,12 @@ public class ReservationController {
 
     @Autowired
     private PaymentService paymentService;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
 
 
     public ReservationController(){
@@ -73,18 +82,21 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
-            @RequestParam("storeId") int storeId, // 가게 ID는 필수
             @SessionAttribute("user") User user,
+            @ModelAttribute("search") Search search,
             Model model) throws Exception {
 
         // 초기 Search 객체 설정 (기본값)
-        Search search = new Search();
+        System.out.println("/reservation/getRsrvStoreList : GET");
+
+        int storeId = storeService.getStoreId(user.getUsername());
+
         search.setStartDate(null); // 기본값 없음
         search.setEndDate(null); // 기본값 없음
         search.setSearchStatuses(null); // 모든 상태 포함
@@ -93,8 +105,20 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
 
+
+        Map<Date, Integer> reservationCountsByDate = new HashMap<>();
+        for (Reservation reservation : reservations) {
+            Date rsrvDt = reservation.getRsrvDt();
+            int count = reservationService.getCountAllRsrv(rsrvDt, storeId);
+            reservationCountsByDate.put(rsrvDt, count);
+        }
+
+
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
+        model.addAttribute("reservationCountsByDate", reservationCountsByDate);
+        model.addAttribute("search", search);
+        model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
 
         // 뷰 반환
         return "reservation/getRsrvStoreList";
@@ -103,14 +127,15 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
     public String getRsrvStoreList(
-            @RequestParam("storeId") int storeId,
+            @SessionAttribute("user") User user,
             @RequestParam(value = "startDate", required = false) String startDate,
             @RequestParam(value = "endDate", required = false) String endDate,
             @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
+            @ModelAttribute("search") Search search,
             Model model) throws Exception {
 
-        // Search 객체 생성
-        Search search = new Search();
+        int storeId = storeService.getStoreId(user.getUsername());
+
 
         // 조건 설정: 값이 있을 때만 설정
         if (startDate != null && !startDate.isEmpty()) {
@@ -125,10 +150,24 @@ public class ReservationController {
             search.setSearchStatuses(searchStatuses);
         }
 
+        search.setStartDate(startDate);
+        search.setStartDate(startDate);
+        search.setSearchStatuses(searchStatuses);
+
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
+        Map<Date, Integer> reservationCountsByDate = new HashMap<>();
+        for (Reservation reservation : reservations) {
+            Date rsrvDt = reservation.getRsrvDt();
+            int count = reservationService.getCountAllRsrv(rsrvDt, storeId);
+            reservationCountsByDate.put(rsrvDt, count);
+        }
+
         model.addAttribute("reservations", reservations);
+        model.addAttribute("reservationCountsByDate", reservationCountsByDate);
+        model.addAttribute("search", search);
+        model.addAttribute("searchStatuses", searchStatuses);
 
         return "reservation/getRsrvStoreList";
     }
@@ -138,10 +177,10 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
             @ModelAttribute Search search,
-            @RequestParam("userName") String userName,
             @SessionAttribute("user") User user,
             Model model) throws Exception {
 
+        String userName = user.getUsername();
 
         // 초기 Search 객체 설정 (기본값)
         search.setOrder("desc"); // 기본 정렬
@@ -162,11 +201,13 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
     public String getRsrvUserList(
             @ModelAttribute Search search,
-            @RequestParam("userName") String userName,
+            @SessionAttribute("user") User user,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
             @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
+
+        String userName = user.getUsername();
 
         // 조건 설정: 값이 있을 때만 설정
 
@@ -259,7 +300,7 @@ public class ReservationController {
 
         if (store.getUserName().equals(user.getUsername())) {
             reservationService.addRsrvStore(reservation);
-            return "redirect:/reservation/getRsrvStoreList?storeId=" + storeId;
+            return "redirect:/reservation/getRsrvStoreList";
         }
 
         // Business Logic
@@ -386,11 +427,11 @@ public class ReservationController {
             if("예약 요청".equals(reservation.getRsrvStatus())){
                 paymentService.refundPayment(reservation.getPaymentId(), reason,null, reservation.getAmount());
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
-                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+                return "redirect:/reservation/getRsrvUserList";
             }else if("예약 확정".equals(reservation.getRsrvStatus())){
                 paymentService.refundPayment(reservation.getPaymentId(), reason,reservation.getRsrvDt(), reservation.getAmount());
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
-                return "redirect:/reservation/getRsrvUserList?userName=" + reservation.getUserName();
+                return "redirect:/reservation/getRsrvUserList";
             }
         }else if("ROLE_STORE".equals(role)){
             if("예약 요청".equals(reservation.getRsrvStatus())){
@@ -401,7 +442,7 @@ public class ReservationController {
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
             }
         }
-        return "redirect:/reservation/getRsrvStoreList?storeId=" + reservation.getStoreId();
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 

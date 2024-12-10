@@ -84,6 +84,7 @@ public class ReservationServiceImpl implements ReservationService{
         reservationDao.updateRsrvReason(rsrvNo, reason);
     }
 
+
     // 예약 목록 조회 어드민
     public List<Reservation> getRsrvList() throws Exception{
         return reservationDao.getRsrvList();
@@ -111,6 +112,18 @@ public class ReservationServiceImpl implements ReservationService{
 
         // DAO 호출하여 결과 반환
         return reservationDao.getCountRsrv(params);
+    }
+
+
+    // 예약 일시(rsrsDate)의 예약 인수들의 합
+    public int getCountAllRsrv(Date rsrvDt, int storeId) throws Exception {
+        // Map으로 파라미터 생성
+        Map<String, Object> params = new HashMap<>();
+        params.put("rsrvDt", rsrvDt);
+        params.put("storeId", storeId);
+
+        // DAO 호출하여 결과 반환
+        return reservationDao.getCountAllRsrv(params);
     }
 
 
@@ -143,10 +156,12 @@ public class ReservationServiceImpl implements ReservationService{
         return reservationDao.getCountRsrvNumber(storeId);
     }
 
+
     // 예약 확정이면서 예약 일시가 지나간 예약 번호 리스트
     public List<Integer> getPastRsrvNos() throws Exception {
         return reservationDao.getPastRsrvNos();
     }
+
 
     public void updateRsrvStatusDay() throws Exception {
         // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
@@ -179,6 +194,8 @@ public class ReservationServiceImpl implements ReservationService{
         return reservationDao.getRemoveUserRsrvNos(userName);
     }
 
+
+    //가게 예약 일시 인원 수
     public StoreReservation getStoreReservation(Map<String, Object> params) throws Exception {
         int storeId = (Integer) params.get("storeId");
         String effectDt = (String) params.get("effectDt");
@@ -220,6 +237,7 @@ public class ReservationServiceImpl implements ReservationService{
         return reservationDao.getRemoveStoreRsrvNos(storeId);
     }
 
+
     // 탈퇴 예정인 점주 회원의 일괄 환불
     public void getRemoveStoreRefundPayment(int storeId) throws Exception {
         // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
@@ -240,6 +258,8 @@ public class ReservationServiceImpl implements ReservationService{
         }
     }
 
+
+    //가게 휴무일 리스트
     public List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception{
         return reservationDao.getRsrvClose(storeId);
     }

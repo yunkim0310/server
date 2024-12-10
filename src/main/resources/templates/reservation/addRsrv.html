@@ -10,7 +10,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            border: 2px solid #ccc; /* 기본 테두리 */
         }
 
         #time-table {
@@ -486,7 +485,7 @@
         <input type="hidden" name="storeAddr" th:value="${store.storeAddr}" />
         <input type="hidden" id="selectedDate" name="selectedDate" />
         <input type="hidden" id="amount" name="amount" required readonly/>
-        <input type="hidden" id="userName" name="userName" />
+        <input type="hidden" id="userName" name="userName" th:value="${session.user.getUsername()}"/>
 
         <div class="form-group">
 

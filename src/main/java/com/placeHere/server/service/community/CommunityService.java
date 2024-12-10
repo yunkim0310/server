@@ -41,5 +41,8 @@ public interface CommunityService {
     //댓글 삭제 -> 노출여부 T => F 로 변경
     public void removeComment(Comment comment) throws Exception;
 
+    //댓글 조회 메서드
+    public Comment getComment (int commentNo) throws  Exception;
+
 
 }
