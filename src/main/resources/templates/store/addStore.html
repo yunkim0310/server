@@ -9,34 +9,30 @@
 
         <title>PlaceHere</title>
 
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-    <!--    <link rel="shortcut icon" href="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp/img/app/favicon.ico">-->
-        <link rel="stylesheet"
-        href="https://fonts.googleapis.com/css?family=Roboto|Noto+Sans+KR:300,400,500,700&amp;display=block&amp;subset=korean"
-        as="style" crossorigin="anonymous">
-        <link rel="stylesheet" href="/css/templates/header.css">
-        <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="/css/templates/collection_detail.css">
         <link rel="stylesheet" href="/css/templates/regist_hp.css">
-        <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+
+        <link th:insert="~{common/import :: importFragment}">
 
         <!-- 카카오 맵 주소 검색 -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
-        <script src="/javascript/store/addStore.js"></script>
+        <script type="module" src="/javascript/store/addStore.js"></script>
 
     </head>
 
     <body>
 
-        <div th:insert="~{common/header}"></div>
+        <header id="header">
+            <div th:insert="~{common/header}"></div>
+        </header>
 
         <div id="root">
 
             <form>
 
-                <input type="hidden" id="apiKey" th:value="${apiKey}">
                 <input type="hidden" name="userName" th:value="${userName}">
+                <input type="hidden" name="storeLocation">
 
                 <div class="wrapper">
 
@@ -451,8 +447,8 @@
                             <div class="css-1eo0fey e1j7jtti0"></div>
 
                             <div class="css-137ca2h e1utgeno0">
-                                <button class="css-18m884r e4nu7ef3" id="submit" name="submit-button" type="submit" width="240"
-                                        height="56" radius="3" style="background-color: #4880FF">
+                                <button class="css-18m884r e4nu7ef3" id="submit" name="submitBtn" type="submit" width="240"
+                                        height="56" radius="3" style="background-color: #4880FF;">
                                     <span class="css-ymwvow e4nu7ef1 submit-button-span">다음 단계</span>
                                 </button>
                             </div>

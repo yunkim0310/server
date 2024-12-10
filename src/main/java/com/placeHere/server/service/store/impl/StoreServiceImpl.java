@@ -128,10 +128,17 @@ public class StoreServiceImpl implements StoreService {
             StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
             List<String> closedayList = storeDao.getClosedayList(storeId);
 
-            List<String> regularClosedayList = new ArrayList<String>();
-            regularClosedayList.add(storeOperation.getRegularCloseday1());
-            regularClosedayList.add(storeOperation.getRegularCloseday2());
-            regularClosedayList.add(storeOperation.getRegularCloseday3());
+            if (storeOperation != null) {
+
+                List<String> regularClosedayList = new ArrayList<String>();
+                regularClosedayList.add(storeOperation.getRegularCloseday1());
+                regularClosedayList.add(storeOperation.getRegularCloseday2());
+                regularClosedayList.add(storeOperation.getRegularCloseday3());
+
+                storeOperation.setRegularClosedayList(regularClosedayList);
+                storeOperation.setClosedayList(closedayList);
+
+            }
 
             List<String> storeImgList = new ArrayList<String>();
             storeImgList.add(store.getStoreImg1());
@@ -140,8 +147,6 @@ public class StoreServiceImpl implements StoreService {
             storeImgList.add(store.getStoreImg4());
             storeImgList.add(store.getStoreImg5());
 
-            storeOperation.setRegularClosedayList(regularClosedayList);
-            storeOperation.setClosedayList(closedayList);
             store.setStoreOperation(storeOperation);
             store.setStoreImgList(storeImgList);
             store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
@@ -156,6 +161,24 @@ public class StoreServiceImpl implements StoreService {
     public List<Store> getStoreList(Search search) {
 
         return storeDao.getStoreList(search);
+    }
+
+    @Override
+    public List<Store> getStoreList(List<Integer> storeIdList) {
+
+        return storeDao.getStoreListById(storeIdList);
+    }
+
+    @Override
+    public List<Map<String, String>> getStoreLocationList(Search search) {
+
+        return storeDao.getStoreLocationList(search);
+    }
+
+    @Override
+    public List<Map<String, String>> getStoreLocation(int storeId) {
+
+        return storeDao.getStoreLocation(storeId);
     }
 
 

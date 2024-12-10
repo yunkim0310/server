@@ -1,15 +1,26 @@
+import { getLocation, getApiKey } from "./geoLocation.mjs";
+
 $(function() {
 
     $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
     let duplicateResult = "";
 
+    let businessNoApiKey = ""
+    let googleApiKey = ""
+    let kakaoApiKey = "";
+
+    getApiKey().then(apiKey => {
+        businessNoApiKey = apiKey.businessNo;
+        googleApiKey = apiKey.google;
+        kakaoApiKey = apiKey.kakao;
+    });
+
     function checkDuplicateBusinessNo(businessNo) {
         var bNo = {"b_no": [businessNo]};
-        var apiKey = $("#apiKey").val();
 
         $.ajax({
-            url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+apiKey,
+            url: "https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey="+businessNoApiKey,
             type: "POST",
             data: JSON.stringify(bNo),
             dataType: "JSON",
@@ -120,12 +131,6 @@ $(function() {
         $("#changeBusinessNo").attr("id", "useBusinessNo");
 
     });
-    
-});
-
-
-
-$(function() {
 
     // 1차 분류 선택이 변경되면 2차, 3차 분류의 체크박스 해제 및 분류 표시
     $("input[name='foodCategory1']").on("change", function() {
@@ -204,6 +209,12 @@ $(function() {
                 // 주소 정보를 해당 필드에 넣는다.
                 $("input[name='storeAddr1']").val(addr);
                 $("input[name='storeAddr2']").focus();
+
+                getLocation(googleApiKey, addr).then(location => {
+
+                    $("input[name='storeLocation']").val(location);
+
+                });
 
             }
         }).open();
@@ -380,9 +391,7 @@ $(function() {
 
     
     // 다음 단계 버튼 함수
-    $("button#submit").on("click", function () {
-
-        alert("submit");
+    $("button[name='submitBtn']").on("click", function () {
 
         // 음식 카테고리 합치기
         var category1 = $("input[name='foodCategory1']:checked").val();
