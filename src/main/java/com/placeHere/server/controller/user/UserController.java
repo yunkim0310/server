@@ -58,7 +58,7 @@ public class UserController {
         log.info("logout Controller - get 호출");
         session.invalidate();
 
-        return "/index";
+//        return "/index";
         return "index";
     }
 
