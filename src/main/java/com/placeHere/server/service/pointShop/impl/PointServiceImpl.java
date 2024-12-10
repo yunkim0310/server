@@ -2,6 +2,7 @@ package com.placeHere.server.service.pointShop.impl;
 
 import com.placeHere.server.dao.pointShop.PointDao;
 import com.placeHere.server.domain.Point;
+import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.service.pointShop.PointService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ public class PointServiceImpl implements PointService {
     public void addPointTransaction(@Param("username") String username,
                                     @Param("tranPoint") int tranPoint,
                                     @Param("depType") String depType,
-                                    @Param("currPoint") int currPoint,
+                                    @Param("currPoint")  int currPoint,
                                     @Param("relNo") Integer relNo) {
 
         pointDao.addPointTransaction(username, tranPoint, depType, currPoint, relNo);
@@ -31,23 +32,24 @@ public class PointServiceImpl implements PointService {
 
     // 보유 포인트 업데이트
     @Override
-    public void updatePoint(@Param("username") String username,
-                            @Param("tranPoint") int tranPoint) {
+    public void updatePoint(Point point) {
 
-        pointDao.updatePoint(username, tranPoint);
+        point.setTranPoint(Integer.parseInt(String.valueOf(point.getTranPoint())));
+        System.out.println("tranPoint : "+point.getTranPoint());
+
+        pointDao.updatePoint(point);
     }
 
     // 현재 보유 포인트 조회
     @Override
     public int getCurrentPoint(@Param("username") String username) {
 
-
         return pointDao.getCurrentPoint(username);
     }
 
     // 포인트 내역 조회
     @Override
-    public List<Point> getPointHistoryList(String username) {
+    public List<Point> getPointHistoryList(@Param("username") String username) {
 
         return pointDao.getPointHistoryList(username);
     }

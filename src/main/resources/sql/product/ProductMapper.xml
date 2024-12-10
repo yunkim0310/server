@@ -70,7 +70,7 @@
             <if test="searchKeyword != null and searchKeyword != ''">
                 prod_name LIKE CONCAT('%',#{searchKeyword},'%')
             </if>
-            <if test="priceMin != 0 and priceMin != ''">
+            <if test="priceMin != null">
                 AND prod_price BETWEEN #{priceMin} AND #{priceMax}
             </if>
 <!--            <if test="priceMin != 0">-->

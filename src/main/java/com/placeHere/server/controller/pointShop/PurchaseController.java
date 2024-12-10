@@ -5,13 +5,11 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.placeHere.server.domain.Point;
-import com.placeHere.server.domain.Product;
-import com.placeHere.server.domain.Purchase;
-import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
+import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -45,6 +43,10 @@ public class PurchaseController {
     @Qualifier("pointServiceImpl")
     private PointService pointService;
 
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
+
     // Constructor
     public PurchaseController() {
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
@@ -58,11 +60,14 @@ public class PurchaseController {
 
     @GetMapping("/addPurchase")
     public String addPurchase(@RequestParam("prodNo") int prodNo,
-//                                @RequestParam("username") String username,
+                                @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception{
 
-        String username = "user1";
+        String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("addPurchase's username: " + username);
 
         System.out.println("/purchase/addPurchase : GET");
 
@@ -72,7 +77,7 @@ public class PurchaseController {
 
         int tranPoint = product.getProdPrice()* product.getCntProd();
         purchase.setProdNo(prodNo);
-        purchase.setTranPoint(tranPoint);
+        purchase.setTranPoint(-tranPoint);
         purchase.setDepType("상품 구매");
         purchase.setRelNo(prodNo);
 
@@ -127,7 +132,15 @@ public class PurchaseController {
     public String addPurchaseResult(@RequestParam("file") MultipartFile file,
                                     @ModelAttribute("purchase") Purchase purchase,
                                     @RequestParam("tranPoint") int tranPoint,
+                                    @SessionAttribute("user") User buyer,
+                                    @ModelAttribute("point") Point point,
                                     Model model) throws Exception{
+
+        String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("/purchase/addPurchase : POST");
+        System.out.println("addPurchaseResult's username = " + username);
 
         Product product = productService.getProduct(purchase.getProdNo());
 
@@ -177,13 +190,16 @@ public class PurchaseController {
 
         System.out.println("/purchase/addPurchase : POST");
 
-        String username = "user1";
+
+        point.setTranPoint(-tranPoint);
+
+//        point.setCurrPoint(point.getCurrPoint()-tranPoint);
 
         model.addAttribute("tranPoint", tranPoint);
 
         purchaseService.addPurchase(purchase);
 
-        pointService.updatePoint(username, -tranPoint);
+        pointService.updatePoint(point);
 
         int currPoint = pointService.getCurrentPoint(username);
 
@@ -194,13 +210,15 @@ public class PurchaseController {
     }
 
     @RequestMapping( value="listPurchase")
-    public String listPurchase(@RequestParam("username") String username,
+    public String listPurchase(@SessionAttribute("user") User buyer,
 //                               @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-//        username = "user1";
+        String username = buyer.getUsername();
+
+        System.out.println("username's listPurchase : " + username);
 
         List<Purchase> purchaseList = purchaseService.getPurchaseList(username);
 
@@ -211,15 +229,21 @@ public class PurchaseController {
     }
 
     @GetMapping("/getPurchase")
-    public String getPurchase(@RequestParam("tranNo") int tranNo , Model model) throws Exception {
+    public String getPurchase(
+//                                @SessionAttribute("user") User buyer,
+                                @RequestParam("tranNo") int tranNo , Model model) throws Exception {
 
         System.out.println("/product/getPurchase : GET");
 
-        String username = "user1";
+//        String username = buyer.getUsername();
 
-        Purchase purchase = purchaseService.getPurchase(tranNo);
+        Purchase purchase = new Purchase();
+//        System.out.println("Buyer: " + purchase.getBuyer());
+//        System.out.println("Username: " + purchase.getBuyer().getUsername());
 
-        model.addAttribute("username" , username);
+        purchase = purchaseService.getPurchase(tranNo);
+
+//        model.addAttribute("username" , username);
         model.addAttribute("purchase" , purchase);
 
         return "/pointShop/purchase/getPurchase";
@@ -228,16 +252,19 @@ public class PurchaseController {
 
     @GetMapping("/listCart")
     public String getCartList(
-//            @RequestParam("username") String username,
+                                @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
-        String username = "user1";
+        String username = buyer.getUsername();
         // 장바구니 목록을 서비스에서 받아옴
         List<Purchase> cartList = purchaseService.getCartList(username);
 
+
+
         // 모델에 장바구니 목록을 추가하여 뷰로 전달
         model.addAttribute("cartList", cartList);
+        model.addAttribute("username" , username);
 
         // Thymeleaf 템플릿 이름을 반환
         return "pointShop/purchase/listCart"; // 템플릿 경로
@@ -246,30 +273,34 @@ public class PurchaseController {
     // 찜 목록 조회
     @GetMapping("/listWish")
     public String getWishList(
-//                          @RequestParam("username") String username,
+                            @SessionAttribute("user") User buyer,
                             @ModelAttribute("purchase") Purchase purchase,
                             Model model) throws Exception {
 
-            String username = "user1";
+            String username = buyer.getUsername();
             // 찜 목록을 서비스에서 받아옴
         List<Purchase> wishList = purchaseService.getWishList(username);
 
         // 모델에 찜 목록을 추가하여 뷰로 전달
         model.addAttribute("wishList", wishList);
+        model.addAttribute("username" , username);
 
         // Thymeleaf 템플릿 이름을 반환
         return "pointShop/purchase/listWish"; // 템플릿 경로
     }
 
     @RequestMapping("listPointHistory")
-    public String getPointHistoryList(@RequestParam("username") String username,
+    public String getPointHistoryList(@SessionAttribute("user") User buyer,
                                       Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-        System.out.println("username: " + username);
+        Point point = new Point();
+        point.setBuyer(buyer);
+        String username = buyer.getUsername();
+        point.setUsername(username);
 
-//        username = "user1";
+        System.out.println("username: " + username);
 
         int currPoint = pointService.getCurrentPoint(username);
 
@@ -288,7 +319,7 @@ public class PurchaseController {
     public double calculateTotal(@RequestBody List<Purchase> selectedItems) {
         double total = 0;
         for (Purchase purchase : selectedItems) {
-            if (purchase.isSelected()) {
+            if (purchase.getSelected() != 0) {
                 total += purchase.getPurchaseProd().getProdPrice() * purchase.getPurchaseProd().getCntProd();
             }
         }
@@ -297,9 +328,9 @@ public class PurchaseController {
 
     // 선택된 상품들 일괄 구매 처리
     @PostMapping("/buy")
-    public String buySelectedItems(@RequestParam("username") String username, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+    public String buySelectedItems(@SessionAttribute("user") User buyer, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
 
-        username = "user1";
+        String username = buyer.getUsername();
 
         model.addAttribute("username", username);
 
@@ -309,9 +340,9 @@ public class PurchaseController {
 
     // 선택된 상품들 삭제
     @PostMapping("/removeSelected")
-    public String removeSelectedItems(@RequestParam("username") String username, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+    public String removeSelectedItems(@SessionAttribute("user") User buyer, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
 
-        username = "user1";
+        String username = buyer.getUsername();
 
         model.addAttribute("username", username);
 

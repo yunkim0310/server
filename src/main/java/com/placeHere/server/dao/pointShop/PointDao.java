@@ -17,13 +17,12 @@ public interface PointDao {
                                     @Param("relNo") Integer relNo);
 
     // 보유 포인트 업데이트
-    public void updatePoint(@Param("username") String username,
-                            @Param("tranPoint") int tranPoint);
+    public void updatePoint(Point point);
 
     // 현재 보유 포인트 조회
     public int getCurrentPoint(@Param("username") String username);
 
     // 포인트 내역 조회
-    public List<Point> getPointHistoryList(String username);
+    public List<Point> getPointHistoryList(@Param("username") String username);
 
 }

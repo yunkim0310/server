@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/css/templates/header.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         /* 기본 스타일 */
         body {
@@ -159,10 +160,12 @@
             display: block;
         }
 
+
     </style>
 
     <script type="text/javascript">
-        $(function() {
+
+    $(function() {
             // 구매 버튼 클릭
             $("button.btn-primary.buy").on("click", function () {
                 var prodNo = $(this).data("prod-no");
@@ -192,7 +195,7 @@
             });
 
             // 찜하기 아이콘 클릭
-            $("i.fas.fa-heart.addWish").on("click", function() {
+            $("#addWish").on("click", function() {
                 var prodNo = $(this).data("prod-no");
                 var username = $(this).data("user-name");
 
@@ -209,10 +212,8 @@
                     data: JSON.stringify(wishCartData),
                     success: function(response) {
                         alert(response);  // 서버에서 받은 응답을 알림으로 표시
-                        if (response === "찜 목록에 상품이 추가되었습니다.") {
-                            $(this).removeClass('far').addClass('fas').css('color', 'red');
-                        } else if (response === "찜 목록에 상품이 삭제되었습니다.") {
-                            $(this).removeClass('fas').addClass('far').css('color', '#ddd');
+                        if(response === "찜 목록이 꽉찼습니다."){
+                            location.reload();
                         }
                     },
                     error: function(error) {
@@ -248,8 +249,10 @@
     </div><br/><br/>
 
     <div class="icon-container">
-        <i class="fas fa-shopping-cart addCart" th:data-prod-no="${product.prodNo}" style="cursor: pointer;"></i>
-        <i class="fas fa-heart addWish" th:data-prod-no="${product.prodNo}" th:data-user-name="${username}" style="cursor: pointer;"></i>
+        <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+            <i class="fas fa-shopping-cart addCart" th:data-prod-no="${product.prodNo}" th:data-user-name="${username}" style="cursor: pointer;"></i>&nbsp;&nbsp;&nbsp;&nbsp;
+            <i th:class="${isWishExist != 0} ? 'fas fa-heart addWish' : 'far fa-heart addWish'" id="addWish" th:data-prod-no="${product.prodNo}" th:data-user-name="${username}" style="cursor: pointer;"></i>
+        </div>
     </div>
 
     <div class="product-info">
@@ -272,10 +275,10 @@
         </div><br/><br/>
         <div>
             <br/><br/>
-            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>
-            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
-            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>
-            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+<!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
+            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 상세 이미지">
+<!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
+            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 상세 이미지">
         </div>
 <!--        <div>-->
 <!--            <strong>상품 갯수</strong><br/><br/>-->
@@ -288,8 +291,13 @@
     </div><br/><br/>
     <br/>
     <div class="button-container">
-        <button class="btn-primary buy" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}">구매</button>
-        <button class="btn-primary confirm">확인</button>
+        <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+            <button class="btn-primary buy" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}">구매</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn-primary confirm">확인</button>
+        </div>
+        <div th:if="${session.user.role == 'ROLE_POINT'}" class="point">
+            <button class="btn-primary confirm">확인</button>
+        </div>
     </div><br/><br/>
 </div>
 

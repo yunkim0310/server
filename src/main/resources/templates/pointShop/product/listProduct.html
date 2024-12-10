@@ -13,11 +13,13 @@
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
 
     <script type="text/javascript">
-        function fncGetList(order) {
-            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
-        }
 
         $(function() {
+            // $("button.btn-default").on("click", function () {
+            //     var prodNo = $(this).data("prod-no");
+            //     self.location = "/product/getProduct?prodNo=" + prodNo;
+            // });
+
             $("button.btn-primary.view").on("click", function () {
                 var prodNo = $(this).data("prod-no");
                 self.location = "/product/getProduct?prodNo=" + prodNo;
@@ -54,6 +56,10 @@
                 fncGetList(order);
             });
         });
+
+        function fncGetList(order) {
+            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
+        }
     </script>
 
     <style>
@@ -379,9 +385,16 @@
                             <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
                                 <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
                             </div><br/>
+                            <div th:if="${session.user.role == 'ROLE_POINT'}" class="user">
                             <div class="product-actions">
                                 <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>
                                 <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>
+                            </div>
+                            </div>
+                            <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+                                <div class="product-actions">
+                                    <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>
+                                </div>
                             </div>
                         </div>
                     </div>

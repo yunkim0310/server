@@ -2,6 +2,7 @@ package com.placeHere.server.service.pointShop;
 
 import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +39,7 @@ public interface PurchaseService {
     // 찜 목록 삭제
     public void removeCart(Purchase purchase) throws Exception;
 
-    public boolean isProductInWishList(int prodNo, String username) throws Exception;
+    public int isProductInWishList(Purchase purchase) throws Exception;
 
     public int getWishListCount(String username);
 

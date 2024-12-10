@@ -1,113 +1,367 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
+<link rel="stylesheet" href="/css/templates/header.css">
+<link rel="stylesheet" href="/css/templates/collection_detail.css">
+<link rel="stylesheet" href="/css/templates/regist_hp.css">
 <head>
-    <title>장바구니</title>
-    <script th:inline="javascript">
-        function calculateTotal() {
-            let total = 0;
-            let selectedItems = [];
-            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    let cartId = checkbox.dataset.cartId;
-                    let quantity = document.querySelector(`#quantity-${cartId}`).value;
-                    let price = document.querySelector(`#price-${cartId}`).value;
-                    selectedItems.push({
-                        cartId: cartId,
-                        quantity: quantity,
-                        price: price
-                    });
-                }
+    <title>PlaceHere</title>
+    <script type="text/javascript">
+
+        $(function() {
+            // 체크박스 클릭 시, 총 금액을 계산
+            $("input[name='chk']").on("click", function() {
+                calculateTotalPrice(); // 총 금액 계산 함수 호출
             });
-            fetch('/cart/calculateTotal', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedItems)
-            })
-                .then(response => response.json())
-                .then(totalPrice => {
-                    document.querySelector('#totalPrice').textContent = totalPrice;
+
+            // 전체 선택 체크박스 클릭 시
+            $("#allCheckBox").on("click", function() {
+                $("input[name='chk']").prop("checked", this.checked);
+                calculateTotalPrice(); // 전체 선택 후 총 금액 계산
+            });
+        });
+
+        $(function() {
+            // 체크박스 클릭 시, 총 금액 계산
+            $("input[name='chk']").on("click", function() {
+                calculateTotalPrice(); // 총 금액 계산 함수 호출
+            });
+
+            // 전체 선택 체크박스 클릭 시
+            $("#allCheckBox").on("click", function() {
+                $("input[name='chk']").prop("checked", this.checked);
+                calculateTotalPrice(); // 전체 선택 후 총 금액 계산
+            });
+        });
+
+        function calculateTotalPrice() {
+            let totalPrice = 0;
+
+            // 선택된 상품들의 가격을 계산
+            $("input[name='chk']:checked").each(function() {
+                // 데이터 속성에서 가격과 수량을 가져오기
+                let prodPrice = parseInt($(this).data("price").replace(/[^0-9]/g, ""));  // 숫자만 추출
+                let cntProd = parseInt($(this).data("quantity").replace(/[^0-9]/g, ""));  // 숫자만 추출
+
+                // 가격이나 수량이 유효하지 않으면 무시
+                if (isNaN(prodPrice) || isNaN(cntProd)) {
+                    return; // 유효하지 않은 값은 넘어감
+                }
+
+                // 총 금액에 가격 * 수량 더하기
+                totalPrice += (prodPrice * cntProd);
+            });
+
+            // 계산된 총 금액을 화면에 표시
+            $("#totalPrice").text(totalPrice.toLocaleString() + " 원"); // 쉼표 포함 형식으로 출력
+
+            // tranPoint 값을 업데이트
+            $("#tranPoint").val(Number(totalPrice)); // tranPoint에 총 금액을 넣음
+            console.log(totalPrice);
+        }
+
+        $(function() {
+            // 조회 버튼 클릭
+            $("button.btn-primary.view").on("click", function () {
+                var prodNo = $(this).data("prod-no");
+                self.location = "/product/getProduct?prodNo=" + prodNo;
+            });
+
+            $("button.btn-primary.removeCart").on("click", function () {
+                var userName = $(this).data("user-name");
+                var prodNo = $(this).data("prod-no");
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api-purchase/removeCart",
+                    data: { userName: userName, prodNo: prodNo },
+                    success: function(response) {
+                        alert("장바구니에서 상품이 삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("장바구니 삭제 실패함: " + error);
+                    }
                 });
+            });
+
+        });
+
+        //체크박스 전체 선택 클릭 이벤트
+        function allChecked(target){
+
+            //전체 체크박스 버튼
+            const checkbox = document.getElementById('allCheckBox');
+
+            //전체 체크박스 버튼 체크 여부
+            const is_checked = checkbox.checked;
+
+            //전체 체크박스 제외한 모든 체크박스
+            if(is_checked){
+                //체크박스 전체 체크
+                chkAllChecked()
+            }
+
+            else{
+                //체크박스 전체 해제
+                chkAllUnChecked()
+            }
+        }
+        //자식 체크박스 클릭 이벤트
+        function chkClicked(){
+
+            //체크박스 전체개수
+            const allCount = document.querySelectorAll(".chk").length;
+
+            //체크된 체크박스 전체개수
+            const query = 'input[name="chk"]:checked'
+            const selectedElements = document.querySelectorAll(query)
+            const selectedElementsCnt = selectedElements.length;
+
+            //체크박스 전체개수와 체크된 체크박스 전체개수가 같으면 전체 체크박스 체크
+            if(allCount == selectedElementsCnt){
+                document.getElementById('allCheckBox').checked = true;
+            }
+
+            //같지않으면 전체 체크박스 해제
+            else{
+                document.getElementById('allCheckBox').checked = false;
+            }
         }
 
-        function buySelectedItems() {
-            let selectedItems = [];
-            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    let cartId = checkbox.dataset.wishCartNo;
-                    let quantity = document.querySelector(`#quantity-${cartId}`).value;
-                    let price = document.querySelector(`#price-${cartId}`).value;
-                    selectedItems.push({
-                        cartId: cartId,
-                        quantity: quantity,
-                        price: price
-                    });
-                }
+        //체크박스 전체 체크
+        function chkAllChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = true;
             });
-            fetch('/purchase/buy', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedItems)
-            })
-                .then(response => window.location.href = '/purchase/listCart?username=user1');
         }
 
-        function removeSelectedItems() {
-            let selectedItems = [];
-            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
-                if (checkbox.checked) {
-                    let cartId = checkbox.dataset.cartId;
-                    selectedItems.push({ wishCar: cartId });
-                }
+        //체크박스 전체 체크 해제
+        function chkAllUnChecked(){
+            document.querySelectorAll(".chk").forEach(function(v, i) {
+                v.checked = false;
             });
-            fetch('/purchase/removeSelected', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(selectedItems)
-            })
-                .then(response => window.location.href = '/purchase/listCart?username=user1');
         }
+
     </script>
+
+    <style>
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*background-color: #f0f0f0; !* 기본 배경색 *!*/
+            background-color: #fff;
+            color: #999; /* 텍스트 색상 */
+            font-size: 16px; /* 텍스트 크기 */
+            text-align: center;
+            border: 1px solid #ddd; /* 이미지를 표시하지 않을 때 테두리 표시 */
+        }
+
+        .product-img img {
+            width: 100%; /* 가로를 100%로 설정 */
+            height: 100%; /* 세로도 100%로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
+            display: block;
+        }
+
+        .product-img span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #666;
+        }
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        /* 테이블 영역 스타일 */
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            padding-top: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 1rem;
+            border-bottom: 1px solid #ddd;
+            align-items: flex-start; /* 수직 정렬 (위쪽 정렬) */
+            vertical-align: middle; /* 텍스트를 상단에 정렬 */
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        th text{
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        td {
+            padding-top: 100px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        td input[type="hidden"] {
+            display: none;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+        .point-header {
+            background-color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .point-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* 테이블 전체 텍스트 크기 */
+        .purchase-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem; /* 전체 테이블의 폰트 크기를 키움 */
+        }
+
+        .purchase-table th, .purchase-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+        }
+
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .unavailable {
+            color: red;
+            font-weight: bold;
+        }
+
+
+    </style>
 </head>
 <body>
-<h2>장바구니</h2>
-<form th:action="@{/purchase/listCart}" method="get">
-    <table>
-        <thead>
-        <tr>
-            <th>상품명</th>
-            <th>상품 가격</th>
-            <th>상품 대표 이미지</th>
-            <th>판매 가능 상태</th>
-            <th>상품 수량</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="purchase : ${cartList}">
-            <td th:text="${purchase.purchaseProd.prodName}"></td>
-            <td>
-                <input type="number" id="quantity-[[${purchase.wishCartNo}]]" value="[[${purchase.purchaseProd.cntProd}]]" />
-            </td>
-            <td>
-                <input type="hidden" id="price-[[${purchase.wishCartNo}]]" value="[[${purchase.purchaseProd.prodPrice}]]" />
-                <span th:text="${purchase.purchaseProd.prodPrice}"></span>
-            </td>
-            <td>
-                <input type="checkbox" class="cart-checkbox" th:data-wishCart-no="${purchase.wishCartNo}" onchange="calculateTotal()" />
-            </td>
-        </tr>
-        </tbody>
-    </table>
-    <div>
-        <p>총 가격: <span id="totalPrice">0</span></p>
-        <button type="button" onclick="buySelectedItems()">구매하기</button>
-        <button type="button" onclick="removeSelectedItems()">선택 삭제</button>
-    </div>
-</form>
+<br/><br/>
+<div class="point-header">
+    <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
+    <br/><br/>
+    <h1>장바구니</h1>
+</div>
+<div class="header-line"></div>
+<!--<form action="/purchase/addPurchase" method="POST">-->
+<div class="container">
+<table class="purchase-table">
+    <thead>
+    <tr>
+        <th>
+            <label class="checkbox-inline">
+                <input type="checkbox" id="allCheckBox" onclick="allChecked()">
+            </label>
+        </th>
+        <th>상품 대표 이미지</th>
+        <th>상품명</th>
+        <th>상품 가격</th>
+        <th>판매 가능 상태</th>
+        <th>상품 수량</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="purchase : ${cartList}">
+        <td>
+            <label class="checkbox-inline">
+                <input type="checkbox" name="chk" class="chk" th:value="${purchase.wishCartNo}"
+                       data-price="${purchase.purchaseProd.prodPrice}"
+                       data-quantity="${purchase.purchaseProd.cntProd}"
+                       onclick="chkClicked()" />
+            </label>
+        </td>
+        <td class="product-img">
+            <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
+            <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
+            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+            <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
+        </td>
+        <td th:text="${purchase.purchaseProd.prodName}"></td>
+        <td id="prodPrice" th:text="${purchase.purchaseProd.prodPrice}+P"></td>
+        <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
+            <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+        </td>
+        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>
+        <td>
+            <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
+            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">🔍</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">❌</button>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<div id="totalPriceSection">
+    <h3>총 결제 금액: <span id="totalPrice">0</span> 원</h3>
+</div>
+
+<input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
+
+<button type="submit" id="submitCart">구매하기</button><br/><br/><br/><br/>
+<!--</form>-->
+</div>
 </body>
 </html>

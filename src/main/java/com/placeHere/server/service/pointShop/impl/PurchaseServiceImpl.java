@@ -10,6 +10,7 @@ import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import lombok.Setter;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.security.core.parameters.P;
@@ -131,9 +132,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 //    }
 
     @Override
-    public boolean isProductInWishList(int prodNo, String username) throws Exception {
-        int count = purchaseDao.isProductInWishList(prodNo, username);
-        return count > 0;
+    public int isProductInWishList(Purchase purchase) throws Exception {
+        int count = purchaseDao.isProductInWishList(purchase);
+        return count;
     }
 
     @Override

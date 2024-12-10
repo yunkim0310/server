@@ -22,7 +22,7 @@
         <result property="wishCartNo" column="wishcart_no" jdbcType="INTEGER"/>
 
         <association property="purchaseProd" column="prod_no" select="com.placeHere.server.dao.pointShop.ProductDao.getProduct"/>
-        <association property="user" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
+        <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
     </resultMap>
 
     <insert id="addPurchase" parameterType="com.placeHere.server.domain.Purchase">
@@ -35,12 +35,13 @@
     </insert>
 
 
-    <!--    <select id="calcTranPoint" parameterType="String" resultType="int">-->
-    <!--        SELECT SUM(p.prod_price * pt.cnt_prod)-->
-    <!--        FROM Point_Transaction pt, Product p-->
-    <!--        WHERE pt.prod_no = p.prod_no AND pt.username = #{username}-->
-    <!--        AND pt.point_dt = CURRENT_DATE-->
-    <!--    </select>-->
+        <select id="calcTranPoint" parameterType="String" resultType="int">
+            SELECT SUM(p.prod_price)
+            FROM Point_Transaction pt
+            JOIN Product p ON pt.prod_no = p.prod_no
+            WHERE pt.username = #{username}
+              AND pt.cnt_prod > 0
+        </select>
 
     <select id="getPurchase" parameterType="int" resultMap="purchaseSelectMap">
         SELECT
@@ -76,7 +77,7 @@
             p.prod_price,
             p.prod_img1
         FROM Point_Transaction pt , Product p
-        WHERE pt.prod_no = p.prod_no AND pt.username = #{username}
+        WHERE pt.prod_no = p.prod_no AND pt.username = #{buyer.username}
         ORDER BY pt.tran_no DESC
     </select>
 
@@ -95,12 +96,12 @@
 
     <insert id="addCart" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{username}, #{prodNo}, #{cntProd})
+        VALUES (#{buyer.username}, #{prodNo}, 1)
     </insert>
 
     <insert id="addWish" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{username}, #{prodNo}, 0)
+        VALUES (#{buyer.username}, #{prodNo}, 0)
     </insert>
 
     <select id="getCartList" parameterType="String" resultMap="purchaseSelectMap">
@@ -115,7 +116,7 @@
             p.prod_status,
             wc.cnt_prod
         FROM WishCart wc, Product p
-        WHERE wc.prod_no = p.prod_no AND wc.username = #{user.username} AND wc.cnt_prod != 0
+        WHERE wc.prod_no = p.prod_no AND wc.username = #{buyer.username} AND wc.cnt_prod != 0
     </select>
 
     <select id="getWishList" parameterType="String" resultMap="purchaseSelectMap">
@@ -129,12 +130,12 @@
             p.prod_img1,
             p.prod_status
         FROM WishCart wc, Product p
-        WHERE wc.prod_no = p.prod_no AND wc.username = #{user.username} AND wc.cnt_prod = 0
+        WHERE wc.prod_no = p.prod_no AND wc.username = #{buyer.username} AND wc.cnt_prod = 0
     </select>
 
     <delete id="removeWish" parameterType="com.placeHere.server.domain.Purchase">
         DELETE FROM WishCart
-        WHERE username = #{username}
+        WHERE username = #{buyer.username}
           AND prod_no = #{prodNo}
           AND cnt_prod = 0;
     </delete>
@@ -142,7 +143,7 @@
     <!--    찜 / 장바구니 삭제로 합쳐짐-->
         <delete id="removeCart" parameterType="com.placeHere.server.domain.Purchase">
             DELETE FROM WishCart
-            WHERE username = #{username}
+            WHERE username = #{buyer.username}
               AND prod_no = #{prodNo}
               AND cnt_prod != 0;
         </delete>
@@ -156,13 +157,13 @@
     <select id="getWishListCount" resultType="int">
         SELECT COUNT(*)
         FROM wishcart
-        WHERE username = #{username} AND cnt_prod = 0
+        WHERE username = #{buyer.username} AND cnt_prod = 0
     </select>
 
     <select id="getCartListCount" resultType="int">
         SELECT COUNT(*)
         FROM wishcart
-        WHERE username = #{username} AND cnt_prod != 0
+        WHERE username = #{buyer.username} AND cnt_prod != 0
     </select>
 
 </mapper>

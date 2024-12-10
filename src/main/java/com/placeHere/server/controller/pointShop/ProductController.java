@@ -1,8 +1,11 @@
 package com.placeHere.server.controller.pointShop;
 
 import com.placeHere.server.domain.Product;
+import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.User;
 import com.placeHere.server.service.pointShop.ProductService;
+import com.placeHere.server.service.pointShop.PurchaseService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,6 +31,11 @@ public class ProductController {
     @Autowired
     @Qualifier("productServiceImpl")
     private ProductService productService;
+
+    @Autowired
+    @Qualifier("purchaseServiceImpl")
+    private PurchaseService purchaseService;
+
 
     public ProductController(){
 
@@ -77,7 +85,7 @@ public class ProductController {
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")
     public String addProductResult(
-//                            @RequestParam(value = "file", required = false) MultipartFile file,
+                            @RequestParam(value = "file", required = false) MultipartFile file,
                              @ModelAttribute("product") Product product, Model model) throws Exception {
 
         System.out.println("/product/addProduct : POST");
@@ -86,19 +94,19 @@ public class ProductController {
         product.setProdCateName(prodCateName);
         product.setCntProd(1);
 
-//        model.addAttribute("file", file);
-//
-//        String fileName = file.getOriginalFilename();
-//        String uploadPath = servletContext.getRealPath(path);
-//        String saveFile = uploadPath + fileName;
-//        System.out.println("Image upload path: " + uploadPath);
-//
-//        try {
-//            file.transferTo(new File(saveFile));
-//            product.setProdImg1(fileName);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+        model.addAttribute("file", file);
+
+        String fileName = file.getOriginalFilename();
+        String uploadPath = servletContext.getRealPath(path);
+        String saveFile = uploadPath + fileName;
+        System.out.println("Image upload path: " + uploadPath);
+
+        try {
+            file.transferTo(new File(saveFile));
+            product.setProdImg1(fileName);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         productService.addProduct(product);
 
@@ -108,6 +116,7 @@ public class ProductController {
 //    @RequestMapping( value="getProduct", method=RequestMethod.GET)
     @GetMapping("/getProduct")
     public String getProduct(@RequestParam("prodNo") int prodNo ,
+                             @SessionAttribute("user") User buyer,
                              @RequestParam(value = "wishCartNo", required = false) Integer wishCartNo,
                              HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
@@ -115,8 +124,22 @@ public class ProductController {
 
         Product product = productService.getProduct(prodNo);
 
-        String username = "user1";
+        String username = buyer.getUsername();
         model.addAttribute("username", username);
+
+//        Purchase purchase = new Purchase();
+
+        System.out.println("prodNo : " + prodNo);
+        System.out.println("Buyer: " + buyer.getUsername());
+        System.out.println("Username: " + username);
+
+
+        Purchase purchase = new Purchase();
+        purchase.setProdNo(prodNo);
+        purchase.setUsername(username);
+        int isWishExist = purchaseService.isProductInWishList(purchase);
+        System.out.println("isWishExist : " + isWishExist);
+        model.addAttribute("isWishExist", isWishExist);
 
         Cookie[] cookies = request.getCookies();
         String history = "";
