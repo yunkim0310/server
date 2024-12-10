@@ -107,6 +107,27 @@
                 margin-left: 30px;
             }
 
+            /* 스크롤 */
+            .v-scroll {
+                width: 100%;
+                overflow-x: scroll;
+                white-space: nowrap;
+            }
+
+            .v-scroll::-webkit-scrollbar {
+                height: 8px; /* 스크롤바 높이 */
+                background: #f1f1f1; /* 스크롤바 배경색 */
+            }
+
+            .v-scroll::-webkit-scrollbar-thumb {
+                background: #888; /* 스크롤바 색상 */
+                border-radius: 4px; /* 둥글게 처리 */
+            }
+
+            .v-scroll::-webkit-scrollbar-thumb:hover {
+                background: #555; /* 마우스 오버 시 색상 */
+            }
+
         </style>
 
     </head>

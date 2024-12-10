@@ -42,7 +42,9 @@
                         </div>
                     </li>
                     <li><a href="/product/listProduct">포인트 상점</a></li>
-                    <li><a href="/store/getMyStore">가게관리</a></li>
+                    <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
+                        <li><a href="/store/getMyStore">가게관리</a></li>
+                    </th:block>
                 </ul>
             </div>
         </div>
@@ -65,7 +67,9 @@
                         </div>
                     </li>
                     <li><a href="/product/listProduct">포인트 상점</a></li>
-                    <li><a href="/store/getMyStore">가게관리</a></li>
+                    <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
+                        <li><a href="/store/getMyStore">가게관리</a></li>
+                    </th:block>
                 </ul>
             </div>
 

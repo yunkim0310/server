@@ -77,7 +77,7 @@ public class StoreController {
         // 로그인 안 한 경우
         if (user == null) {
 
-            return "redirect:/login";
+            return "redirect:/user/login";
             
         // 점주 회원의 경우
         } else if (user.getRole().equals("ROLE_STORE")) {
@@ -151,7 +151,7 @@ public class StoreController {
         // 로그인 안 한 경우
         if (user == null) {
 
-            return "redirect:/login";
+            return "redirect:/user/login";
         
         // 점주 회원의 경우
         } else if (user.getRole().equals("ROLE_STORE")) {
@@ -214,7 +214,7 @@ public class StoreController {
         // 로그인 안 한 경우
         if (user == null) {
 
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         // 점주 회원의 경우
@@ -298,7 +298,7 @@ public class StoreController {
         // 로그인 안 한 경우
         if (user == null) {
 
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
         
         // 점주 회원의 경우
@@ -555,7 +555,7 @@ public class StoreController {
         }
 
         else {
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
     }
@@ -579,7 +579,7 @@ public class StoreController {
 
         if (user == null) {
 
-            return "redirect:/login";
+            return "redirect:/user/login";
         }
 
         else if (user.getRole().equals("ROLE_STORE")) {
