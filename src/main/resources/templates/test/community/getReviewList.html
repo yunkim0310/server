@@ -5,63 +5,145 @@
     <title>리뷰 목록</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
-        /* 고정 위치를 위한 스타일 */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem; /* Bigger font size for the title */
+            margin-bottom: 40px; /* Space below the title */
+        }
+
         .fixed-button {
             position: fixed;
             top: 20px;
             right: 20px;
             z-index: 1000;
         }
- button {
-            background-color: #007bff; /* 버튼 배경색 */
-            color: white; /* 버튼 텍스트 색상 */
-            border: none; /* 테두리 없애기 */
-            padding: 10px 20px; /* 패딩 추가 */
-            text-align: center; /* 텍스트 중앙 정렬 */
-            text-decoration: none; /* 링크 장식 없애기 */
-            display: inline-block; /* 버튼 형태로 가져가기 */
-            margin: 4px 2px; /* 버튼 마진 */
-            cursor: pointer; /* 마우스 포인팅 커서 */
-            border-radius: 5px; /* 경계 둥글게 */
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
         }
 
         button:hover {
             background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .review-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            transition: transform 0.2s;
+            position: relative; /* 슬라이드를 위해 필요 */
+        }
+
+        .review-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .slides {
+            width: 100%;
+              height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            user-select: none;
+            z-index: 1000; /* 버튼이 다른 항목 위에 올도록 */
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .review-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .review-details img {
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+            border: 2px solid #007bff;
+        }
+
+        .review-metrics {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
         }
     </style>
-
-    <script>
-
-
-        function removeFriend(friendNo) {
-
-       const confirmation = confirm("정말 친구를 삭제하시겠습니까?");
-
-       if (confirmation) {
-           $.ajax({
-              url: '/review/removeFriend?friendNo=${friendNo}',
-               type: 'DELETE',
-               success: function(message) {
-                   alert(message);
-                   const friendButton = $(`#friend-button-${friendNo}`);
-                   if (friendButton.length) {
-                       friendButton.text("친구 신청");
-                       friendButton.attr('onclick', `applyFriendRequest(${friendNo});`);
-                   }
-               },
-               error: function(xhr) {
-                   alert("친구 삭제에 실패했습니다: " + xhr.responseText);
-               }
-           });
-       }
-   }
-    </script>
-
-
 </head>
+
 <body>
-<h1>리뷰 목록</h1>
-<a th:href="@{/review/addReview}">리뷰 추가하기</a>
+
+<div th:include="~{common/header}"></div>
+<div th:include="~{community/menuBar}"></div>
+
+<h1>리뷰 목록  ===> 여기는 getReviewList.html</h1>
+<a th:href="@{/review/getReviewList?type=myFeed}" class="fixed-button">
+    <button>내 피드 바로 가기</button>
+</a>
 
 <div class="review-list">
     <div th:if="${#lists.isEmpty(reviewList)}">
@@ -70,16 +152,38 @@
 
     <div th:each="review, iterStat : ${reviewList}">
         <div class="review-item">
-            <h2 th:text="${review.storeName}">가게 이름</h2>
-            <img th:src="${review.profileImg}" alt="작성자 프로필 이미지" />
-            <p>작성자: <span th:text="${review.userName}"></span></p>
-            <p>별점: <span th:text="${review.reviewScore}"></span></p>
-            <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
-            <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>
-            <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
-            <p>매장 이름: <span th:text="${review.storeName}"></span></p>
-            <p>매장 아이디 : <span th:text="${review.storeId}"></span></p>
+            <div class="slideshow-container">
+                <div class="slides">
+                    <img th:src="@{/file/community/55555.png}" alt="test">
+                </div>
+                <div class="slides">
+                    <img th:src="@{/file/community/1.png}" alt="test">
+                </div>
+<!--                <div class="slides">-->
+<!--                    <img th:src="${review.reviewImg3}" alt="리뷰 이미지 3">-->
+<!--                </div>-->
 
+                <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
+                <button class="next" onclick="plusSlides(1)">&#10095;</button>
+            </div>
+
+            <div class="review-details">
+                <img th:src="@{/file/community/2222.png}" alt="test">
+                <p>
+                    작성자:
+                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
+                        <span th:text="${review.userName}"></span>
+                    </a>
+                </p>
+            </div>
+            <div class="review-metrics">
+                <p>매장 명 : <span th:text="${review.storeName}"></span></p>
+                <p>별점: <span th:text="${review.reviewScore}"></span>점</p>
+                <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+                좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span>
+                댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span>
+                <input type="hidden" th:value="${review.storeId}" />
+            </div>
             <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" class="review-detail-button">
                 <button>리뷰 상세보기</button>
             </a>
@@ -88,20 +192,36 @@
     </div>
 </div>
 
-<!-- 오른쪽 상단에 고정된 친구 신청 및 삭제 버튼 -->
-<div class="fixed-button">
-    <div th:if="${friendUsername != null}">
-        <div th:if="${isFriend}"> <!-- 친구인 경우 -->
-            <button class="btn-primary del" id="friend-button-${friendNo}"
-                    onclick="removeFriend(${friendNo});">친구 삭제</button>
-        </div>
-        <div th:if="${!isFriend}"> <!-- 친구가 아닌 경우 -->
-            <form th:action="@{/friend/request}" method="post">
-                <input type="hidden" name="friendUsername" th:value="${friendUsername}">
-                <button type="submit">친구 신청</button>
-            </form>
-        </div>
-    </div>
-</div>
+<script>
+    let slideIndex = 0;
+
+    function plusSlides(n) {
+        const slideshows = document.querySelectorAll('.slideshow-container');
+        slideshows.forEach(slideshow => {
+            showSlides(slideshow, n);
+        });
+    }
+
+    function showSlides(slideshow, n = 1) {
+        const slides = slideshow.getElementsByClassName("slides");
+        slideIndex += n;
+        if (slideIndex >= slides.length) { slideIndex = 0 }
+        if (slideIndex < 0) { slideIndex = slides.length - 1 }
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex].style.display = "block";
+    }
+
+    // 각 슬라이드 쇼를 5초마다 자동으로 넘기는 코드
+    setInterval(() => {
+        const slideshows = document.querySelectorAll('.slideshow-container');
+        slideshows.forEach(slideshow => {
+            showSlides(slideshow, 1);
+        });
+    }, 5000);
+</script>
+
 </body>
 </html>

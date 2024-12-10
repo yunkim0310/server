@@ -47,13 +47,15 @@
 <!--    </select>-->
 
     <select id="likeList">
+
         SELECT relation_no
         FROM likes
         WHERE target = #{target}
             AND like_dt BETWEEN DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY) AND CURDATE()
         GROUP BY relation_no
         ORDER BY COUNT(username) DESC
-        LIMIT 5;
+        LIMIT 5
+
     </select>
 
 

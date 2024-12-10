@@ -11,7 +11,7 @@ window.addEventListener('scroll', () => {
         mainHeader.style.display = "none";
         smallHeader.style.display = "block";
 
-    }else if(window.scrollY < 108){
+    }else {
         smallHeader.style.display = "none";
         mainHeader.style.display = "block";
 

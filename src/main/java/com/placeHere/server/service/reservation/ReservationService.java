@@ -24,7 +24,6 @@ public interface ReservationService {
     // 예약 결제 고유 ID 업데이트
     public void updateRsrvpay(int rsrvNo, String paymentId) throws Exception;
 
-
     // 예약 환불 사유 업데이트
     public void updateRsrvReason(int rsrvNo, String reason) throws Exception;
 
@@ -39,6 +38,9 @@ public interface ReservationService {
 
     // 예약 일시(rsrsDate)의 예약 인수들의 합
     int getCountRsrv(Date rsrvDt, int storeId) throws Exception;
+
+    // 예약 일시(rsrvDt)의 예약 총 인수들의 합
+    public int getCountAllRsrv(Date rsrvDt, int storeId) throws Exception;
 
     // 예약 날짜의 예약 인수들의 합(휴무일에도 쓰임)
     public int getCountDayRsrv(Date rsrvDt, int storeId) throws Exception;
@@ -70,8 +72,10 @@ public interface ReservationService {
     // 탈퇴 예정인 점주 회원의 일괄 환불
     public void getRemoveStoreRefundPayment(int storeId) throws Exception;
 
+    //가게 예약 일시 인원 수
     StoreReservation getStoreReservation(Map<String, Object> params) throws Exception;
 
+    //가게 휴무일 리스트
     List<CloseDayOnEffectDay> getRsrvClose(int storeId) throws Exception;
 
 

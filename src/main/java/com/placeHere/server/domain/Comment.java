@@ -21,6 +21,7 @@ public class Comment {
     private int commentNo;
     // 댓글 내용
     private String commentsContent;
+
     //댓글 등록일
     private Date commentsDt;
     //최종댓글 수정일

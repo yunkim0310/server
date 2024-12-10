@@ -1,7 +1,20 @@
+import { getLocation, getApiKey } from "./geoLocation.mjs";
+
 $(function() {
 
     // action 맵핑
     $("form").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data");
+
+
+    // API Key
+    let googleApiKey = ""
+    let kakaoApiKey = "";
+
+    getApiKey().then(apiKey => {
+        googleApiKey = apiKey.google;
+        kakaoApiKey = apiKey.kakao;
+    });
+
     
     // submit 함수
     $("button#submit").on("click", function () {
@@ -39,9 +52,11 @@ $(function() {
         });
 
     });
-    
+
+
     // 초기 상태에서 선택된 1차, 2차, 3차 분류에 따라 표시 설정
     initCategoryDisplay();
+
 
     // 1차 분류 변경 이벤트
     $("input[name='foodCategory1']").on("change", function() {
@@ -64,6 +79,7 @@ $(function() {
         }
     });
 
+
     // 2차 분류 변경 이벤트
     $("input[name='foodCategory2']").on("change", function() {
         var selectedCategory2 = $("input[name='foodCategory2']:checked").val();
@@ -85,6 +101,7 @@ $(function() {
         }
     });
 
+
     // 3차 분류 변경 이벤트
     $("input[name='foodCategory3']").on("change", function() {
         var selectedCategory3 = $("input[name='foodCategory3']:checked").val();
@@ -98,6 +115,7 @@ $(function() {
             $("#foodCategory4").css("display", "none").prop("disabled", true);
         }
     });
+
 
     // 초기 상태 설정 함수
     function initCategoryDisplay() {
@@ -139,6 +157,13 @@ $(function() {
                 // 주소 정보를 해당 필드에 넣는다.
                 $("input[name='storeAddr1']").val(addr);
                 $("input[name='storeAddr2']").focus();
+                
+                // Geocode 생성
+                getLocation(googleApiKey, addr).then(location => {
+
+                    $("input[name='storeLocation']").val(location);
+
+                });
 
             }
         }).open();

@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1">
@@ -10,11 +10,11 @@
     <meta http-equiv="Cache-Control" content="post-check=0, pre-check=0">
     <meta http-equiv="Pragma" content="No-Cache">
 
-    <title>보안설정 : 네이버ID</title>
+    <title>설정</title>
 
     <script type="text/javascript" src="/inc/common/js/jquery.min.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/inc/user/css/account.min.css?r=240906"> -->
-    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />
+<!--    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />-->
     <script type="text/javascript" src="/inc/common/js/lcslog.js?r=20221103"></script>
     <script type="text/javascript" src="/inc/common/js/nclk_v0.8.1.js?r=20221103"></script>
     <script type="text/javascript" src="/inc/common/js/ko/commonUtil.js?20240221"></script>
@@ -57,48 +57,33 @@
 </head>
 
 
-<body onclick="clearDocs();gnbClose();" id="mainBody" class="bgother">
-<div id="wrap" class="wrap naverid">
+<body onclick="clearDocs(); gnbClose();" id="mainBody" class="bgother">
+<div id="wrap" class="wrap naverid" >
     <!-- skip navigation -->
-    <div class="u_skip"><a href="#container">본문 바로가기</a></div>
-
     <link rel="stylesheet" th:href="@{/css/user/setting.css}">
     <!-- //skip navigation -->
 
-    <header class="header" role="banner">
+    <header class="header" role="banner" >
         <div class="header_subindex">
 
-            <!--N로고/네이버ID-->
-            <!-- <div class="gnb_area">
-        <a href="https://www.naver.com/" class="logo" onclick="nclk(this,'gnb.naver','','',event)">
-            <span class="blind">네이버</span>
-        </a>
-        <a href="/user2/help/myInfoV2?lang=ko_KR" class="gnb_title" onclick="nclk(this,'gnb.naverID','','',event)">
-            <h1 class="text"><span class="blind">Place Here</span></h1>
-        </a>
-    </div> -->
-
-            <div id="lnbArea" class="lnb_area">
-                <ul class="lnb_list" role="menu">
-                    <li>
-                        <a href="/user2/help/myInfoV2?m=viewProfile&lang=ko_KR" class="lnb_item" role="menuitem" onclick="nclk(this,'lnb.info','','',event)">
-                            <div class="lnb_text ">
-                                내프로필
-                            </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="/user2/help/myInfoV2?m=viewSecurity&lang=ko_KR" class="lnb_item" role="menuitem" onclick="nclk(this,'lnb.protect','','',event)">
-                            <div class="lnb_text on">
-                                설정
-                            </div>
-                        </a>
-                    </li>
-                </ul>
-            </div>
 
             <!--프로필-사진,아이디,메일주소,2단계인증알림-->
             <div class="profile_area">
+
+                <div class="header_left" >
+
+                    <ul class="left_menu" role="menu">
+                        <li>
+                            <a href="/user2/help/myInfoV2?m=viewProfile&lang=ko_KR" class="left_item" role="menuitem" onclick="nclk(this,'lnb.info','','',event)"
+                               aria-current=>
+                            </a>
+                        </li>
+                        <li>
+                            <div class="menu_text on">계정 설정</div>
+                        </li>
+                    </ul>
+                </div>
+
                 <div class="profile_inner">
                     <a href="#" onclick="changeImage()" class="photo">
                         <img src="https://phinf.pstatic.net/contact/20180510_205/1525930147706nu3jQ_PNG/avatar_profile.png?type=s160" width="84"
@@ -106,8 +91,15 @@
                         <span class="photo_edit"></span>
                     </a>
                     <div class="profile">
-                        <p class="useid">user001</p>
-                        <p class="usemail">abc@naver.com</p>
+                        <th:if #{user !=" null"}>
+                            <p class="username">[[ ${user.username} ]]</p>
+                            <p class="email">[[ ${user.email} ]]</p>
+
+                            <p th:if="${user.gender == 'F'}" class="gender" >여성👩</p>
+                            <p th:if="${user.gender == 'M'}" class="gender" >남성👨</p>
+                            <p class="birth" th:text="${#dates.format(user.birth, 'yyyy-MM-dd')}"></p>
+<!--                            <p class="birth">[[ ${user.birth} ]]</p>-->
+                        </th:if>
                     </div>
                 </div>
             </div>
@@ -118,23 +110,10 @@
                     <li>
                         <a href="/user2/help/myInfoV2?m=viewProfile&lang=ko_KR" class="left_item" role="menuitem" onclick="nclk(this,'lnb.info','','',event)"
                            aria-current=>
-                            <div class="menu_text ">내 프로필</div>
                         </a>
                     </li>
-                    <li>
-                        <a href="/user2/help/myInfoV2?m=viewSecurity&lang=ko_KR" class="left_item" role="menuitem" onclick="nclk(this,'lnb.protect','','',event)"
-                           aria-current="true">
-                            <div class="menu_text on">계정 설정</div>
-                        </a>
-                    </li>
-
                 </ul>
-
-
-
             </div>
-            <!--//-->
-
         </div>
     </header>
     <script>

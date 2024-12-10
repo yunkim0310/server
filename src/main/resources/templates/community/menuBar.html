@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        .side-bar:before{
+            content: "";
+            display: inline-block;
+            width: 1px;
+            height: 12px;
+            margin: 0 7px 0 3px;
+            background-color: #FFFFFF;
+            vertical-align: -1px;
+        }
+
+        /* 사이드 바 스타일 */
+        .side-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            height: 80vh;
+            width: 250px;
+            background-color: #fff;
+            color: #fff;
+            padding-top: 20px;
+        }
+
+        .side-bar .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .side-bar .logoImg {
+            width: 150px;
+            height: auto;
+        }
+
+        .side-menu {
+            padding-left: 20px;
+        }
+
+        .menu-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .menu-list li {
+            margin-bottom: 20px;
+        }
+
+        .menu-list li a {
+            color: #333;
+            font-size: 16px;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .menu-list li a:hover {
+            color: #4880FF;
+        }
+
+        .menu-list li a.active {
+            color: #4880FF;
+        }
+
+        .header-line {
+            width: calc(70% - 20px);
+            height: 2px;
+            background-color: #ccc;
+            margin: 20px auto;
+        }
+
+        /* 배지 스타일 */
+        .badge {
+            background-color: red;
+            color: white;
+            border-radius: 50%;
+            padding: 2px 5px;
+            font-size: 12px;
+            position: absolute;
+            top: 0;
+            right: 0;
+        }
+        .menu-list li {
+            position: relative; /* 부모 요소를 상대적으로 설정하여 배지 위치 조정 가능 */
+        }
+    </style>
+</head>
+<body>
+<aside class="side-bar" style="color: #fff;">
+    <br/><br/><br/>
+    <div class="logo">
+        <a href="/product/listProduct" style="text-decoration: none; color: #4880FF; font-size: 24px; font-weight: bold;">커뮤니티</a>
+    </div>
+    <div class="header-line"></div>
+    <nav class="side-menu">
+        <ul class="menu-list">
+            <li><a href="/review/getReviewList?type=allList">전체 리뷰 리스트</a></li>
+            <li><a href="/review/getReviewList?type=myFeed">My Feed</a></li>
+            <li><a href="/review/getFriendList">친구 목록</a></li>
+            <li>
+                <a href="/review/getFriendReqStatus">친구 요청 현황</a>
+                <span class="badge">!</span> <!-- 배지 추가 -->
+            </li>
+        </ul>
+    </nav>
+</aside>
+</body>
+</html>

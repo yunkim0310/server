@@ -266,7 +266,7 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-        Store store = storeService.getStore(1);
+        Store store = storeService.getStore(15);
 //        Store store = storeService.getStore(1, Date.valueOf("2024-11-26"));
 
         System.out.println(store);

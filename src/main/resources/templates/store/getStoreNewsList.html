@@ -194,9 +194,13 @@
 
                                 <tr style="display: flex; align-items: flex-start;margin-top: 5%;">
                                     <td style="flex-shrink: 0;width: 300px; height: 300px">
-                                        <img src="/images/store/storeNewsImgTest.jpg" th:alt="${storeNews.newsImg}"
-                                             width="300" height="300">
-                                    </td>
+                                        <th:block th:if="${storeNews.newsImg != null && storeNews.newsImg != ''}">
+                                            <img src="/images/store/storeNewsImgTest.jpg" th:alt="${storeNews.newsImg}"
+                                                 width="300" height="300">
+                                        </th:block>
+                                        <th:block th:if="${storeNews.newsImg == null || storeNews.newsImg == ''}">
+                                            <p>소식 사진이 없습니다.</p>
+                                        </th:block>
                                     <td style="flex-grow: 1; padding-left: 20px;">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <textarea class="css-1bkd15f e1uzxhvi2"

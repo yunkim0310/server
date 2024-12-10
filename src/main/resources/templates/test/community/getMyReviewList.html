@@ -1,10 +1,227 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>getMyReviewList.html</title>
+    <title>My Feed</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f7f9fc;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2.5rem; /* Bigger font size for the title */
+            margin-bottom: 40px; /* Space below the title */
+        }
+
+        .fixed-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 25px;
+            transition: background-color 0.3s, transform 0.3s;
+            font-size: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+        }
+
+        button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .review-list {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .review-item {
+            background-color: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            transition: transform 0.2s;
+            position: relative; /* 슬라이드를 위해 필요 */
+        }
+
+        .review-item:hover {
+            transform: translateY(-3px);
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            overflow: hidden;
+            height: 300px;
+        }
+
+        .slides {
+            width: 100%;
+              height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            color: white;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: none;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            user-select: none;
+            z-index: 1000; /* 버튼이 다른 항목 위에 올도록 */
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .review-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .review-details img {
+            border-radius: 50%;
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+            border: 2px solid #007bff;
+        }
+
+        .review-metrics {
+            margin-top: 10px;
+            font-size: 15px;
+            color: #555;
+        }
+
+        hr {
+            margin: 20px 0;
+            border: none;
+            border-top: 1px solid #eee;
+        }
+    </style>
 </head>
 <body>
+
+<!-- 인크루드 -->
+<div th:include="~{common/header}"></div>
+<div th:include="~{community/menuBar}"></div>
+
+<h1>My Feed</h1>
+
+<div class="review-list">
+    <div>
+        <a th:href="@{/review/addReview(rsrvNo=13, userName='user03', searchKeyword='이용완료')}"><button>리뷰 추가하기</button></a>
+    </div>
+
+    <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+        <p>리뷰가 없습니다.</p>
+    </div>
+
+    <div th:each="review, iterStat : ${reviewList}">
+        <div class="review-item">
+            <div class="slideshow-container">
+                <div class="slides">
+                    <img th:src="@{/file/community/55555.png}" alt="test">
+                </div>
+                <div class="slides">
+                    <img th:src="@{/file/community/1.png}" alt="test">
+                </div>
+                <!--                <div class="slides">-->
+                <!--                    <img th:src="${review.reviewImg3}" alt="리뷰 이미지 3">-->
+                <!--                </div>-->
+
+                <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
+                <button class="next" onclick="plusSlides(1)">&#10095;</button>
+            </div>
+
+            <p>별점: <span th:text="${review.reviewScore}"></span></p>
+            <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+            <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>
+            <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
+
+            <div class="button-group">
+                <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}">
+                    <button>리뷰 상세보기</button>
+                </a>
+                <a th:href="@{/review/updateReview?(reviewNo=${review.reviewNo})}">
+                    <button>수정</button>
+                </a>
+                <form method="post" style="display:inline;" th:action="@{/review/removeReview}" onsubmit="return confirm('정말 삭제 하시겠습니까?');">
+                    <input name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
+                    <button type="submit">삭제</button>
+                </form>
+            </div>
+
+            <hr class="separator"/>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    let slideIndex = 0;
+
+    function plusSlides(n) {
+        const slideshows = document.querySelectorAll('.slideshow-container');
+        slideshows.forEach(slideshow => {
+            showSlides(slideshow, n);
+        });
+    }
+
+    function showSlides(slideshow, n = 1) {
+        const slides = slideshow.getElementsByClassName("slides");
+        slideIndex += n;
+        if (slideIndex >= slides.length) { slideIndex = 0 }
+        if (slideIndex < 0) { slideIndex = slides.length - 1 }
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        slides[slideIndex].style.display = "block";
+    }
+
+    // 각 슬라이드 쇼를 5초마다 자동으로 넘기는 코드
+    setInterval(() => {
+        const slideshows = document.querySelectorAll('.slideshow-container');
+        slideshows.forEach(slideshow => {
+            showSlides(slideshow, 1);
+        });
+    }, 5000);
+</script>
+
 
 </body>
 </html>

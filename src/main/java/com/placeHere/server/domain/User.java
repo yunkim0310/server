@@ -2,9 +2,6 @@ package com.placeHere.server.domain;
 
 
 import lombok.Data;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
@@ -15,16 +12,15 @@ import java.util.Date;
 public class User implements Serializable {
 
     // Field
+
     // 회원 인덱스
     private Long id;
-
     // 회원어아디
     private String username;
     // 비밀번호
     private String password;
     // 이메일
     private String email;
-
     // 역할 (ROLE_USER, ROLE_STORE, ROLE_ADMIN, ROLE_POINT)
     private String role;
     private Date regDt;

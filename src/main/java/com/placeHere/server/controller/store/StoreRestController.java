@@ -9,9 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api-store/*")
@@ -30,7 +28,14 @@ public class StoreRestController {
     @Value("${list_size}")
     private int listSize;
 
+    @Value("${business_no_api}")
+    private String businessNoApiKey;
 
+    @Value("${google_api}")
+    private String googleApiKey;
+
+    @Value("${kakao_api}")
+    private String kakaoApiKey;
 
 
     // Constructor
@@ -110,6 +115,45 @@ public class StoreRestController {
         System.out.println(store);
 
         return ResponseEntity.ok(store);
+    }
+
+
+    // API Key 전달
+    @GetMapping("/getApiKey")
+    public ResponseEntity<Map<String, String>> getApiKey() {
+
+        System.out.println("/api-store/getApiKey : GET");
+
+        Map<String, String> response = new HashMap<>();
+        response.put("businessNo", businessNoApiKey);
+        response.put("google", googleApiKey);
+        response.put("kakao", kakaoApiKey);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+    // 가게 위치 전달
+    @GetMapping("getStoreLocation")
+    public ResponseEntity<List<Map<String,String>>> getStoreLocation(@ModelAttribute Search search,
+                                                                     @RequestParam(value = "storeId", required = false, defaultValue = "0") int storeId) {
+        System.out.println("/api-store/getStoreLocation : GET");
+
+        if (storeId == 0) {
+
+            List<Map<String,String>> storeLocationList = storeService.getStoreLocationList(search);
+            System.out.println(storeLocationList);
+
+            return ResponseEntity.ok(storeLocationList);
+
+        } else {
+
+            List<Map<String, String>>storeLocation = storeService.getStoreLocation(storeId);
+            System.out.println(storeLocation);
+
+            return ResponseEntity.ok(storeLocation);
+        }
+
     }
 
 }

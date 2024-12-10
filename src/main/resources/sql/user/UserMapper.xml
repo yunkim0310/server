@@ -35,7 +35,6 @@
 
     <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
         SELECT
-            id,
             username,
             password,
             email,
@@ -48,7 +47,7 @@
             gender,
             birth
         FROM user
-        WHERE username = #{value}
+        WHERE username = #{username}
     </select>
 
     <update id="updateLoginDt" parameterType="java.lang.String">
