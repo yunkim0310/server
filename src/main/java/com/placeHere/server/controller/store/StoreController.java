@@ -67,18 +67,12 @@ public class StoreController {
     // TODO 가게 등록 중간에 닫어버리면?
     // 가게 기본 정보 등록
     @GetMapping(value="/store/addStore")
-    public String addStore(HttpSession session, Model model, @RequestParam("userName") String userName) {
+    public String addStore(HttpSession session, Model model) {
 
         System.out.println("/store/addStore : GET");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
-        if (user == null) {
-            user = new User();
-            user.setUsername(userName);
-            user.setRole("ROLE_STORE");
-        }
         
         // 로그인 안 한 경우
         if (user == null) {
@@ -147,18 +141,12 @@ public class StoreController {
 
     // 가게 운영 정보 등록
     @GetMapping("/store/addOperation")
-    public String addOperation(HttpSession session, Model model, @RequestParam("userName") String userName) {
+    public String addOperation(HttpSession session, Model model) {
 
         System.out.println("/store/addOperation : GET");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
-        if (user == null) {
-            user = new User();
-            user.setUsername(userName);
-            user.setRole("ROLE_STORE");
-        }
         
         // 로그인 안 한 경우
         if (user == null) {
@@ -216,18 +204,12 @@ public class StoreController {
 
     // 가게 기본 정보 수정
     @GetMapping(value = "/store/updateStore")
-    public String updateStore(HttpSession session, @RequestParam("userName") String userName, Model model) {
+    public String updateStore(HttpSession session, Model model) {
 
         System.out.println("/store/updateStore : GET");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
-        if (user == null) {
-            user = new User();
-            user.setUsername(userName);
-            user.setRole("ROLE_STORE");
-        }
 
         // 로그인 안 한 경우
         if (user == null) {
@@ -238,7 +220,7 @@ public class StoreController {
         // 점주 회원의 경우
         else if (user.getRole().equals("ROLE_STORE")) {
 
-            int storeId = storeService.getStoreId(userName);
+            int storeId = storeService.getStoreId(user.getUsername());
             
             // 등록된 가게가 없는 경우
             if (storeId == 0) {
@@ -312,12 +294,6 @@ public class StoreController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
-        if (user == null) {
-            user = new User();
-            user.setUsername(user.getUsername());
-            user.setRole("ROLE_STORE");
-        }
         
         // 로그인 안 한 경우
         if (user == null) {
@@ -553,7 +529,6 @@ public class StoreController {
     // 가게 좋아요 목록 조회
     @GetMapping("/getStoreLikeList")
     public String getLikeStoreList(HttpSession session,
-                                   @RequestParam("userName") String userName,
                                    Model model) throws Exception {
 
         System.out.println("/store/getLikeStoreList : GET");
@@ -565,7 +540,7 @@ public class StoreController {
 
             if (user.getRole().equals("ROLE_USER")) {
 
-                List<Like> storeLikeList = likeService.getStoreLikeList(userName);
+                List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername());
 
                 model.addAttribute("storeLikeList", storeLikeList);
 
@@ -593,22 +568,14 @@ public class StoreController {
                              @ModelAttribute("search") Search search,
                              @ModelAttribute("message") String message,
                              HttpSession session,
-                             Model model,
-                             @RequestParam("userName") String userName) {
+                             Model model) {
 
         System.out.println("/store/getMyStore : GET");
-        System.out.println(userName);
         System.out.println("mode: " + mode);
         
         // TODO 로그인 중인 회원 아이디 가져오기, 역할 확인
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
-        if (user == null) {
-            user = new User();
-            user.setUsername(userName);
-            user.setRole("ROLE_STORE");
-        }
 
         if (user == null) {
 
@@ -620,7 +587,7 @@ public class StoreController {
             search.setPageSize(pageSize);
             search.setListSize(listSize);
 
-            int storeId = storeService.getStoreId(userName);
+            int storeId = storeService.getStoreId(user.getUsername());
 
             if (storeId == 0) {
 
@@ -707,11 +674,9 @@ public class StoreController {
                              @RequestParam(value = "fnc", required = false) String fnc,
                              @ModelAttribute Closeday closeday,
                              @ModelAttribute Search search,
-                             RedirectAttributes redirectAttributes,
-                             @RequestParam("userName") String userName) throws Exception {
+                             RedirectAttributes redirectAttributes) throws Exception {
 
         System.out.println("/store/getMyStore : POST");
-        System.out.println(userName);
         System.out.println("mode: " + mode);
         System.out.println("fnc: " + fnc);
 

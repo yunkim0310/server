@@ -36,6 +36,7 @@ public class MainController {
         System.out.println("Home : GET");
 
         User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
         
         // 인기 가게
         List<Integer> storeIdList =  likeService.likeList("store");
