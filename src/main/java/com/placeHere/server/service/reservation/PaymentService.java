@@ -17,6 +17,7 @@ public class PaymentService {
 
     private final String REFUND_API_URL = "https://api.tosspayments.com/v1/payments/{paymentKey}/cancel";
 
+    //환불 로직
     public String refundPayment(String paymentKey, String reason, Date rsrvDt, int amount) {
         RestTemplate restTemplate = new RestTemplate();
 
@@ -79,6 +80,7 @@ public class PaymentService {
         }
     }
 
+    // 결제 승인 로직
     public Map<String, Object> confirmPayment(String paymentKey, String orderId, int amount) throws Exception {
         RestTemplate restTemplate = new RestTemplate();
 
