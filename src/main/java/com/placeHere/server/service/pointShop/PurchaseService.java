@@ -3,6 +3,7 @@ package com.placeHere.server.service.pointShop;
 import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +51,6 @@ public interface PurchaseService {
     public void removeSelectedItems(List<Purchase> selectedItems) throws Exception;
 
 
+    @Transactional
+    public void purchaseProducts(String username) throws Exception;
 }

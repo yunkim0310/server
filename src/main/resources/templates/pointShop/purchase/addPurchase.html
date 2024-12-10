@@ -214,6 +214,7 @@
         <div>
             <strong>상품명</strong><br/><br/>
             <span class="value" th:text="${product.prodName}">상품명</span>
+            <span th:if="${additionalItemsText != ''}" th:text="${additionalItemsText}"></span>
         </div>
         <br/><br/>
 <!--        <div>-->

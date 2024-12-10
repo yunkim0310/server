@@ -12,55 +12,36 @@
     <script type="text/javascript">
 
         $(function() {
-            // 체크박스 클릭 시, 총 금액을 계산
-            $("input[name='chk']").on("click", function() {
-                calculateTotalPrice(); // 총 금액 계산 함수 호출
-            });
 
-            // 전체 선택 체크박스 클릭 시
-            $("#allCheckBox").on("click", function() {
-                $("input[name='chk']").prop("checked", this.checked);
-                calculateTotalPrice(); // 전체 선택 후 총 금액 계산
+            $("button.btn-primary.buy").on("click", function () {
+                fncAddPurchase();
+                // alert("점검중입니다.");
+                // history.go();
             });
         });
 
-        $(function() {
-            // 체크박스 클릭 시, 총 금액 계산
-            $("input[name='chk']").on("click", function() {
-                calculateTotalPrice(); // 총 금액 계산 함수 호출
-            });
+        function fncAddPurchase() {
+            var tranPoint = Number($("input[name='tranPoint']").val());
+            var currPoint = Number($("input[name='currPoint']").val());
+            // var prodStatus = $("input[name='prodStatus']").val();
+            // var cartList = $("input[name='cartList']").val();
 
-            // 전체 선택 체크박스 클릭 시
-            $("#allCheckBox").on("click", function() {
-                $("input[name='chk']").prop("checked", this.checked);
-                calculateTotalPrice(); // 전체 선택 후 총 금액 계산
-            });
-        });
+            if (tranPoint > currPoint) {
+                alert("보유하신 포인트가 부족합니다.");
+                return;
+            }
+            // if (prodStatus === false){
+            //     alert("판매 중지된 상품이 포함되어 있습니다.")
+            //     return;
+            // }
+            // if (cartList.length() === 0){
+            //     alert("장바구니가 비었습니다.");
+            // }
 
-        function calculateTotalPrice() {
-            let totalPrice = 0;
-
-            // 선택된 상품들의 가격을 계산
-            $("input[name='chk']:checked").each(function() {
-                // 데이터 속성에서 가격과 수량을 가져오기
-                let prodPrice = parseInt($(this).data("price").replace(/[^0-9]/g, ""));  // 숫자만 추출
-                let cntProd = parseInt($(this).data("quantity").replace(/[^0-9]/g, ""));  // 숫자만 추출
-
-                // 가격이나 수량이 유효하지 않으면 무시
-                if (isNaN(prodPrice) || isNaN(cntProd)) {
-                    return; // 유효하지 않은 값은 넘어감
-                }
-
-                // 총 금액에 가격 * 수량 더하기
-                totalPrice += (prodPrice * cntProd);
-            });
-
-            // 계산된 총 금액을 화면에 표시
-            $("#totalPrice").text(totalPrice.toLocaleString() + " 원"); // 쉼표 포함 형식으로 출력
-
-            // tranPoint 값을 업데이트
-            $("#tranPoint").val(Number(totalPrice)); // tranPoint에 총 금액을 넣음
-            console.log(totalPrice);
+            $("form").attr("method", "POST")
+                .attr("action", "/purchase/addPurchaseCart")
+                .attr("enctype", "multipart/form-data")
+                .submit();
         }
 
         $(function() {
@@ -88,62 +69,6 @@
             });
 
         });
-
-        //체크박스 전체 선택 클릭 이벤트
-        function allChecked(target){
-
-            //전체 체크박스 버튼
-            const checkbox = document.getElementById('allCheckBox');
-
-            //전체 체크박스 버튼 체크 여부
-            const is_checked = checkbox.checked;
-
-            //전체 체크박스 제외한 모든 체크박스
-            if(is_checked){
-                //체크박스 전체 체크
-                chkAllChecked()
-            }
-
-            else{
-                //체크박스 전체 해제
-                chkAllUnChecked()
-            }
-        }
-        //자식 체크박스 클릭 이벤트
-        function chkClicked(){
-
-            //체크박스 전체개수
-            const allCount = document.querySelectorAll(".chk").length;
-
-            //체크된 체크박스 전체개수
-            const query = 'input[name="chk"]:checked'
-            const selectedElements = document.querySelectorAll(query)
-            const selectedElementsCnt = selectedElements.length;
-
-            //체크박스 전체개수와 체크된 체크박스 전체개수가 같으면 전체 체크박스 체크
-            if(allCount == selectedElementsCnt){
-                document.getElementById('allCheckBox').checked = true;
-            }
-
-            //같지않으면 전체 체크박스 해제
-            else{
-                document.getElementById('allCheckBox').checked = false;
-            }
-        }
-
-        //체크박스 전체 체크
-        function chkAllChecked(){
-            document.querySelectorAll(".chk").forEach(function(v, i) {
-                v.checked = true;
-            });
-        }
-
-        //체크박스 전체 체크 해제
-        function chkAllUnChecked(){
-            document.querySelectorAll(".chk").forEach(function(v, i) {
-                v.checked = false;
-            });
-        }
 
     </script>
 
@@ -293,6 +218,39 @@
             font-weight: bold;
         }
 
+        .product-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* 수직 중앙 정렬 */
+            align-items: center; /* 수평 중앙 정렬 */
+            background-color: #fff;
+            padding: 20px;
+            margin: 20px auto;
+            width: 50%;
+            box-sizing: border-box;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
 
     </style>
 </head>
@@ -310,29 +268,17 @@
 <table class="purchase-table">
     <thead>
     <tr>
-        <th>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="allCheckBox" onclick="allChecked()">
-            </label>
-        </th>
         <th>상품 대표 이미지</th>
         <th>상품명</th>
         <th>상품 가격</th>
         <th>판매 가능 상태</th>
-        <th>상품 수량</th>
+<!--        <th>상품 수량</th>-->
         <th></th>
     </tr>
     </thead>
+<!--    <tbody th:if="${cartList.size()} != 0">-->
     <tbody>
     <tr th:each="purchase : ${cartList}">
-        <td>
-            <label class="checkbox-inline">
-                <input type="checkbox" name="chk" class="chk" th:value="${purchase.wishCartNo}"
-                       data-price="${purchase.purchaseProd.prodPrice}"
-                       data-quantity="${purchase.purchaseProd.cntProd}"
-                       onclick="chkClicked()" />
-            </label>
-        </td>
         <td class="product-img">
             <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
             <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
@@ -344,23 +290,51 @@
         <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
             <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
         </td>
-        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>
+<!--        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>-->
         <td>
             <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
-            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">🔍</button>&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">❌</button>
+            <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
+            <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
+            <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
+            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">보기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
         </td>
     </tr>
     </tbody>
-</table>
+<!--    <tbody th:if="${cartList.size()} == 0">-->
+<!--        장바구니가 비어있습니다.-->
+<!--    </tbody>-->
+</table><br/>
 
 <div id="totalPriceSection">
-    <h3>총 결제 금액: <span id="totalPrice">0</span> 원</h3>
+    <h3>결제 포인트 : <span th:text="${tranPoint}">0</span> 원</h3>
+    <h3>보유 포인트 : <span th:text="${currPoint}">0</span> 원</h3>
 </div>
 
 <input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
+    <div class="product-container">
+        <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
+        <h3>구매하시겠습니까?</h3>
+    </div>
 
-<button type="submit" id="submitCart">구매하기</button><br/><br/><br/><br/>
+    <form>
+    <div class="button-container">
+        <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+        <input type="hidden" name="cartList" th:value="${cartList}">
+        <input type="hidden" name="purchase" th:value="${purchase}">
+        <input type="hidden" name="currPoint" th:value="${currPoint}">
+        <input type="file" name="file" id="file" style="display:none;">
+        <input type="hidden" th:value="${username}" name="username">
+        <button type="button" class="btn-primary buy">구매</button>
+    </div><br/><br/>
+    </form>
+<!--    <div>-->
+<!--        <form th:action="@{/purchase/addPurchaseCart}" method="post">-->
+<!--            <input type="hidden" th:value="${username}" name="username">-->
+<!--&lt;!&ndash;            <input type="hidden" th:value="${purchase.prodNo}" name="prodNo">&ndash;&gt;-->
+<!--            <button type="submit">구매하기</button>-->
+<!--        </form>-->
+<!--    </div>-->
 <!--</form>-->
 </div>
 </body>

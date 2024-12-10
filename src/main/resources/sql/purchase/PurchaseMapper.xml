@@ -166,4 +166,8 @@
         WHERE username = #{buyer.username} AND cnt_prod != 0
     </select>
 
+    <delete id="clearWishCartByUsername">
+        DELETE FROM wishCart WHERE username = #{username} AND cnt_prod != 0
+    </delete>
+
 </mapper>

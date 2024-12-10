@@ -57,4 +57,6 @@ public int isProductInWishList(Purchase purchase) throws Exception;
 
     public void removeSelectedItems(List<Purchase> selectedItems)throws Exception;
 
+    // 장바구니 비우기
+    public void clearWishCartByUsername(String username) throws Exception;
 }

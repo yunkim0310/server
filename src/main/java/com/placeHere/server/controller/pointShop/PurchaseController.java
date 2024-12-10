@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -85,7 +86,7 @@ public class PurchaseController {
         System.out.println("tranPoint : " + tranPoint);
         System.out.println("currPoint : " + currPoint);
         System.out.println("product.getProdPrice() : " + product.getProdPrice());
-
+//
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("username", username);
         model.addAttribute("tranPoint", tranPoint);
@@ -257,10 +258,41 @@ public class PurchaseController {
                               Model model) throws Exception {
 
         String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("user's carlist : "+username);
         // 장바구니 목록을 서비스에서 받아옴
         List<Purchase> cartList = purchaseService.getCartList(username);
 
+        int tranPoint = 0;
+        int numItems = cartList.size();
+        int currPoint = pointService.getCurrentPoint(username);
+        model.addAttribute("currPoint", currPoint);
+        System.out.println("보유 포인트 : "+currPoint);
 
+        // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
+        Purchase firstItem = cartList.isEmpty() ? null : cartList.get(0);
+        String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+
+        // 각 상품에 대해 결제 포인트 계산
+        for (Purchase cartItem : cartList) {
+            Product product = productService.getProduct(cartItem.getProdNo());
+            Point point = new Point();
+            int plusPoint = product.getProdPrice();
+            cartItem.setTranPoint(-plusPoint);  // 포인트 차감
+//            cartItem.setDepType("상품 구매");
+            cartItem.setRelNo(cartItem.getProdNo());
+            tranPoint += plusPoint;
+//            purchaseService.addPurchase(purchase);
+        }
+        purchase.setTranPoint(tranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
+        model.addAttribute("purchase", purchase);
+        model.addAttribute("tranPoint", tranPoint);
+        model.addAttribute("cartList", cartList);
+        model.addAttribute("firstItem", firstItem);
+        model.addAttribute("additionalItemsText", additionalItemsText);
+
+//        purchaseService.purchaseProducts(username);
 
         // 모델에 장바구니 목록을 추가하여 뷰로 전달
         model.addAttribute("cartList", cartList);
@@ -269,6 +301,94 @@ public class PurchaseController {
         // Thymeleaf 템플릿 이름을 반환
         return "pointShop/purchase/listCart"; // 템플릿 경로
     }
+
+    @PostMapping("/addPurchaseCart")
+    public String addPurchaseCartResult(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("tranPoint") int tranPoint,
+//            @RequestParam("cartList")  List<Purchase> purchaseList,  // List<Purchase>를 받을 수 있도록 설정
+            @SessionAttribute("user") User buyer,
+            @ModelAttribute("point") Point point,
+            Model model) throws Exception {
+
+        String username = buyer.getUsername();
+        int currPoint = 0;
+//        System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
+        System.out.println("point.getCurrPoint : "+point.getCurrPoint());
+
+
+
+        // 구매한 상품들을 처리
+        List<Product> products = new ArrayList<>();
+        List<Purchase> purchaseList = purchaseService.getCartList(buyer.getUsername());
+        System.out.println("purchaseList : "+purchaseList.size());
+        for (Purchase purchase : purchaseList) {
+            purchase.setBuyer(buyer);
+            purchase.setUsername(username);
+            point.setUsername(username);
+            System.out.println("purchaseList : "+purchaseList.size());
+            Product product = productService.getProduct(purchase.getProdNo());
+            purchase.setPurchaseProd(product);
+            products.add(product);  // 상품 목록에 추가
+
+            currPoint = pointService.getCurrentPoint(username);
+            System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
+
+            point.setCurrPoint(currPoint);
+
+            // 바코드 생성 및 파일 업로드 처리
+            String fileName = file.getOriginalFilename();
+            String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+            File barcodeDirectory = new File(uploadPath);
+            if (!barcodeDirectory.exists()) {
+                barcodeDirectory.mkdirs();
+            }
+
+            String saveFile = uploadPath + fileName;
+            try {
+                file.transferTo(new File(saveFile));
+                purchase.setBarcodeName(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String barcodeNumber = generateBarcodeNumber();
+            String barcodeFileName = barcodeNumber + ".png";
+            String barcodeFilePath = uploadPath + "/" + barcodeFileName;
+
+            // 바코드 이미지 생성
+            generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);
+
+            // 바코드 파일명 저장
+            purchase.setBarcodeName(barcodeFileName);
+            purchase.setBarcodeNo(barcodeNumber);  // 바코드 번호 저장
+            purchase.setDepType("상품 구매");
+            purchase.setTranPoint(product.getProdPrice());
+            point.setTranPoint(-product.getProdPrice());  // 총 결제 포인트 차감
+            System.out.println("addPurchaseCartResult : "+ -product.getProdPrice());
+            // 포인트 업데이트
+            purchaseService.addPurchase(purchase);
+            pointService.updatePoint(point);
+            point.setCurrPoint(currPoint-product.getProdPrice());
+            System.out.println("test currPoint : "+point.getCurrPoint());
+
+        }
+
+        purchaseService.purchaseProducts(username);
+
+        // 최종 결제 포인트 차감
+        model.addAttribute("currPoint", currPoint);
+        model.addAttribute("tranPoint", tranPoint);
+        model.addAttribute("purchase", purchaseList);
+        model.addAttribute("products", products);
+
+        model.addAttribute("username", username);
+
+        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
+    }
+
+
+
 
     // 찜 목록 조회
     @GetMapping("/listWish")
@@ -349,5 +469,41 @@ public class PurchaseController {
         purchaseService.removeSelectedItems(selectedItems);
         return "pointShop/purchase/listCart";
     }
+
+//    @PostMapping("/addPurchaseCart")
+//    public String addPurchaseCart(@SessionAttribute("user") User buyer, Model model) throws Exception{
+//
+//        String username = buyer.getUsername();
+//        List<Purchase> cartItems = purchaseService.getCartList(buyer.getUsername());  // 장바구니의 모든 상품을 가져옴
+//        int totalTranPoint = 0;
+//        int numItems = cartItems.size();
+//        int currPoint = pointService.getCurrentPoint(username);
+//
+//        // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
+//        Purchase firstItem = cartItems.isEmpty() ? null : cartItems.get(0);
+//        String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+//
+//        // 각 상품에 대해 결제 포인트 계산
+//        for (Purchase cartItem : cartItems) {
+//            Product product = productService.getProduct(cartItem.getProdNo());
+//            Point point = new Point();
+//            int tranPoint = product.getProdPrice() * cartItem.getCntProd();
+//            point.setTranPoint(-tranPoint);  // 포인트 차감
+//            point.setDepType("상품 구매");
+//            point.setRelNo(cartItem.getProdNo());
+//            totalTranPoint += tranPoint;
+//        }
+//        Purchase purchase = new Purchase();
+//        purchase.setTranPoint(-totalTranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
+//        model.addAttribute("totalTranPoint", totalTranPoint);
+//        model.addAttribute("currPoint", currPoint);
+//        model.addAttribute("cartItems", cartItems);
+//        model.addAttribute("firstItem", firstItem);
+//        model.addAttribute("additionalItemsText", additionalItemsText);
+//
+//        purchaseService.purchaseProducts(username);
+//
+//        return "pointShop/purchase/listPurchase";  // 구매 내역 페이지로 리다이렉트
+//    }
 
 }

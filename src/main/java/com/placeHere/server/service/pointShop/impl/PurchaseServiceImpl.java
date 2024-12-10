@@ -2,23 +2,17 @@ package com.placeHere.server.service.pointShop.impl;
 
 import com.placeHere.server.dao.pointShop.PointDao;
 import com.placeHere.server.dao.pointShop.PurchaseDao;
-import com.placeHere.server.domain.Product;
 import com.placeHere.server.domain.Purchase;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.User;
 import com.placeHere.server.service.pointShop.PointService;
-import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import lombok.Setter;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Service("purchaseServiceImpl")
@@ -45,25 +39,15 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Override
     public void addPurchase(Purchase purchase) throws Exception{
 
-//        String barcodeNo = purchaseDao.getNextBarcodeNumber();
-//        purchase.setBarcodeNo(barcodeNo);
-//        int tranPoint = purchaseDao.calcTranPoint(purchase.getUserName());
-//        purchase.setTranPoint(tranPoint);
+//        List<Purchase> cartItems = purchaseDao.getCartList(purchase.getUsername());
+//
+//        for (Purchase purchase : cartItems) { // 구매 일자 설정
+//            purchaseMapper.insertPurchase(purchase);  // 구매 기록 저장
+//        }
+//        // 구매 후 장바구니 비우기
+//        purchaseMapper.clearWishCartByUserId(userId);  // 장바구니 비우기
 
         purchaseDao.addPurchase(purchase);
-
-//        Product product = new Product();
-//        User user = new User();
-//
-//        String username = "user1";
-//        int tranPoint = -20000;
-//        String depType = "상품 구매";
-//        int currPoint = 23300;
-//        int relNo = 9;
-//
-//        pointService.addPointTransaction(username, tranPoint, depType, currPoint, relNo);
-//
-//        pointService.updatePoint(username, tranPoint,30073);
 
     }
 
@@ -159,6 +143,19 @@ public class PurchaseServiceImpl implements PurchaseService {
         for (Purchase purchase : selectedItems) {
             purchaseDao.removeCart(purchase);
         }
+    }
+
+    @Transactional
+    @Override
+    public void purchaseProducts(String username) throws Exception {
+        // 장바구니 상품 조회
+        List<Purchase> cartItems = purchaseDao.getCartList(username);
+
+//        for (Purchase purchase : cartItems) { // 구매 일자 설정
+//            purchaseDao.addPurchase(purchase);  // 구매 기록 저장
+//        }
+        // 구매 후 장바구니 비우기
+        purchaseDao.clearWishCartByUsername(username);  // 장바구니 비우기
     }
 
 }
