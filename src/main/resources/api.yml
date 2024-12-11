@@ -10,6 +10,9 @@ business_no_api:  nc45BSwtU7L3a%2BdfhWI9de17ugAEjsNTL1yeub5Jcithkjuzk8uOCpHdFzMR
 # 파일 업로드 경로 (수정필요)
 store_upload_dir: src/main/resources/static/file/store
 
+# 파일 업로드 경로 (수정필요)
+pointShop_upload_dir: src/main/resources/static/file/pointShop
+
 # 페이징 사이즈
 page_size: 5
 
@@ -18,3 +21,9 @@ list_size: 5
 
 # 댓글 사이즈
 comment_size: 5
+
+# 구글 API 키 ***
+google_api: AIzaSyBKtqanIBhdK1lZUBaKDYM2sVIs4UF7lSE
+
+# 카카오 API 키 ***
+kakao_api:  31fbb727e271aa15efa0b1949ed4e1a1
