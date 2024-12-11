@@ -62,7 +62,7 @@ public class ReservationServiceImpl implements ReservationService{
         if("리뷰 작성".equals(rsrvStatus)){
             String username = reservation.getUserName();
             int tranPoint = 100;
-            String depType = "리뷰 작성";
+            String depType = "리뷰 완료";
             int currPoint = pointService.getCurrentPoint(username);
 
             pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
