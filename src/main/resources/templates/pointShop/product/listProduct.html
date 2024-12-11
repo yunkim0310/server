@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>포인트 상품 목록                                                                 </title>
+    <title>PlaceHere</title>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua7Kw1TIq0RtvO+fi6QxfhCpCz2vhK4U6Xvn8PBxJg4mtLOefW4Llmhks" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
@@ -11,13 +11,19 @@
     <link rel="stylesheet" href="/css/templates/header.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
+<!--    <link href="/css/templates/mypage.css" rel="stylesheet">-->
+<!--    <link href="/css/templates/collection_detail.css" rel="stylesheet">-->
+<!--    <link href="/css/templates/style.css" rel="stylesheet">-->
+<!--    <script src="/javascript/templates/script.js" type="text/javascript"></script>-->
 
     <script type="text/javascript">
-        function fncGetList(order) {
-            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
-        }
 
         $(function() {
+            // $("button.btn-default").on("click", function () {
+            //     var prodNo = $(this).data("prod-no");
+            //     self.location = "/product/getProduct?prodNo=" + prodNo;
+            // });
+
             $("button.btn-primary.view").on("click", function () {
                 var prodNo = $(this).data("prod-no");
                 self.location = "/product/getProduct?prodNo=" + prodNo;
@@ -37,7 +43,7 @@
             $("#searchKeyword").autocomplete({
                 source: function(request, response) {
                     $.ajax({
-                        url : "/product/json/getProductAutocomplete/"+ encodeURIComponent(request.term),
+                        url : "/api-product/json/getProductAutocomplete/"+ encodeURIComponent(request.term),
                         method : "GET" ,
                         dataType: "json",
                         success : function(JSONData) {
@@ -54,25 +60,45 @@
                 fncGetList(order);
             });
         });
+
+        function fncGetList(order) {
+            $("form").attr("method" , "POST").attr("action" , "/product/listProduct").submit();
+        }
     </script>
 
     <style>
         .product-img {
             width: 100%;
-            height: 300px;
+            height: 200px;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f0f0; /* 기본 배경색 */
+            /*background-color: #f0f0f0; !* 기본 배경색 *!*/
+            background-color: #fff;
             color: #999; /* 텍스트 색상 */
             font-size: 16px; /* 텍스트 크기 */
             text-align: center;
             border: 1px solid #ddd; /* 이미지를 표시하지 않을 때 테두리 표시 */
         }
 
+        /*.product-img img {*/
+        /*    display: none; !* 이미지가 표시되지 않을 때 *!*/
+        /*}*/
+
+
         .product-img img {
-            display: none; /* 이미지가 표시되지 않을 때 */
+            width: 100%; /* 가로를 100%로 설정 */
+            height: 100%; /* 세로도 100%로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
+            display: block;
         }
+
+        /*.product-img img {*/
+        /*    width: 100%; !* 가로를 100%로 설정 *!*/
+        /*    height: 100%; !* 세로도 100%로 설정 *!*/
+        /*    object-fit: contain; !* 이미지 비율을 유지하면서 영역을 채움 *!*/
+        /*    display: block;*/
+        /*}*/
 
         .product-img span {
             font-size: 1.2rem;
@@ -174,18 +200,12 @@
         }
 
         /* 이미지 크기 */
-        .product-img {
-            width: 100%;
-            height: 300px; /* 이미지 높이를 크게 설정 */
-            overflow: hidden;
-        }
+        /*.product-img {*/
+        /*    width: 100%;*/
+        /*    height: 300px; !* 이미지 높이를 크게 설정 *!*/
+        /*    overflow: hidden;*/
 
-        .product-img img {
-            width: 100%; /* 가로를 100%로 설정 */
-            height: 100%; /* 세로도 100%로 설정 */
-            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
-            display: block;
-        }
+        /*}*/
 
         /* 상품 정보 */
         .product-info {
@@ -230,24 +250,24 @@
         /* 기본 body 스타일 */
         body {
             font-family: 'Arial', sans-serif;
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             margin: 0;
             padding: 0;
         }
 
         .container {
+            /*width: 100%;*/
             width: 80%;
+            /*max-width: 100%;  !* 최대 너비도 100%로 설정 *!*/
             margin: 0 auto;
         }
 
         /* 헤더 스타일 */
         .point-header {
-            background-color: #f4f4f4;
+            background-color: #ffffff;
             padding: 30px;
             text-align: center;
             margin-bottom: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
         .point-header h1 {
@@ -288,20 +308,42 @@
         input[type="radio"] {
             cursor: pointer;
         }
+
+        .available {
+            color: green;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .unavailable {
+            color: red;
+            font-weight: bold;
+            text-align: center;
+        }
+
+
     </style>
 
 </head>
 <body>
+<br/><br/>
 <div class="point-header">
     <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
     <br/><br/>
     <h1>포인트 상품 목록</h1>
 </div>
+<div class="header-line"></div>
   <!-- 원래 스타일의 헤더 -->
 
 <div class="container">
-
-
+<!--    <div class="css-luwwab eug5r8l1">-->
+<!--        <div class="css-833hqy ecbxmj4">-->
+<!--            <div class="side">-->
+<!--                <div class="css-1v4whg ecbxmj3">포인트 상점</div>-->
+<!--                <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>-->
+<!--            </div>-->
+<!--        </div>-->
     <div class="container">
         <div class="row">
             <!-- 왼쪽 부분: 3컬럼 (정렬 및 검색폼) -->
@@ -325,10 +367,11 @@
                         </div>
                     </div>
 
+
                     <div class="form-group">
                         <strong>검색어 : </strong>
                         <input type="text" class="form-control" id="searchKeyword" name="searchKeyword" placeholder="상품명을 입력하세요"
-                               th:value="${search.searchKeyword != null ? search.searchKeyword : ''}">&nbsp;
+                               th:value="${search.searchKeyword != null ? search.searchKeyword : ''}">&nbsp;<br/>
                         <strong>가격 범위 : </strong>
                         <input type="text" id="priceMin" name="priceMin" class="form-control" placeholder="최소 금액" th:value="${search.priceMin}">~
                         <input type="text" id="priceMax" name="priceMax" class="form-control" placeholder="최고 금액" th:value="${search.priceMax}">&nbsp;
@@ -344,16 +387,28 @@
                     <div class="product-list">
                         <div th:each="product : ${productList}" class="product-card">
                             <div class="product-img">
-                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">
+<!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
+<!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
+                                <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+<!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
                             </div>
                             <div class="product-info">
                                 <h3 th:text="${product.prodName}">상품명</h3>
                                 <p th:text="${product.prodPrice} + 'P'">상품 가격</p>
-                                <p th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}">판매 상태</p>
                             </div>
+                            <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
+                                <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+                            </div><br/>
+                            <div th:if="${session.user.role == 'ROLE_POINT'}" class="user">
                             <div class="product-actions">
-                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">조회</button>
+                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>
                                 <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>
+                            </div>
+                            </div>
+                            <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+                                <div class="product-actions">
+                                    <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -363,6 +418,6 @@
     </div>
 
 </div>
-
+<!--</div>-->
 </body>
 </html>

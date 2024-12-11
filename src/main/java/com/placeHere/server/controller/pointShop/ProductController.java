@@ -1,8 +1,11 @@
 package com.placeHere.server.controller.pointShop;
 
 import com.placeHere.server.domain.Product;
+import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.User;
 import com.placeHere.server.service.pointShop.ProductService;
+import com.placeHere.server.service.pointShop.PurchaseService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,13 +32,18 @@ public class ProductController {
     @Qualifier("productServiceImpl")
     private ProductService productService;
 
+    @Autowired
+    @Qualifier("purchaseServiceImpl")
+    private PurchaseService purchaseService;
+
+
     public ProductController(){
 
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
 
     }
 
-    @Value("${store_upload_dir}")
+    @Value("${pointShop_upload_dir}")
     String path;
 
     @Autowired
@@ -77,14 +85,17 @@ public class ProductController {
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")
     public String addProductResult(
-//                            @RequestParam("file") MultipartFile file,
+//                            @RequestParam(value = "file", required = false) MultipartFile file,
                              @ModelAttribute("product") Product product, Model model) throws Exception {
 
         System.out.println("/product/addProduct : POST");
 
         String prodCateName = getCategoryNameByNo(product.getProdCateNo());
         product.setProdCateName(prodCateName);
+        product.setCntProd(1);
 
+//        model.addAttribute("file", file);
+//
 //        String fileName = file.getOriginalFilename();
 //        String uploadPath = servletContext.getRealPath(path);
 //        String saveFile = uploadPath + fileName;
@@ -105,6 +116,7 @@ public class ProductController {
 //    @RequestMapping( value="getProduct", method=RequestMethod.GET)
     @GetMapping("/getProduct")
     public String getProduct(@RequestParam("prodNo") int prodNo ,
+                             @SessionAttribute("user") User buyer,
                              @RequestParam(value = "wishCartNo", required = false) Integer wishCartNo,
                              HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
@@ -112,8 +124,22 @@ public class ProductController {
 
         Product product = productService.getProduct(prodNo);
 
-        String userName = "user01";
-        model.addAttribute("userName", userName);
+        String username = buyer.getUsername();
+        model.addAttribute("username", username);
+
+//        Purchase purchase = new Purchase();
+
+        System.out.println("prodNo : " + prodNo);
+        System.out.println("Buyer: " + buyer.getUsername());
+        System.out.println("Username: " + username);
+
+
+        Purchase purchase = new Purchase();
+        purchase.setProdNo(prodNo);
+        purchase.setUsername(username);
+        int isWishExist = purchaseService.isProductInWishList(purchase);
+        System.out.println("isWishExist : " + isWishExist);
+        model.addAttribute("isWishExist", isWishExist);
 
         Cookie[] cookies = request.getCookies();
         String history = "";

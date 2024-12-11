@@ -2,7 +2,9 @@ package com.placeHere.server.service.user.impl;
 
 
 import com.placeHere.server.dao.user.UserDao;
+import com.placeHere.server.domain.Point;
 import com.placeHere.server.domain.User;
+import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,10 @@ public class UserServiceImpl implements UserService {
     @Autowired
     @Qualifier("userDao")
     UserDao userDao;
+
+    @Autowired
+    @Qualifier("pointServiceImpl")
+    PointService pointService;
 
 //    @Autowired
 //    private BCryptPasswordEncoder bCryptPasswordEncoder; // BCryptPasswordEncoder 주입
@@ -67,6 +73,34 @@ public class UserServiceImpl implements UserService {
 //        user.setPassword(encodedPassword);
 
         userDao.join(user);
+
+
+        String username = user.getUsername();
+        pointService.addPointTransaction(username, 0, "회원 가입", 0, 0);
+        Point point = new Point();
+
+        if (user.getRecommendedId() != null ) {
+
+            point.setUsername(user.getUsername());
+            int tranPoint = 500;
+            point.setTranPoint(tranPoint);
+            String depType = "추천함";
+            int currPoint = pointService.getCurrentPoint(username);
+
+            pointService.addPointTransaction(username, tranPoint, depType, currPoint, 0);
+            pointService.updatePoint(point);
+
+            String recommendedId = user.getRecommendedId();
+            point.setUsername(recommendedId);
+            int recommendedTranPoint = 1000;
+            point.setTranPoint(recommendedTranPoint);
+            String recommendedDepType = "추천받음";
+            int recommendedCurrPoint = pointService.getCurrentPoint(recommendedId);
+
+            pointService.addPointTransaction(recommendedId, recommendedTranPoint, recommendedDepType, recommendedCurrPoint, 0);
+            pointService.updatePoint(point);
+
+        }
 
 //        System.out.println("chk 11 :: " + rawPassword);
 //        System.out.println("chk 11 :: " + encodedPassword);

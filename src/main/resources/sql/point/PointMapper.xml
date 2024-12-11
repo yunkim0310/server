@@ -9,26 +9,26 @@
     <!-- resultMap -->
     <resultMap id="pointSelectMap" type="com.placeHere.server.domain.Point">
         <result property="tranNo" column="tran_no" jdbcType="INTEGER"/>
-        <result property="userName" column="username" jdbcType="VARCHAR"/>
+<!--        <result property="username" column="username" jdbcType="VARCHAR"/>-->
         <result property="relNo" column="rel_no" jdbcType="INTEGER"/>
         <result property="tranPoint" column="tran_point" jdbcType="INTEGER"/>
         <result property="pointDt" column="point_dt" jdbcType="DATE"/>
         <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
         <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
-<!--        <association property="user" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>-->
+        <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
     </resultMap>
 
     <select id="getCurrentPoint" parameterType="String" resultType="int">
         SELECT curr_point
         FROM point_transaction
-        WHERE username = #{userName}
+        WHERE username = #{username}
         ORDER BY tran_no DESC LIMIT 1
     </select>
 
     <update id="updatePoint" parameterType="com.placeHere.server.domain.Point">
         UPDATE point_transaction
         SET curr_point = curr_point + #{tranPoint}
-        WHERE username = #{userName}
+        WHERE username = #{username}
         ORDER BY tran_no DESC
         LIMIT 1;
     </update>
@@ -37,7 +37,7 @@
         INSERT INTO point_transaction
             (username, tran_point, point_dt, dep_type, curr_point, rel_no)
         VALUES
-            (#{userName}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
+            (#{username}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
     </insert>
 
     <select id="getPointHistoryList" parameterType="String" resultMap="pointSelectMap">
@@ -50,7 +50,7 @@
             curr_point,
             rel_no
         FROM point_transaction
-        WHERE username = #{userName}
+        WHERE username = #{username}
         ORDER BY tran_no DESC
     </select>
 

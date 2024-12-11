@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="/css/templates/collection_detail.css">
 <link rel="stylesheet" href="/css/templates/regist_hp.css">
 <head>
-    <title>찜 목록</title>
+    <title>PlaceHere</title>
     <script type="text/javascript">
 
         $(function() {
@@ -18,25 +18,26 @@
                 self.location = "/product/getProduct?prodNo=" + prodNo;
             });
 
-            // $("button.btn-primary.removeWishCart").on("click", function () {
-            //     var wishCartNo = $(this).data("wish-cart-no");
-            //     $.ajax({
-            //         type: "DELETE",
-            //         url: "/purchase/removeWishCart",
-            //         data: { wishCartNo: wishCartNo },
-            //         success: function(response) {
-            //             alert("찜 목록에서 상품이 삭제되었습니다.");
-            //             location.reload();
-            //         },
-            //         error: function(xhr, status, error) {
-            //             alert("찜 목록 삭제 실패함: " + error);
-            //         }
-            //     });
-            // });
+            $("button.btn-primary.removeWish").on("click", function () {
+                var username = $(this).data("user-name");
+                var prodNo = $(this).data("prod-no");
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api-purchase/removeWish",
+                    data: { username: username, prodNo: prodNo },
+                    success: function(response) {
+                        alert("찜 목록에서 상품이 삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("찜 목록 삭제 실패함: " + error);
+                    }
+                });
+            });
 
         });
 
-        // function removeWishCart(){
+        // function removeWish(){
         //
         //     const query = 'input[name="chk"]:checked'
         //     const selectedElements = document.querySelectorAll(query)
@@ -55,7 +56,7 @@
         //
         //         const form = document.createElement('form');
         //         form.setAttribute('method', 'DELETE');
-        //         form.setAttribute('action', '/purchase/removeWishCart');
+        //         form.setAttribute('action', '/purchase/removeWish');
         //
         //         var input1 = document.createElement('input');
         //         input1.setAttribute("type", "hidden");
@@ -70,7 +71,7 @@
         //
         // }
 
-        function removeWishCart() {
+        function removeWish() {
             // 체크된 상품들
             const selectedElements = document.querySelectorAll('input[name="chk"]:checked');
             const selectedElementsCnt = selectedElements.length;
@@ -87,7 +88,7 @@
 
                 // AJAX 요청을 보내서 서버에서 해당 상품들을 삭제하도록 함
                 $.ajax({
-                    url: '/purchase/removeWishCart',  // 서버의 삭제 처리 URL
+                    url: '/purchase/removeWish',  // 서버의 삭제 처리 URL
                     type: 'DELETE',  // HTTP DELETE 요청
                     data: {
                         wishCartNo: arr  // 삭제할 상품들의 wishCartNo를 배열로 전달
@@ -160,49 +161,235 @@
             });
         }
     </script>
+
+    <style>
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*background-color: #f0f0f0; !* 기본 배경색 *!*/
+            background-color: #fff;
+            color: #999; /* 텍스트 색상 */
+            font-size: 16px; /* 텍스트 크기 */
+            text-align: center;
+            border: 1px solid #ddd; /* 이미지를 표시하지 않을 때 테두리 표시 */
+        }
+
+        .product-img img {
+            width: 100%; /* 가로를 100%로 설정 */
+            height: 100%; /* 세로도 100%로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
+            display: block;
+        }
+
+        .product-img span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #666;
+        }
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        /* 테이블 영역 스타일 */
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            padding-top: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 1rem;
+            border-bottom: 1px solid #ddd;
+            align-items: flex-start; /* 수직 정렬 (위쪽 정렬) */
+            vertical-align: middle; /* 텍스트를 상단에 정렬 */
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        th text{
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        td {
+            padding-top: 100px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        td input[type="hidden"] {
+            display: none;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+        .point-header {
+            background-color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .point-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* 테이블 전체 텍스트 크기 */
+        .purchase-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem; /* 전체 테이블의 폰트 크기를 키움 */
+        }
+
+        .purchase-table th, .purchase-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+        }
+
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .unavailable {
+            color: red;
+            font-weight: bold;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-primary {
+            padding: 12px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+
+    </style>
 </head>
 <body>
 <br/><br/>
-<div th:insert="~{common/header}"></div>
-<h1>찜 목록</h1>
-<form>
-<table>
+<div class="point-header">
+    <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
+    <br/><br/>
+    <h1>찜 목록</h1>
+</div>
+<div class="header-line"></div>
+
+<div class="container">
+<table class="purchase-table">
     <thead>
     <tr>
-        <th>
-            <label class="checkbox-inline">
-                <input type="checkbox" id="allCheckBox" onclick="allChecked()"> 전체 선택
-            </label>
-        </th>
+<!--        <th>-->
+<!--            <label class="checkbox-inline">-->
+<!--                <input type="checkbox" id="allCheckBox" onclick="allChecked()"> 전체 선택-->
+<!--            </label>-->
+<!--        </th>-->
+        <th>상품 대표 이미지</th>
         <th>상품명</th>
         <th>상품 가격</th>
-        <th>상품 대표 이미지</th>
         <th>판매 가능 상태</th>
+        <th></th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="purchase : ${wishList}">
-        <td>
-            <label class="checkbox-inline">
-                <input type="checkbox" name="chk" class="chk" onclick="chkClicked()" th:value="${purchase.wishCartNo}">
-            </label>
+<!--        <td>-->
+<!--            <label class="checkbox-inline">-->
+<!--                <input type="checkbox" name="chk" class="chk" onclick="chkClicked()" th:value="${purchase.wishCartNo}">-->
+<!--            </label>-->
+<!--        </td>-->
+        <td class="product-img">
+            <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
+            <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
+            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+            <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
         </td>
         <td th:text="${purchase.purchaseProd.prodName}"></td>
         <td th:text="${purchase.purchaseProd.prodPrice}+P"></td>
-        <td><img th:src="${purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지" width="100"></td>
-        <td th:text="${purchase.purchaseProd.prodStatus}"></td>
+<!--        <td><img th:src="${purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지" width="100"></td>-->
+        <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
+            <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+        </td>
         <td>
             <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
-            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">조회</button>
-<!--            <button class="btn-primary removeWishCart" th:data-wish-cart-no="${purchase.wishCartNo}">찜 목록 삭제</button>-->
+            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">보기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+            <button class="btn-primary removeWish" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
         </td>
     </tr>
     </tbody>
 </table>
 
-    <div class="button-container">
-        <a href="javascript:void(0);" class="btn-primary removeWishCart" onclick="removeWishCart();">찜 목록 삭제</a>
-    </div>
-</form>
+<!--    <div class="button-container">-->
+<!--        <a href="javascript:void(0);" class="btn-primary removeWish" onclick="removeWish();">찜 목록 삭제</a>-->
+<!--    </div>-->
+</div><br/><br/>
 </body>
 </html>

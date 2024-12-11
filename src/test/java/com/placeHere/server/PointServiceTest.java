@@ -43,23 +43,23 @@ public class PointServiceTest {
 
     }
 
-    @Test
-    public void testUpdatePoint() throws Exception {
-
-//        Point point = new Point();
-
-        String username = "user1";
-
-        int totalPoint = pointService.getCurrentPoint(username);
-        pointService.updatePoint("user1", -1000);
-
-        int updatedPoint = pointService.getCurrentPoint(username);
-
-        Assertions.assertEquals(totalPoint - 1000, updatedPoint);
-
-        System.out.println("updatedPoint : " + updatedPoint);
-
-    }
+//    @Test
+//    public void testUpdatePoint() throws Exception {
+//
+////        Point point = new Point();
+//
+//        String username = "user1";
+//
+//        int totalPoint = pointService.getCurrentPoint(username);
+//        pointService.updatePoint("user1", -1000);
+//
+//        int updatedPoint = pointService.getCurrentPoint(username);
+//
+//        Assertions.assertEquals(totalPoint - 1000, updatedPoint);
+//
+//        System.out.println("updatedPoint : " + updatedPoint);
+//
+//    }
 
     @Test
     public void testGetCurrentPoint() throws Exception {

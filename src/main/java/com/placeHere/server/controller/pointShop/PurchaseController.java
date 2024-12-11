@@ -5,13 +5,11 @@ import com.google.zxing.EncodeHintType;
 import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import com.placeHere.server.domain.Point;
-import com.placeHere.server.domain.Product;
-import com.placeHere.server.domain.Purchase;
-import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
+import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -45,6 +44,10 @@ public class PurchaseController {
     @Qualifier("pointServiceImpl")
     private PointService pointService;
 
+    @Autowired
+    @Qualifier("userServiceImpl")
+    private UserService userService;
+
     // Constructor
     public PurchaseController() {
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
@@ -58,21 +61,24 @@ public class PurchaseController {
 
     @GetMapping("/addPurchase")
     public String addPurchase(@RequestParam("prodNo") int prodNo,
-//                                @RequestParam("username") String username,
+                                @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception{
 
-        String userName = "user01";
+        String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("addPurchase's username: " + username);
 
         System.out.println("/purchase/addPurchase : GET");
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
         Product product = productService.getProduct(prodNo);
 
         int tranPoint = product.getProdPrice()* product.getCntProd();
         purchase.setProdNo(prodNo);
-        purchase.setTranPoint(tranPoint);
+        purchase.setTranPoint(-tranPoint);
         purchase.setDepType("상품 구매");
         purchase.setRelNo(prodNo);
 
@@ -80,9 +86,9 @@ public class PurchaseController {
         System.out.println("tranPoint : " + tranPoint);
         System.out.println("currPoint : " + currPoint);
         System.out.println("product.getProdPrice() : " + product.getProdPrice());
-
+//
         model.addAttribute("currPoint", currPoint);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
         model.addAttribute("tranPoint", tranPoint);
         model.addAttribute("product", product);
         model.addAttribute("purchase", purchase);
@@ -127,7 +133,15 @@ public class PurchaseController {
     public String addPurchaseResult(@RequestParam("file") MultipartFile file,
                                     @ModelAttribute("purchase") Purchase purchase,
                                     @RequestParam("tranPoint") int tranPoint,
+                                    @SessionAttribute("user") User buyer,
+                                    @ModelAttribute("point") Point point,
                                     Model model) throws Exception{
+
+        String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("/purchase/addPurchase : POST");
+        System.out.println("addPurchaseResult's username = " + username);
 
         Product product = productService.getProduct(purchase.getProdNo());
 
@@ -177,49 +191,60 @@ public class PurchaseController {
 
         System.out.println("/purchase/addPurchase : POST");
 
-        String userName = "user01";
+
+        point.setTranPoint(-tranPoint);
+
+//        point.setCurrPoint(point.getCurrPoint()-tranPoint);
 
         model.addAttribute("tranPoint", tranPoint);
 
         purchaseService.addPurchase(purchase);
 
-        pointService.updatePoint(userName, -tranPoint);
+        pointService.updatePoint(point);
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
         model.addAttribute("currPoint", currPoint);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "pointShop/purchase/addPurchaseResult";
     }
 
     @RequestMapping( value="listPurchase")
-    public String listPurchase(@RequestParam("userName") String userName,
+    public String listPurchase(@SessionAttribute("user") User buyer,
 //                               @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-//        username = "user1";
+        String username = buyer.getUsername();
 
-        List<Purchase> purchaseList = purchaseService.getPurchaseList(userName);
+        System.out.println("username's listPurchase : " + username);
+
+        List<Purchase> purchaseList = purchaseService.getPurchaseList(username);
 
         model.addAttribute("purchaseList", purchaseList);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "/pointShop/purchase/listPurchase";
     }
 
     @GetMapping("/getPurchase")
-    public String getPurchase(@RequestParam("tranNo") int tranNo , Model model) throws Exception {
+    public String getPurchase(
+//                                @SessionAttribute("user") User buyer,
+                                @RequestParam("tranNo") int tranNo , Model model) throws Exception {
 
         System.out.println("/product/getPurchase : GET");
 
-        String userName = "user01";
+//        String username = buyer.getUsername();
 
-        Purchase purchase = purchaseService.getPurchase(tranNo);
+        Purchase purchase = new Purchase();
+//        System.out.println("Buyer: " + purchase.getBuyer());
+//        System.out.println("Username: " + purchase.getBuyer().getUsername());
 
-        model.addAttribute("userName" , userName);
+        purchase = purchaseService.getPurchase(tranNo);
+
+//        model.addAttribute("username" , username);
         model.addAttribute("purchase" , purchase);
 
         return "/pointShop/purchase/getPurchase";
@@ -228,58 +253,257 @@ public class PurchaseController {
 
     @GetMapping("/listCart")
     public String getCartList(
-//            @RequestParam("userName") String userName,
+                                @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
-        String userName = "user01";
+        String username = buyer.getUsername();
+        purchase.setBuyer(buyer);
+        purchase.setUsername(username);
+        System.out.println("user's carlist : "+username);
         // 장바구니 목록을 서비스에서 받아옴
-        List<Purchase> cartList = purchaseService.getCartList(userName);
+        List<Purchase> cartList = purchaseService.getCartList(username);
+
+        int tranPoint = 0;
+        int numItems = cartList.size();
+        int currPoint = pointService.getCurrentPoint(username);
+        model.addAttribute("currPoint", currPoint);
+        System.out.println("보유 포인트 : "+currPoint);
+
+        // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
+        Purchase firstItem = cartList.isEmpty() ? null : cartList.get(0);
+        String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+
+        // 각 상품에 대해 결제 포인트 계산
+        for (Purchase cartItem : cartList) {
+            Product product = productService.getProduct(cartItem.getProdNo());
+            Point point = new Point();
+            int plusPoint = product.getProdPrice();
+            cartItem.setTranPoint(-plusPoint);  // 포인트 차감
+//            cartItem.setDepType("상품 구매");
+            cartItem.setRelNo(cartItem.getProdNo());
+            tranPoint += plusPoint;
+//            purchaseService.addPurchase(purchase);
+        }
+        purchase.setTranPoint(tranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
+        model.addAttribute("purchase", purchase);
+        model.addAttribute("tranPoint", tranPoint);
+        model.addAttribute("cartList", cartList);
+        model.addAttribute("firstItem", firstItem);
+        model.addAttribute("additionalItemsText", additionalItemsText);
+
+//        purchaseService.purchaseProducts(username);
 
         // 모델에 장바구니 목록을 추가하여 뷰로 전달
         model.addAttribute("cartList", cartList);
+        model.addAttribute("username" , username);
 
         // Thymeleaf 템플릿 이름을 반환
         return "pointShop/purchase/listCart"; // 템플릿 경로
     }
 
+    @PostMapping("/addPurchaseCart")
+    public String addPurchaseCartResult(
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("tranPoint") int tranPoint,
+//            @RequestParam("cartList")  List<Purchase> purchaseList,  // List<Purchase>를 받을 수 있도록 설정
+            @SessionAttribute("user") User buyer,
+            @ModelAttribute("point") Point point,
+            Model model) throws Exception {
+
+        String username = buyer.getUsername();
+        int currPoint = 0;
+//        System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
+        System.out.println("point.getCurrPoint : "+point.getCurrPoint());
+
+
+
+        // 구매한 상품들을 처리
+        List<Product> products = new ArrayList<>();
+        List<Purchase> purchaseList = purchaseService.getCartList(buyer.getUsername());
+        System.out.println("purchaseList : "+purchaseList.size());
+        for (Purchase purchase : purchaseList) {
+            purchase.setBuyer(buyer);
+            purchase.setUsername(username);
+            point.setUsername(username);
+            System.out.println("purchaseList : "+purchaseList.size());
+            Product product = productService.getProduct(purchase.getProdNo());
+            purchase.setPurchaseProd(product);
+            products.add(product);  // 상품 목록에 추가
+
+            currPoint = pointService.getCurrentPoint(username);
+            System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
+
+            point.setCurrPoint(currPoint);
+
+            // 바코드 생성 및 파일 업로드 처리
+            String fileName = file.getOriginalFilename();
+            String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+            File barcodeDirectory = new File(uploadPath);
+            if (!barcodeDirectory.exists()) {
+                barcodeDirectory.mkdirs();
+            }
+
+            String saveFile = uploadPath + fileName;
+            try {
+                file.transferTo(new File(saveFile));
+                purchase.setBarcodeName(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            String barcodeNumber = generateBarcodeNumber();
+            String barcodeFileName = barcodeNumber + ".png";
+            String barcodeFilePath = uploadPath + "/" + barcodeFileName;
+
+            // 바코드 이미지 생성
+            generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);
+
+            // 바코드 파일명 저장
+            purchase.setBarcodeName(barcodeFileName);
+            purchase.setBarcodeNo(barcodeNumber);  // 바코드 번호 저장
+            purchase.setDepType("상품 구매");
+            purchase.setTranPoint(product.getProdPrice());
+            point.setTranPoint(-product.getProdPrice());  // 총 결제 포인트 차감
+            System.out.println("addPurchaseCartResult : "+ -product.getProdPrice());
+            // 포인트 업데이트
+            purchaseService.addPurchase(purchase);
+            pointService.updatePoint(point);
+            point.setCurrPoint(currPoint-product.getProdPrice());
+            System.out.println("test currPoint : "+point.getCurrPoint());
+
+        }
+
+        purchaseService.purchaseProducts(username);
+
+        // 최종 결제 포인트 차감
+        model.addAttribute("currPoint", currPoint);
+        model.addAttribute("tranPoint", tranPoint);
+        model.addAttribute("purchase", purchaseList);
+        model.addAttribute("products", products);
+
+        model.addAttribute("username", username);
+
+        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
+    }
+
+
+
+
     // 찜 목록 조회
     @GetMapping("/listWish")
     public String getWishList(
-//                          @RequestParam("userName") String userName,
+                            @SessionAttribute("user") User buyer,
                             @ModelAttribute("purchase") Purchase purchase,
                             Model model) throws Exception {
 
-            String userName = "user01";
+            String username = buyer.getUsername();
             // 찜 목록을 서비스에서 받아옴
-        List<Purchase> wishList = purchaseService.getWishList(userName);
+        List<Purchase> wishList = purchaseService.getWishList(username);
 
         // 모델에 찜 목록을 추가하여 뷰로 전달
         model.addAttribute("wishList", wishList);
+        model.addAttribute("username" , username);
 
         // Thymeleaf 템플릿 이름을 반환
         return "pointShop/purchase/listWish"; // 템플릿 경로
     }
 
     @RequestMapping("listPointHistory")
-    public String getPointHistoryList(@RequestParam("userName") String userName,
+    public String getPointHistoryList(@SessionAttribute("user") User buyer,
                                       Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-        System.out.println("userName: " + userName);
+        Point point = new Point();
+        point.setBuyer(buyer);
+        String username = buyer.getUsername();
+        point.setUsername(username);
 
-//        username = "user1";
+        System.out.println("username: " + username);
 
-        int currPoint = pointService.getCurrentPoint(userName);
+        int currPoint = pointService.getCurrentPoint(username);
 
-        List<Point> pointHistoryList = pointService.getPointHistoryList(userName);
+        List<Point> pointHistoryList = pointService.getPointHistoryList(username);
 
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("pointHistoryList", pointHistoryList);
-        model.addAttribute("userName", userName);
+        model.addAttribute("username", username);
 
         return "pointShop/purchase/listPointHistory";
     }
+
+    // 선택된 상품들의 총 가격 계산
+    @PostMapping("/calculateTotal")
+    @ResponseBody
+    public double calculateTotal(@RequestBody List<Purchase> selectedItems) {
+        double total = 0;
+        for (Purchase purchase : selectedItems) {
+            if (purchase.getSelected() != 0) {
+                total += purchase.getPurchaseProd().getProdPrice() * purchase.getPurchaseProd().getCntProd();
+            }
+        }
+        return total;
+    }
+
+    // 선택된 상품들 일괄 구매 처리
+    @PostMapping("/buy")
+    public String buySelectedItems(@SessionAttribute("user") User buyer, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+
+        String username = buyer.getUsername();
+
+        model.addAttribute("username", username);
+
+        purchaseService.buySelectedItems(selectedItems);
+        return "pointShop/purchase/listCart"; // 구매 후 장바구니 목록 페이지로 이동
+    }
+
+    // 선택된 상품들 삭제
+    @PostMapping("/removeSelected")
+    public String removeSelectedItems(@SessionAttribute("user") User buyer, @RequestBody List<Purchase> selectedItems, Model model) throws Exception{
+
+        String username = buyer.getUsername();
+
+        model.addAttribute("username", username);
+
+        purchaseService.removeSelectedItems(selectedItems);
+        return "pointShop/purchase/listCart";
+    }
+
+//    @PostMapping("/addPurchaseCart")
+//    public String addPurchaseCart(@SessionAttribute("user") User buyer, Model model) throws Exception{
+//
+//        String username = buyer.getUsername();
+//        List<Purchase> cartItems = purchaseService.getCartList(buyer.getUsername());  // 장바구니의 모든 상품을 가져옴
+//        int totalTranPoint = 0;
+//        int numItems = cartItems.size();
+//        int currPoint = pointService.getCurrentPoint(username);
+//
+//        // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
+//        Purchase firstItem = cartItems.isEmpty() ? null : cartItems.get(0);
+//        String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+//
+//        // 각 상품에 대해 결제 포인트 계산
+//        for (Purchase cartItem : cartItems) {
+//            Product product = productService.getProduct(cartItem.getProdNo());
+//            Point point = new Point();
+//            int tranPoint = product.getProdPrice() * cartItem.getCntProd();
+//            point.setTranPoint(-tranPoint);  // 포인트 차감
+//            point.setDepType("상품 구매");
+//            point.setRelNo(cartItem.getProdNo());
+//            totalTranPoint += tranPoint;
+//        }
+//        Purchase purchase = new Purchase();
+//        purchase.setTranPoint(-totalTranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
+//        model.addAttribute("totalTranPoint", totalTranPoint);
+//        model.addAttribute("currPoint", currPoint);
+//        model.addAttribute("cartItems", cartItems);
+//        model.addAttribute("firstItem", firstItem);
+//        model.addAttribute("additionalItemsText", additionalItemsText);
+//
+//        purchaseService.purchaseProducts(username);
+//
+//        return "pointShop/purchase/listPurchase";  // 구매 내역 페이지로 리다이렉트
+//    }
 
 }
