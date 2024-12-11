@@ -2,184 +2,98 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>addReview</title>
+    <title>리뷰 작성</title>
     <style>
-        .star-rating {
+        body {
             display: flex;
-            /*direction: row-reverse;*/
-            justify-content: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            width: 80%;
+            margin-top: 20px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+        }
+
+        select, input[type="text"], input[type="number"], textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
             cursor: pointer;
         }
 
-        .star {
-            font-size: 30px;
-            color: gray;
-            transition: color 0.2s;
-        }
-
-        .star:hover,
-        .star:hover ~ .star {
-            color: gold;
-        }
-
-        .star.selected {
-            color: gold;
+        button:hover {
+            background-color: #218838;
         }
     </style>
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-    <script type="text/javascript">
-
-        $(function() {
-            $("button.btn-primary").on("click", function() {
-                fncAddReview();
-            });
-        });
-
-        $(function() {
-            $("button.btn-confirm").on("click", function () {
-                history.go(-1);
-            });
-        });
-
-        function fncAddReview() {
-            var reviewScore = $("input[name='reviewScore']").val();
-            var reviewImg1 = $("input[name='reviewImg1']").val();
-            var reviewImg2 = $("input[name='reviewImg2']").val();
-            var reviewImg3 = $("input[name='reviewImg3']").val();
-            var reviewContent = $("input[name='reviewContent']").val();
-
-
-          if (reviewScore == null || reviewScore.length < 1) {
-                alert(" 리뷰점수  입력하여야 합니다."); // 리뷰 점수 확인
-                return;
-            }
-
-
-
-
-            $("form").attr("method", "POST")
-                .attr("action", "/review/addReview")
-                .attr("enctype", "multipart/form-data")
-                .submit();
-        }
-    </script>
 </head>
 <body>
 <div th:include="~{common/header}"></div>
-<!--<div th:include="~{community/menuBar}"></div>-->
 
-<h1>상품 등록</h1>
+<div class="container">
+    <h1>리뷰 작성</h1>
 
-<p>Reservation Number: <span th:text="${reservation.rsrvNo}">[예약 번호]</span></p>
-<p>Reservation Number: <span th:text="${reservation.userName}">[예약 번호]</span></p>
+    <form th:action="@{/review/addReview}" method="post" onsubmit="return confirm('리뷰 작성 하시겠습니까');">
+        <label for="reservation">예약 내역 선택:</label>
+        <select id="reservation" name="rsrvNo" required>
+            <option value="" disabled selected>예약 내역을 선택하세요</option>
+            <div th:each="reservation : ${reservations}">
+                <option th:value="${reservation.rsrvNo}"
+                        th:text="${reservation.storeName} + ' (' + ${reservation.rsrvDt} + ')'"></option>
+            </div>
+        </select>
 
-<form>
-    <div class="star-rating">
-        <span class="star" data-value="5">&#9733;</span>
-        <span class="star" data-value="4">&#9733;</span>
-        <span class="star" data-value="3">&#9733;</span>
-        <span class="star" data-value="2">&#9733;</span>
-        <span class="star" data-value="1">&#9733;</span>
-    </div>
-    <input type="hidden" name="reviewScore" id="selected-rating" value="0">
+        <label for="reviewScore">리뷰 점수:</label>
+        <input type="number" id="reviewScore" name="reviewScore" min="1" max="5" required>
 
+        <label for="reviewImg1">리뷰 이미지 1 (URL 형식):</label>
+        <input type="text" id="reviewImg1" name="reviewImg1">
 
+        <label for="reviewImg2">리뷰 이미지 2 (URL 형식):</label>
+        <input type="text" id="reviewImg2" name="reviewImg2">
 
-    <label>
-        <strong>리뷰 이미지1 *</strong><br/>
-        <input type="hidden" name="rsrvNo" th:value="${reservation.rsrvNo}">
-        <!--            <input type="file" name="prodImg1" accept="image/*">-->
-    </label>
+        <label for="reviewImg3">리뷰 이미지 3 (URL 형식):</label>
+        <input type="text" id="reviewImg3" name="reviewImg3">
 
+        <label for="reviewContent">리뷰 내용:</label>
+        <textarea id="reviewContent" name="reviewContent" rows="5" required></textarea>
 
-    <label>
-        <strong>리뷰 이미지1 *</strong><br/>
-        <input type="text" name="reviewImg1" placeholder="선택">
-        <!--            <input type="file" name="prodImg1" accept="image/*">-->
-    </label>
-
-    <br/><br/>
-
-    <label>
-        <strong>리뷰 이미지2 *</strong><br/>
-        <input type="text" name="reviewImg2" placeholder="선택">
-        <!--            <input type="file" name="prodImg1" accept="image/*">-->
-    </label>
-
-    <br/><br/>
-
-    <label>
-        <strong>리뷰 이미지3 *</strong><br/>
-        <input type="text" name="reviewImg3" placeholder="선택">
-        <!--            <input type="file" name="prodImg1" accept="image/*">-->
-    </label>
-
-    <br/><br/>
-
-    <label>
-        <strong>리뷰 내용 *</strong><br/>
-        <input type="text" name="reviewContent" placeholder="100자 이내 (공백 포함)">
-    </label>
-
-    <label>
-        <strong>username *</strong><br/>
-        <input type="hidden" name="userName" th:value="${reservation.userName}">
-        <!--            <input type="file" name="prodImg1" accept="image/*">-->
-    </label>
-
-
-    <script>
-        $(document).ready(function() {
-            var selectedRating = 0;
-
-            // 별 클릭 시
-            $(".star").on("click", function() {
-                selectedRating = $(this).data("value");
-                // 선택한 별점 표시
-                $(".star").removeClass("selected");
-                $(this).prevAll().addClass("selected");
-                $(this).addClass("selected");
-
-                // hidden input에 선택한 별점 저장
-                $("#selected-rating").val(selectedRating);
-            });
-
-            // 폼 제출 시 별점 값 확인
-            $("form").submit(function(e) {
-                if (selectedRating == 0) {
-                    alert("별점을 선택해주세요.");
-                    e.preventDefault();
-                }
-            });
-        });
+        <label for="userName">작성자:</label>
+        <input type="text" id="userName" name="userName" required>
 
 
 
-    </script>
-    <button type="submit" class="btn-primary">등&nbsp;록</button>
-    <button type="button" class="btn-confirm" >취&nbsp;소</button>
-
-    <table>
-        <thead>
-        <tr>
-            <th>Reservation Number</th>
-            <th>Store Name</th>
-            <th>Status</th>
-
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="reservation : ${reservations}">
-            <td th:text="${reservation.rsrvNo}">[예약 번호]</td>
-            <td th:text="${reservation.storeName}">[매장 이름]</td>
-            <td th:text="${reservation.rsrvStatus}">[예약 상태]</td>
-        </tr>
-        </tbody>
-    </table>
-
-</form>
+        <button type="submit">리뷰 작성</button>
+    </form>
+</div>
 </body>
 </html>

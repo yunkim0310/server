@@ -43,7 +43,7 @@
 
     <div th:each="review : ${reviewList}">
         <div class="review-item">
-            <h2 th:text="${review.storeName}">가게 이름</h2>
+            <h2 th:text="${review.storeName}" th:data-friendid="${friend.friendNo}">가게 이름</h2>
             <img th:src="${review.profileImg}" alt="작성자 프로필 이미지" />
             <p>
                 작성자:
@@ -78,7 +78,7 @@
 <!--        <div th:if="${friendStatus == 1}"> &lt;!&ndash; 친구인 경우 &ndash;&gt;-->
     <form th:action="@{/review/remove}" method="post" onsubmit="return confirm('정말로 친구 삭제 하시겠습니까?');">
 <!--                <input type="text" name="friendNo" th:value="${friend.friendNo}" />-->
-                <input type="text" name="friendNo" value="56" />
+                <input type="text" name="friendNo" value="${friend.friendNo}" />
                 <button type="submit" class="btn-primary del">친구 삭제</button>
             </form>
         </div>

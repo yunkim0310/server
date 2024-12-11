@@ -44,7 +44,7 @@ public class CommunityRestController {
 
                 // 좋아요가 존재하면 취소
                 likeService.removeLike(chkLike);
-                System.out.println("removeLikeㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ :: "+  likeService.removeLike(chkLike));
+                System.out.println("removeLike:: "+  likeService.removeLike(chkLike));
                 //return ResponseEntity.ok("좋아요가 취소 되었습니다");
                 return ResponseEntity.ok("-1");
             } else {

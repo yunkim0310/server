@@ -50,31 +50,22 @@ public class CommunityController {
     // Method
     //  @RequestMapping (value = "/addReview.do" , method = RequestMethod.GET)
     @GetMapping("/addReview")
-    public String addReview(@RequestParam("rsrvNo") int rsrvNo,
-                            @RequestParam("userName") String userName,
-                            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-                            @RequestParam(value = "order", required = false) String order,
-                            Model model) throws Exception {
+    public String addReview(@SessionAttribute("user") User user, Model model) throws Exception {
 
         System.out.println("/addReview.do");
 
         Search search = new Search();
 
-        // 조건 설정: 값이 있을 때만 설정
-        if (searchKeyword != null && !searchKeyword.isEmpty()) {
-            search.setSearchKeyword(searchKeyword);
-        }
-        if (order != null && !order.isEmpty()) {
-            search.setOrder(order);
-        }
+        String userName = user.getUsername();
 
-        //예약 정보 가져옴
-        Reservation reservation = reservationService.getRsrv(rsrvNo);
+        search.setSearchKeyword("이용 완료");
+        search.setOrder("desc");
+
+
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
         Review review = new Review();
         model.addAttribute("reservations", reservations);
-        model.addAttribute("reservation", reservation);
         model.addAttribute("review", review);
 
         return "test/community/addReview";
@@ -89,7 +80,7 @@ public class CommunityController {
 
         reservationService.updateRsrvStatus(rsrvNo,"리뷰 작성");
 
-        return "redirect:/review/getReviewList";
+        return "test/community/getReview";
     }
 
 
@@ -192,7 +183,7 @@ public class CommunityController {
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
             search.setPageSize(pageSize);
-            search.setSearchKeyword("이용 완료");
+
 
             // 리뷰 리스트 초기화
             List<Review> reviewList;
@@ -200,6 +191,9 @@ public class CommunityController {
 
             String currentUser = user.getUsername();
             System.out.println("currentUser : "+currentUser);
+
+
+
 
             switch (type) {
 
@@ -222,7 +216,16 @@ public class CommunityController {
                         // friendCheck가 null이 아닐 경우 친구
                         boolean isFriend = (friendCheck != null && friendCheck.isFriendStatus());
 
+                        boolean friendStatus;
+                        if (isFriend) {
+                            friendStatus = true;
+                            model.addAttribute("friendNo", friendCheck.getFriendNo()); // 친구 번호 추가
+                        } else {
+                            friendStatus = false;
+                        }
+
                         model.addAttribute("isFriend", isFriend);
+                        model.addAttribute("friendStatus", friendStatus);
 
                         // 친구가 아닐 경우 메시지 처리
                         if (isFriend) {
@@ -231,25 +234,39 @@ public class CommunityController {
                         } else {
                             reviewList = communityService.getReviewList(List.of(friendUsername), search);
                             model.addAttribute("message", "친구가 아닙니다.");
+                            System.out.println("friendNo" + friend.getFriendNo());
                         }
 
                         //친구 신청 시 res 값 넣어줌
                         model.addAttribute("friendUsername", friendUsername);
 
                         model.addAttribute("reviewList", reviewList);
-                        return "test/community/getFriendReviewList"; // 친구 리뷰 페이지로 이동
+//                        return "test/community/getFriendReviewList"; // 친구 리뷰 페이지로 이동
+                        return "test/community/feedTest";
                     }
                     break;
 
                 case "myFeed":
+
+                    search.setSearchKeyword("이용 완료");
+                    search.setOrder("desc");
+
+                    System.out.println("test1111 " + currentUser);
+
+                    String userName = currentUser;
+
                     // 나의 리뷰 리스트 가져오기
                     reviewList = communityService.getReviewList(List.of(currentUser), search);
 
                     //리뷰 작성 할 수 있는 예약 정보
-                    List<Reservation> reservations = reservationService.getRsrvUserList(currentUser, search);
-                    System.out.println("제발제발제발 :: " + reservations);
+                    List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+                    for (Reservation reservation :reservations){
+                        int rsrvNo = reservation.getRsrvNo();
+                        System.out.println(rsrvNo);
+                    }
 
                     model.addAttribute("reviewList", reviewList);
+                    model.addAttribute("reservations", reservations);
 
                     return "test/community/getMyReviewList";
 
@@ -338,7 +355,7 @@ public class CommunityController {
 //            model.addAttribute("friendNo", friend);
             System.out.println("3333333 ::" + friend);
 
-            return "test/community/getOtherFeedView";
+            return "redirect:/review/getFriendList";
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
