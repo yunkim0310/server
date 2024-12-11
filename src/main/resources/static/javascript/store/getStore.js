@@ -66,7 +66,7 @@ $(function () {
     });
 
 
-    if (mode ==="info") {
+    if (mode === "info") {
 
         $("button[name='operationToggle']").on("click", function () {
 
@@ -104,6 +104,158 @@ $(function () {
             },
             error: function (xhr, status, error) {
                 console.error("AJAX 요청 실패: ", error);
+            }
+
+        });
+
+    }
+
+
+    if (mode === "statistics") {
+
+        $.ajax({
+            url: "/api-store/getStatistics" + window.location.search,
+            method: "GET",
+            dataType: "json",
+            headers: {
+                "Accept": "application/json"
+            },
+            success: function (result) {
+                
+                // 본인 가게인지 여부 확인 (본인 가게만 금주의 예약 볼 수 있음)
+                const isMyStore = $("input[name='isMyStore']").val();
+                
+                // 통계 데이터
+                const week = result.week;
+                const avg = result.avg;
+                const per = result.per;
+
+                // 금주 + 평균 예약 통계 그래프
+                const rsrvChart = document.getElementById('rsrvChart');
+
+                const rsrvDataset = (isMyStore === "true")?
+                    [{
+                        label: "예약 평균",
+                        data: [avg["월"], avg["화"], avg["수"], avg["목"], avg["금"], avg["토"], avg["일"]],
+                        type: 'line'
+                    },
+                        {
+                        label: '금주 예약',
+                        data: [week["월"], week["화"], week["수"], week["목"], week["금"], week["토"], week["일"]],
+                        borderWidth: 1,
+                        type: 'bar'
+                    }]
+                    :
+                    [{
+                        label: "예약 평균",
+                        data: [avg["월"], avg["화"], avg["수"], avg["목"], avg["금"], avg["토"], avg["일"]],
+                        type: 'line'
+                    }];
+
+                new Chart (rsrvChart, {
+                    type: 'bar',
+                    data: {
+                        labels: ['월', '화', '수', '목', '금', '토', '일'],
+                        datasets: rsrvDataset
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: true
+                            },
+                            layout: {
+                                padding: {
+                                    top: 30
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: '예약 통계',
+                                font: {
+                                    size: 20
+                                }
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: (value) => value,
+                                color: '#000',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: Math.max(...rsrvDataset[0].data.concat(rsrvDataset[0].data)) * 1.5
+                            }
+                        },
+                    },
+                    plugins: [ChartDataLabels]
+                });
+
+
+                // 성별, 나이대별 예약 비율
+                const percentChart = document.getElementById('percentChart');
+
+                const percentDataset =
+                    [{
+                        label: '남성',
+                        data: [per["10대 남성"], per["20대 남성"], per["30대 남성"], per["40대 남성"], per["50대 남성"], per["60대이상 남성"]],
+                        borderWidth: 1,
+                        type: 'bar'
+                    },
+                    {
+                        label: "여성",
+                        data: [per["10대 여성"], per["20대 여성"], per["30대 여성"], per["40대 여성"], per["50대 여성"], per["60대이상 여성"]],
+                        borderWidth: 1,
+                        type: 'bar'
+                    }];
+
+                new Chart (percentChart, {
+                    type: 'bar',
+                    data: {
+                        labels: ["10대", "20대", "30대", "40대", "50대", "60대이상"],
+                        datasets: percentDataset
+                    },
+                    options: {
+                        plugins: {
+                            legend: {
+                                display: true
+                            },
+                            layout: {
+                                padding: {
+                                    top: 30
+                                }
+                            },
+                            title: {
+                                display: true,
+                                text: '성별, 나이대별 예약 비율',
+                                font: {
+                                    size: 20
+                                }
+                            },
+                            datalabels: {
+                                anchor: 'end',
+                                align: 'top',
+                                formatter: (value) => value+' %',
+                                color: '#000',
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: Math.max(...percentDataset[0].data.concat(percentDataset[1].data)) * 1.5
+                            }
+                        },
+                    },
+                    plugins: [ChartDataLabels]
+                });
+
             }
 
         });

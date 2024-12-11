@@ -23,7 +23,15 @@
 <!--        <script type="text/javascript" src="/javascript/templates/script.js"></script>-->
         <link href="/css/templates/mypage.css" rel="stylesheet">
 
-        <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        <!-- 구글 맵 -->
+        <th:block th:if="${mode == 'info'}">
+            <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        </th:block>
+
+        <!-- ChartJs -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 
         <script src="/javascript/store/getStore.js"></script>
 
@@ -186,7 +194,7 @@
                 <div th:insert="~{common/header}"></div>
             </header>
 
-            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
+            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px;position: sticky">
                 <div class="side">
                     <div class="css-1v4whg ecbxmj3">가게 정보</div>
                     <div th:replace="~{store/getStoreAside :: getStoreAside}"></div>
@@ -301,10 +309,7 @@
                     </th:block>
 
                     <th:block th:if="${mode == 'statistics'}">
-<!--                        <div th:insert="~{}"></div>-->
-                        <p th:text="${weekRsrv}"></p>
-                        <p th:text="${rsrvAvg}"></p>
-                        <p th:text="${percent}"></p>
+                        <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
