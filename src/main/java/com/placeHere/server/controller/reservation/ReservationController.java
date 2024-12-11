@@ -118,6 +118,8 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
+        model.addAttribute("searchStatuses", search.getStartDate()); // 상태 추가
+        model.addAttribute("searchStatuses", search.getEndDate()); // 상태 추가
         model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
 
         // 뷰 반환
@@ -151,7 +153,7 @@ public class ReservationController {
         }
 
         search.setStartDate(startDate);
-        search.setStartDate(startDate);
+        search.setEndDate(endDate);
         search.setSearchStatuses(searchStatuses);
 
         // 서비스 호출
@@ -164,10 +166,13 @@ public class ReservationController {
             reservationCountsByDate.put(rsrvDt, count);
         }
 
+
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", searchStatuses);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return "reservation/getRsrvStoreList";
     }
