@@ -27,6 +27,15 @@ public interface StoreService {
     // 가게 검색, 가게 목록 조회
     public List<Store> getStoreList(Search search);
 
+    // 가게 목록 조회 (인기 가게)
+    public List<Store> getStoreList(List<Integer> storeIdList);
+
+    // 가게 목록 위치 조회
+    public List<Map<String, String>> getStoreLocationList(Search search);
+
+    // 가게 위치 조회
+    public List<Map<String, String>> getStoreLocation(int storeId);
+
     // 가게 수정
     public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals);
 

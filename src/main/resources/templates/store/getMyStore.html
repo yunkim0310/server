@@ -10,7 +10,7 @@
         <link href="/css/templates/collection_detail.css" rel="stylesheet">
         <link href="/css/templates/style.css" rel="stylesheet">
 
-        <link th:insert="~{test/store/importTest :: importFragment}">
+        <link th:insert="~{common/import :: importFragment}">
 
 <!--        <script src="/javascript/templates/profileFollow.js"></script>-->
         <script src="/javascript/templates/script.js" type="text/javascript"></script>
@@ -59,11 +59,12 @@
     </head>
 
     <body>
-        <div id="root">
 
-            <header id="header">
-                <div th:insert="~{common/header}"></div>
-            </header>
+        <header id="header">
+            <div th:insert="~{common/header}"></div>
+        </header>
+
+        <div id="root">
 
             <input type="hidden" id="mode" th:value="${mode}">
 

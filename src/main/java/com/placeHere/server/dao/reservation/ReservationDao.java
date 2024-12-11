@@ -5,6 +5,7 @@ import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.ReservationTimeStatus;
 import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 
 import java.util.List;
@@ -25,7 +26,7 @@ public interface ReservationDao {
     public Reservation getRsrv(int rsrvNo);
 
     // 예약 상태 업데이트
-    public void updateRsrvStatus(int rsrvNo, String rsrvStatus) throws Exception;
+    public void updateRsrvStatus(@Param("rsrvNo") int rsrvNo, @Param("rsrvStatus") String rsrvStatus) throws Exception;
 
     // 예약 결제 고유 ID 업데이트
     public void updateRsrvpay(int rsrvNo, String paymentId) throws Exception;

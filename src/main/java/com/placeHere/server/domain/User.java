@@ -28,6 +28,7 @@ public class User implements Serializable {
     private Date loginDt;
     private Date updateDt;
     private String gender;
+
     // util의 데이터 타입
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;

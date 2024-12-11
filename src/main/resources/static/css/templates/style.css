@@ -874,7 +874,7 @@ table .align-middle {
 
 
 .section .section-header .section-title .count {
-    font-size: 14px;
+    font-size: 16px;
     color: #999;
     margin-left: 8px;
     font-weight: 400;
@@ -1334,7 +1334,7 @@ input, select, textarea {
     display: block;
     color: #aaa;
     margin-bottom: 5px;
-    font-size: 11px;
+    font-size: 15px;
 }
 .saved-restaurant-list-item .restaurant-info .detail .restaurant-meta .price {
     display: block;
@@ -1870,7 +1870,7 @@ html {
     align-items: baseline;
 }
 .restaurant-meta .rating .star {
-    font-size: 14px;
+    font-size: 18px;
     position: relative;
     padding-left: 18px;
     display: inline-block;
@@ -1900,8 +1900,8 @@ html {
 .restaurant-meta .rating .star:before {
     background: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzYiIGhlaWdodD0iMzYiIHZpZXdCb3g9IjAgMCAzNiAzNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0xOC4xNDUyIDI4LjUzNjVDMTguMDU0OSAyOC40ODY2IDE3Ljk0NTIgMjguNDg2NiAxNy44NTQ5IDI4LjUzNjVMOC43MjQ4OCAzMy41ODM1QzguNTA1NzEgMzMuNzA0NiA4LjI0MzM0IDMzLjUxOTggOC4yODM2NSAzMy4yNzI2TDEwLjAzNDUgMjIuNTM5MkMxMC4wNDk4IDIyLjQ0NTIgMTAuMDE5NiAyMi4zNDk2IDkuOTUzMTIgMjIuMjgxNEwyLjUyNTQgMTQuNjY4NkMyLjM1NDg4IDE0LjQ5MzggMi40NTM0NCAxNC4xOTk0IDIuNjk0ODIgMTQuMTYyNUwxMi45MzM5IDEyLjU5ODFDMTMuMDMyOCAxMi41ODMgMTMuMTE3NiAxMi41MTk2IDEzLjE2MDEgMTIuNDI5TDE3LjcyODUgMi42OTYyM0MxNy44MzY0IDIuNDY2MTkgMTguMTYzNiAyLjQ2NjE5IDE4LjI3MTYgMi42OTYyM0wyMi44Mzk5IDEyLjQyOUMyMi44ODI0IDEyLjUxOTYgMjIuOTY3MyAxMi41ODMgMjMuMDY2MiAxMi41OTgxTDMzLjMwNTIgMTQuMTYyNUMzMy41NDY2IDE0LjE5OTQgMzMuNjQ1MiAxNC40OTM4IDMzLjQ3NDcgMTQuNjY4NkwyNi4wNDY5IDIyLjI4MTRDMjUuOTgwNCAyMi4zNDk2IDI1Ljk1MDMgMjIuNDQ1MiAyNS45NjU2IDIyLjUzOTJMMjcuNzE2NCAzMy4yNzI2QzI3Ljc1NjcgMzMuNTE5OCAyNy40OTQ0IDMzLjcwNDYgMjcuMjc1MiAzMy41ODM1TDE4LjE0NTIgMjguNTM2NVoiIGZpbGw9IiNGRkMwMUQiLz4KPC9zdmc+Cg==) 0 50% no-repeat;
     background-size: contain;
-    width: 14px;
-    height: 14px;
+    width: 18px;
+    height: 18px;
     content: "";
     position: absolute;
     left: 0;
@@ -2288,7 +2288,7 @@ hr {
     position: relative;
     width: 260px;
     box-sizing: border-box;
-    height: 180px;
+    height: 500px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -2308,11 +2308,15 @@ hr {
     font-size: 14px;
     line-height: 160%;
     letter-spacing: -.02em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
     display: -webkit-box;
     -webkit-line-clamp: 6;
     -webkit-box-orient: vertical;
+    white-space: normal; /* 줄바꿈 허용 */
+    overflow: visible; /* 오버플로우 제거 */
+    text-overflow: clip; /* 텍스트 잘림 없음 */
+    word-break: break-word; /* 긴 단어 강제 줄바꿈 */
 }
 .__restaurant-notice-v2 .__restaurant-notice-v2-item .__notice-content .__desc .__more {
     display: block;
@@ -2438,6 +2442,7 @@ hr {
     overflow: hidden;
     display: flex;
     align-items: center;
+    text-align: center;
     line-height: 160%;
 }
 .__menupan-item .__name h4 {

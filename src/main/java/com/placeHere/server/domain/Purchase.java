@@ -18,9 +18,9 @@ public class Purchase {
     //int 타입의 거래번호
     private int tranNo;
     //String 타입의 회원 아이디
-    private User user;
+    private User buyer;
     //
-    private String userName;
+    private String username;
     //int 타입의 구매한 상품번호
     private Product purchaseProd;
     //
@@ -44,6 +44,9 @@ public class Purchase {
 
     //int 타입의 상품 수량
     private int cntProd;
+
+
+    private int selected;
 
 
 //    private String prodName;

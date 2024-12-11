@@ -7,6 +7,7 @@ import com.placeHere.server.service.reservation.PaymentService;
 import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.reservation.ReservationService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -55,20 +56,24 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 예약 상태 업데이트
-    public void updateRsrvStatus(int rsrvNo, String rsrvStatus) throws Exception {
+    public void updateRsrvStatus(@Param("rsrvNo") int rsrvNo, @Param("rsrvStatus") String rsrvStatus) throws Exception {
         reservationDao.updateRsrvStatus(rsrvNo, rsrvStatus);
         Reservation reservation = reservationDao.getRsrv(rsrvNo);
+        Point point = new Point();
 
         if("리뷰 작성".equals(rsrvStatus)){
             String username = reservation.getUserName();
+            point.setUsername(username);
             int tranPoint = 100;
-            String depType = "리뷰 완료";
+            point.setTranPoint(tranPoint);
+            String depType = "리뷰 작성";
             int currPoint = pointService.getCurrentPoint(username);
 
             pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
 
-            pointService.updatePoint(username, tranPoint);
+            pointService.updatePoint(point);
         }
+
 
     }
 
@@ -173,6 +178,7 @@ public class ReservationServiceImpl implements ReservationService{
                 reservationDao.updateRsrvStatus(rsrvNo, "이용 완료");
                 Reservation reservation = reservationDao.getRsrv(rsrvNo);
 
+                Point point = new Point();
                 String username = reservation.getUserName();
                 int tranPoint = 600;
                 String depType = "예약 이용 완료";
@@ -180,7 +186,7 @@ public class ReservationServiceImpl implements ReservationService{
 
                 pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
 
-                pointService.updatePoint(username, tranPoint);
+                pointService.updatePoint(point);
             }
             System.out.println("Updated reservations: " + pastRsrvNos);
         } else {
