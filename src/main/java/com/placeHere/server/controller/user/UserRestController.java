@@ -43,38 +43,25 @@ public class UserRestController {
         }
     }
 
-//    @GetMapping("/getUserList")
-//    public ResponseEntity<?> getUserList() throws Exception {
-//
-//        log.info("/api-user/getUserList - GET Controller ");
-//
-//        List<User> list = new ArrayList<>();
-//
-//        list = userService.getUserList();
-//        HttpHeaders headers = new HttpHeaders();
-//
-//        if (list != null) {
-//
-//            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-//            String contentRange = "getUserList 0-" + (list.size() - 1) + "/" + list.size();
-//
-//            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
-//
-//            log.info("Content-Range: " + contentRange);
-//
-//            return new ResponseEntity<>(list, headers, HttpStatus.OK);
-//        } else {
-//            return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
-//        }
-//
-//    }
+    @GetMapping("/chkDuplication")
+    public ResponseEntity<?> chkDuplication(@RequestParam(value="username") String username) throws Exception {
+
+        log.info("username :: " + username);
+
+        boolean result = userService.chkDuplication(username);
+
+        // 이미 회원이 존재하면 true, 반대는 false
+
+        // boolean 값 리턴
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 
 
 
 
-    // getUserList
-//    @GetMapping("")
+
+
 
 
 }
