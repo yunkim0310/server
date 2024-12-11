@@ -143,7 +143,7 @@
 
 <div class="review-list">
     <div>
-        <a th:href="@{/review/addReview(rsrvNo=13, userName='user03', searchKeyword='이용완료')}"><button>리뷰 추가하기</button></a>
+        <a th:href="@{/review/addReview}"><button>리뷰 추가하기</button></a>
     </div>
 
     <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">

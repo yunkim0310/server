@@ -192,6 +192,7 @@ public class CommunityController {
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
             search.setPageSize(pageSize);
+            search.setSearchKeyword("이용 완료");
 
             // 리뷰 리스트 초기화
             List<Review> reviewList;
@@ -243,7 +244,13 @@ public class CommunityController {
                 case "myFeed":
                     // 나의 리뷰 리스트 가져오기
                     reviewList = communityService.getReviewList(List.of(currentUser), search);
+
+                    //리뷰 작성 할 수 있는 예약 정보
+                    List<Reservation> reservations = reservationService.getRsrvUserList(currentUser, search);
+                    System.out.println("제발제발제발 :: " + reservations);
+
                     model.addAttribute("reviewList", reviewList);
+
                     return "test/community/getMyReviewList";
 
                 case "otherFeed":
