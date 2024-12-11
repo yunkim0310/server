@@ -498,11 +498,17 @@ public class StoreController {
                     System.out.println("/getStore 예약통계");
                     Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
-                    model.addAttribute("weekRsrv", statistics.get("cntWeekRsrv"));
-                    model.addAttribute("rsrvAvg", statistics.get("cntRsrvAvg"));
-                    model.addAttribute("percent", statistics.get("calcRsrvPercent"));
+                    model.addAttribute("week", statistics.get("week"));
+                    model.addAttribute("avg", statistics.get("avg"));
+                    model.addAttribute("per", statistics.get("per"));
 
                     model.addAttribute("statistics", statistics);
+
+                    if (user != null) {
+
+                        boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
+                        model.addAttribute("isMyStore", isMyStore);
+                    }
 
                     break;
 
