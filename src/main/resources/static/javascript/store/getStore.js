@@ -5,6 +5,66 @@ $(function () {
     const mode = $("input[name='mode']:hidden").val();
 
     console.log(mode);
+    
+    // 좋아요 추가, 취소
+    $("a#like").on("click", function () {
+
+        const storeId = $("input[name='storeId']:hidden").val();
+        const likeId = $(this).data("likeid");
+        const $this = $(this);
+        
+        // 좋아요 추가
+        if ($this.attr("class") === "btn-like-inactive") {
+
+            $.ajax({
+                url: "/api-store/addStoreLike?relationNo="+storeId,
+                method: "GET",
+                dataType: "json",
+                success: function (result) {
+
+                    if (result !== 0) {
+
+                        $this.data("likeid", result);
+                        $this.attr("class", "btn-like-active");
+
+                    } else {
+
+                        if (confirm("좋아요는 회원만 가능한 기능입니다.\n로그인 하시겠습니까?")) {
+                            window.location.href = "/user/login";
+                        }
+
+                    }
+                }
+            })
+        
+        // 좋아요 취소
+        } else if ($this.attr("class") === "btn-like-active") {
+
+            $.ajax({
+                url: "/api-store/removeStoreLike?likeId="+likeId,
+                method: "GET",
+                dataType: "json",
+                success: function (result) {
+
+                    if (result) {
+                        $this.data("likeid", null);
+                        $this.attr("class", "btn-like-inactive");
+                    }
+
+                }
+
+            });
+
+        }
+
+    });
+
+
+    // TODO 채팅 버튼 처리 추가 필요
+    $("a#chat").on("click", function () {
+
+    });
+
 
     if (mode ==="info") {
 

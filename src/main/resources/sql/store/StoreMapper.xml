@@ -552,7 +552,7 @@
     </insert>
 
     <!-- 매장 소식 목록 조회 -->
-    <select id="getStoreNewsList" parameterType="map" resultMap="StoreNewsResultMap">
+    <select id="getStoreNewsList" resultMap="StoreNewsResultMap">
 
         SELECT *, COUNT(*) OVER() AS total_cnt
         FROM store_news
