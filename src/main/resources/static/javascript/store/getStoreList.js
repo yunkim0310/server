@@ -56,7 +56,7 @@ function initMap() {
         bounds.extend(marker.position);
 
         marker.addListener("click", () => {
-            infoWindow.setContent(`<a href="/getStore?storeId=${storeId}">${storeName}</a>`);
+            infoWindow.setContent(`<a href="/getStore?storeId=${storeId}" target="_blank">${storeName}</a>`);
             infoWindow.open({
                 anchor: marker,
                 map,

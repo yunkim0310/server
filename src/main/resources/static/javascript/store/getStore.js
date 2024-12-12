@@ -1,3 +1,5 @@
+import { getApiKey } from "./geoLocation.mjs";
+
 let storeList = [];
 
 $(function () {
@@ -5,6 +7,10 @@ $(function () {
     const mode = $("input[name='mode']:hidden").val();
 
     console.log(mode);
+
+    let googleApiKey = getApiKey().then(apiKey => {
+        googleApiKey = apiKey.google;
+    });
     
     // 좋아요 추가, 취소
     $("a#like").on("click", function () {
@@ -81,6 +87,51 @@ $(function () {
             }
 
         });
+
+
+        // 지도 초기화 함수
+        function initMap() {
+
+            const map = new google.maps.Map(document.getElementById("map"), {
+                center: {lat: 37.5400456, lng: 126.9921017},
+                zoom: 12,
+            });
+
+            const bounds = new google.maps.LatLngBounds();
+            const infoWindow = new google.maps.InfoWindow();
+
+            storeList.forEach(({storeId, storeName, storeLocation}) => {
+
+                const [lat, lng] = storeLocation.split(',').map(Number);
+
+                const marker = new google.maps.Marker({
+                    position: {lat, lng},
+                    storeId,
+                    map,
+                });
+
+                bounds.extend(marker.position);
+
+                marker.addListener("click", () => {
+                    infoWindow.setContent(`<a href="/getStore?storeId=${storeId}">${storeName}</a>`);
+                    infoWindow.open({
+                        anchor: marker,
+                        map,
+                    });
+                });
+            });
+
+            map.fitBounds(bounds);
+
+            if (storeList.length === 1) {
+
+                google.maps.event.addListenerOnce(map, 'idle', function () {
+                    map.setZoom(18); // 원하는 줌 레벨로 설정
+                });
+
+            }
+        }
+        
 
         // 가게 위치 가져오기
         $.ajax({
@@ -261,49 +312,152 @@ $(function () {
         });
 
     }
+    
+    
+    // 주변시설 추천
+    if (mode === "nearby") {
 
-});
+        let map;
 
-// 지도 초기화 함수
-function initMap() {
+        async function initMap() {
 
-    const map = new google.maps.Map(document.getElementById("map"), {
-        center: {lat: 37.5400456, lng: 126.9921017},
-        zoom: 12,
-    });
+            const { Map } = await google.maps.importLibrary('maps');
+            const infoWindow = new google.maps.InfoWindow();
 
-    const bounds = new google.maps.LatLngBounds();
-    const infoWindow = new google.maps.InfoWindow();
+            const [lat, lng] = storeList[0].storeLocation.split(',').map(Number);
 
-    storeList.forEach(({storeId, storeName, storeLocation}) => {
+            let center = new google.maps.LatLng(lat, lng);
 
-        const [lat, lng] = storeLocation.split(',').map(Number);
-
-        const marker = new google.maps.Marker({
-            position: {lat, lng},
-            storeId,
-            map,
-        });
-
-        bounds.extend(marker.position);
-
-        marker.addListener("click", () => {
-            infoWindow.setContent(`<a href="/getStore?storeId=${storeId}">${storeName}</a>`);
-            infoWindow.open({
-                anchor: marker,
-                map,
+            map = new Map(document.getElementById('nearbyMap'), {
+                center: center,
+                zoom: 16,
+                mapId: 'DEMO_MAP_ID',
             });
-        });
-    });
 
-    map.fitBounds(bounds);
+            new google.maps.Marker({
+                position: center,
+                map: map,
+                title: 'Center Location',
+                icon: {
+                    path: google.maps.SymbolPath.CIRCLE,
+                    fillColor: '#4880FF',
+                    fillOpacity: 1,
+                    scale: 10,
+                    strokeColor: '#FFFFFF',
+                    strokeWeight: 5,
+                },
+            });
 
-    if (storeList.length === 1) {
+            getNearbyPlace(lat, lng);
 
-        google.maps.event.addListenerOnce(map, 'idle', function () {
-            map.setZoom(18); // 원하는 줌 레벨로 설정
+        }
+
+        async function getNearbyPlace(lat, lng) {
+            const { Place, SearchNearbyRankPreference } = await google.maps.importLibrary('places');
+            const { AdvancedMarkerElement } = await google.maps.importLibrary('marker');
+
+            // 500m 이내 공원, 카페, 술집 1개 설정
+            const categories = ['park', 'cafe', 'bar'];
+            const center = new google.maps.LatLng(lat, lng);
+            const radius = 500;
+
+            for (const category of categories) {
+                const request = {
+                    fields: ['displayName', 'location', 'businessStatus', 'formattedAddress',
+                            'photos', 'types', 'rating', 'nationalPhoneNumber'],
+                    locationRestriction: {
+                        center: center,
+                        radius: radius,
+                    },
+                    includedPrimaryTypes: [category],
+                    maxResultCount: 1,
+                    rankPreference: SearchNearbyRankPreference.POPULARITY,
+                    language: 'ko',
+                    region: 'kr',
+                };
+
+                try {
+                    
+                    const { places } = await Place.searchNearby(request);
+                    const infoWindow = new google.maps.InfoWindow();
+
+                    if (places && places.length) {
+
+                        const place = places[0];
+
+                        console.log(`Recommended ${category}:`, place);
+
+                        // 마크 추가
+                        const marker = new AdvancedMarkerElement({
+                            map,
+                            position: place.location,
+                            title: place.displayName,
+                        });
+
+
+                        // 마크 클릭 정보 추가
+                        marker.addListener("click", () => {
+                            infoWindow.setContent(`
+                                <a href="https://www.google.com/search?q=${place.displayName}" target="_blank">${place.displayName}</a>
+                                <p>${place.formattedAddress}</p>
+                                `);
+                            infoWindow.open({
+                                anchor: marker,
+                                map,
+                            });
+                        });
+
+                        if (place) {
+
+                            $(`#${category}Img`).attr("src", `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=${googleApiKey}`)
+                                .attr("alt", place.displayName);
+
+                            $(`#${category}Name`).attr("style","font-size: 25px;").text(`${place.displayName}`);
+                            $(`#${category}Addr`).attr("style","font-size: 20px;").text(`${place.formattedAddress}`);
+                            $(`#${category}Rating`).attr("style","font-size: 20px;").text(`★ ${place.rating}`);
+                            $(`#${category}Phone`).attr("style","font-size: 20px;").text(`${place.nationalPhoneNumber}`);
+
+                        } else {
+
+                            $(`#${category}Info`).attr("style","font-size: 20px;").text("주변에 해당 시설이 없습니다.");
+
+                        }
+
+                    } else {
+                        console.log(`No ${category} found within ${radius}m.`);
+                    }
+                } catch (error) {
+                    console.error(`Error fetching ${category}:`, error);
+                }
+            }
+        }
+
+        // 가게 위치 가져오기
+        $.ajax({
+            url: "/api-store/getStoreLocation" + window.location.search,
+            method: "GET",
+            dataType: "json",
+            headers: {
+                "Accept": "application/json"
+            },
+            success: function (result) {
+                storeList = result;
+
+                // storeList 가 로드된 후에 지도를 초기화
+                if (typeof google !== 'undefined' && google.maps) {
+                    initMap();
+                } else {
+                    console.error("Google Maps API가 로드되지 않았습니다.");
+                }
+
+            },
+            error: function (xhr, status, error) {
+                console.error("AJAX 요청 실패: ", error);
+            }
         });
 
     }
-}
+
+});
+
 
