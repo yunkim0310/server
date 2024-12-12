@@ -234,10 +234,21 @@ public class ReservationController {
     @RequestMapping(value = "addRsrv", method = RequestMethod.GET)
     public String addRsrv(
             @RequestParam("storeId") int storeId,
+            HttpSession session,
             @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : GET");
+
+        User user = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/user/login";
+
+            // 점주 회원의 경우
+        }
 
         java.util.Date effectDt;
 
