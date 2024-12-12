@@ -279,6 +279,7 @@ public class PurchaseController {
             Product product = productService.getProduct(cartItem.getProdNo());
             Point point = new Point();
             int plusPoint = product.getProdPrice();
+            cartItem.setProdNo(cartItem.getProdNo());
             cartItem.setTranPoint(-plusPoint);  // 포인트 차감
 //            cartItem.setDepType("상품 구매");
             cartItem.setRelNo(cartItem.getProdNo());
@@ -304,22 +305,20 @@ public class PurchaseController {
 
     @PostMapping("/addPurchaseCart")
     public String addPurchaseCartResult(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("tranPoint") int tranPoint,
-//            @RequestParam("cartList")  List<Purchase> purchaseList,  // List<Purchase>를 받을 수 있도록 설정
-            @SessionAttribute("user") User buyer,
-            @ModelAttribute("point") Point point,
-            Model model) throws Exception {
+                                        @RequestParam("file") MultipartFile file,
+                                        @RequestParam("tranPoint") int tranPoint,
+                            //            @RequestParam("cartList")  List<Purchase> purchaseList,  // List<Purchase>를 받을 수 있도록 설정
+                                        @SessionAttribute("user") User buyer,
+                                        @ModelAttribute("point") Point point,
+                                        Model model) throws Exception {
 
         String username = buyer.getUsername();
-        int currPoint = 0;
+        int currPoint = pointService.getCurrentPoint(username);
 //        System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
-        System.out.println("point.getCurrPoint : "+point.getCurrPoint());
-
-
+        System.out.println("point.getCurrPoint : "+currPoint);
 
         // 구매한 상품들을 처리
-        List<Product> products = new ArrayList<>();
+//        List<Product> products = new ArrayList<>();
         List<Purchase> purchaseList = purchaseService.getCartList(buyer.getUsername());
         System.out.println("purchaseList : "+purchaseList.size());
         for (Purchase purchase : purchaseList) {
@@ -329,11 +328,12 @@ public class PurchaseController {
             System.out.println("purchaseList : "+purchaseList.size());
             Product product = productService.getProduct(purchase.getProdNo());
             purchase.setPurchaseProd(product);
-            products.add(product);  // 상품 목록에 추가
+//            products.add(product);  // 상품 목록에 추가
 
             currPoint = pointService.getCurrentPoint(username);
             System.out.println("addPurchaseCartResult's currPoint : "+currPoint);
 
+            purchase.setCurrPoint(currPoint);
             point.setCurrPoint(currPoint);
 
             // 바코드 생성 및 파일 업로드 처리
@@ -359,18 +359,22 @@ public class PurchaseController {
             // 바코드 이미지 생성
             generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);
 
+            int buyPoint = product.getProdPrice();
             // 바코드 파일명 저장
             purchase.setBarcodeName(barcodeFileName);
             purchase.setBarcodeNo(barcodeNumber);  // 바코드 번호 저장
             purchase.setDepType("상품 구매");
-            purchase.setTranPoint(product.getProdPrice());
-            point.setTranPoint(-product.getProdPrice());  // 총 결제 포인트 차감
-            System.out.println("addPurchaseCartResult : "+ -product.getProdPrice());
+            purchase.setTranPoint(buyPoint);
+            point.setTranPoint(-buyPoint);  // 총 결제 포인트 차감
+            System.out.println("addPurchaseCartResult : "+ -buyPoint);
             // 포인트 업데이트
             purchaseService.addPurchase(purchase);
             pointService.updatePoint(point);
-            point.setCurrPoint(currPoint-product.getProdPrice());
-            System.out.println("test currPoint : "+point.getCurrPoint());
+            int changePoint = pointService.getCurrentPoint(username);
+            point.setCurrPoint(changePoint);
+            System.out.println("changePoint : "+changePoint);
+//            point.setCurrPoint(currPoint);
+//            System.out.println("test currPoint : "+point.getCurrPoint());
 
         }
 
@@ -380,7 +384,7 @@ public class PurchaseController {
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("tranPoint", tranPoint);
         model.addAttribute("purchase", purchaseList);
-        model.addAttribute("products", products);
+//        model.addAttribute("products", products);
 
         model.addAttribute("username", username);
 

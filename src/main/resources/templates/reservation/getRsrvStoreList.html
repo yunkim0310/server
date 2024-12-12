@@ -10,6 +10,11 @@
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
     <script>
+
+        function stopPropagation(event) {
+            event.stopPropagation();
+        }
+
         // AJAX로 예약 상태 업데이트
         function updateRsrvStatus(rsrvNo, buttonElement) {
             console.log("Reservation Number: ", rsrvNo); // 디버깅용 로그
@@ -43,6 +48,47 @@
                 }
             });
         });
+
+        function autoSubmitForm() {
+            document.getElementById("searchForm").submit();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            const rows = document.querySelectorAll("tbody tr");
+
+            let lastDate = "";
+            let lastTime = "";
+
+            rows.forEach(row => {
+                const dateCell = row.querySelector("td:nth-child(1)"); // 예약 날짜 셀
+                const timeCell = row.querySelector("td:nth-child(2)"); // 예약 시간 셀
+                const countCell = row.querySelector("td:nth-child(7)"); // 총 예약 인수 셀
+
+                const currentDate = dateCell.textContent.trim();
+                const currentTime = timeCell.textContent.trim();
+
+                // 날짜 중복 처리
+                if (currentDate === lastDate) {
+                    dateCell.textContent = ""; // 중복된 날짜 숨기기
+                } else {
+                    lastDate = currentDate; // 새로운 날짜로 갱신
+                }
+
+                // 시간 중복 처리
+                if (currentTime === lastTime) {
+                    timeCell.textContent = ""; // 중복된 시간 숨기기
+                } else {
+                    lastTime = currentTime; // 새로운 시간으로 갱신
+                }
+
+                // 총 예약 인수 표시 조건
+                if (dateCell.textContent === "" && timeCell.textContent === "") {
+                    countCell.textContent = ""; // 날짜와 시간이 모두 숨겨졌다면 총 예약 인수도 숨기기
+                }
+            });
+        });
+
+
     </script>
 
     <style>
@@ -237,25 +283,27 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="reservation : ${reservations}">
+        <tr th:each="reservation : ${reservations}"
+            th:attr="onclick='location.href=\'/reservation/getRsrv?rsrvNo=' + ${reservation.rsrvNo} + '\''"
+            style="cursor: pointer;">
             <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}">예약 날짜</td>
             <td th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">예약 시간</td>
             <td class="status-cell" th:text="${reservation.rsrvStatus}">[예약 상태]</td>
             <td th:text="${reservation.rsrvNumber}" data-phone>[전화 번호]</td>
             <td th:text="${reservation.rsrvPerson} + '명'">[예약 인원]</td>
             <td>
-                <span th:if="${reservation.rsrvReq != null && !reservation.rsrvReq.isEmpty()}"
-                      th:text="${reservation.rsrvReq.length() > 10 ? reservation.rsrvReq.substring(0, 10) + '...' : reservation.rsrvReq}">
-                </span>
+        <span th:if="${reservation.rsrvReq != null && !reservation.rsrvReq.isEmpty()}"
+              th:text="${reservation.rsrvReq.length() > 10 ? reservation.rsrvReq.substring(0, 10) + '...' : reservation.rsrvReq}">
+        </span>
                 <span th:if="${reservation.rsrvReq == null || reservation.rsrvReq.isEmpty()}"></span>
             </td>
             <td th:text="${reservationCountsByDate[reservation.rsrvDt]} ?: 0">총 예약 인수</td>
             <td class="action-cell" th:if="${reservation.rsrvStatus != '예약 요청'}" style="padding: 0; text-align: center; width: 100px; height: 40px; border-bottom: 1px solid #ddd;">
                 <div style="height: 100%;">&nbsp;</div>
             </td>
-
             <td class="action-cell" th:if="${reservation.rsrvStatus == '예약 요청'}" style="padding: 0; text-align: center; width: 100px; height: 40px; border-bottom: 1px solid #ddd;">
-                <div class="css-1w0ksfz e744wfw2" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                <div class="css-1w0ksfz e744wfw2" style="display: flex; justify-content: center; align-items: center; height: 100%;"
+                     onclick="stopPropagation(event)">
                     <button class="css-ufulao e4nu7ef3 checkBtn" type="button"
                             style="font-size: 0.8rem; padding: 5px 10px; height: 25px; width: auto;"
                             th:attr="onclick='updateRsrvStatus(' + ${reservation.rsrvNo} + ', this)'">
@@ -270,89 +318,58 @@
     <br/>
     <br/>
 
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const rows = document.querySelectorAll("tbody tr");
-
-            let lastDate = "";
-            let lastTime = "";
-
-            rows.forEach(row => {
-                const dateCell = row.querySelector("td:nth-child(1)"); // 예약 날짜 셀
-                const timeCell = row.querySelector("td:nth-child(2)"); // 예약 시간 셀
-                const countCell = row.querySelector("td:nth-child(7)"); // 총 예약 인수 셀
-
-                const currentDate = dateCell.textContent.trim();
-                const currentTime = timeCell.textContent.trim();
-
-                // 날짜 중복 처리
-                if (currentDate === lastDate) {
-                    dateCell.textContent = ""; // 중복된 날짜 숨기기
-                } else {
-                    lastDate = currentDate; // 새로운 날짜로 갱신
-                }
-
-                // 시간 중복 처리
-                if (currentTime === lastTime) {
-                    timeCell.textContent = ""; // 중복된 시간 숨기기
-                } else {
-                    lastTime = currentTime; // 새로운 시간으로 갱신
-                }
-
-                // 총 예약 인수 표시 조건
-                if (dateCell.textContent === "" && timeCell.textContent === "") {
-                    countCell.textContent = ""; // 날짜와 시간이 모두 숨겨졌다면 총 예약 인수도 숨기기
-                }
-            });
-        });
-    </script>
-
 </div>
 
 <div class="allpoint1">
-<!-- 검색 폼 -->
-<form action="/reservation/getRsrvStoreList" method="POST">
-    <input type="hidden" name="storeId" th:value="${param.storeId}"/>
-    <div class="date-search-container">
-        <div class="css-82a6rk e744wfw3">
-            <div class="css-jmalg e1uzxhvi6">
-                <div class="css-176lya2 e1uzxhvi3">
-                    <input class="css-1bkd15f e1uzxhvi2"
-                           id="startDate" name="startDate"
-                           type="date" style="width: 45%;">
-                    ~
-                    <input class="css-1bkd15f e1uzxhvi2"
-                           id="endDate" name="endDate"
-                           type="date" style="width: 45%;">
+    <!-- 검색 폼 -->
+    <form id="searchForm" action="/reservation/getRsrvStoreList" method="POST">
+
+        <input type="hidden" name="storeId" th:value="${param.storeId}"/>
+
+        <div class="date-search-container">
+            <div class="css-82a6rk e744wfw3">
+                <div class="css-jmalg e1uzxhvi6">
+                    <div class="css-176lya2 e1uzxhvi3">
+                        <input class="css-1bkd15f e1uzxhvi2"
+                               id="startDate" name="startDate"
+                               type="date" style="width: 80%;"
+                               th:value="${search.startDate ?: ''}">
+                        ~
+                        <input class="css-1bkd15f e1uzxhvi2"
+                               id="endDate" name="endDate"
+                               type="date" style="width: 80%;"
+                               th:value="${search.endDate ?: ''}">
+                    </div>
                 </div>
             </div>
+
+            <button type="submit">Search</button>
         </div>
 
-        <button type="submit">Search</button>
-    </div>
+        <br/><br/><br/><br/><br/>
 
-    <div id="searchStatuses">
-        <label>
-        <input type="checkbox" name="searchStatuses" value="예약 요청"
-               th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 요청')}" /> 예약 요청 &nbsp;&nbsp;
-        </label>
-        <label>
-        <input type="checkbox" name="searchStatuses" value="예약 확정"
-               th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 확정')}" /> 예약 확정 &nbsp;&nbsp;
-        </label>
-        <label>
+        <div id="searchStatuses">
+            <label>
+                <input type="checkbox" name="searchStatuses" value="예약 요청" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 요청')}" /> 예약 요청 &nbsp;&nbsp;
+            </label>
+            <label>
+                <input type="checkbox" name="searchStatuses" value="예약 확정" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 확정')}" /> 예약 확정 &nbsp;&nbsp;
+            </label>
+            <label>
 
-        <input type="checkbox" name="searchStatuses" value="이용 완료"
-               th:checked="${search.searchStatuses != null && search.searchStatuses.contains('이용 완료')}" /> 이용 완료 &nbsp;&nbsp;
-        </label>
-        <label>
+                <input type="checkbox" name="searchStatuses" value="이용 완료" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('이용 완료')}" /> 이용 완료 &nbsp;&nbsp;
+            </label>
+            <label>
 
-        <input type="checkbox" name="searchStatuses" value="전화 예약"
-               th:checked="${search.searchStatuses != null && search.searchStatuses.contains('전화 예약')}" /> 전화 예약 &nbsp;&nbsp;
-        </label>
-    </div>
+                <input type="checkbox" name="searchStatuses" value="전화 예약" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('전화 예약')}" /> 전화 예약 &nbsp;&nbsp;
+            </label>
+        </div>
 
-</form>
+    </form>
 </div>
 
 </body>

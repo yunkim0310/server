@@ -72,15 +72,30 @@ public class ProductController {
 
 //    @RequestMapping( value="addProduct", method= RequestMethod.GET)
     @GetMapping("/addProduct")
-    public String addProduct(Model model) throws Exception{
+    public String addProduct(HttpSession session, Model model) throws Exception{
 
         System.out.println("/product/addProduct : GET");
 
-        Product product = new Product();
-        model.addAttribute("product", product);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        return "/pointShop/product/addProduct";
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_POINT")) {
+
+            Product product = new Product();
+            model.addAttribute("product", product);
+
+            return "/pointShop/product/addProduct";
+        }else{
+
+            return "redirect:/";
+
+        }
     }
+
 
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")
@@ -118,6 +133,7 @@ public class ProductController {
     public String getProduct(@RequestParam("prodNo") int prodNo ,
                              @SessionAttribute("user") User buyer,
                              @RequestParam(value = "wishCartNo", required = false) Integer wishCartNo,
+                             @ModelAttribute("search") Search search ,
                              HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
         System.out.println("/product/getProduct : GET");
@@ -140,6 +156,16 @@ public class ProductController {
         int isWishExist = purchaseService.isProductInWishList(purchase);
         System.out.println("isWishExist : " + isWishExist);
         model.addAttribute("isWishExist", isWishExist);
+
+        String categoryName = getCategoryNameByNo(product.getProdCateNo());
+
+        Product cateName = new Product();
+//        String prodCateName = cateName.setProdCateName(categoryName);
+//        prodCateName = product.getProdCateName();
+        search.setSearchKeyword(categoryName);
+        System.out.println("categoryName : " + categoryName);
+        List<Product> productList = productService.getProductList(search);
+        model.addAttribute("productList", productList);
 
         Cookie[] cookies = request.getCookies();
         String history = "";

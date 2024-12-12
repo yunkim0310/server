@@ -172,4 +172,15 @@ public class StoreRestController {
 
     }
 
+
+    @GetMapping(value = "getStatistics", params = "storeId")
+    public ResponseEntity<Map<String,Map<String, Integer>>> getStatistics(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/getStatistics : GET");
+
+        Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
+
+        return ResponseEntity.ok(statistics);
+    }
+
 }

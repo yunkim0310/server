@@ -118,6 +118,8 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
+        model.addAttribute("searchStatuses", search.getStartDate()); // 상태 추가
+        model.addAttribute("searchStatuses", search.getEndDate()); // 상태 추가
         model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
 
         // 뷰 반환
@@ -151,7 +153,7 @@ public class ReservationController {
         }
 
         search.setStartDate(startDate);
-        search.setStartDate(startDate);
+        search.setEndDate(endDate);
         search.setSearchStatuses(searchStatuses);
 
         // 서비스 호출
@@ -164,10 +166,13 @@ public class ReservationController {
             reservationCountsByDate.put(rsrvDt, count);
         }
 
+
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", searchStatuses);
+        model.addAttribute("startDate", startDate);
+        model.addAttribute("endDate", endDate);
 
         return "reservation/getRsrvStoreList";
     }
@@ -229,10 +234,21 @@ public class ReservationController {
     @RequestMapping(value = "addRsrv", method = RequestMethod.GET)
     public String addRsrv(
             @RequestParam("storeId") int storeId,
+            HttpSession session,
             @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : GET");
+
+        User user = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/user/login";
+
+            // 점주 회원의 경우
+        }
 
         java.util.Date effectDt;
 

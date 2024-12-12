@@ -20,162 +20,19 @@
 
         <link th:insert="~{common/import :: importFragment}">
 
-<!--        <script type="text/javascript" src="/javascript/templates/script.js"></script>-->
         <link href="/css/templates/mypage.css" rel="stylesheet">
 
-        <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        <!-- 구글 맵 -->
+        <script defer th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&callback=initMap'"></script>
 
-        <script src="/javascript/store/getStore.js"></script>
+        <!-- ChartJs -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 
-        <style>
+        <script type="module" src="/javascript/store/getStore.js"></script>
 
-            .__restaurant-notice-v2 .__restaurant-notice-v2-item .__notice-content .__desc {
-                margin-right: 15px;
-            }
-
-            .video-swiper-wrapper {
-                width: 100%;
-                margin: 0 auto;
-            }
-
-            .container.gutter-sm .v-scroll {
-                margin-left: 0px;
-            }
-
-            body {
-                scrollbar-color: white;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-                overflow-x: hidden;
-            }
-
-            .__name .__info {
-                position: absolute;
-                left: 400px;  /* 메뉴 설명을 왼쪽에서 20px 띄우기 */
-            }
-
-            .__desc {
-                display: flex;
-                flex-direction: column; /* 수직으로 정렬 */
-                align-items: center; /* 수평 중앙 정렬 */
-                text-align: center; /* 텍스트 중앙 정렬 */
-            }
-
-            .news-item img {
-                width: 200px;
-                height: 200px;
-                padding: 5px;
-                margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
-            }
-
-            .news-item p {
-                margin: 0;
-                font-size: 14px; /* 원하는 텍스트 크기로 설정 */
-                color: #333; /* 텍스트 색상 */
-                text-align: left;
-                padding: 10px;
-                white-space: normal; /* 줄바꿈 허용 */
-                overflow: visible; /* 오버플로우 제거 */
-                text-overflow: clip; /* 텍스트 잘림 없음 */
-                word-break: break-word; /* 긴 단어 강제 줄바꿈 */
-            }
-
-            .restaurant-meta .info {
-                display: flex;
-                margin-bottom: 8px;
-                align-items: baseline;
-            }
-
-            .storeBasicInfo > div {
-                display: flex;
-                align-items: center; /* 텍스트와 아이콘을 수직 정렬 */
-                margin-bottom: 8px; /* 각 항목 간 간격 */
-            }
-
-            .storeBasicInfo img {
-                margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
-                display: inline-block;
-            }
-
-            .storeBasicInfo span {
-                line-height: 1.5; /* 텍스트의 높이를 조정 */
-            }
-
-            #operationMore {
-                margin-left: 30px;
-            }
-
-            /* 스크롤 */
-            .v-scroll {
-                width: 100%;
-                overflow-x: auto;
-                white-space: nowrap;
-            }
-
-            .v-scroll::-webkit-scrollbar {
-                height: 8px; /* 스크롤바 높이 */
-                background: #f1f1f1; /* 스크롤바 배경색 */
-            }
-
-            .v-scroll::-webkit-scrollbar-thumb {
-                background: #888; /* 스크롤바 색상 */
-                border-radius: 4px; /* 둥글게 처리 */
-            }
-
-            .v-scroll::-webkit-scrollbar-thumb:hover {
-                background: #555; /* 마우스 오버 시 색상 */
-            }
-
-            /* 좋아요 */
-            .restaurant-detail-header .btn-like-active{
-                border-radius: 50%;
-                background: #fff url('/images/store/icon_heart_red.png') 50% 50% no-repeat;
-                display: block;
-                text-indent: -999em;
-                overflow: hidden;
-                width: 55px;
-                height: 55px;
-                position: absolute;
-                right: 20px;
-                top: 100%;
-                margin-top: -18px;
-                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
-                z-index: 10;
-            }
-
-            .restaurant-detail-header .btn-like-inactive{
-                border-radius: 50%;
-                background: #fff url('/images/store/icon_heart_white.png') 50% 50% no-repeat;
-                display: block;
-                text-indent: -999em;
-                overflow: hidden;
-                width: 55px;
-                height: 55px;
-                position: absolute;
-                right: 20px;
-                top: 100%;
-                margin-top: -18px;
-                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
-                z-index: 10;
-            }
-
-            .restaurant-detail-header .btn-chat {
-                border-radius: 50%;
-                background: #fff url('/images/store/icon_chat.png') 50% 50% no-repeat;
-                display: block;
-                text-indent: -999em;
-                overflow: hidden;
-                width: 55px;
-                height: 55px;
-                position: absolute;
-                right: 100px;
-                top: 100%;
-                margin-top: -18px;
-                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
-                z-index: 10;
-            }
-
-        </style>
+<!--        <link rel="stylesheet" href="/css/store/getStoreNewsList.css">-->
+        <link rel="stylesheet" href="/css/store/getStore.css">
 
     </head>
 
@@ -186,7 +43,7 @@
                 <div th:insert="~{common/header}"></div>
             </header>
 
-            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
+            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px;position: sticky">
                 <div class="side">
                     <div class="css-1v4whg ecbxmj3">가게 정보</div>
                     <div th:replace="~{store/getStoreAside :: getStoreAside}"></div>
@@ -297,14 +154,11 @@
                     <hr class="separator">
 
                     <th:block th:if="${mode == 'nearby'}">
-                        <div th:insert="~{}"></div>
+                        <div th:insert="~{store/getNearbyPlace :: nearbyFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'statistics'}">
-<!--                        <div th:insert="~{}"></div>-->
-                        <p th:text="${weekRsrv}"></p>
-                        <p th:text="${rsrvAvg}"></p>
-                        <p th:text="${percent}"></p>
+                        <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
@@ -354,6 +208,7 @@
                                 </div>
                                 <div class="section-body">
                                     <div class="restaurant-features mb-20">
+                                        <span class="feature-item" th:if="${store.amenitiesNoList == null || store.amenitiesNoList.isEmpty()}" style="padding-left: 10px;">등록된 편의시설이 없습니다.</span>
                                         <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(1) != -1}">
                                             <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_parking.svg"
                                                  alt="" class="icon"><span class="label">주차 가능</span>
@@ -411,9 +266,6 @@
                             <div class="container gutter-sm">
                                 <div class="section-header">
                                     <h3 class="section-title">메뉴</h3>
-    <!--                                <div class="utils">-->
-    <!--                                    <a class="__btn-all" href="#">전체보기</a>-->
-    <!--                                </div>-->
                                 </div>
                                 <div class="section-body">
                                     <div class="menupan-item-list mb-20">

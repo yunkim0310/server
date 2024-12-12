@@ -481,6 +481,7 @@ public class StoreController {
 
             model.addAttribute("store", store);
             model.addAttribute("mode", mode);
+            model.addAttribute("googleApi", googleApi);
 
             switch (mode) {
 
@@ -489,7 +490,6 @@ public class StoreController {
                     System.out.println("/getStore 가게 정보");
 
                     model.addAttribute("amenitiesNameList", amenitiesNameList);
-                    model.addAttribute("googleApi", googleApi);
 
                     break;
 
@@ -498,11 +498,17 @@ public class StoreController {
                     System.out.println("/getStore 예약통계");
                     Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
-                    model.addAttribute("weekRsrv", statistics.get("cntWeekRsrv"));
-                    model.addAttribute("rsrvAvg", statistics.get("cntRsrvAvg"));
-                    model.addAttribute("percent", statistics.get("calcRsrvPercent"));
+                    model.addAttribute("week", statistics.get("week"));
+                    model.addAttribute("avg", statistics.get("avg"));
+                    model.addAttribute("per", statistics.get("per"));
 
                     model.addAttribute("statistics", statistics);
+
+                    if (user != null) {
+
+                        boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
+                        model.addAttribute("isMyStore", isMyStore);
+                    }
 
                     break;
 
@@ -564,7 +570,6 @@ public class StoreController {
     }
 
 
-    // TODO 내 가게 리뷰보기, 매장 소식 보기, 휴무일 보기 합치기
     // 점주 회원 마이페이지 (가게 관리)
     @GetMapping("/store/getMyStore")
     public String getMyStore(@RequestParam(value = "mode", required = false, defaultValue = "review") String mode,
@@ -575,8 +580,7 @@ public class StoreController {
 
         System.out.println("/store/getMyStore : GET");
         System.out.println("mode: " + mode);
-        
-        // TODO 로그인 중인 회원 아이디 가져오기, 역할 확인
+
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 

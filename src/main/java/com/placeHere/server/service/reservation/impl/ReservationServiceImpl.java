@@ -61,12 +61,12 @@ public class ReservationServiceImpl implements ReservationService{
         Reservation reservation = reservationDao.getRsrv(rsrvNo);
         Point point = new Point();
 
-        if("리뷰 작성".equals(rsrvStatus)){
+        if("리뷰 완료".equals(rsrvStatus)){
             String username = reservation.getUserName();
             point.setUsername(username);
             int tranPoint = 100;
             point.setTranPoint(tranPoint);
-            String depType = "리뷰 작성";
+            String depType = "리뷰 완료";
             int currPoint = pointService.getCurrentPoint(username);
 
             pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );

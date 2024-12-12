@@ -1,5 +1,5 @@
 <ul class="css-1x9bshx ecbxmj2" th:fragment="getPointShopAside">
-
+  <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
   <li class="css-0 ecbxmj1">
     <a class="css-pi3u6r ecbxmj0" th:href="'/product/listProduct'">
       포인트 상품 목록
@@ -34,4 +34,19 @@
       <span class="css-e41glx e1x0rfoo0"></span>
     </a>
   </li>
+  </div>
+  <div th:if="${session.user.role == 'ROLE_POINT'}" class="point">
+    <li class="css-0 ecbxmj1">
+      <a class="css-pi3u6r ecbxmj0" th:href="'/product/listProduct'">
+        포인트 상품 목록
+        <span class="css-e41glx e1x0rfoo0"></span>
+      </a>
+    </li>
+    <li class="css-0 ecbxmj1">
+      <a class="css-pi3u6r ecbxmj0" th:href="'/product/addProduct'">
+        포인트 상품 등록
+        <span class="css-e41glx e1x0rfoo0"></span>
+      </a>
+    </li>
+  </div>
 </ul>
