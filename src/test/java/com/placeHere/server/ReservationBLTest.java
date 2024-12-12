@@ -229,7 +229,7 @@ public class ReservationBLTest {
     @Test
     public void testGetRsrvUserList() throws Exception {
         // Given: 특정 유저와 검색 조건, 내림차순
-        String userName = "user3";
+        String userName = "user01";
         Search search = new Search();
 
         //기본 상태
@@ -237,8 +237,9 @@ public class ReservationBLTest {
 //        search.setOrder(null);
 
         //조건 설정
-        search.setSearchKeyword("예약 확정");
+        search.setSearchKeyword("이용 완료");
         search.setOrder("desc");
+        search.setCommentSize(5);
 
         // When: 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);

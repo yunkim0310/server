@@ -20,12 +20,18 @@
 
         <link th:insert="~{common/import :: importFragment}">
 
-        <script type="text/javascript" src="/javascript/templates/script.js"></script>
-        <script src="/javascript/templates/shopBlock.js"></script>
-        <script src="/javascript/templates/map.js"></script>
+<!--        <script type="text/javascript" src="/javascript/templates/script.js"></script>-->
         <link href="/css/templates/mypage.css" rel="stylesheet">
 
-        <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        <!-- 구글 맵 -->
+        <th:block th:if="${mode == 'info'}">
+            <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        </th:block>
+
+        <!-- ChartJs -->
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
 
         <script src="/javascript/store/getStore.js"></script>
 
@@ -110,7 +116,7 @@
             /* 스크롤 */
             .v-scroll {
                 width: 100%;
-                overflow-x: scroll;
+                overflow-x: auto;
                 white-space: nowrap;
             }
 
@@ -128,6 +134,55 @@
                 background: #555; /* 마우스 오버 시 색상 */
             }
 
+            /* 좋아요 */
+            .restaurant-detail-header .btn-like-active{
+                border-radius: 50%;
+                background: #fff url('/images/store/icon_heart_red.png') 50% 50% no-repeat;
+                display: block;
+                text-indent: -999em;
+                overflow: hidden;
+                width: 55px;
+                height: 55px;
+                position: absolute;
+                right: 20px;
+                top: 100%;
+                margin-top: -18px;
+                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+                z-index: 10;
+            }
+
+            .restaurant-detail-header .btn-like-inactive{
+                border-radius: 50%;
+                background: #fff url('/images/store/icon_heart_white.png') 50% 50% no-repeat;
+                display: block;
+                text-indent: -999em;
+                overflow: hidden;
+                width: 55px;
+                height: 55px;
+                position: absolute;
+                right: 20px;
+                top: 100%;
+                margin-top: -18px;
+                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+                z-index: 10;
+            }
+
+            .restaurant-detail-header .btn-chat {
+                border-radius: 50%;
+                background: #fff url('/images/store/icon_chat.png') 50% 50% no-repeat;
+                display: block;
+                text-indent: -999em;
+                overflow: hidden;
+                width: 55px;
+                height: 55px;
+                position: absolute;
+                right: 100px;
+                top: 100%;
+                margin-top: -18px;
+                box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+                z-index: 10;
+            }
+
         </style>
 
     </head>
@@ -139,14 +194,14 @@
                 <div th:insert="~{common/header}"></div>
             </header>
 
-            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
+            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px;position: sticky">
                 <div class="side">
                     <div class="css-1v4whg ecbxmj3">가게 정보</div>
                     <div th:replace="~{store/getStoreAside :: getStoreAside}"></div>
                 </div>
             </div>
 
-            <div class="wrapper" id="wrapperDiv" style="max-width: 60%;margin: 0 auto;width: auto;position: relative;background: #fff;min-height: 100%;">
+            <div class="wrapper" id="wrapperDiv" style="max-width: 50%;margin: 0 auto;width: auto;position: relative;background: #fff;min-height: 100%;">
 
                 <!--메인 시작-->
                 <main id="main">
@@ -160,7 +215,13 @@
                                     </div>
                                 </div>
                             </div>
-                            <a href="#target" class="btn-location">위치</a>
+                            <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
+                                <a style="cursor: pointer;" id="chat"
+                                   class="btn-chat">채팅</a>
+                                <a style="cursor: pointer" id="like"
+                                   th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
+                                   th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>
+                            </th:block>
                         </div>
                     </section>
                     <section class="section">
@@ -229,6 +290,7 @@
                     </section>
 
                     <input type="hidden" name="mode" th:value="${mode}">
+                    <input type="hidden" name="storeId" th:value="${store.storeId}">
 
 <!--                    <hr class="separator">-->
 <!--                    <section class="section pb-30" style="padding-top: 30px;">-->
@@ -247,10 +309,7 @@
                     </th:block>
 
                     <th:block th:if="${mode == 'statistics'}">
-<!--                        <div th:insert="~{}"></div>-->
-                        <p th:text="${weekRsrv}"></p>
-                        <p th:text="${rsrvAvg}"></p>
-                        <p th:text="${percent}"></p>
+                        <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
@@ -263,7 +322,7 @@
                         <section class="section pt-30 pb-30 section-overflow-hidden">
                             <div class="container gutter-sm">
                                 <div class="section-header mb-30">
-                                    <h3 class="section-title __sm">레스토랑 공지</h3>
+                                    <h3 class="section-title __sm">매장 소식</h3>
                                 </div>
                                 <div class="section-body" style="overflow: hidden;">
                                     <div id="shop-notice-list" class="v-scroll">
@@ -299,41 +358,57 @@
                                     <h3 class="section-title __sm">편의시설</h3>
                                 </div>
                                 <div class="section-body">
-                                        <div class="restaurant-features mb-20" th:each="amenities : ${store.amenitiesNoList}">
-                                            <span class="feature-item" th:if="${amenities == 1}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_parking.svg"
-                                                     alt="" class="icon"><span class="label">주차 가능</span>
-                                            </span>
-                                            <span class="feature-item" th:if="${amenities == 2}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_valet_parking.svg"
-                                                     alt="" class="icon"><span class="label">발렛 가능</span>
-                                            </span>
-                                            <span class="feature-item" th:if="${amenities == 4}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_corkage.svg"
-                                                     alt="" class="icon"><span class="label">콜키지 가능</span>
-                                            </span>
-                                            <span class="feature-item" th:if="${amenities == 6}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_no_kids.svg"
-                                                     alt="" class="icon"><span class="label">노키즈존</span>
-                                            </span>
-                                            <span class="feature-item" th:if="${amenities == 7}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_pet.svg"
-                                                     alt="" class="icon"><span class="label">반려동물 동반</span>
-                                            </span>
-                                            <span class="feature-item" th:if="${amenities == 9}">
-                                                <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_accessible.svg"
-                                                     alt="" class="icon"><span class="label">장애인 편의시설</span>
-                                            </span>
-                                        </div>
+                                    <div class="restaurant-features mb-20">
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(1) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_parking.svg"
+                                                 alt="" class="icon"><span class="label">주차 가능</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(2) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_valet_parking.svg"
+                                                 alt="" class="icon"><span class="label">발렛 가능</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(3) != -1}">
+                                            <img src="/images/store/icon_corkage_free.png"
+                                                 alt="" class="icon"><span class="label">콜키지 프리</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(4) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_corkage.svg"
+                                                 alt="" class="icon"><span class="label">콜키지 가능</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(5) != -1}">
+                                            <img src="/images/store/icon_kids.png"
+                                                 alt="" class="icon"><span class="label">키즈존</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(6) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_no_kids.svg"
+                                                 alt="" class="icon"><span class="label">노키즈존</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(7) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_pet.svg"
+                                                 alt="" class="icon"><span class="label">반려동물 동반</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(8) != -1}">
+                                            <img src="/images/store/icon_toy.png"
+                                                 alt="" class="icon"><span class="label">유아시설</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(9) != -1}">
+                                            <img src="https://d1il53drs2cmia.cloudfront.net/resources/img/icons-mood/ic_accessible.svg"
+                                                 alt="" class="icon"><span class="label">장애인 편의시설</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(10) != -1}">
+                                            <img src="/images/store/icon_rent.png"
+                                                 alt="" class="icon"><span class="label">대관 가능</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(11) != -1}">
+                                            <img src="/images/store/icon_event.png"
+                                                 alt="" class="icon"><span class="label">이벤트 가능</span>
+                                        </span>
+                                        <span class="feature-item" th:if="${store.amenitiesNoList.indexOf(12) != -1}">
+                                            <img src="/images/store/icon_people.png"
+                                                 alt="" class="icon"><span class="label">단체이용 가능</span>
+                                        </span>
+                                    </div>
                                 </div>
-<!--                                <div class="__notes ml&#45;&#45;20 mr&#45;&#45;20">-->
-<!--                                    <span id="toc-toggle" onclick="openCloseToc()"> 주차정보</span>-->
-<!--                                    <ol id="toc-content">-->
-<!--                                        <br><br>-->
-<!--                                        <li>주차주차</li>-->
-<!--                                        <br><br>-->
-<!--                                    </ol>-->
-<!--                                </div>-->
                             </div>
                         </section>
                         <hr class="separator">
@@ -370,7 +445,7 @@
                                 <div class="section-body">
                                     <div class="sc-hKMtZM jdiMxr">
                                         <div class="map" id="map"
-                                             style="height: 240px; overflow: hidden; background: url(&quot;https://t1.daumcdn.net/mapjsapi/images/2x/bg_tile.png&quot;);">
+                                             style="height: 240px; overflow: hidden; background-color: #e0e0e0;">
 
                                         </div>
                                         <div class="addr" style="padding-left: 0">
@@ -396,23 +471,19 @@
                                         </div>
                                         <div class="desc-block">
                                             <dl>
-                                                <th:block th:if="${store.storeInfo != null}">
-                                                    <dt>
-                                                        <a class="__toggle">매장 소개</a>
-                                                    </dt>
-                                                    <dd class="color-gray" th:text="${store.storeInfo}" style="white-space: pre-line">
-                                                        매장 소개
-                                                    </dd>
-                                                </th:block>
-                                                <th:block th:unless="${store.storeInfo != null}">
-                                                </th:block>
+                                                <dt>
+                                                    <a class="__toggle">매장 소개</a>
+                                                </dt>
+                                                <dd class="color-gray" th:text="${(store.storeInfo != null)? store.storeInfo : '없음'}" style="white-space: pre-line">
+                                                    매장 소개
+                                                </dd>
                                             </dl>
                                         </div>
                                         <div class="desc-block">
                                             <dl>
                                                 <dt><a class="__toggle">영업시간</a></dt>
-                                                <dd class="color-gray" th:text="${store.storeOperation.openTime + ' ~ ' + store.storeOperation.closeTime}">
-                                                    9:00 - 10:00
+                                                <dd class="color-gray" th:text="${store.storeOperation.openTime.subSequence(0, 5) + ' ~ ' + store.storeOperation.closeTime.subSequence(0, 5)}">
+                                                    오픈시간 ~ 마감시간
                                                 </dd>
                                             </dl>
                                         </div>

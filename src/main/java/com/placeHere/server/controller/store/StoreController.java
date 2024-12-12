@@ -455,27 +455,30 @@ public class StoreController {
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 
-        Store store = storeService.getStore(storeId);
+        Store store = storeService.getStore(storeId, Date.valueOf(LocalDate.now()));
         search.setPageSize(pageSize);
         search.setListSize(listSize);
 
         System.out.println(store);
 
         if (store == null) {
-            return null;
+            return "redirect:/";
         }
 
         else {
+
             // 회원의 좋아요 여부
-            // 로그인 중인 유저 아이디 얻어오기 TODO
-            String userName = "user01";
-            Like like = new Like(userName);
-            like.setRelationNo(storeId);
-            like.setTarget("store");
+            if (user != null && user.getRole().equals("ROLE_USER")) {
 
-            Like chkLike = likeService.chkLike(like);
+                Like like = new Like(user.getUsername());
+                like.setRelationNo(storeId);
+                like.setTarget("store");
 
-            model.addAttribute("like", chkLike);
+                Like chkLike = likeService.chkLike(like);
+
+                model.addAttribute("like", chkLike);
+            }
+
             model.addAttribute("store", store);
             model.addAttribute("mode", mode);
 
@@ -485,7 +488,7 @@ public class StoreController {
                     // 가게 정보
                     System.out.println("/getStore 가게 정보");
 
-                    model.addAttribute("amenitiesNamList", amenitiesNameList);
+                    model.addAttribute("amenitiesNameList", amenitiesNameList);
                     model.addAttribute("googleApi", googleApi);
 
                     break;
@@ -495,11 +498,17 @@ public class StoreController {
                     System.out.println("/getStore 예약통계");
                     Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
-                    model.addAttribute("weekRsrv", statistics.get("cntWeekRsrv"));
-                    model.addAttribute("rsrvAvg", statistics.get("cntRsrvAvg"));
-                    model.addAttribute("percent", statistics.get("calcRsrvPercent"));
+                    model.addAttribute("week", statistics.get("week"));
+                    model.addAttribute("avg", statistics.get("avg"));
+                    model.addAttribute("per", statistics.get("per"));
 
                     model.addAttribute("statistics", statistics);
+
+                    if (user != null) {
+
+                        boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
+                        model.addAttribute("isMyStore", isMyStore);
+                    }
 
                     break;
 

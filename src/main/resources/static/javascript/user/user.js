@@ -1,3 +1,5 @@
+
+
 function pwdValidation() {
 
   console.log("비밀번호 재설정 validation ");
@@ -127,3 +129,72 @@ function fn_process() {
   }); // end ajax
 
 }
+
+// username 유효성 검사
+function validation() {
+
+  // username 초기화
+  const username = $('#username').val();  // jQuery로 username 값을 가져옴
+
+  // 보여줄 메시지 초기화
+  const messageElement = $(".invalid-feedback-username");
+
+  console.log("username", username);
+
+  // messageElement가 존재하는지 확인
+  if (messageElement.length === 0) {
+    console.error('invalid-feedback 요소가 존재하지 않습니다.');
+    return;
+  }
+
+  // username 입력 안했을 때
+  if (!username) {
+    messageElement.text('');
+    messageElement.css('color', '');
+    return;
+  }
+
+  // username 길이 체크
+  const usernameChk = validationUsername(username);
+
+  if( usernameChk ) { // true
+    console.log("input username :: ", username);
+    console.log(" result :: ", usernameChk)
+    messageElement.text('아이디를 확인해주세요.');
+    messageElement.css({'color': 'red', 'display': 'block'});
+    return;
+  }
+  
+
+  $.ajax({
+    url: '/api-user/chkDuplication',
+    type: 'GET', // HTTP 메서드
+    data: { username: username },
+
+    success: function (isDuplicate) {
+
+      // 사용불가
+      if (isDuplicate) {
+        messageElement.text('이미 사용 중인 아이디입니다.');
+        messageElement.css({'color': 'red', 'display': 'block'});
+      // 사용가능
+      } else {
+        messageElement.text('사용 가능한 아이디입니다.');
+        messageElement.css({'color': 'green', 'display': 'block'});
+      }
+    },
+    error: function () {
+      messageElement.text('아이디 확인 중 오류가 발생했습니다.');
+      messageElement.css({'color': 'red', 'display': 'block'});
+    }
+  });
+} // end of validation
+
+function validationUsername(username) {
+  return /^[a-zA-Z](?=.*[a-zA-Z])(?=.*[0-9]).{4,12}$/g.test(username);
+}
+//
+// // 한글과 영어조합 체크
+// function onlyNumberAndEnglish(username) {
+//   return /^[A-Za-z0-9][A-Za-z0-9]*$/.test(username);
+// }

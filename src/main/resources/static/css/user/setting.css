@@ -335,6 +335,7 @@ h6 {
 }
 .naverid .container {
     background-color: #f9fbfc;
+
 }
 .naverid .content {
     padding: 0 20px;
@@ -394,12 +395,10 @@ h6 {
         vertical-align: top;
     }
 }
-    /*지금여기*/
 @media all and (min-width: 1200px) {
     .naverid {
         width: 1200px;
-        background-color: red;
-        /*margin-top: 165px;*/
+        padding-top: 150px;
     }
 }
 .is_fixed {
@@ -583,6 +582,7 @@ h6 {
     }
 }
 .profile_area {
+
     padding: 2px 20px 8px;
     text-align: center;
     box-sizing: border-box;
@@ -1345,7 +1345,7 @@ h6 {
 .path_area {
     display: none;
     font-size: 0;
-    margin-top: 50%;
+    margin-top: 30%;
 }
 @media all and (min-width: 1024px) {
     .path_area {

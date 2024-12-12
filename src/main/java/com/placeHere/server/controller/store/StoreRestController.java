@@ -3,6 +3,7 @@ package com.placeHere.server.controller.store;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -59,17 +60,32 @@ public class StoreRestController {
 
 
     // 가게 좋아요 추가
-    @GetMapping(value = "/addStoreLike", params = {"userName", "relationNo", "target"})
-    public ResponseEntity<Like> addLikeStore(@ModelAttribute Like like) throws Exception {
+    @GetMapping(value = "/addStoreLike", params = {"relationNo"})
+    public ResponseEntity<Integer> addLikeStore(HttpSession session,
+                                             @ModelAttribute Like like) throws Exception {
 
         System.out.println("/api-store/addLikeStore/");
-        System.out.println(like);
 
-        likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+        User user = (User) session.getAttribute("user");
 
-        Like result = likeService.chkLike(like);
+        if (user == null) {
 
-        return ResponseEntity.ok(result);
+            return ResponseEntity.ok(0);
+        }
+
+        else {
+
+            like.setUserName(user.getUsername());
+            like.setTarget("store");
+
+            System.out.println(like);
+
+            likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+
+            Like result = likeService.chkLike(like);
+
+            return ResponseEntity.ok(result.getLikeId());
+        }
     }
 
 
@@ -154,6 +170,17 @@ public class StoreRestController {
             return ResponseEntity.ok(storeLocation);
         }
 
+    }
+
+
+    @GetMapping(value = "getStatistics", params = "storeId")
+    public ResponseEntity<Map<String,Map<String, Integer>>> getStatistics(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/getStatistics : GET");
+
+        Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
+
+        return ResponseEntity.ok(statistics);
     }
 
 }

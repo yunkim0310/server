@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
         boolean result = false;
         User user = userDao.getUser(username);
 
-        System.out.println("serviceImpl" + user);
+        log.info("user :: " + user);
 
         if(user != null) {
             result = true;
