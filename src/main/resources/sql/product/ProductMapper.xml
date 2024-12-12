@@ -68,7 +68,7 @@
         FROM product
         <where>
             <if test="searchKeyword != null and searchKeyword != ''">
-                prod_name LIKE CONCAT('%',#{searchKeyword},'%')
+                prod_name LIKE CONCAT('%',#{searchKeyword},'%') || prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
             </if>
             <if test="priceMin != null">
                 AND prod_price BETWEEN #{priceMin} AND #{priceMax}

@@ -390,7 +390,7 @@
 
                     <div class="form-group">
                         <strong>검색어 : </strong>
-                        <input type="text" class="form-control" id="searchKeyword" name="searchKeyword" placeholder="상품명을 입력하세요"
+                        <input type="text" class="form-control" id="searchKeyword" name="searchKeyword" placeholder="상품명/카테고리를 입력하세요"
                                th:value="${search.searchKeyword != null ? search.searchKeyword : ''}">&nbsp;<br/>
                         <strong>가격 범위 : </strong>
                         <input type="text" id="priceMin" name="priceMin" class="form-control" placeholder="최소 금액" th:value="${search.priceMin}">~
@@ -415,6 +415,7 @@
                             <div class="product-info">
                                 <h3 th:text="${product.prodName}">상품명</h3>
                                 <p th:text="${product.prodPrice} + 'P'">상품 가격</p>
+                                <p th:text="${product.prodCateName}">상품 카테고리</p>
                             </div>
                             <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
                                 <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
