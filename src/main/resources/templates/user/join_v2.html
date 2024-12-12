@@ -1,101 +1,142 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
-          crossorigin="anonymous">
+
     <link rel="stylesheet" th:href="@{/css/user/join.css}">
+    <script src="/javascript/user/user.js"></script>
+    <title>회원가입</title>
 
 
 
-    <!-- CDN(Content Delivery Network) 호스트 사용 -->
-    <script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-        $("#btnSignin").click(function () {
-
-          // 회원가입 로직
-          $("form").attr("method", "post").attr("action", "/user/addUser").submit();
-
-        });
-
-      });
-
-    </script>
-
-    <title>정보기입</title>
 </head>
 
+<style>
+    body {
+        min-height: 100vh;
+
+        background-color: #5a5a5a;
+
+        /*background: -webkit-gradient(linear, left bottom, right top, from(#92b5db), to(#5a5a5a));*/
+        /*background: -webkit-linear-gradient(bottom left, #92b5db 0%, #5a5a5a 100%);*/
+        /*background: -moz-linear-gradient(bottom left, #92b5db 0%, #5a5a5a 100%);*/
+        /*background: -o-linear-gradient(bottom left, #92b5db 0%, #5a5a5a 100%);*/
+        /*background: linear-gradient(to top right, #92b5db 0%, #5a5a5a 100%);*/
+    }
+
+    .input-form {
+        max-width: 680px;
+
+        margin-top: 200px;
+        padding: 32px;
+
+        background: #fff;
+        -webkit-border-radius: 10px;
+        -moz-border-radius: 10px;
+        border-radius: 10px;
+        -webkit-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+        -moz-box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15);
+        box-shadow: 0 8px 20px 0 rgba(0, 0, 0, 0.15)
+    }
+</style>
+
 <body>
+<div class="container">
+    <div class="input-form-backgroud row">
+        <div class="input-form col-md-12 mx-auto">
+            <h4 class="mb-3">회원가입🔑</h4>
+            <form class="validation-form">
 
-    <div id="join" class="container-fluid">
-        <div class="row mb-4 text-center">
-            <h3>회원가입</h3>
+                <div class="row">
+
+                    <div class="col-md-6 mb-3">
+                        <label for="username">아이디</label>
+<!--                        <input type="text" class="form-control" id="username" placeholder="4~12 글자 영어나 숫자 조합으로 입력해주세요" value="" required>-->
+                        <input type="text" class="form-control" id="username" name="username" placeholder="4~12 글자 영어나 숫자 조합으로 입력해주세요" oninput="validation()" required>
+                        <div class="invalid-feedback-username"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="email">이메일</label>
+                        <input type="email" class="form-control" id="email" placeholder="you@example.com" required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="password">비밀번호</label>
+                        <input type="password" class="form-control" id="password" placeholder="8글자 이상 영문, 숫자, 특수문자를 모두 사용해야 합니다." value="" required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div class="col-md-6 mb-3">
+                        <label for="password2">비밀번호 확인</label>
+                        <input type="password" class="form-control" id="password2" placeholder="비밀번호와 동일해야 합니다." required>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                </div>
+
+
+                <div th:if="${role == 'ROLE_USER' }" class="mb-3">
+                    <label for="birth">생년월일</label>
+                    <input type="date" class="form-control" id="birth" placeholder="선택하세요">
+                </div>
+
+                <div th:if="${role == 'ROLE_USER' }" class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="root">성별</label>
+                        <select class="custom-select d-block w-100" id="root">
+                            <option value=""></option>
+                            <option>남자</option>
+                            <option>여자</option>
+                        </select>
+                        <div class="invalid-feedback"></div>
+                    </div>
+
+                    <div th:if="${role == 'ROLE_USER' }" class="col-md-6 mb-3">
+                        <label for="recommendedId">추천인 아이디</label>
+                        <input type="text" class="form-control" id="recommendedId" name="recommendedId" placeholder="" >
+                        <div class="invalid-feedback"></div>
+                    </div>
+                </div>
+
+                <div class="mb-4"></div>
+
+<!--                <button class="btn btn-primary btn-sm btn-block" type="submit">가입 완료</button>-->
+<!--                <button class="btn btn-primary btn-sm" type="submit">가입 완료</button>-->
+<!--                <button type="button" class="btn btn-light btn-sm" >-->
+<!--                    <a href="/">취소</a>-->
+<!--                </button>-->
+
+                <div id="edit-footer" class="container-fluid text-center">
+                    <button type="button" class="btn btn-primary" id="btnSignin">등록</button>
+                    <a href="/user/selectRole">
+                        <button type="button" class="btn btn-outline-secondary">취소</button>
+                    </a>
+                </div>
+
+            </form>
+
+<!--            <div th:if="${role == 'ROLE_USER' }" class="login">-->
+<!--                [[ ${role} ]]-->
+<!--&lt;!&ndash;                <input type="hidden" id="role" name="username">&ndash;&gt;-->
+<!--            </div>-->
+
+
+
         </div>
-        <form>
-            <!--    아이디 주석-->
-            <div class="row mb-4 text-center">
-                <div class="col-3">아이디</div>
-                <div class="col-3"><input type="text" class="form-control" name="username"></div>
-            </div>
-            <!--        비밀번호 주석-->
-            <div class="row mb-2 text-center">
-                <div class="col-3">비밀번호</div>
-                <div class="col-3"><input type="password" placeholder="password" class="form-control" name="password">
-                </div>
-            </div>
-
-            <!--    비밀번호 확인 주석-->
-            <div class="row mb-2 text-center">
-                <div class="col-3">비밀번호확인</div>
-                <div class="col-3">
-                    <input type="password" placeholder="비밀번호확인" class="form-control" id="password2" name="password2">
-                </div>
-            </div>
-
-            <!--    이메일 주석-->
-            <div class="row mb-2 text-center">
-                <div class="col-3">이메일</div>
-                <div class="col-3"><input type="text" placeholder="abc@abc.com" class="form-control" id="userinfo-email"></div>
-            </div>
-
-            <!-- 생년월일 -->
-            <div class="row mb-2 text-center">
-                <div class="col-3">생년월일</div>
-                <div class="col-3"><input type="date" class="form-control" id="birth" name="birth"></div>
-            </div>
-
-            <!-- 성별 -->
-            <div class="row mb-2 text-center">
-                <div class="col-3">성별</div>
-                <div class="col-3">
-                    <input type="radio" class="form-check-input" name="gender" value="F">여자</input>
-                    <input type="radio" class="form-check-input" name="gender" value="M">남자</input>
-                </div>
-            </div>
-
-            <!-- 추천자 아이디 -->
-            <div class="row mb-2 text-center">
-                <div class="col-3">추천자 아이디</div>
-                <div class="col-3">
-                    <input type="text" placeholder="추천자 아이디 입력" class="form-control" id="recommendedId" name="recommendedId">
-                </div>
-            </div>
-
-        </form>
-
-
-        <div id="edit-footer" class="container-fluid text-center">
-            <button type="button" class="btn btn-primary" id="btnSignin">등록</button>
-            <button type="button" class="btn btn-outline-secondary">취소</button>
-        </div>
-
     </div>
+</div>
+
+<!--  jqueru  -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 </body>
 

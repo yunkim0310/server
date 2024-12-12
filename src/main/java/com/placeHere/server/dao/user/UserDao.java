@@ -11,6 +11,8 @@ public interface UserDao {
     /// Method
 
     public User getUser(String username) throws Exception;
+    // 이메일 중복 확인
+    public User chkEmail(String email) throws Exception;
 
     // 로그인
     // getUser랑 기능 유사하지만 로그인일시 update 때문에 따로 빼둠

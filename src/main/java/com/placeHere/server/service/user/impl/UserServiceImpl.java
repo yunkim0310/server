@@ -61,6 +61,20 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    public boolean chkEmail(String email) throws Exception {
+
+        boolean result = false;
+        User user = userDao.chkEmail(email);
+
+        log.info("user :: " + user);
+
+        if(user != null) {
+            result = true;
+        }
+
+        return result;
+    }
+
     // 회원가입
     public void join(User user) throws Exception {
 

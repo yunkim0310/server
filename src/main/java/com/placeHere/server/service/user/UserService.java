@@ -10,6 +10,8 @@ public interface UserService {
     // 아이디 중복확인
     public boolean chkDuplication(String username) throws Exception;
 
+    public boolean chkEmail(String email) throws Exception;
+
     // 회원가입
     public void join(User user) throws Exception;
 

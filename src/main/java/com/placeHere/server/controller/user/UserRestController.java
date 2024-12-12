@@ -56,6 +56,19 @@ public class UserRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/chkEmail")
+    public ResponseEntity<?> chkEmail(@RequestParam(value="email") String email) throws Exception {
+
+        log.info("email :: " + email);
+
+        boolean result = userService.chkEmail(email);
+
+        // 이미 회원이 존재하면 true, 반대는 false
+
+        // boolean 값 리턴
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
 
 
 
