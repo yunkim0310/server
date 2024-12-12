@@ -72,15 +72,30 @@ public class ProductController {
 
 //    @RequestMapping( value="addProduct", method= RequestMethod.GET)
     @GetMapping("/addProduct")
-    public String addProduct(Model model) throws Exception{
+    public String addProduct(HttpSession session, Model model) throws Exception{
 
         System.out.println("/product/addProduct : GET");
 
-        Product product = new Product();
-        model.addAttribute("product", product);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        return "/pointShop/product/addProduct";
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_POINT")) {
+
+            Product product = new Product();
+            model.addAttribute("product", product);
+
+            return "/pointShop/product/addProduct";
+        }else{
+
+            return "redirect:/";
+
+        }
     }
+
 
 //    @RequestMapping(value = "addProductResult", method = RequestMethod.POST)
     @PostMapping("/addProduct")

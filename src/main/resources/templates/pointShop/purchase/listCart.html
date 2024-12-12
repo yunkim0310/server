@@ -23,7 +23,8 @@
         function fncAddPurchase() {
             var tranPoint = Number($("input[name='tranPoint']").val());
             var currPoint = Number($("input[name='currPoint']").val());
-            // var prodStatus = $("input[name='prodStatus']").val();
+            // var username = $("input[name='username']").val();
+            // var prodStatus = $("input[name='prodStatus']").va l();
             // var cartList = $("input[name='cartList']").val();
 
             if (tranPoint > currPoint) {
@@ -49,6 +50,10 @@
             $("button.btn-primary.view").on("click", function () {
                 var prodNo = $(this).data("prod-no");
                 self.location = "/product/getProduct?prodNo=" + prodNo;
+            });
+
+            $("button.btn-primary.list").on("click", function () {
+                self.location = "/product/listProduct";
             });
 
             $("button.btn-primary.removeCart").on("click", function () {
@@ -265,77 +270,82 @@
 <div class="header-line"></div>
 <!--<form action="/purchase/addPurchase" method="POST">-->
 <div class="container">
-<table class="purchase-table">
-    <thead>
-    <tr>
-        <th>상품 대표 이미지</th>
-        <th>상품명</th>
-        <th>상품 가격</th>
-        <th>판매 가능 상태</th>
-<!--        <th>상품 수량</th>-->
-        <th></th>
-    </tr>
-    </thead>
-<!--    <tbody th:if="${cartList.size()} != 0">-->
-    <tbody>
-    <tr th:each="purchase : ${cartList}">
-        <td class="product-img">
-            <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
-            <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
-            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
-            <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
-        </td>
-        <td th:text="${purchase.purchaseProd.prodName}"></td>
-        <td id="prodPrice" th:text="${purchase.purchaseProd.prodPrice}+P"></td>
-        <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
-            <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
-        </td>
-<!--        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>-->
-        <td>
-            <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
-            <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
-            <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
-            <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
-            <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">보기</button>&nbsp;&nbsp;&nbsp;&nbsp;
-            <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
-        </td>
-    </tr>
-    </tbody>
-<!--    <tbody th:if="${cartList.size()} == 0">-->
-<!--        장바구니가 비어있습니다.-->
-<!--    </tbody>-->
-</table><br/>
+    <div th:if="${tranPoint != 0}">
+        <table class="purchase-table">
+            <thead>
+            <tr>
+                <th>상품 대표 이미지</th>
+                <th>상품명</th>
+                <th>상품 가격</th>
+                <th>판매 가능 상태</th>
+        <!--        <th>상품 수량</th>-->
+                <th></th>
+            </tr>
+            </thead>
+        <!--    <tbody th:if="${cartList.size()} != 0">-->
+            <tbody>
+            <tr th:each="purchase : ${cartList}">
+                <td class="product-img">
+                    <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
+                    <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
+                    <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                    <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
+                </td>
+                <td th:text="${purchase.purchaseProd.prodName}"></td>
+                <td id="prodPrice" th:text="${purchase.purchaseProd.prodPrice}+P"></td>
+                <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
+                    <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+                </td>
+        <!--        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>-->
+                <td>
+                    <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
+                    <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
+                    <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
+                    <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
+                    <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">보기</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
+                </td>
+            </tr>
+            </tbody>
+        </table><br/>
 
-<div id="totalPriceSection">
-    <h3>결제 포인트 : <span th:text="${tranPoint}">0</span> 원</h3>
-    <h3>보유 포인트 : <span th:text="${currPoint}">0</span> 원</h3>
-</div>
+        <div id="totalPriceSection">
+            <h3>결제 포인트 : <span th:text="${tranPoint}">0</span> 원</h3>
+            <h3>보유 포인트 : <span th:text="${currPoint}">0</span> 원</h3>
+        </div>
+    </div>
 
 <input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
-    <div class="product-container">
-        <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
-        <h3>구매하시겠습니까?</h3>
+    <div th:if="${tranPoint != 0}">
+        <div class="product-container">
+            <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
+            <h3>구매하시겠습니까?</h3>
+        </div>
+    </div>
+    <div th:if="${tranPoint == 0}">
+        <div class="product-container">
+            <h3>장바구니가 비어있습니다.</h3>
+        </div>
     </div>
 
     <form>
-    <div class="button-container">
-        <input type="hidden" name="tranPoint" th:value="${tranPoint}">
-        <input type="hidden" name="cartList" th:value="${cartList}">
-        <input type="hidden" name="purchase" th:value="${purchase}">
-        <input type="hidden" name="currPoint" th:value="${currPoint}">
-        <input type="file" name="file" id="file" style="display:none;">
-        <input type="hidden" th:value="${username}" name="username">
-        <button type="button" class="btn-primary buy">구매</button>
-    </div><br/><br/>
+    <div th:if="${tranPoint != 0}">
+        <div class="button-container">
+            <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+            <input type="hidden" name="cartList" th:value="${cartList}">
+            <input type="hidden" name="purchase" th:value="${purchase}">
+            <input type="hidden" name="currPoint" th:value="${currPoint}">
+            <input type="file" name="file" id="file" style="display:none;">
+            <input type="hidden" th:value="${username}" name="username">
+            <button type="button" class="btn-primary buy">구매</button>
+        </div><br/><br/>
+    </div>
+        <div th:if="${tranPoint == 0}">
+            <div class="button-container">
+                <button type="button" class="btn-primary list">둘러보기</button>
+            </div><br/><br/>
+        </div>
     </form>
-<!--    <div>-->
-<!--        <form th:action="@{/purchase/addPurchaseCart}" method="post">-->
-<!--            <input type="hidden" th:value="${username}" name="username">-->
-<!--&lt;!&ndash;            <input type="hidden" th:value="${purchase.prodNo}" name="prodNo">&ndash;&gt;-->
-<!--            <button type="submit">구매하기</button>-->
-<!--        </form>-->
-<!--    </div>-->
-<!--</form>-->
 </div>
 </body>
 </html>
