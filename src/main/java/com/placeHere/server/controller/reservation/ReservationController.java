@@ -56,12 +56,28 @@ public class ReservationController {
     }
 
     @RequestMapping( value="getRsrv", method=RequestMethod.GET )
-    public String getRsrv(@RequestParam("rsrvNo") int rsrvNo, @SessionAttribute("user") User user, Model model, RedirectAttributes redirectAttributes) throws Exception {
+    public String getRsrv(@RequestParam("rsrvNo") int rsrvNo,
+                          @SessionAttribute("user") User user,
+                          HttpSession session,
+                          Model model) throws Exception {
 
 
-        System.out.println(user.getUsername());
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        int storeId = storeService.getStoreId(user.getUsername());
+
+        if(reservation.getStoreId() != storeId){
+            return "redirect:/";
+        }
 
 
         System.out.println("/reservation/getRsrv : GET");
@@ -72,7 +88,18 @@ public class ReservationController {
     }
 
     @RequestMapping( value="updateRsrvStatus", method=RequestMethod.GET )
-    public String updateRsrvStatus(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+    public String updateRsrvStatus(@RequestParam("rsrvNo") int rsrvNo,
+                                   HttpSession session,
+                                   Model model) throws Exception {
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         Reservation reservation = reservationService.getRsrv(rsrvNo);
 
@@ -89,17 +116,26 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
             @SessionAttribute("user") User user,
+            HttpSession session,
             @ModelAttribute("search") Search search,
             Model model) throws Exception {
 
         // 초기 Search 객체 설정 (기본값)
         System.out.println("/reservation/getRsrvStoreList : GET");
 
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
+
         int storeId = storeService.getStoreId(user.getUsername());
 
-        search.setStartDate(null); // 기본값 없음
-        search.setEndDate(null); // 기본값 없음
-        search.setSearchStatuses(null); // 모든 상태 포함
+
+        search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약")); // 모든 상태 포함
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
@@ -118,8 +154,6 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
-        model.addAttribute("searchStatuses", search.getStartDate()); // 상태 추가
-        model.addAttribute("searchStatuses", search.getEndDate()); // 상태 추가
         model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
 
         // 뷰 반환
@@ -129,31 +163,30 @@ public class ReservationController {
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
     public String getRsrvStoreList(
-            @SessionAttribute("user") User user,
-            @RequestParam(value = "startDate", required = false) String startDate,
-            @RequestParam(value = "endDate", required = false) String endDate,
+            HttpSession session,
             @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             @ModelAttribute("search") Search search,
             Model model) throws Exception {
 
+        User user = (User) session.getAttribute("user");
+
+        System.out.println(user);
+
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/user/login";
+
+        }
+
         int storeId = storeService.getStoreId(user.getUsername());
 
 
-        // 조건 설정: 값이 있을 때만 설정
-        if (startDate != null && !startDate.isEmpty()) {
-            search.setStartDate(startDate);
-        }
-
-        if (endDate != null && !endDate.isEmpty()) {
-            search.setEndDate(endDate);
-        }
 
         if (searchStatuses != null && !searchStatuses.isEmpty()) {
             search.setSearchStatuses(searchStatuses);
         }
 
-        search.setStartDate(startDate);
-        search.setEndDate(endDate);
         search.setSearchStatuses(searchStatuses);
 
         // 서비스 호출
@@ -171,8 +204,6 @@ public class ReservationController {
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", searchStatuses);
-        model.addAttribute("startDate", startDate);
-        model.addAttribute("endDate", endDate);
 
         return "reservation/getRsrvStoreList";
     }
@@ -182,8 +213,18 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.GET)
     public String getRsrvUserList(
             @ModelAttribute Search search,
+            HttpSession session,
             @SessionAttribute("user") User user,
             Model model) throws Exception {
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         String userName = user.getUsername();
 
@@ -207,10 +248,20 @@ public class ReservationController {
     public String getRsrvUserList(
             @ModelAttribute Search search,
             @SessionAttribute("user") User user,
+            HttpSession session,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
             @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         String userName = user.getUsername();
 
@@ -240,14 +291,13 @@ public class ReservationController {
 
         System.out.println("/reservation/addReservation : GET");
 
-        User user = (User) session.getAttribute("user");
+        User presenceuser = (User) session.getAttribute("user");
 
         // 로그인 안 한 경우
-        if (user == null) {
+        if (presenceuser == null) {
 
             return "redirect:/user/login";
 
-            // 점주 회원의 경우
         }
 
         java.util.Date effectDt;
@@ -298,12 +348,22 @@ public class ReservationController {
     @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
     public String addRsrv(
             @RequestParam("selectedDate") String rsrvDtStr, // String으로 받기
+            HttpSession session,
             @RequestParam("storeId") int storeId,
             @ModelAttribute("reservation") Reservation reservation,
             @SessionAttribute("user") User user,
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : POST");
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         Store store = storeService.getStore(storeId);
 
@@ -332,9 +392,21 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "chkRsrv", method = RequestMethod.POST)
-    public String chkRsrv(@RequestParam("rsrvNo") int rsrvNo, Model model) throws Exception {
+    public String chkRsrv(@RequestParam("rsrvNo") int rsrvNo,
+                          HttpSession session,
+                          Model model) throws Exception {
 
         System.out.println("/reservation/Paycheck : POST");
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
+
         // 1. 예약 정보 조회
         Reservation reservation = reservationService.getRsrv(rsrvNo);
 
@@ -365,8 +437,18 @@ public class ReservationController {
     @RequestMapping(value = "addRsrvResult", method = RequestMethod.POST)
     public String confirmPay(@RequestParam("orderId") String orderId,
                              @RequestParam("paymentKey") String paymentKey,
+                             HttpSession session,
                              @RequestParam int amount,
                              Model model) throws Exception {
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
 
         String[] parts = orderId.split("_");
 
@@ -433,8 +515,20 @@ public class ReservationController {
     @RequestMapping(value = "modalRsrvCancel", method = RequestMethod.POST)
     public String modalRsrvCancel(@RequestParam("rsrvNo") int rsrvNo,
                                   @RequestParam("role") String role,
+                                  HttpSession session,
                                   @RequestParam("reason") String reason) throws Exception {
+
         System.out.println("/reservation/modalRsrvCancel : POST");
+
+        User presenceuser = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (presenceuser == null) {
+
+            return "redirect:/user/login";
+
+        }
+
         System.out.println(role);
         Reservation reservation = reservationService.getRsrv(rsrvNo);
         reservationService.updateRsrvReason(rsrvNo, reason);
