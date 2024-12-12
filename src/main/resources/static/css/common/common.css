@@ -6,3 +6,9 @@
 textarea {
     resize: none;
 }
+
+canvas {
+    margin-top: 5%;
+    margin-bottom: 5%;
+    height: 20%;
+}

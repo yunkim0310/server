@@ -13,52 +13,7 @@
         <link rel="stylesheet" href="/css/templates/collection_detail.css">
         <link rel="stylesheet" href="/css/templates/regist_hp.css">
 
-        <style>
-
-            .containerList {
-                display: flex;
-                flex-direction: column;
-                gap: 20px;
-                padding: 20px;
-            }
-
-            .containerItem {
-                border: 1px solid #C4C4C4;
-                border-radius: 10px;
-                padding: 20px;
-                background-color: #F8F8F8;
-                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-                width: 800px;
-                max-width: 100%;
-            }
-
-            .containerHeader {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-            }
-
-            .containerHeader .containerData {
-                font-size: 30px;
-                font-weight: bold;
-                color: #333;
-            }
-
-            .containerHeader .containerTitle {
-                font-size: 16px;
-                color: #888;
-                text-align: right;
-            }
-
-            .btnContainer {
-                display: flex; /* 플렉스 컨테이너로 설정 */
-            }
-
-            .checkBtn {
-                display: inline-block;
-            }
-
-        </style>
+        <link rel="stylesheet" href="/css/store/getStoreNewsList.css">
 
     </head>
 
@@ -201,6 +156,7 @@
                                         <th:block th:if="${storeNews.newsImg == null || storeNews.newsImg == ''}">
                                             <p>소식 사진이 없습니다.</p>
                                         </th:block>
+                                    </td>
                                     <td style="flex-grow: 1; padding-left: 20px;">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <textarea class="css-1bkd15f e1uzxhvi2"
