@@ -1,4 +1,4 @@
-package com.placeHere.server.controller;
+package com.placeHere.server.controller.common;
 
 import com.placeHere.server.domain.Store;
 import com.placeHere.server.domain.User;

@@ -43,6 +43,13 @@ public class StoreServiceTest {
 
 
     @Test
+    public void search() {
+
+        System.out.println(new Search());
+
+    }
+
+    @Test
     public void chkLike() throws Exception {
 
         Like like = new Like("user01");

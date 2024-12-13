@@ -20,9 +20,11 @@ public class AwsS3Service {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFile(MultipartFile file, String path) throws IOException {
+    public Map<String,String> uploadFile(MultipartFile file, String path) throws IOException {
 
         System.out.println("AWS S3 File Upload");
+
+        Map<String, String> map = new HashMap<String, String>();
 
         String filePath = null;
 
@@ -46,8 +48,11 @@ public class AwsS3Service {
             System.out.println(amazonS3.getUrl(bucket, filePath).toString());
         }
 
+        map.put("filePath", filePath);
+        map.put("url", amazonS3.getUrl(bucket, filePath).toString());
+
 //        return amazonS3.getUrl(bucket, filePath).toString();
-        return filePath;
+        return map;
     }
 
     public void deleteFile(String filePath) {
@@ -57,7 +62,7 @@ public class AwsS3Service {
         amazonS3.deleteObject(bucket, filePath);
     }
 
-    public String updateFile(String beforeFilePath, MultipartFile newFile, String path) throws IOException {
+    public Map<String, String> updateFile(String beforeFilePath, MultipartFile newFile, String path) throws IOException {
 
         System.out.println("AWS S3 File Update");
 
