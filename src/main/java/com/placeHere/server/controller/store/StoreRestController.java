@@ -39,9 +39,6 @@ public class StoreRestController {
     @Value("${google_api}")
     private String googleApiKey;
 
-    @Value("${kakao_api}")
-    private String kakaoApiKey;
-
 
     // Constructor
     public StoreRestController() {
@@ -147,7 +144,6 @@ public class StoreRestController {
         Map<String, String> response = new HashMap<>();
         response.put("businessNo", businessNoApiKey);
         response.put("google", googleApiKey);
-        response.put("kakao", kakaoApiKey);
 
         return ResponseEntity.ok(response);
     }
