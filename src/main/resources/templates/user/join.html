@@ -22,7 +22,7 @@
 <body>
 <div id="root">
 
-    <form id="join-form" role="form" method="post" onsubmit="return sendit()" action="/join">  <!--  th:action="@{/join}" -->
+    <form id="join-form">  <!--  th:action="@{/join}" -->
         <!--        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
         <div class="wrapper">
 
@@ -34,6 +34,15 @@
                     <div class="css-rb0i47 e1yyjjij1"><span class="css-qq9ke6 e1yyjjij0">*</span> 필수입력사항</div>
 
                     <div class="css-y8aj3r eo6ykj40">
+                        <!-- role -->
+                        <span th:if="${role == 'ROLE_USER' }">
+                            <input type="hidden" name="role" value="ROLE_USER">
+                        </span>
+                        <span th:unless="${role == 'ROLE_STORE'}">
+                            <input type="hidden" id="role" name="role" value="ROLE_STORE">
+                        </span>
+
+
                         <!-- 아이디 시작 -->
                         <div class="css-1pjgd36 e744wfw6">
                             <div class="css-1y8737n e744wfw5"><label class="css-1obgjqh e744wfw4" for="username">아이디<span
@@ -44,16 +53,13 @@
                                         <input data-testid="input-box"
                                                id="username"
                                                name="username"
-                                               placeholder="4~12 글자 영어나 숫자 조합으로 입력해주세요" type="text"
+                                               placeholder="4~12이하 영어, 숫자 조합으로 입력해주세요.(첫글자 영어)" type="text"
                                                class="css-1bkd15f e1uzxhvi2"
-                                               oninput="validation()"
+                                               oninput="usernameValidation()"
                                                maxlength='12'
                                                required
                                         />
                                     </div>
-                                    <!-- TODO 김윤지 -->
-<!--                                    <p class="font-12 color-gray mt-10">레스토랑을 예약할 때 사용할 이름이므로 꼭 실명을 사용해 주세요.</p>-->
-<!--                                    <p class="font-12 color-gray mt-10" id="invalid-feedback-username"></p>-->
                                     <p class="font-12 mt-10" id="invalid-feedback-username"></p>
                                 </div>
                             </div>
@@ -79,6 +85,7 @@
                                                autocomplete="off"
                                                maxlength='20'
                                                class="css-1bkd15f e1uzxhvi2"
+                                               required
                                         />
                                     </div>
                                     <p class="font-12 mt-10" id="invalid-feedback-pwd"></p>
@@ -102,7 +109,9 @@
                                                type="password"
                                                oninput="isMatch()"
                                                autocomplete="off"
-                                               class="css-1bkd15f e1uzxhvi2">
+                                               class="css-1bkd15f e1uzxhvi2"
+                                               required
+                                        />
                                     </div>
                                     <p class="font-12 mt-10" id="invalid-feedback-pwdConfirm"></p>
                                 </div>
@@ -120,10 +129,12 @@
                                         <input data-testid="input-box"
                                                id="email"
                                                name="email"
-                                               placeholder="이메일 형식 이어야 합니다."
+                                               placeholder="이메일 형식 으로 입력해주세요."
                                                oninput="emailValidation()"
                                                type="email"
-                                               class="css-1bkd15f e1uzxhvi2" value=""> <!-- required 삭제 -->
+                                               class="css-1bkd15f e1uzxhvi2" value=""
+                                               required
+                                        > <!-- required 삭제 -->
                                     </div>
                                     <!-- TODO 김윤지 -->
                                     <p class="font-12 mt-10" id="invalid-feedback-email"></p>
@@ -141,19 +152,19 @@
                                 <div class="css-14wodj6 es1pbny0">
                                     <label class="css-z9g6s0 et8nqc33" for="gender-man">
                                         <input data-testid="radio-MALE" id="gender-man" name="gender" type="radio"
-                                               class="css-1pes2r6 et8nqc32" value="남자">
+                                               class="css-1pes2r6 et8nqc32" value="M">
                                         <span aria-labelledby="gender-man" class="css-mgd87h et8nqc31">남자</span>
                                     </label>
 
                                     <label class="css-z9g6s0 et8nqc33" for="gender-woman">
                                         <input data-testid="radio-FEMALE" id="gender-woman" name="gender" type="radio"
-                                               class="css-1pes2r6 et8nqc32" value="여자">
+                                               class="css-1pes2r6 et8nqc32" value="F">
                                         <span aria-labelledby="gender-woman" class="css-mgd87h et8nqc31">여자</span>
                                     </label>
 
                                     <label class="css-z9g6s0 et8nqc33" for="gender-none">
                                         <input data-testid="radio-NONE" id="gender-none" name="gender" type="radio"
-                                               class="css-1pes2r6 et8nqc32" value="선택안함" checked>
+                                               class="css-1pes2r6 et8nqc32" checked>
                                         <span aria-labelledby="gender-none" class="css-mgd87h et8nqc31">선택안함</span>
                                     </label>
                                 </div>
@@ -170,22 +181,25 @@
                                 <div class="css-18n8lnw e1ke3ehm1">
                                     <div class="css-1dkwuq4 e1uzxhvi6">
                                         <div height="40" class="css-xsmgyi e1uzxhvi3">
-                                            <input data-testid="input-box" name="prBirth" id="birthY" placeholder="YYYY" type="text"
-                                                   height="40" maxlength='4' class="css-1368454 e1uzxhvi2">
+                                            <input name="prBirth" id="birthY" placeholder="YYYY" type="text"
+                                                   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                   height="40" minlength='4' maxlength='4' class="css-1368454 e1uzxhvi2">
                                         </div>
                                     </div>
                                     <span class="css-5lnvt6 e1ke3ehm0"></span>
                                     <div class="css-1dkwuq4 e1uzxhvi6">
                                         <div height="40" class="css-xsmgyi e1uzxhvi3">
-                                            <input data-testid="input-box" name="prBirth" id="birthM" placeholder="MM" type="text"
-                                                   height="40" maxlength='2' class="css-1368454 e1uzxhvi2">
+                                            <input name="prBirth" id="birthM" placeholder="MM" type="text"
+                                                   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                   height="40" minlength='2' maxlength='2' class="css-1368454 e1uzxhvi2">
                                         </div>
                                     </div>
                                     <span class="css-5lnvt6 e1ke3ehm0"></span>
                                     <div class="css-1dkwuq4 e1uzxhvi6">
                                         <div height="40" class="css-xsmgyi e1uzxhvi3">
-                                            <input data-testid="input-box" name="prBirth" id="birthD" placeholder="DD" type="text"
-                                                   height="40" maxlength='2' class="css-1368454 e1uzxhvi2">
+                                            <input name="prBirth" id="birthD" placeholder="DD" type="text"
+                                                   onKeyup="this.value=this.value.replace(/[^0-9]/g,'');"
+                                                   height="40" minlength='2' maxlength='2' class="css-1368454 e1uzxhvi2">
                                         </div>
                                     </div>
                                 </div>
@@ -200,30 +214,43 @@
                             <div class="css-82a6rk e744wfw3">
                                 <div class="css-jmalg e1uzxhvi6">
                                     <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                        <input data-testid="input-box" id="recommendedId" name="recommendedId"
-                                               placeholder="이름을 입력해 주세요" type="text"
-                                               class="css-1bkd15f e1uzxhvi2" value=""> <!-- required 삭제 -->
+                                        <input data-testid="input-box"
+                                               id="recommendedId"
+                                               name="recommendedId"
+                                               oninput="recomandValidation()"
+                                               type="text"
+                                               class="css-1bkd15f e1uzxhvi2"> <!-- required 삭제 -->
                                     </div>
                                     <!-- TODO 김윤지 -->
-                                    <p class="font-12 mt-10" id="invalid-feedback-recommendedId">1234</p>
+                                    <p class="font-12 mt-10" id="invalid-feedback-recommendedId"></p>
                                 </div>
                             </div>
                         </div>
                         <!-- 지인추천 끝 -->
 
                     <div class="subbmit">
-                        <button class="btn btn btn-primary btn-sm" id="submit-button" name="submit-button" type="submit" width="240"
-                                height="56" radius="3" diabled=""><span class="css-ymwvow e4nu7ef1 submit-button-span">가입하기</span></button>
+                        <button class="btn btn btn-primary btn-sm"
+                                id="submit-button"
+                                th:onclick="validateAll()"
+                                name="submit-button"
+                                width="240"
+                                height="56"
+                                radius="3"
+                                diabled="">
+                            <span class="css-ymwvow e4nu7ef1 submit-button-span">가입하기</span>
+                        </button>
 
-                        <button class="btn btn btn-primary btn-sm" id="prev" name="prev" width="240"
-                                height="56" radius="3" diabled=""><span class="css-ymwvow e4nu7ef1 submit-button-span">이전</span></button>
+                        <button class="btn btn btn-primary btn-sm"
+                                id="prev"
+                                name="prev"
+                                width="240"
+                                height="56"
+                                radius="3"
+                                diabled="">
+                            <span class="css-ymwvow e4nu7ef1 submit-button-span">이전</span>
+                        </button>
+
                     </div>
-<!--                        <div id="subbmit" class="container-fluid text-center">-->
-<!--                            <button class="btn btn-outline-primary btn-sm">가입</button>-->
-<!--                            <button class="btn btn-light btn-sm" >-->
-<!--                                <a href="/">취소</a>-->
-<!--                            </button>-->
-<!--                        </div>-->
                 </div>
 
             </div>

@@ -18,7 +18,7 @@ public interface UserDao {
     // getUser랑 기능 유사하지만 로그인일시 update 때문에 따로 빼둠
     public User login(String username) throws Exception;
 
-    public void join(User user) throws Exception;
+    public int join(User user) throws Exception;
 
     public void updateUserStatus (String username) throws Exception;
 

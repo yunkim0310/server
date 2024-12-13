@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +60,35 @@ public class UserRestController {
 
         boolean result = userService.chkEmail(email);
 
+        log.info("이메일 존재하는 지 값 확인 :: " + result);
+
         // 이미 회원이 존재하면 true, 반대는 false
 
         // boolean 값 리턴
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @PostMapping("/join")
+    public ResponseEntity<?> join( @RequestBody User user) throws Exception{
+
+        log.info("join Controller - post 호출");
+        log.info("회원가입 User 객체 :: " + user);
+
+        // todo, 성별, 생년월일 누락
+
+        int result = userService.join(user);
+
+        log.info("회워가입 result :: " + result);
+
+        if( result > 0 ) {
+            log.info("회원가입 성공! - SUCCESS");
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            log.info("회원가입 실패! - FAIL");
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
     }
 
 
