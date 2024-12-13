@@ -1,7 +1,7 @@
 $(function () {
 
     // 검색 함수
-    function search() {
+    function search(page) {
 
         var searchKeyword = $("input[name='searchKeyword']:text").val();
 
@@ -35,21 +35,25 @@ $(function () {
         });
 
         $("input[name='mode']:hidden").val("result");
+        $("input[name='page']").val(page);
 
         $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
     }
 
     // 검색 버튼
     $("button[name='searchStore']").on("click", function () {
-        search();
+
+        search(1);
     });
 
     // 엔터 검색
     $(document).on('keydown', function (e) {
+
         // Enter 키 코드: 13
         if (e.keyCode === 13) {
-            e.preventDefault(); // 기본 동작 방지 (예: 폼 제출 방지)
-            search(); // search 함수 실행
+
+            e.preventDefault();
+            search(1);
         }
     });
 
@@ -59,15 +63,20 @@ $(function () {
 
     // 필터 적용 후 제출 (모달 내의 폼 제출)
     $("button[name='saveFilter']").on("click", function (e) {
+
         e.preventDefault(); // 기본 제출 방지
 
         if (mode === "search") {
+
             // 필터 적용 후 모달 닫기
             $("#filterModal").hide();
         } else {
-            search();
+            search(1);
         }
 
     });
+
+    // 페이징
+    pageNavigator(search);
 
 });

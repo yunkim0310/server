@@ -1,4 +1,4 @@
-package com.example.server.common;
+package com.placeHere.server.common;
 
 public class Common {
 }

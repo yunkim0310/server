@@ -1,7 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
 <head>
-    <title>예약 실패 페이지</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>잘못된 접근</title>
     <style>
         /* 사용자 정의 팝업 스타일 */
         .custom-alert {
@@ -50,27 +52,26 @@
 <body>
 <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
 
-<!-- 팝업 영역 -->
-<div id="customPopup" class="overlay" style="display: none;">
-    <div class="custom-alert">
-        <p>예약이 실패 되었습니다</p>
-        <button onclick="redirectToReservation()">확인</button>
-    </div>
+<!-- 어두운 배경 -->
+<div class="overlay" id="overlay"></div>
+
+<!-- 사용자 정의 팝업 -->
+<div id="customAlert" class="custom-alert">
+    <p>잘못된 접근입니다.</p>
+    <button onclick="redirect()">확인</button>
 </div>
 
 <script>
-    // 팝업 표시 함수
-    function showCustomPopup() {
-        document.getElementById("customPopup").style.display = "block";
-    }
-
     // 확인 버튼 클릭 시 리다이렉트
-    function redirectToReservation() {
-        window.location.href = "/reservation/addRsrv?storeId=1"; // 원하는 storeId 값으로 설정
+    function redirect() {
+        window.location.href = "/"; // '/' 경로로 리다이렉트
     }
 
     // 페이지 로드 시 팝업 표시
-    window.onload = showCustomPopup;
+    window.onload = function () {
+        document.getElementById('customAlert').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    };
 </script>
 </body>
 </html>

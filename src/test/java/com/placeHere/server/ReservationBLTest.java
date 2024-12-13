@@ -262,8 +262,8 @@ public class ReservationBLTest {
         //search.setStartDate(null); // 검색 시작 날짜
         //search.setEndDate(null);   // 검색 종료 날짜
 
-        //search.setSearchStatuses(List.of("예약 요청", "예약 확정", "예약 취소")); // 예약 상태 필터
-        search.setSearchStatuses(null); // 예약 상태 필터
+        search.setSearchStatuses(List.of("예약 요청", "예약 확정", "예약 취소")); // 예약 상태 필터
+//        search.setSearchStatuses(null); // 예약 상태 필터
 
         // When: 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
