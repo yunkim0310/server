@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +24,9 @@ public class StoreRestController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private AwsS3Service awsS3Service;
+
     @Value("${page_size}")
     private int pageSize;
 
@@ -34,9 +38,6 @@ public class StoreRestController {
 
     @Value("${google_api}")
     private String googleApiKey;
-
-    @Value("${kakao_api}")
-    private String kakaoApiKey;
 
 
     // Constructor
@@ -143,14 +144,13 @@ public class StoreRestController {
         Map<String, String> response = new HashMap<>();
         response.put("businessNo", businessNoApiKey);
         response.put("google", googleApiKey);
-        response.put("kakao", kakaoApiKey);
 
         return ResponseEntity.ok(response);
     }
 
 
     // 가게 위치 전달
-    @GetMapping("getStoreLocation")
+    @GetMapping("/getStoreLocation")
     public ResponseEntity<List<Map<String,String>>> getStoreLocation(@ModelAttribute Search search,
                                                                      @RequestParam(value = "storeId", required = false, defaultValue = "0") int storeId) {
         System.out.println("/api-store/getStoreLocation : GET");
@@ -173,7 +173,8 @@ public class StoreRestController {
     }
 
 
-    @GetMapping(value = "getStatistics", params = "storeId")
+    // 예약 통계 데이터 전달
+    @GetMapping(value = "/getStatistics", params = "storeId")
     public ResponseEntity<Map<String,Map<String, Integer>>> getStatistics(@RequestParam("storeId") int storeId) {
 
         System.out.println("/api-store/getStatistics : GET");
@@ -181,6 +182,15 @@ public class StoreRestController {
         Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
         return ResponseEntity.ok(statistics);
+    }
+
+
+    // 사진 삭제 테스트
+    @GetMapping("/removeFile")
+    public void removeFile(@RequestParam("filePath") String filePath) {
+
+        awsS3Service.deleteFile(filePath);
+
     }
 
 }
