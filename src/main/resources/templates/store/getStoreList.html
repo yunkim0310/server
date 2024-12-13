@@ -19,11 +19,10 @@
         <link rel="stylesheet" href="/css/templates/regist_hp.css">
         <link rel="stylesheet" href="/css/store/modalStoreFilter.css">
         <script src="/javascript/store/modalStoreFilter.js"></script>
-        <script src="/javascript/store/searchStore.js"></script>
+        <script type="module" src="/javascript/store/searchStore.js"></script>
 
         <!-- 구글 지도 -->
-
-        <script async th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
+        <script defer th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&loading=async&callback=initMap&libraries=map,marker'"></script>
 
         <script src="/javascript/store/getStoreList.js"></script>
         <link rel="stylesheet" href="/css/store/getStoreList.css">
@@ -31,10 +30,6 @@
     </head>
 
     <body>
-
-        <header id="header">
-            <div th:insert="~{common/header}"></div>
-        </header>
 
         <input type="hidden" name="storeLocationList" th:value="${storeLocationList}">
 
@@ -47,6 +42,7 @@
                     <div class="layout-container" style="display: flex; flex-direction: row; justify-content: space-between;">
 
                         <div id="map-container" style="flex: 1; max-width: 60%; margin-right: 20px;">
+                            <div th:insert="~{store/searchStore :: searchStoreFragment}"></div>
                             <div id="map" style="width: 100%; height: 600px; background-color: #e0e0e0;">
 
                                 <p style="text-align: center; line-height: 600px; color: #555;">지도가 표시됩니다.</p>
@@ -56,8 +52,6 @@
                         <div id="store-list-container" style="flex: 2;">
 
                             <div class="search-header __autohide" style="background: none; top: 48px;">
-
-                                <div th:insert="~{store/searchStore :: searchStoreFragment}"></div>
 
                                 <div class="__search-result-header mb-20">
                                     <div class="__total-count" style="min-width: 121px">
@@ -74,6 +68,9 @@
                                         <div style="padding-bottom: 10px;">
                                             <div id="searchList_">
                                                 <div id="searchList__0" data-dummy="40">
+                                                    <div th:if="${totalCnt == 0}" style="text-align: center">
+                                                        <span>검색된 매장이 없습니다.</span>
+                                                    </div>
                                                     <div th:each="store : ${storeList}">
                                                         <div class="saved-restaurant-list-item" style="padding-bottom: 40px;">
                                                             <div class="restaurant-info">
@@ -142,16 +139,10 @@
                                 </div>
 
                                 <!--페이징 처리-->
-                                <div class="page_wrap" style="padding: 60px;">
-                                    <div class="page_nation" aria-label="Page navigation example">
-                                        <a href="#"
-                                           th:class="'page-prev' + (${totalCnt} <= 0 ? ' page-disabled':'')"></a>
-                                        <span th:each="pageNumber : ${#numbers.sequence(1, 5)}">
-                                        <a th:text="${pageNumber + 1}" href="#"
-                                           class="active">1</a></span>
-                                        <a href="#" class="page-next'"></a>
-                                    </div>
-                                </div>
+                                <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+                                <form name="paging">
+                                    <input type="hidden" name="page">
+                                </form>
                                 <!--페이징 끝-->
 
                             </section>

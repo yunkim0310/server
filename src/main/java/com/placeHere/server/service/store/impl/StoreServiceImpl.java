@@ -419,9 +419,9 @@ public class StoreServiceImpl implements StoreService {
         System.out.println(calcRsrvPercentMap);
 
         Map<String, Map<String, Integer>> statisticsMap = new HashMap<String, Map<String, Integer>>();
-        statisticsMap.put("cntWeekRsrv", cntWeekRsrvMap);
-        statisticsMap.put("cntRsrvAvg", cntRsrvAvgMap);
-        statisticsMap.put("calcRsrvPercent", calcRsrvPercentMap);
+        statisticsMap.put("week", cntWeekRsrvMap);
+        statisticsMap.put("avg", cntRsrvAvgMap);
+        statisticsMap.put("per", calcRsrvPercentMap);
         
         return statisticsMap;
     }

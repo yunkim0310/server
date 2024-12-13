@@ -2,8 +2,10 @@
 let selectedRole = null;
 
 function selectOption(button, role) {
+
   // 모든 버튼에서 'active' 클래스 제거
   const buttons = document.querySelectorAll('.button');
+
   buttons.forEach(btn => {
     btn.classList.remove('active');
   });
@@ -19,11 +21,16 @@ function selectOption(button, role) {
 
 }
 
-// '다음' 버튼 클릭 시 폼이 제출될 때 역할을 전송
-document.getElementById('roleForm').onsubmit = function(event) {
-  // 역할이 선택되지 않았다면 폼 제출을 막고 알림
-  if (!selectedRole) {
+// 역할을 선택하지 않았을 때
+function validateForm() {
+
+  const selectedRole = document.getElementById('selectedRole').value;
+  console.log(selectedRole);
+
+  if( !selectedRole ) {
+    alert("역할을 선택하세요.");
     event.preventDefault();
-    alert("역할을 선택해주세요.");
+    return;
   }
-};
+  return true;
+}

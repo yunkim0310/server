@@ -1,8 +1,10 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +24,9 @@ public class StoreRestController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private AwsS3Service awsS3Service;
+
     @Value("${page_size}")
     private int pageSize;
 
@@ -33,9 +38,6 @@ public class StoreRestController {
 
     @Value("${google_api}")
     private String googleApiKey;
-
-    @Value("${kakao_api}")
-    private String kakaoApiKey;
 
 
     // Constructor
@@ -59,17 +61,32 @@ public class StoreRestController {
 
 
     // 가게 좋아요 추가
-    @GetMapping(value = "/addStoreLike", params = {"userName", "relationNo", "target"})
-    public ResponseEntity<Like> addLikeStore(@ModelAttribute Like like) throws Exception {
+    @GetMapping(value = "/addStoreLike", params = {"relationNo"})
+    public ResponseEntity<Integer> addLikeStore(HttpSession session,
+                                             @ModelAttribute Like like) throws Exception {
 
         System.out.println("/api-store/addLikeStore/");
-        System.out.println(like);
 
-        likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+        User user = (User) session.getAttribute("user");
 
-        Like result = likeService.chkLike(like);
+        if (user == null) {
 
-        return ResponseEntity.ok(result);
+            return ResponseEntity.ok(0);
+        }
+
+        else {
+
+            like.setUserName(user.getUsername());
+            like.setTarget("store");
+
+            System.out.println(like);
+
+            likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+
+            Like result = likeService.chkLike(like);
+
+            return ResponseEntity.ok(result.getLikeId());
+        }
     }
 
 
@@ -127,14 +144,13 @@ public class StoreRestController {
         Map<String, String> response = new HashMap<>();
         response.put("businessNo", businessNoApiKey);
         response.put("google", googleApiKey);
-        response.put("kakao", kakaoApiKey);
 
         return ResponseEntity.ok(response);
     }
 
 
     // 가게 위치 전달
-    @GetMapping("getStoreLocation")
+    @GetMapping("/getStoreLocation")
     public ResponseEntity<List<Map<String,String>>> getStoreLocation(@ModelAttribute Search search,
                                                                      @RequestParam(value = "storeId", required = false, defaultValue = "0") int storeId) {
         System.out.println("/api-store/getStoreLocation : GET");
@@ -153,6 +169,27 @@ public class StoreRestController {
 
             return ResponseEntity.ok(storeLocation);
         }
+
+    }
+
+
+    // 예약 통계 데이터 전달
+    @GetMapping(value = "/getStatistics", params = "storeId")
+    public ResponseEntity<Map<String,Map<String, Integer>>> getStatistics(@RequestParam("storeId") int storeId) {
+
+        System.out.println("/api-store/getStatistics : GET");
+
+        Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
+
+        return ResponseEntity.ok(statistics);
+    }
+
+
+    // 사진 삭제 테스트
+    @GetMapping("/removeFile")
+    public void removeFile(@RequestParam("filePath") String filePath) {
+
+        awsS3Service.deleteFile(filePath);
 
     }
 

@@ -1,65 +1,83 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.na/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>PlaceHere</title>
+
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+    <link href="/css/templates/mypage.css" rel="stylesheet">
+
+    <link th:insert="~{common/import :: importFragment}">
 
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="/css/templates/header.css">
-    <link rel="stylesheet" href="/css/templates/collection_detail.css">
-    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
 
     <script type="text/javascript">
         $(function() {
-            $("button.btn-primary").on("click", function() {
-                fncAddProduct();
+            $("button[name='cancelBtn']").on("click", function () {
+                // history.go(-1);
+                self.location = "/product/listProduct";
             });
         });
 
         $(function() {
-            $("button.btn-confirm").on("click", function () {
-                history.go(-1);
+            $("button[name='submitBtn']").on("click", function() {
+                fncAddProduct();
             });
+
         });
 
         function fncAddProduct() {
-            var prodName = $("textarea[name='prodName']").val();
+            var prodName = $("input[name='prodName']").val();
             var prodDetail = $("textarea[name='prodDetail']").val();
-            var prodImg1 = $("textarea[name='prodImg1']").val();
-            var prodPrice = $("textarea[name='prodPrice']").val();
+            var prodImg1 = $("input[name='prodImg1']").val();
+            var prodPrice = $("input[name='prodPrice']").val();
             var prodCateNo = $("select[name='prodCateNo']").val();
 
             if (prodName == null || prodName.length < 1) {
                 alert("상품명은 반드시 입력하여야 합니다.");
-                return;
+                history.go();
             }
 
             if (prodName.length > 20) {
                 alert("상품명은 20자까지 입력 가능합니다.");
-                return;
+                // return;
+                history.go();
             }
 
             if (prodDetail == null || prodDetail.length < 1) {
                 alert("상품상세정보는 반드시 입력하여야 합니다.");
-                return;
+                // return;
+                history.go();
             }
 
             if (prodDetail.length > 100) {
                 alert("상품 설명은 100자까지 입력 가능합니다.");
-                return;
+                // return;
+                history.go();
             }
 
             if (prodImg1 == null || prodImg1.length < 1) {
                 alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
-                return;
+                // return;
+                history.go();
             }
             if (prodPrice == null || prodPrice.length < 1) {
                 alert("가격은 반드시 입력하셔야 합니다.");
-                return;
+                // return;
+                history.go();
             }
             if (prodCateNo == null || prodCateNo.length < 1) {
                 alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
-                return;
+                // return;
+                history.go();
             }
 
             $("form").attr("method", "POST")
@@ -70,70 +88,6 @@
     </script>
 
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-        }
-
-        .point-header {
-            background-color: #ffffff;
-            padding: 30px;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .point-header h1 {
-            color: #333;
-            font-size: 2rem;
-            font-weight: bold;
-            margin-top: 10px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #333;
-            margin-top: 30px;
-        }
-
-        .form-container {
-            display: flex;
-            justify-content: center;  /* 가로 중앙 정렬 */
-            align-items: center;      /* 세로 중앙 정렬 */
-            height: calc(100vh - 120px); /* 전체 화면 높이에서 헤더 높이를 제외한 영역을 차지 */
-        }
-
-        form {
-            background-color: #ffffff;
-            padding: 20px;
-            margin-top: 20px;
-            width: 500px; /* 원하는 너비로 설정 */
-            box-sizing: border-box; /* 패딩을 포함한 너비 설정 */
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group strong {
-            font-size: 14px;
-            color: #333;
-            font-weight: bold;
-        }
-
-        .form-group input[type="text"], .form-group select {
-            width: 100%; /* 가로 크기 100%로 설정 */
-            padding: 10px;
-            margin-right: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-
-        .form-group input[type="radio"] {
-            margin-right: 10px;
-        }
-
         .form-group.button-group {
             text-align: center;
         }
@@ -166,84 +120,169 @@
             background-color: #d0d0d0;
         }
 
-    </style>
+</style>
 
 
 </head>
 <body>
-<br/><br/>
-<div class="point-header">
-    <div th:insert="~{common/header}"></div>
-    <div th:insert="~{pointShop/menuBar}"></div>
     <br/><br/>
-    <h1>상품 등록</h1><br/><br/>
-    <span class="css-qq9ke6 e1yyjjij0">*</span> 필수입력사항
-    <div class="header-line"></div><br/><br/><br/><br/><br/>
-</div>
+    <header id="header">
+        <div th:insert="~{common/header}"></div>
+    </header>
 
-<div class="form-container">
-    <form>
-        <div class="form-group">
-            <label for="prodName"><strong>상품명 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <textarea name="prodName" id="prodName" placeholder="20자 이내 (공백 포함)" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div><br/>
-
-        <div class="form-group">
-            <label for="prodDetail"><strong>상품 설명 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <textarea name="prodDetail" id="prodDetail" placeholder="100자 이내 (공백 포함)" rows="5" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div><br/>
-
-
-        <div class="form-group">
-            <label for="prodPrice"><strong>상품 가격 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <textarea name="prodPrice" id="prodPrice" placeholder="숫자만 입력 가능합니다." rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div><br/>
-
-        <div class="form-group">
-            <label for="prodImg1"><strong>상품 대표 이미지 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span><p class="font-12 color-gray mt-10">1장 필수</p></label>
-<!--            <input type="file" accept="image/*" name="file" id="prodImg1" th:field="*{product.prodImg1}" placeholder="1장 필수">-->
-            <textarea name="prodImg1" id="prodImg1" placeholder="1장 필수" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div><br/>
-
-        <div class="form-group">
-            <label for="prodImg2"><strong>상품 상세 이미지</strong><p class="font-12 color-gray mt-10">최대 2장</p></label>
-            <textarea name="prodImg2" id="prodImg2" placeholder="상세 이미지" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea><br/><br/>
-<!--            <input type="file" accept="image/*" name="prodImg2" id="prodImg2" th:field="*{product.prodImg2}" placeholder="1장 선택"><br/><br/>-->
-            <label for="prodImg3"><strong>상품 상세 이미지</strong><p class="font-12 color-gray mt-10">최대 2장</p></label>
-<!--            <input type="file" accept="image/*" name="prodImg3" id="prodImg3" th:field="*{product.prodImg3}" placeholder="1장 선택">-->
-            <textarea name="prodImg3" id="prodImg3" placeholder="상세 이미지" rows="1" style="resize: none; width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;"></textarea>
-        </div><br/>
-
-        <div class="form-group">
-            <label for="prodCateNo"><strong>상품 카테고리 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <select name="prodCateNo" id="prodCateNo">
-                <option value="0">상품 카테고리를 선택하세요.</option>
-                <option value="1">배달 상품권</option>
-                <option value="2">베이커리 교환권</option>
-                <option value="3">카페 교환권</option>
-                <option value="4">아이스크림 교환권</option>
-                <option value="5">치킨 교환권</option>
-                <option value="6">버거/피자 교환권</option>
-                <option value="7">편의점 교환권</option>
-            </select>
-        </div><br/>
-
-        <div class="form-group">
-            <label><strong>판매 가능 상태 </strong><span
-                    class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>
-            <input type="radio" name="prodStatus" value="1" checked>구매 가능&nbsp;&nbsp;&nbsp;
-            <input type="radio" name="prodStatus" value="0">판매 중지
-        </div><br/><br/>
-
-        <div class="form-group button-group">
-            <button type="submit" class="btn-primary">등&nbsp;록</button>
-            <button type="button" class="btn-confirm">취&nbsp;소</button>
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
+        <div class="side">
+            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
+            <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
         </div>
+    </div>
+
+    <div id="root">
+
+        <form>
+
+            <div class="wrapper">
+
+                <div class="css-pculus e1ovi4141">
+                    <div class="css-o5dw7d e1ovi4140">상품 등록</div>
+
+                    <div class="css-mhmtvt e15so55l1">
+                        <div class="css-rb0i47 e1yyjjij1">
+                            <span class="css-qq9ke6 e1yyjjij0">*</span> 필수입력사항
+                        </div><br/><br/>
+
+                        <div class="css-y8aj3r eo6ykj40">
+
+                            <div class="css-1pjgd36 e744wfw6">
+                                <div class="css-1y8737n e744wfw5">
+                                    <label class="css-1obgjqh e744wfw4" for="prodName">
+                                        상품명
+                                        <span class="css-qq9ke6 e744wfw0">*</span>
+                                    </label>
+                                </div><br/><br/>
+                                <div class="css-82a6rk e744wfw3">
+                                    <div class="css-jmalg e1uzxhvi6">
+                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                            <input id="prodName" name="prodName"
+                                                   placeholder="상품명을 입력하세요." type="text"
+                                                   class="css-1bkd15f e1uzxhvi2">
+                                        </div>
+                                        <p class="font-12 color-gray mt-10" id="duplicateResult">20자 이내로 입력해주세요.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <div class="css-1y8737n e744wfw5">
+                                        <label class="css-1obgjqh e744wfw4" for="prodDetail">상품 설명
+                                            <span class="css-qq9ke6 e744wfw0">*</span></label>
+                                    </div>
+                                    <div class="css-82a6rk e744wfw3">
+                                        <div class="css-jmalg e1uzxhvi6">
+                                            <div class="css-176lya2 e1uzxhvi3 password-block">
+                                                <textarea id="prodDetail" name="prodDetail" class="css-1bkd15f e1uzxhvi2" placeholder="상품 설명을 입력하세요. 100자 이내 (공백 포함)"
+                                                          rows="20" style="resize: none; height: 100px"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <br/><br/><br/><br/><br/><br/>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <div class="css-1y8737n e744wfw5"><label class="css-1obgjqh e744wfw4" for="prodPrice">상품 가격<span
+                                            class="css-qq9ke6 e744wfw0">*</span></label></div>
+                                    <div class="css-82a6rk e744wfw3">
+                                        <div class="css-jmalg e1uzxhvi6">
+                                            <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                                <input  id="prodPrice" name="prodPrice"
+                                                        placeholder="상품 가격을 입력하세요." type="text"
+                                                        class="css-1bkd15f e1uzxhvi2">
+                                            </div>
+                                            <p class="font-12 color-gray mt-10">숫자만 입력 가능합니다.</p>
+                                        </div>
+                                    </div>
+                                </div><br/><br/>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <div class="css-1y8737n e744wfw5">
+                                        <label class="css-1obgjqh e744wfw4">상품 대표 이미지<span
+                                                class="css-qq9ke6 e744wfw0">*</span>
+                                            <p class="font-12 color-gray mt-10">1장 필수</p></label>
+                                    </div><br/><br/>
+                                    <div class="css-jmalg e1uzxhvi6">
+                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+<!--                                            <input type="file" accept="image/*" name="prodImg1">-->
+                                            <input id="prodImg1" name="prodImg1"
+                                                   placeholder="상품 대표 이미지" type="text"
+                                                   class="css-1bkd15f e1uzxhvi2">
+                                        </div>
+                                    </div><br/>
+                                </div><br/><br/>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <div class="css-1y8737n e744wfw5">
+                                        <label class="css-1obgjqh e744wfw4">상품 상세 이미지
+                                            <p class="font-12 color-gray mt-10">최대 2장</p>
+                                        </label>
+                                    </div>
+                                    <div class="css-jmalg e1uzxhvi6">
+                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+<!--                                            <input type="file" accept="image/*" name="prodImg2">-->
+                                            <input id="prodImg2" name="prodImg2"
+                                                   placeholder="상품 상세 이미지" type="text"
+                                                   class="css-1bkd15f e1uzxhvi2">
+                                        </div>
+                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+<!--                                            <input type="file" accept="image/*" name="prodImg3">-->
+                                            <input id="prodImg3" name="prodImg3"
+                                                   placeholder="상품 상세 이미지" type="text"
+                                                   class="css-1bkd15f e1uzxhvi2">
+                                        </div>
+                                    </div>
+                                </div><br/><br/>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <label class="css-1obgjqh e744wfw4" for="prodCateNo"><strong>상품 카테고리 </strong><span
+                                            class="css-qq9ke6 e744wfw0">*</span></label><br/><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <select name="prodCateNo" id="prodCateNo">
+                                        <option value="0">상품 카테고리를 선택하세요.</option>
+                                        <option value="1">배달 상품권</option>
+                                        <option value="2">베이커리 교환권</option>
+                                        <option value="3">카페 교환권</option>
+                                        <option value="4">아이스크림 교환권</option>
+                                        <option value="5">치킨 교환권</option>
+                                        <option value="6">버거/피자 교환권</option>
+                                        <option value="7">편의점 교환권</option>
+                                    </select>
+                                </div>
+
+                                <br/><br/>
+
+                                <div class="css-1pjgd36 e744wfw6">
+                                    <label class="css-1obgjqh e744wfw4"><strong>판매 가능 상태 </strong><span
+                                            class="css-qq9ke6 e744wfw0">*</span></label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="prodStatus" value="1" checked>구매 가능&nbsp;&nbsp;&nbsp;
+                                    <input type="radio" name="prodStatus" value="0">판매 중지
+                                </div><br/><br/><br/><br/>
+<!--                                <div class="form-group button-group">-->
+<!--                                    <button type="submit" class="btn-primary">등&nbsp;록</button>-->
+<!--                                    <button type="button" class="btn-confirm">취&nbsp;소</button>-->
+<!--                                </div><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>-->
+                            <div class="css-137ca2h e1utgeno0">
+                                <button class="css-18m884r e4nu7ef3" id="submit" name="submitBtn" type="submit" width="240"
+                                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                                    <span class="css-ymwvow e4nu7ef1 submit-button-span">등&nbsp;록</span>
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button class="css-18m884r e4nu7ef3" id="cancel" name="cancelBtn" type="button" width="240"
+                                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #646D7A;">
+                                    <span class="css-ymwvow e4nu7ef1 submit-button-span">취&nbsp;소</span>
+                                </button>
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
     </form>
 </div>
 

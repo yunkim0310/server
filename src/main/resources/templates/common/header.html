@@ -11,7 +11,7 @@
     <div class="header">
         <div class="headerMain">
             <div class="logo">
-                <a id="home" href="/"><img class="logoImg" src="/images/logo.png"/></a>
+                <a id="home" href="/"><img class="logoImg" src="/images/common/logo.png"/></a>
             </div>
 
 
@@ -41,7 +41,9 @@
                             <a th:if="${session.user.role == 'ROLE_STORE'}" href="/reservation/getRsrvStoreList">예약</a>
                         </div>
                     </li>
-                    <li><a href="/product/listProduct">포인트 상점</a></li>
+                    <th:block th:if="${session.user != null and (session.user.role == 'ROLE_USER' or session.user.role == 'ROLE_POINT')}">
+                        <li><a href="/product/listProduct">포인트 상점</a></li>
+                    </th:block>
                     <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
                         <li><a href="/store/getMyStore">가게관리</a></li>
                     </th:block>
@@ -56,7 +58,7 @@
             <div class="small_category">
                 <ul class="small_categoryList">
                     <li class="small_logo">
-                        <a href="/"><img class="logoImg" src="/images/logo.png" style="transform: scale(0.8);transform-origin: center;"/></a>
+                        <a href="/"><img class="logoImg" src="/images/common/logo.png" style="transform: scale(0.8);transform-origin: center;"/></a>
                     </li>
                     <li><a href="/searchStore">가게 검색</a></li>
                     <li><a href="#">커뮤니티</a></li>
@@ -66,7 +68,9 @@
                             <a th:if="${session.user.role == 'ROLE_STORE'}" href="/reservation/getRsrvStoreList">예약</a>
                         </div>
                     </li>
-                    <li><a href="/product/listProduct">포인트 상점</a></li>
+                    <th:block th:if="${session.user != null and (session.user.role == 'ROLE_USER' or session.user.role == 'ROLE_POINT')}">
+                        <li><a href="/product/listProduct">포인트 상점</a></li>
+                    </th:block>
                     <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
                         <li><a href="/store/getMyStore">가게관리</a></li>
                     </th:block>

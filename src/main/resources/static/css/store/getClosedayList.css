@@ -1,0 +1,93 @@
+.containerList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.containerItem {
+    border: 1px solid #C4C4C4;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #F8F8F8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 800px;
+    max-width: 100%;
+}
+
+.containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerHeader .containerData {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+.containerHeader .containerTitle {
+    font-size: 16px;
+    color: #888;
+    text-align: right;
+}
+
+.btnContainer {
+    display: flex; /* 플렉스 컨테이너로 설정 */
+}
+
+.checkBtn {
+    display: inline-block;
+}
+
+/* 테이블 스타일 */
+table {
+    width: 50%;
+    border-collapse: collapse;
+    margin: 0 auto; /* 테이블 수평 가운데 정렬 */
+    margin-bottom: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px 20px;
+    text-align: center;
+    font-size: 1rem;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    color: #333;
+}
+
+td {
+    background-color: #fff;
+    color: #333;
+}
+
+td input[type="hidden"] {
+    display: none;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    table {
+        font-size: 0.9rem;
+    }
+
+    th, td {
+        padding: 8px 12px;
+    }
+
+    h1 {
+        font-size: 2rem;
+    }
+
+    h3 {
+        font-size: 1.2rem;
+    }
+}

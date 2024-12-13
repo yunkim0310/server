@@ -494,7 +494,7 @@ hr.separator {
     font-size: 18px!important;
 }
 .color-red {
-    color: #ff3d00!important;
+    color: #4880FF!important;
 }
 .section .section-header .utils .__toggle.__up {
     transform: rotate(-180deg);
@@ -573,8 +573,8 @@ table .align-middle {
 }
 .__checkout-methods .__item label input:checked+span {
     background-color: #ffebe5;
-    border-color: #ff3d00;
-    color: #ff3d00;
+    border-color: #4880FF;
+    color: #4880FF;
 }
 .__checkout-methods .__item label span {
     display: flex;
@@ -1618,7 +1618,7 @@ h1 {
 }
 
 .__recom-hashtag a {
-    border: 1px solid #ff3d00;
+    border: 1px solid #4880FF;
     box-sizing: border-box;
     border-radius: 18px;
     display: flex;
@@ -2135,7 +2135,7 @@ hr {
 }
 .timetable-list-item {
     border-radius: 6px;
-    border: solid 1px #ff3d00;
+    border: solid 1px #4880FF;
     overflow: hidden;
     width: 76px;
     text-align: center;
@@ -2170,14 +2170,14 @@ hr {
     display: flex;
     justify-content: center;
     align-items: center;
-    border: solid 1px #ff3d00;
+    border: solid 1px #4880FF;
     border-radius: 6px;
 }
 
 .timetable-list-item .time {
     font-size: 16px;
     color: #fff;
-    background: #ff3d00;
+    background: #4880FF;
     padding: 12px 0 11px;
     display: flex;
     justify-content: center;
@@ -2197,14 +2197,14 @@ hr {
     content: url(data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEwLjIzMzQgNkMxMC4yMzM0IDcuMjMzNDQgOS4yMzM0NiA4LjIzMzM0IDguMDAwMDIgOC4yMzMzNEM2Ljc2NjU4IDguMjMzMzQgNS43NjY2OSA3LjIzMzQ0IDUuNzY2NjkgNkM1Ljc2NjY5IDQuNzY2NTcgNi43NjY1OCAzLjc2NjY3IDguMDAwMDIgMy43NjY2N0M5LjIzMzQ2IDMuNzY2NjcgMTAuMjMzNCA0Ljc2NjU3IDEwLjIzMzQgNloiIGZpbGw9ImJsYWNrIiBzdHJva2U9ImJsYWNrIiBzdHJva2Utd2lkdGg9IjEuMiIvPgo8cGF0aCBkPSJNMy45ODYxMiAxMi43MzMzQzQuMjY5NSAxMS4xNDE3IDUuNjYwMzEgOS45MzMzMyA3LjMzMzM0IDkuOTMzMzNIOC42NjY2OEMxMC4zMzk3IDkuOTMzMzMgMTEuNzMwNSAxMS4xNDE3IDEyLjAxMzkgMTIuNzMzM0gzLjk4NjEyWiIgZmlsbD0iYmxhY2siIHN0cm9rZT0iYmxhY2siIHN0cm9rZS13aWR0aD0iMS4yIi8+Cjwvc3ZnPgo=);
 }
 .notice-live-view span {
-    color: #ff3d00;
+    color: #4880FF;
 }
 .btn-centered {
     text-align: center;
 }
 .btn-rounded.btn-outline-orange, .btn-rounded.btn-outline-red {
     background-color: #fff;
-    border: 1px solid #ff3d00;
+    border: 1px solid #4880FF;
     padding-left: 22px;
     padding-right: 22px;
 }
@@ -2213,7 +2213,7 @@ hr {
 }
 
 .btn-rounded.btn-outline-orange .label, .btn-rounded.btn-outline-red .label {
-    color: #ff3d00;
+    color: #4880FF;
 }
 .btn-rounded .label.arrow {
     padding-right: 12px;
@@ -3065,7 +3065,7 @@ hr {
 #dock .dock-container .restaurant-dock-menu .right-menu a.btn-reservation {
     display: block;
     float: right;
-    background: #ff3d00;
+    background: #4880FF;
     color: #fff;
     border-radius: 30px;
     height: 36px;
@@ -3578,8 +3578,8 @@ hr {
 
 .btn-lg.btn-red,
 .btn-md.btn-red {
-    background: #ff3d00;
-    border-color: #ff3d00;
+    background: #4880FF;
+    border-color: #4880FF;
     color: #fff;
 }
 .btn.full-width {
@@ -3917,8 +3917,8 @@ a.btn-layerClose {
 /* 타임라인 */
 .search-header-timeline .__filter-list .__list a.__active {
     background: #fcefe7;
-    border: 1px solid #ff3d00;
-    color: #ff3d00;
+    border: 1px solid #4880FF;
+    color: #4880FF;
 }
 
 .search-header-timeline .__filter-list .__list a {

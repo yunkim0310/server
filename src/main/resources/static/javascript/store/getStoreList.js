@@ -43,34 +43,38 @@ function initMap() {
     const bounds = new google.maps.LatLngBounds();
     const infoWindow = new google.maps.InfoWindow();
 
-    storeList.forEach(({ storeId, storeName, storeLocation }) => {
+    if (storeList.length > 0) {
 
-        const [lat, lng] = storeLocation.split(',').map(Number);
+        storeList.forEach(({storeId, storeName, storeLocation}) => {
 
-        const marker = new google.maps.Marker({
-            position: { lat, lng },
-            storeId,
-            map,
-        });
+            const [lat, lng] = storeLocation.split(',').map(Number);
 
-        bounds.extend(marker.position);
-
-        marker.addListener("click", () => {
-            infoWindow.setContent(`<a href="/getStore?storeId=${storeId}">${storeName}</a>`);
-            infoWindow.open({
-                anchor: marker,
+            const marker = new google.maps.Marker({
+                position: {lat, lng},
+                storeId,
                 map,
             });
+
+            bounds.extend(marker.position);
+
+            marker.addListener("click", () => {
+                infoWindow.setContent(`<a href="/getStore?storeId=${storeId}" target="_blank">${storeName}</a>`);
+                infoWindow.open({
+                    anchor: marker,
+                    map,
+                });
+            });
         });
-    });
 
-    map.fitBounds(bounds);
+        map.fitBounds(bounds);
 
-    if (storeList.length === 1) {
+        if (storeList.length === 1) {
 
-        google.maps.event.addListenerOnce(map, 'idle', function() {
-            map.setZoom(18); // 원하는 줌 레벨로 설정
-        });
+            google.maps.event.addListenerOnce(map, 'idle', function () {
+                map.setZoom(18); // 원하는 줌 레벨로 설정
+            });
+
+        }
 
     }
 

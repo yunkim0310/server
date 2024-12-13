@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
@@ -38,6 +40,9 @@ public class StoreController {
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
 
+    @Autowired
+    private AwsS3Service awsS3Service;
+
     @Value("${store_upload_dir}")
     private String uploadDir;
 
@@ -55,6 +60,9 @@ public class StoreController {
 
     @Value("${google_api}")
     private String googleApi;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
 
 
     // Constructor
@@ -424,6 +432,10 @@ public class StoreController {
 
         System.out.println(storeList);
 
+        // 페이징
+        Paging paging = new Paging(totalCnt, search.getPage(), pageSize, listSize);
+        model.addAttribute("paging", paging);
+
         // 가게 목록
         model.addAttribute("storeList", storeList);
         model.addAttribute("totalCnt", totalCnt);
@@ -455,29 +467,33 @@ public class StoreController {
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 
-        Store store = storeService.getStore(storeId);
+        Store store = storeService.getStore(storeId, Date.valueOf(LocalDate.now()));
         search.setPageSize(pageSize);
         search.setListSize(listSize);
 
         System.out.println(store);
 
         if (store == null) {
-            return null;
+            return "redirect:/";
         }
 
         else {
+
             // 회원의 좋아요 여부
-            // 로그인 중인 유저 아이디 얻어오기 TODO
-            String userName = "user01";
-            Like like = new Like(userName);
-            like.setRelationNo(storeId);
-            like.setTarget("store");
+            if (user != null && user.getRole().equals("ROLE_USER")) {
 
-            Like chkLike = likeService.chkLike(like);
+                Like like = new Like(user.getUsername());
+                like.setRelationNo(storeId);
+                like.setTarget("store");
 
-            model.addAttribute("like", chkLike);
+                Like chkLike = likeService.chkLike(like);
+
+                model.addAttribute("like", chkLike);
+            }
+
             model.addAttribute("store", store);
             model.addAttribute("mode", mode);
+            model.addAttribute("googleApi", googleApi);
 
             switch (mode) {
 
@@ -485,8 +501,7 @@ public class StoreController {
                     // 가게 정보
                     System.out.println("/getStore 가게 정보");
 
-                    model.addAttribute("amenitiesNamList", amenitiesNameList);
-                    model.addAttribute("googleApi", googleApi);
+                    model.addAttribute("amenitiesNameList", amenitiesNameList);
 
                     break;
 
@@ -495,11 +510,17 @@ public class StoreController {
                     System.out.println("/getStore 예약통계");
                     Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
-                    model.addAttribute("weekRsrv", statistics.get("cntWeekRsrv"));
-                    model.addAttribute("rsrvAvg", statistics.get("cntRsrvAvg"));
-                    model.addAttribute("percent", statistics.get("calcRsrvPercent"));
+                    model.addAttribute("week", statistics.get("week"));
+                    model.addAttribute("avg", statistics.get("avg"));
+                    model.addAttribute("per", statistics.get("per"));
 
                     model.addAttribute("statistics", statistics);
+
+                    if (user != null) {
+
+                        boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
+                        model.addAttribute("isMyStore", isMyStore);
+                    }
 
                     break;
 
@@ -529,6 +550,7 @@ public class StoreController {
     // 가게 좋아요 목록 조회
     @GetMapping("/getStoreLikeList")
     public String getLikeStoreList(HttpSession session,
+                                   @RequestParam("page") int page,
                                    Model model) throws Exception {
 
         System.out.println("/store/getLikeStoreList : GET");
@@ -541,6 +563,11 @@ public class StoreController {
             if (user.getRole().equals("ROLE_USER")) {
 
                 List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername());
+                int totalCnt = storeLikeList.size();
+
+                // 페이징
+                Paging paging = new Paging(totalCnt, page, pageSize, listSize);
+                model.addAttribute("paging", paging);
 
                 model.addAttribute("storeLikeList", storeLikeList);
 
@@ -561,7 +588,6 @@ public class StoreController {
     }
 
 
-    // TODO 내 가게 리뷰보기, 매장 소식 보기, 휴무일 보기 합치기
     // 점주 회원 마이페이지 (가게 관리)
     @GetMapping("/store/getMyStore")
     public String getMyStore(@RequestParam(value = "mode", required = false, defaultValue = "review") String mode,
@@ -572,8 +598,7 @@ public class StoreController {
 
         System.out.println("/store/getMyStore : GET");
         System.out.println("mode: " + mode);
-        
-        // TODO 로그인 중인 회원 아이디 가져오기, 역할 확인
+
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 
@@ -605,8 +630,8 @@ public class StoreController {
 
                 else {
 
-                    model.addAttribute("store", store);
-                    model.addAttribute("mode", mode);
+                    // 페이징
+                    Paging paging = new Paging();
 
                     switch (mode) {
 
@@ -621,6 +646,9 @@ public class StoreController {
                             model.addAttribute("reviewList", reviewList);
                             model.addAttribute("totalCnt", reviewTotalCnt);
 
+                            // 페이징
+                            paging = new Paging(reviewTotalCnt, search.getPage(), pageSize, listSize);
+
                             break;
 
                         case "news":
@@ -634,6 +662,9 @@ public class StoreController {
                             model.addAttribute("storeNewsList", storeNewsList);
                             model.addAttribute("totalCnt", newsTotalCnt);
 
+                            // 페이징
+                            paging = new Paging(newsTotalCnt, search.getPage(), pageSize, listSize);
+
                             break;
 
                         case "closeday":
@@ -646,13 +677,20 @@ public class StoreController {
 
                             model.addAttribute("totalCnt", closedayTotalCnt);
                             model.addAttribute("closedayList", closedayList);
-                            model.addAttribute("search", search);
                             model.addAttribute("today", LocalDate.now());
                             model.addAttribute("message", message);
+
+                            // 페이징
+                            paging = new Paging(closedayTotalCnt, search.getPage(), pageSize, listSize);
 
                             break;
 
                     }
+
+                    model.addAttribute("store", store);
+                    model.addAttribute("mode", mode);
+                    model.addAttribute("search", search);
+                    model.addAttribute("paging", paging);
 
                     return "store/getMyStore";
                 }
@@ -770,6 +808,35 @@ public class StoreController {
         }
 
         return "redirect:/store/getMyStore?mode=" + mode;
+    }
+
+
+    // 파일업로드 테스트
+    @RequestMapping("/store/file")
+    public String fileUploadTest(@RequestParam(value = "file", required = false) MultipartFile[] files, Model model) throws Exception {
+
+        System.out.println("/store/file : GET");
+
+        List<String> filePathList = new ArrayList<String>();
+
+        if (files != null && files.length > 0) {
+
+            for (MultipartFile file : files) {
+
+                if (file != null && !file.isEmpty()) {
+
+                    String filePath = awsS3Service.uploadFile(file, "store/");
+                    filePathList.add(filePath);
+                }
+            }
+
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("filePathList", filePathList);
+
+            System.out.println(filePathList);
+        }
+
+        return "test/store/fileUploadTest";
     }
 
 }
