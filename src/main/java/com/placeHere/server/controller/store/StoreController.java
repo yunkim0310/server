@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
@@ -38,6 +40,9 @@ public class StoreController {
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
 
+    @Autowired
+    private AwsS3Service awsS3Service;
+
     @Value("${store_upload_dir}")
     private String uploadDir;
 
@@ -55,6 +60,9 @@ public class StoreController {
 
     @Value("${google_api}")
     private String googleApi;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
 
 
     // Constructor
@@ -800,6 +808,35 @@ public class StoreController {
         }
 
         return "redirect:/store/getMyStore?mode=" + mode;
+    }
+
+
+    // 파일업로드 테스트
+    @RequestMapping("/store/file")
+    public String fileUploadTest(@RequestParam(value = "file", required = false) MultipartFile[] files, Model model) throws Exception {
+
+        System.out.println("/store/file : GET");
+
+        List<String> filePathList = new ArrayList<String>();
+
+        if (files != null && files.length > 0) {
+
+            for (MultipartFile file : files) {
+
+                if (file != null && !file.isEmpty()) {
+
+                    String filePath = awsS3Service.uploadFile(file, "store/");
+                    filePathList.add(filePath);
+                }
+            }
+
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("filePathList", filePathList);
+
+            System.out.println(filePathList);
+        }
+
+        return "test/store/fileUploadTest";
     }
 
 }

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>파일 업로드 테스트</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
+    <script>
+
+        $(function() {
+
+            $("button[name='delete']").on("click", function (){
+
+                const filePath = $(this).data("filepath");
+
+                $.ajax({
+                    url: "/api-store/removeFile?filePath="+filePath,
+                    method: "GET",
+                    success: function (result) {
+                        alert("삭제 완료");
+                    }
+                });
+
+          })
+
+        });
+
+    </script>
+</head>
+<body>
+
+  <form action="/store/file" method="post" enctype="multipart/form-data">
+    <input type="file" name="file" accept="image/*">
+    <input type="file" name="file" accept="image/*">
+    <input type="file" name="file" accept="image/*">
+    <input type="file" name="file" accept="image/*">
+    <input type="file" name="file" accept="image/*">
+    <button type="submit">저장</button>
+  </form>
+
+  <th:block th:if="${filePathList != null && !filePathList.isEmpty()}" th:each="filePath : ${filePathList}">
+    <p th:text="${url+filePath}"></p>
+    <img th:src="${url+filePath}" alt="">
+    <a href="/store/file">다시</a>
+    <button type="button" name="delete" th:data-filepath="${filePath}">삭제</button>
+  </th:block>
+
+</body>
+</html>
