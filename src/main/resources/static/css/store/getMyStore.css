@@ -1,0 +1,35 @@
+.social {
+    margin-top: 14px;
+    display: flex;
+    gap: 20px;
+    min-width: 50%;
+    justify-content: flex-start;
+    margin-left: 45px;
+}
+
+.social a {
+    display: flex;
+    width: 32px;
+    height: 32px;
+    border: 1px solid #c8c8c8;
+    box-sizing: border-box;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.mypage-profile-meta {
+    display: flex;
+}
+
+body {
+    scrollbar-color: white;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow-x: hidden;
+}
+
+.header-wrap {
+    top: -6.5px;
+    right: 8px;
+}
