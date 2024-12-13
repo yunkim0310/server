@@ -68,6 +68,7 @@
             justify-content: center;
             flex-direction: row;
             gap: 10px;
+            align-items: center; /* 세로 정렬 (필요시 조정) */
         }
 
         .allpoint2 {
@@ -117,6 +118,7 @@
         th {
             background-color: #f5f5f5;
             font-weight: bold;
+            font-size: 1.2rem;
             color: #333;
         }
 
@@ -136,9 +138,12 @@
             margin-left: auto; /* 자동 여백으로 약간 오른쪽으로 이동 */
             margin-right: 20px; /* 오른쪽 여백 */
             width: 400px; /* 폼의 전체 너비 제한 */
+            height: 90%; /* 높이 설정 (원하는 값으로 수정) */
             padding-top: 20px; /* 폼 내에서 여백을 추가 */
-            height: 400px;
-            /*border: 1px blue solid ;*/
+            border: 3px solid #4880FF; /* 테두리 추가 */
+            border-radius: 8px; /* 테두리 모서리 둥글게 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+            padding: 30px; /* 내부 여백 */
         }
 
 
@@ -154,7 +159,7 @@
         #searchStatuses label {
             display: block; /* 한 줄에 하나씩 표시 */
             margin-bottom: 15px; /* 위아래 간격 설정 */
-            font-size: 1.8rem; /* 글씨 크기 증가 */
+            font-size: 1.5rem; /* 글씨 크기 증가 */
             line-height: 1.5; /* 줄 간격 조정 */
         }
 
@@ -162,26 +167,6 @@
             width: 30px; /* 체크박스 너비 */
             height: 30px; /* 체크박스 높이 */
             margin-right: 8px; /* 글씨와 체크박스 사이 간격 */
-        }
-
-
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9rem;
-            }
-
-            th, td {
-                padding: 8px 12px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h3 {
-                font-size: 1.2rem;
-            }
         }
 
 
@@ -198,7 +183,7 @@
 <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
 
 <h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
-<br/><br/><br/><br/>
+<br/>
 
 <div class="allpoint2">
     <!-- 결과 테이블 -->
@@ -206,7 +191,7 @@
         <tbody th:each="reservation, iterStat : ${reservations}">
 
 
-        <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}">
+        <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}" style="height: 50px; background-color: #FFFFFF">
             <td colspan="5">
             </td>
         </tr>
@@ -218,10 +203,10 @@
         </tr>
 
         <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'HH:mm') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'HH:mm')))}">
-            <td colspan="3" style="font-size: 20px; font-weight: bold; background-color: #646D7A; color: white;">
+            <td colspan="3" style="font-size: 20px; font-weight: bold; background-color: #979EA8; color: white;">
                 <span style="position: relative; left: 200px;" th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">[예약 시간]</span>
             </td>
-            <td colspan="2" style="padding-left: 100px; font-size: 15px; font-weight: bold; background-color: #646D7A; color: white;">
+            <td colspan="2" style="padding-left: 100px; font-size: 15px; font-weight: bold; background-color: #979EA8; color: white;">
                 <span th:utext="'현재 예약 인원&nbsp;&nbsp;&nbsp;'+${reservationCountsByDate[reservation.rsrvDt]} + '&nbsp;&nbsp;명' ?: 0 + '명'">[현재 예약 인원]</span>
             </td>
         </tr>

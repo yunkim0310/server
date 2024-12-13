@@ -803,11 +803,11 @@ border: 1px solid rgb(95, 0, 128); */
     height: 52px;
     border-radius: 3px;
     color: white;
-    background-color: #ff3d00;    
-    border-color: #ff3d00;
-    color: #ff3d00;
+    background-color: #4880FF;
+    border-color: #4880FF;
+    color: #4880FF;
     background-color: rgb(255, 255, 255);
-    border: 1px solid #ff3d00;
+    border: 1px solid #4880FF;
 }
 
 .css-1w0ksfz > button > span {
@@ -925,7 +925,7 @@ input[type=checkbox], input[type=radio] {
     background-color: #ff3d00; */
 
     /* border: 0.4em solid tomato; */
-    border: 0.4em solid #ff3d00;
+    border: 0.4em solid #4880FF;
 }
 
 
@@ -958,7 +958,7 @@ input[type="checkbox"] + label span.css-0 {
 
 /* 살릴 것 */
 input[type="checkbox"]:checked {
-    border: 0.4em solid #ff3d00;
+    border: 0.4em solid #4880FF;
 }
 
 /* 살릴 것 */
