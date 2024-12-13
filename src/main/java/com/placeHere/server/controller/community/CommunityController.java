@@ -3,6 +3,7 @@ package com.placeHere.server.controller.community;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.community.FriendService;
+import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public class CommunityController {
     @Autowired
     @Qualifier("FriendServiceImpl")
     private FriendService friendService;
+
+    @Autowired
+    private LikeService likeService;
 
     @Value("${page_size}")
     private int pageSize;
@@ -186,22 +190,23 @@ public class CommunityController {
 
 
             // 리뷰 리스트 초기화
-            List<Review> reviewList;
+            List<Review> reviewList = new ArrayList<Review>();
 
 
             String currentUser = user.getUsername();
             System.out.println("currentUser : "+currentUser);
 
-
-
+            String result = "";
 
             switch (type) {
 
                 case "allList":
                     // 전체 리뷰 리스트 가져오기
                     reviewList = communityService.getReviewList(search);
-                    model.addAttribute("reviewList", reviewList);
-                    return "test/community/getReviewList";
+
+                    result = "test/community/getReviewList";
+
+                    break;
 
                 case "friendList":
                     if (friendUsername != null && !friendUsername.isEmpty()) {
@@ -240,9 +245,9 @@ public class CommunityController {
                         //친구 신청 시 res 값 넣어줌
                         model.addAttribute("friendUsername", friendUsername);
 
-                        model.addAttribute("reviewList", reviewList);
+//                        model.addAttribute("reviewList", reviewList);
 //                        return "test/community/getFriendReviewList"; // 친구 리뷰 페이지로 이동
-                        return "test/community/feedTest";
+                        result = "test/community/feedTest";
                     }
                     break;
 
@@ -265,31 +270,61 @@ public class CommunityController {
                         System.out.println(rsrvNo);
                     }
 
-                    model.addAttribute("reviewList", reviewList);
+//                    model.addAttribute("reviewList", reviewList);
                     model.addAttribute("reservations", reservations);
 
-                    return "test/community/getMyReviewList";
+//                    return "test/community/getMyReviewList";
+                    result =  "test/community/testgetMyReviewList";
+
+                    break;
 
                 case "otherFeed":
                     // 다른 사람 리뷰 리스트 가져오기
                     if (friendUsername != null && !friendUsername.isEmpty()) {
                         reviewList = communityService.getReviewList(List.of(friendUsername), search);
-                        model.addAttribute("reviewList", reviewList);
-                        return "test/community/getOtherFeedView";
+//                        model.addAttribute("reviewList", reviewList);
+//                        return "test/community/getOtherFeedView";
+                        result = "test/community/getOtherFeedView";
                     }
                     break;
 
                 default:
                     // 전체 리뷰 리스트 가져오기 (디폴트 행동)
                     reviewList = communityService.getReviewList(search);
-                    model.addAttribute("reviewList", reviewList);
-                    return "test/community/getReviewList";
+//                    model.addAttribute("reviewList", reviewList);
+//                    return "test/community/testGetReviewList";
+
+                    result = "test/community/getReviewList";
             }
+
+            for (int i = 0; i < reviewList.size(); i++) {
+
+                Review review = reviewList.get(i);
+
+                Like chkLike = new Like();
+                chkLike.setRelationNo(review.getReviewNo());
+                chkLike.setTarget("review");
+                chkLike.setUserName(user.getUsername());
+
+                Like chkedLike = likeService.chkLike(chkLike);
+
+                review.setLike(chkedLike);
+
+                reviewList.set(i, review);
+
+            }
+
+            System.out.println(reviewList);
+
+            model.addAttribute("reviewList", reviewList);
+
+            return result;
+
         } catch (Exception e) {
             e.printStackTrace();
             return "error";
         }
-        return "error";
+
     }
 
 

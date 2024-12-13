@@ -59,4 +59,7 @@ public class Review {
         // 가게 Id
         private int storeId;
 
+        //Like 상태체크
+        private Like like;
+
     }

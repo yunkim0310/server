@@ -55,7 +55,7 @@ public class CommunityServiceImpl implements CommunityService {
         int rsrvNo = review.getRsrvNo();
         System.out.println("rsrvNo : "+rsrvNo);
 
-        reservationService.updateRsrvStatus(rsrvNo, "리뷰 작성");
+
 
     }
 

@@ -1,227 +1,253 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>리뷰 목록</title>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>즐거운 미식 생활의 시작, 캐치테이블</title>
+    <link rel="stylesheet" href="/css/templates/mypage.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascript/templates/script.js"></script>
+
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f9fc;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
+            background-color: #FFF; /* 배경색 */
+            color: #333; /* 기본 텍스트 색 */
+            margin: 0; /* 기본 마진 제거 */
+            padding: 0; /* 기본 패딩 제거 */
         }
 
-        h1 {
-            text-align: center;
-            color: #333;
-            font-size: 2.5rem; /* Bigger font size for the title */
-            margin-bottom: 40px; /* Space below the title */
+<!--        .wrapper {-->
+<!--            max-width: 1200px; /* 최대 너비 설정 */-->
+<!--            margin: 40px auto; /* 중앙 정렬 및 위아래 여백 설정 */-->
+<!--            padding: 20px; /* 여백 추가 */-->
+<!--            background: #fff; /* 흰 배경 */-->
+<!--            border-radius: 8px; /* 둥근 모서리 */-->
+<!--            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */-->
+<!--        }-->
+
+        .__my-review-post {
+            border: 1px solid #e2e2e2; /* 테두리 추가 */
+            border-radius: 5px; /* 테두리 둥글게 */
+            margin-bottom: 20px; /* 리뷰 간의 간격 */
+            padding: 15px; /* 패딩 추가 */
+            background-color: #fff; /* 배경색 */
+            transition: box-shadow 0.3s; /* 호버 효과 */
         }
 
-        .fixed-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
+        .__my-review-post:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
         }
 
-        button {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            text-align: center;
-            text-decoration: none;
+        .__post-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center; /* 세로 정렬 */
+            margin: 10px 0; /* 위아래 여백 */
+        }
+
+        .btn-like-inactive,
+        .btn-like-active {
+            border-radius: 50%;
             display: inline-block;
-            margin: 4px 2px;
+            width: 40px;
+            height: 40px;
+            background-size: 50%; /* 아이콘 크기 조절 */
             cursor: pointer;
-            border-radius: 25px;
-            transition: background-color 0.3s, transform 0.3s;
-            font-size: 1rem;
-            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);
+            margin-right: 700px;
+            transition: background 0.3s ease; /* 버튼 호버 효과 */
         }
 
-        button:hover {
-            background-color: #0056b3;
-            transform: translateY(-2px);
+        .btn-like-inactive {
+            background: #fff url('/file/community/icon_heart_white.png') center no-repeat; /* 비활성화 상태 */
         }
 
-        .review-list {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 30px;
+        .btn-like-active {
+            background: #fff url('/file/community/icon_heart_red.png') center no-repeat; /* 활성화 상태 */
         }
 
-        .review-item {
-            background-color: #ffffff;
-            border: 1px solid #ddd;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            transition: transform 0.2s;
-            position: relative; /* 슬라이드를 위해 필요 */
+        .__content {
+            font-size: 1em; /* 텍스트 크기 조정 */
+            line-height: 1.5; /* 줄 간격 조정 */
+            margin-top: 10px; /* 상단 여백 */
+            width: 80%;
+            margin: 15px auto;
         }
 
-        .review-item:hover {
-            transform: translateY(-3px);
+        .__rating {
+            font-weight: bold; /* 평점 굵게 표시 */
+            font-size: 1.5em; /* 평점 크기 조정 */
+            color: #ffcc00; /* 평점 색상 */
         }
 
-        .slideshow-container {
-            position: relative;
-            max-width: 100%;
-            overflow: hidden;
-            height: 300px;
+<!--        .restaurant-info {-->
+<!--            whidth: 850px;-->
+<!--            margin: 0 auto;-->
+<!--            margin-top: 15px; /* 상단 여백 */-->
+<!--            border-top: 1px solid #e2e2e2; /* 상단 테두리 */-->
+<!--            padding-top: 10px; /* 패딩 추가 */-->
+<!--        }-->
+
+        .like-count,
+        .comment-count {
+            font-weight: bold; /* 숫자 굵게 표시 */
         }
 
-        .slides {
-            width: 100%;
-              height: 300px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .prev, .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 16px;
-            color: white;
-            background-color: rgba(0, 0, 0, 0.5);
-            border: none;
-            border-radius: 50%;
-            transform: translateY(-50%);
-            user-select: none;
-            z-index: 1000; /* 버튼이 다른 항목 위에 올도록 */
-        }
-
-        .prev {
-            left: 10px;
-        }
-
-        .next {
-            right: 10px;
-        }
-
-        .review-details {
-            display: flex;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .review-details img {
-            border-radius: 50%;
-            width: 70px;
-            height: 70px;
-            margin-right: 15px;
-            border: 2px solid #007bff;
-        }
-
-        .review-metrics {
-            margin-top: 10px;
-            font-size: 15px;
-            color: #555;
-        }
-
-        hr {
-            margin: 20px 0;
-            border: none;
-            border-top: 1px solid #eee;
-        }
+        /* 추가적인 스타일 및 반응형 디자인 추가 가능 */
     </style>
-</head>
 
+    <script type="text/javascript">
+
+        $(function() {
+
+            $('a#like').on('click', function() {
+
+                const $this = $(this);
+                const reviewNo = $this.data('review-no');
+                const userName = $this.data('username');
+
+                console.log(reviewNo);
+                console.log(userName);
+
+                const currentLikeCount = parseInt($('.like-count').text());
+                const isActive = $this.attr("class") === "btn-like-active";
+
+                let likeData = {
+                    userName: userName,
+                    relationNo: reviewNo,
+                    target: 'review',
+                };
+
+                $.ajax({
+                    url: "/api-review/addLike",
+                    method: "POST",
+                    data: JSON.stringify(likeData),
+                    dataType: "json",
+                    headers: {
+                        "Content-Type" : "application/json"
+                    },
+                    success: function(result) {
+
+                        alert(result);
+
+                        // 좋아요 취소
+                        if (result === "-1") {
+
+                            alert("좋아요 취소 성공");
+
+                        } else if (result === "1") {
+
+                            alert("좋아요 등록 성공");
+
+                        } else {
+                            alert("오류");
+                        }
+
+                        location.reload();
+
+                    }
+
+                });
+                // ajax End
+
+            });
+        });
+    </script>
 <body>
+<div th:include="~{common/header}"></div> <!-- 공통 헤더 포함 -->
 
-<div th:include="~{common/header}"></div>
-<div th:include="~{community/menuBar}"></div>
+<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
-<h1>리뷰 목록  ===> 여기는 getReviewList.html</h1>
-<a th:href="@{/review/getReviewList?type=myFeed}" class="fixed-button">
-    <button>내 피드 바로 가기</button>
-</a>
+<header id="header"></header> <!-- 페이지 헤더 -->
 
-<div class="review-list">
-    <div th:if="${#lists.isEmpty(reviewList)}">
-        <p>리뷰가 없습니다.</p>
-    </div>
+GetReviewList임
+<div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+    <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+        <main id="main">
+            <section class="section mb-50">
+                <div class="container gutter-sm">
+                    <div class="section-body">
+                        <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
+                            <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
+                                <div id="shopReviewListScroll_0"> <!-- 특정 스크롤 섹션 -->
+                                    <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
+                                        <div class="__header" style="padding-left: 0;">
+                                            <div class="__user-info" style="justify-content: space-between;">
+                                                <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
+                                                    <img th:src="@{/file/community/2222.png}" alt="프로필이미지">
+                                                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
+                                                        <span th:text="${review.userName}"
+                                                              style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+                                                              text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
 
-    <div th:each="review, iterStat : ${reviewList}">
-        <div class="review-item">
-            <div class="slideshow-container">
-                <div class="slides">
-                    <img th:src="@{/file/community/55555.png}" alt="test">
-                </div>
-                <div class="slides">
-                    <img th:src="@{/file/community/1.png}" alt="test">
-                </div>
-<!--                <div class="slides">-->
-<!--                    <img th:src="${review.reviewImg3}" alt="리뷰 이미지 3">-->
-<!--                </div>-->
+                                        <div class="__body" style="position: relative; padding: 0px;">
+                                            <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
+                                                <div th:if="${review.reviewImg1 != null}">
+                                                    <div class="swiper-slide" style="margin-right: 16px;">
+                                                        <img th:src="@{/file/community/보배반점1.jpg}">
+                                                    </div>
+                                                </div>
+                                                <div th:if="${review.reviewImg2 != null}">
+                                                    <div class="swiper-slide" style="margin-right: 16px;">
+                                                        <img th:src="@{/file/community/보배반점2.jpg}">
+                                                    </div>
+                                                </div>
+                                                <div th:if="${review.reviewImg3 != null}">
+                                                    <div class="swiper-slide" style="margin-right: 16px;">
+                                                        <img th:src="@{/file/community/보배반점3.jpg}">
+                                                    </div>
+                                                </div>
+                                            </div>
 
-                <button class="prev" onclick="plusSlides(-1)">&#10094;</button>
-                <button class="next" onclick="plusSlides(1)">&#10095;</button>
-            </div>
+                                            <div class="timeline-post-content">
+                                                <div class="__post-meta" style="display: flex; justify-content: space-between;"> <!-- 리뷰 메타 정보 (평점, 좋아요, 댓글) -->
+                                                    <img src="/file/community/star_icon1.png" style="margin-left: 70px;" th:text="${review.reviewScore}"> <!-- 리뷰 평점 -->
+                                                    <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
+                                                        <a style="cursor: pointer" id="like"
+                                                           th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
+                                                           th:data-review-no="${review.reviewNo}"
+                                                           th:data-username="${session.user != null ? session.user.username : ''}">
+                                                            <span class="like-count" style="margin-left: -25px;" th:text="${review.reviewLikeCnt}"></span>
+                                                        </a>
+                                                    </th:block>
 
-            <div class="review-details">
-                <img th:src="@{/file/community/2222.png}" alt="test">
-                <p>
-                    작성자:
-                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
-                        <span th:text="${review.userName}"></span>
-                    </a>
-                </p>
-            </div>
-            <div class="review-metrics">
-                <p>매장 명 : <span th:text="${review.storeName}"></span></p>
-                <p>별점: <span th:text="${review.reviewScore}"></span>점</p>
-                <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
-                좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span>
-                댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span>
-                <input type="hidden" th:value="${review.storeId}" />
-            </div>
-            <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" class="review-detail-button">
-                <button>리뷰 상세보기</button>
-            </a>
-            <hr />
-        </div>
-    </div>
-</div>
+                                                    <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" style="cursor: pointer;" id="comment" class="btn-comment">
+                                                        <img src="/file/community/comment_icon.png" alt="댓글" style="width: 24px; height: 24px; margin-left: -730px;"/>
+                                                        <span class="comment-count" style="margin-left: -30px;" th:text="${#lists.size(review.commentList)}"></span>
+                                                    </a>
 
-<script>
-    let slideIndex = 0;
-
-    function plusSlides(n) {
-        const slideshows = document.querySelectorAll('.slideshow-container');
-        slideshows.forEach(slideshow => {
-            showSlides(slideshow, n);
-        });
-    }
-
-    function showSlides(slideshow, n = 1) {
-        const slides = slideshow.getElementsByClassName("slides");
-        slideIndex += n;
-        if (slideIndex >= slides.length) { slideIndex = 0 }
-        if (slideIndex < 0) { slideIndex = slides.length - 1 }
-
-        for (let i = 0; i < slides.length; i++) {
-            slides[i].style.display = "none";
-        }
-        slides[slideIndex].style.display = "block";
-    }
-
-    // 각 슬라이드 쇼를 5초마다 자동으로 넘기는 코드
-    setInterval(() => {
-        const slideshows = document.querySelectorAll('.slideshow-container');
-        slideshows.forEach(slideshow => {
-            showSlides(slideshow, 1);
-        });
-    }, 5000);
-</script>
-
+                                                    <div style="margin-left: -19px; text-align: right;" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + ' (수정됨)'}"></div> <!-- 수정된 날짜 -->
+                                                </div>
+                                                <div class="restaurant-info" style="width: 850px; margin: 0 auto; padding: 15px;"> <!-- 식당 정보 영역 -->
+                                                    <div class="__info" style="font-size: 1em;">
+                                                        <a th:href="'/getStore?mode=info&storeId='+${review.storeId}"> <!-- 식당 상세 페이지 링크 -->
+                                                            <h4 class="__name">
+                                                                <span th:text="${review.storeName}">매장명</span> <!-- 식당 이름 -->
+                                                            </h4>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <div class="__content" style="font-size: 1.2em;">
+                                                    <p th:text="${review.reviewContent}" style="white-space: pre-line;"></p> <!-- 리뷰 내용 -->
+                                                </div>
+                                                <hr class="hairline"> <!-- 리뷰 항목 간 구분선 -->
+                                    </article>
+                                </div> <!-- shopReviewListScroll_0 끝 -->
+                            </div> <!-- shopReviewListScroll 끝 -->
+                        </div> <!-- __my-review-list 끝 -->
+                    </div> <!-- section-body 끝 -->
+                </div> <!-- container 끝 -->
+            </section> <!-- section 끝 -->
+            <!-- 페이징 처리 부분 생략 -->
+        </main>
+    </div> <!-- wrapperDiv 끝 -->
+</div> <!-- root 끝 -->
 </body>
 </html>

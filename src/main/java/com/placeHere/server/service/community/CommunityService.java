@@ -44,5 +44,8 @@ public interface CommunityService {
     //댓글 조회 메서드
     public Comment getComment (int commentNo) throws  Exception;
 
+//    //탈퇴 회원이 작성한 리뷰를 삭제 하다.
+//    public void
+
 
 }

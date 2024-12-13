@@ -36,9 +36,10 @@ public class CommunityRestController {
     //좋아요 추가
     @PostMapping("/addLike")
     public ResponseEntity<String> addLike(@RequestBody Like like) {
+
         try {
             Like chkLike = likeService.chkLike(like);
-            System.out.println("야야야야야야" + chkLike );
+            System.out.println("/addLike 좋아요체크 : "+chkLike);
             // 현재 사용자의 좋아요 상태 확인
             if (chkLike != null) {
 
@@ -47,11 +48,14 @@ public class CommunityRestController {
                 System.out.println("removeLike:: "+  likeService.removeLike(chkLike));
                 //return ResponseEntity.ok("좋아요가 취소 되었습니다");
                 return ResponseEntity.ok("-1");
+
             } else {
+
                 //좋아요가 없으면 추가
                 likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
                 //return ResponseEntity.ok("좋아요가 추가되었습니다.");
                 return ResponseEntity.ok("1");
+
             }
         } catch (Exception e) {
             e.printStackTrace();
