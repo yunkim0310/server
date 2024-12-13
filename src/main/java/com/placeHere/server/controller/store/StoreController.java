@@ -424,6 +424,10 @@ public class StoreController {
 
         System.out.println(storeList);
 
+        // 페이징
+        Paging paging = new Paging(totalCnt, search.getPage(), pageSize, listSize);
+        model.addAttribute("paging", paging);
+
         // 가게 목록
         model.addAttribute("storeList", storeList);
         model.addAttribute("totalCnt", totalCnt);
@@ -538,6 +542,7 @@ public class StoreController {
     // 가게 좋아요 목록 조회
     @GetMapping("/getStoreLikeList")
     public String getLikeStoreList(HttpSession session,
+                                   @RequestParam("page") int page,
                                    Model model) throws Exception {
 
         System.out.println("/store/getLikeStoreList : GET");
@@ -550,6 +555,11 @@ public class StoreController {
             if (user.getRole().equals("ROLE_USER")) {
 
                 List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername());
+                int totalCnt = storeLikeList.size();
+
+                // 페이징
+                Paging paging = new Paging(totalCnt, page, pageSize, listSize);
+                model.addAttribute("paging", paging);
 
                 model.addAttribute("storeLikeList", storeLikeList);
 
@@ -612,8 +622,8 @@ public class StoreController {
 
                 else {
 
-                    model.addAttribute("store", store);
-                    model.addAttribute("mode", mode);
+                    // 페이징
+                    Paging paging = new Paging();
 
                     switch (mode) {
 
@@ -628,6 +638,9 @@ public class StoreController {
                             model.addAttribute("reviewList", reviewList);
                             model.addAttribute("totalCnt", reviewTotalCnt);
 
+                            // 페이징
+                            paging = new Paging(reviewTotalCnt, search.getPage(), pageSize, listSize);
+
                             break;
 
                         case "news":
@@ -641,6 +654,9 @@ public class StoreController {
                             model.addAttribute("storeNewsList", storeNewsList);
                             model.addAttribute("totalCnt", newsTotalCnt);
 
+                            // 페이징
+                            paging = new Paging(newsTotalCnt, search.getPage(), pageSize, listSize);
+
                             break;
 
                         case "closeday":
@@ -653,13 +669,20 @@ public class StoreController {
 
                             model.addAttribute("totalCnt", closedayTotalCnt);
                             model.addAttribute("closedayList", closedayList);
-                            model.addAttribute("search", search);
                             model.addAttribute("today", LocalDate.now());
                             model.addAttribute("message", message);
+
+                            // 페이징
+                            paging = new Paging(closedayTotalCnt, search.getPage(), pageSize, listSize);
 
                             break;
 
                     }
+
+                    model.addAttribute("store", store);
+                    model.addAttribute("mode", mode);
+                    model.addAttribute("search", search);
+                    model.addAttribute("paging", paging);
 
                     return "store/getMyStore";
                 }

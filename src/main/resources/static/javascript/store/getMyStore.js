@@ -16,6 +16,13 @@ $(function() {
     if (mode === 'news') {
 
         $("form").attr("action", "/store/getMyStore").attr("method", "post").attr("enctype", "multipart/form-data");
+
+        function getNews(page) {
+
+            window.location.href = "/store/getMyStore?mode=news&page=" + page;
+        }
+
+        pageNavigator(getNews);
         
         // 소식 등록
         $("#addStoreNews").on("click", function () {
@@ -143,6 +150,17 @@ $(function() {
         // action 맵핑
         $("form").attr("action", "/store/getMyStore").attr("method", "post");
 
+        function getCloseday(page) {
+
+            $("input[name='fnc']:hidden").val("get");
+            $("input[name='page']").val(page)
+
+            $("form[name='getAndRemoveCloseday']").submit();
+
+        }
+
+        pageNavigator(getCloseday);
+
 
         // 휴무일 삭제 함수
         $("button[name='removeCloseday']").on("click", function () {
@@ -187,6 +205,8 @@ $(function() {
 
             $startDate.attr("max", endDate);
             $endDate.attr("min", startDate);
+
+            getCloseday(1);
 
         });
 
