@@ -207,7 +207,8 @@ public class PurchaseController {
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("username", username);
 
-        return "pointShop/purchase/addPurchaseResult";
+//        return "pointShop/purchase/addPurchaseResult";
+        return "pointShop/purchase/listPurchase";
     }
 
     @RequestMapping( value="listPurchase")

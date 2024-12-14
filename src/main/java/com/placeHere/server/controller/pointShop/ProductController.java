@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -262,6 +263,8 @@ public class ProductController {
         System.out.println("priceMax : " + search.getPriceMax());
 
         search.setOrder(order);
+        search.setPageSize(9);
+        search.setListSize(9);
         System.out.println("order: " + order);
 
         if(search.getPage() == 0) {
@@ -270,6 +273,7 @@ public class ProductController {
 //        search.setPageSize(pageSize);
 
         List<Product> productList = productService.getProductList(search);
+
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);

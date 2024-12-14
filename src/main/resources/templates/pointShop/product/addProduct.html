@@ -120,6 +120,20 @@
             background-color: #d0d0d0;
         }
 
+        [type="radio"]:checked {
+            /* min-width: 24px;
+            min-height: 24px;
+            display: inline-block;
+            position: relative;
+            border-radius: 50%;
+            background-color: #ff3d00; */
+            transition: border 0.5s ease-in-out;
+
+            /* border: 0.4em solid tomato; */
+            /*border: 0.4em solid #ff3d00;*/
+            border: 0.4em solid #4880FF;
+        }
+
 </style>
 
 
@@ -130,8 +144,8 @@
         <div th:insert="~{common/header}"></div>
     </header>
 
-    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
-        <div class="side">
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+        <div class="side" style="margin-top: 80px;">
             <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
             <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
         </div>

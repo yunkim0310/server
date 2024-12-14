@@ -64,21 +64,15 @@
     </update>
 
     <select id="getProductList" parameterType="com.placeHere.server.domain.Search" resultMap="productSelectMap">
-        SELECT prod_no, prod_name, prod_price, prod_status, prod_img1
+        SELECT prod_no, prod_name, prod_price, prod_status, prod_img1, prod_category_name
         FROM product
         <where>
             <if test="searchKeyword != null and searchKeyword != ''">
-                prod_name LIKE CONCAT('%',#{searchKeyword},'%') || prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
+                prod_name or prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
             </if>
             <if test="priceMin != null">
                 AND prod_price BETWEEN #{priceMin} AND #{priceMax}
             </if>
-<!--            <if test="priceMin != 0">-->
-<!--                prod_price &gt;= #{priceMin}-->
-<!--            </if>-->
-<!--            <if test="priceMax != 0">-->
-<!--                prod_price &lt;= #{priceMax}-->
-<!--            </if>-->
         </where>
         <if test="order == 'asc'">
             ORDER BY prod_price ASC

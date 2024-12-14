@@ -94,6 +94,20 @@
       margin-top: 10px;
     }
 
+    [type="radio"]:checked {
+      /* min-width: 24px;
+      min-height: 24px;
+      display: inline-block;
+      position: relative;
+      border-radius: 50%;
+      background-color: #ff3d00; */
+      transition: border 0.5s ease-in-out;
+
+      /* border: 0.4em solid tomato; */
+      /*border: 0.4em solid #ff3d00;*/
+      border: 0.4em solid #4880FF;
+    }
+
     /*.btn-primary {*/
     /*  background-color: #0066cc;*/
     /*  color: white;*/
@@ -123,8 +137,8 @@
       <div th:insert="~{common/header}"></div>
     </header>
 
-    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
-      <div class="side">
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+      <div class="side" style="margin-top: 80px;">
         <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
         <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
       </div>
@@ -208,7 +222,10 @@
                   </div><br/><br/>
                   <div class="css-jmalg e1uzxhvi6">
                     <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg1" th:value="${product.prodImg1}">
+<!--                      <input type="file" accept="image/*" name="prodImg1" th:value="${product.prodImg1}">-->
+                      <input id="prodImg1" name="prodImg1"
+                             placeholder="상품 대표 이미지" type="text"
+                             class="css-1bkd15f e1uzxhvi2">
                     </div>
                   </div><br/>
                 </div><br/><br/>
@@ -221,10 +238,16 @@
                   </div>
                   <div class="css-jmalg e1uzxhvi6">
                     <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg2" th:value="${product.prodImg2}">
+<!--                      <input type="file" accept="image/*" name="prodImg2" th:value="${product.prodImg2}">-->
+                      <input id="prodImg2" name="prodImg2"
+                             placeholder="상품 상세 이미지" type="text"
+                             class="css-1bkd15f e1uzxhvi2">
                     </div>
                     <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg3" th:value="${product.prodImg3}">
+<!--                      <input type="file" accept="image/*" name="prodImg3" th:value="${product.prodImg3}">-->
+                      <input id="prodImg3" name="prodImg3"
+                             placeholder="상품 상세 이미지" type="text"
+                             class="css-1bkd15f e1uzxhvi2">
                     </div>
                   </div>
                 </div><br/><br/>
