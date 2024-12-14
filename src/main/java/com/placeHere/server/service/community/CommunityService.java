@@ -12,7 +12,7 @@ public interface CommunityService {
     public void addReview(Review review) throws Exception;
 
     //리뷰 상세보기
-    public Review getReview(int reviewNo) throws  Exception;
+    public Review getReview(int reviewNo, Search search) throws  Exception;
 
     //전체 리뷰 가져오기
     public List<Review> getReviewList(Search search) throws Exception;
@@ -32,8 +32,8 @@ public interface CommunityService {
     //댓글 작성
     public void addComment(Comment comment) throws Exception;
 
-    //댓글 불러오다
-    public List<Comment> getCommentList(int reviewNo) throws Exception;
+    //댓글 목록 조회
+    public List<Comment> getCommentList(int reviewNo, Search search) throws Exception;
 
     //댓글 수정
     public void updateComment(Comment comment) throws Exception;
@@ -44,8 +44,17 @@ public interface CommunityService {
     //댓글 조회 메서드
     public Comment getComment (int commentNo) throws  Exception;
 
-//    //탈퇴 회원이 작성한 리뷰를 삭제 하다.
-//    public void
+    // 탈퇴 회원이 작성한 모든 리뷰를 삭제하다.
+    public void deleteAllReviewsByUser(String username) throws Exception;
+
+    // 탈퇴 회원이 작성한 모든 댓글을 삭제하다.
+    public void deleteAllCommentsByUser(String username) throws Exception;
+
+    // 탈퇴 회원의 리뷰 리스트 조회
+    public List<Review> getDeletedUserReview(String username) throws Exception;
+
+    // 탈퇴 회원의 댓글 리스트 조회
+    public List<Comment> getDeletedUserComment(String username) throws Exception;
 
 
 }

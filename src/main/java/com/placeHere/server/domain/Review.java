@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-
 public class Review {
 
         // Field 리뷰

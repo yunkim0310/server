@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>리뷰 상세보기 ==> getReview.html</title>
+
+        <link th:insert="~{common/import :: importFragment}">
+
+        <link rel="stylesheet" href="/css/community/getReview.css">
+
+        <script src="/javascript/community/like.js"></script>
+        <script src="/javascript/community/getReview.js"></script>
+        <link rel="stylesheet" href="/css/community/getReviewList.css">
+
+    </head>
+
+    <body>
+
+        <!--<div th:include="~{community/menuBar}"></div>-->
+
+        <div class="review-container">
+            <h2>리뷰 점수1: <span th:text="${review.reviewScore}"></span></h2>
+            <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+            <p>작성자: <span th:text="${review.userName}"></span></p>
+            <p>작성일: <span th:text="${#dates.format(review.reviewDt, 'yyyy-MM-dd ')}"></span></p>
+            <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd ')}"></span></p>
+            <p>별점: <span th:text="${review.reviewScore}"></span>점</p>
+            <p>매장 이름: <span th:text="${review.storeName}"></span></p>
+            <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>
+            <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
+        </div>
+
+        <div class="comment-section">
+            <h2>댓글 작성하기</h2>
+            <form>
+                <input id="reviewNo" name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
+                <input id="userName" name="userName" type="hidden" th:value="${user.username}"/>
+                <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
+                <!--        <button type="submit">댓글 추가</button>-->
+                <button type="button" name="addCommentBtn">댓글 추가</button>
+                <br/><br/>
+                <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
+                    <a style="cursor: pointer" id="like"
+                       th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
+                       th:data-review-no="${review.reviewNo}"
+                       th:data-username="${session.user != null ? session.user.username : ''}">
+                        <span class="like-count" style="margin-left: -25px;" th:text="${review.reviewLikeCnt}"></span>
+                    </a>
+                </th:block>
+
+
+
+            </form>
+            <!-- 에러 메시지 표시 -->
+            <div class="error-message"></div>
+        </div>
+
+        <div class="comment-section">
+            <h2>댓글 목록</h2>
+            <ul class="comment-list" id="commentList">
+                <li th:each="comment : ${commentList}">
+                    <p><strong th:text="${comment.userName}"></strong></p>
+                    <p th:text="${comment.commentsContent}"></p>
+                    <p th:text="${#dates.format(comment.commentsDt, 'yyyy-MM-dd ')}"></p>
+
+                    <button class="btn-primary edit" th:data-comment-no="${comment.commentNo}"
+                            th:data-current-comment="${comment.commentsContent}"
+                            th:if="${comment.userName == user.username}">수정
+                    </button>
+
+                    <form method="post" onsubmit="return confirm('정말 삭제 하시겠습니까?');" style="display:inline;"
+                          th:action="@{/review/removeComment}"
+                          th:if="${comment.userName == user.username}">
+                        <input type="hidden" name="commentNo" th:value="${comment.commentNo}"/>
+                        <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
+                        <button type="submit">삭제</button>
+                    </form>
+                    <hr/>
+                </li>
+            </ul>
+        </div>
+
+        <form name="pagingForm">
+            <input type="hidden" name="page">
+            <input type="hidden" name="reviewNo" th:value="${review.reviewNo}">
+        </form>
+
+        <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+
+        <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+    </body>
+</html>

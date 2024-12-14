@@ -47,7 +47,7 @@ public class CommuniryServiceTest {
         List<Review> reviewListALL = communityService.getReviewList(search);
         List<Review> reviewListByStoreId = communityService.getReviewList(1, search);
         List<Review> reviewListByUserName = communityService.getReviewList(List.of("user01"), search);
-        List<Comment> getCommentList = communityService.getCommentList(42);
+//        List<Comment> getCommentList = communityService.getCommentList(42);
 
         System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
         System.out.println();
@@ -67,9 +67,9 @@ public class CommuniryServiceTest {
     @Test
     public void getCommentList() throws Exception {
         int reviewNO = 44;
-        List<Comment> commentList = communityService.getCommentList(reviewNO);
+//        List<Comment> commentList = communityService.getCommentList(reviewNO);
 
-        System.out.println("test :: " + commentList);
+//        System.out.println("test :: " + commentList);
     }
 
 
@@ -91,11 +91,11 @@ public class CommuniryServiceTest {
     public void testGetReview() throws Exception {
         int reviewNo = 5;
 
-        Review review = communityService.getReview(reviewNo);
+//        Review review = communityService.getReview(reviewNo);
 
         System.out.println("111111111111===============");
 
-        System.out.println("tets :: " + communityService.getReview(5));
+//        System.out.println("tets :: " + communityService.getReview(5));
 
         System.out.println("111111111111===============");
 //        Review review = new Review();

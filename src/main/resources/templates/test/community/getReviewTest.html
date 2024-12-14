@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>리뷰 상세보기 ==> getReview.html</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <style>
         body {
@@ -243,7 +246,7 @@
 
 </head>
 <body>
-<div th:include="~{common/header}"></div>
+
 <!--<div th:include="~{community/menuBar}"></div>-->
 
 <div class="review-container">
@@ -296,6 +299,11 @@
         </li>
     </ul>
 </div>
+
+<form name="pagingForm">
+    <input type="hidden" name="page">
+    <input type="hidden" name="type" value="getReview">
+</form>
 
 <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
 

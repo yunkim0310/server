@@ -35,9 +35,11 @@ public interface CommunityDao {
     //댓글 작성
     public void addComment(Comment comment) throws Exception;
 
-    //리뷰의 댓글 목록 불러오다
-    public List<Comment> getCommentList(@Param("reviewNo") int reviewNo) throws Exception;
-//    public List<Comment> getCommentList(@Param("reviewNo") int reviewNo, @Param("search") Search search) throws Exception;
+    // 리뷰 댓글 목록 조회 - 페이징 X, 리뷰 목록 조회
+    public List<Comment> getCommentList(int reviewNo) throws Exception;
+
+    //리뷰의 댓글 목록 조회 - 페이징 O, 리뷰 상세 조회
+    public List<Comment> getCommentListBySearch(@Param("reviewNo") int reviewNo, @Param("search") Search search) throws Exception;
 
     //댓글 수정
     public void updateComment(Comment comment) throws Exception;
@@ -47,4 +49,18 @@ public interface CommunityDao {
 
     // 댓글 조회 메서드
     public Comment getCommentById(int commentNo);
+
+    //탈퇴 회원이 작성한 모든 리뷰를 삭제 하다.
+    public void deleteAllReviewsByUser(String username) throws Exception;
+
+    //탈퇴 회원이 작성한 모든 댓글을 삭제 하다.
+    public void deleteAllCommentsByUser(String username) throws Exception;
+
+    //탈퇴 회원의 리뷰 리스트 조회
+    public List<Review> getDeletedUserReview(String username) throws Exception;
+
+    //탈퇴 회원의 댓글 리스트 조회
+    public List<Comment> getDeletedUserComment(String username) throws Exception;
+
+
 }

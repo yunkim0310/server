@@ -5,165 +5,29 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>즐거운 미식 생활의 시작, 캐치테이블</title>
+
+
     <link rel="stylesheet" href="/css/templates/mypage.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/style.css">
+    <link th:insert="~{common/import :: importFragment}">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="/javascript/templates/script.js"></script>
 
-    <style>
-        body {
-            font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
-            background-color: #FFF; /* 배경색 */
-            color: #333; /* 기본 텍스트 색 */
-            margin: 0; /* 기본 마진 제거 */
-            padding: 0; /* 기본 패딩 제거 */
-        }
+    <script src="/javascript/community/like.js"></script>
+    <link rel="stylesheet" href="/css/community/getReviewList.css">
 
-<!--        .wrapper {-->
-<!--            max-width: 1200px; /* 최대 너비 설정 */-->
-<!--            margin: 40px auto; /* 중앙 정렬 및 위아래 여백 설정 */-->
-<!--            padding: 20px; /* 여백 추가 */-->
-<!--            background: #fff; /* 흰 배경 */-->
-<!--            border-radius: 8px; /* 둥근 모서리 */-->
-<!--            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */-->
-<!--        }-->
+</head>
 
-        .__my-review-post {
-            border: 1px solid #e2e2e2; /* 테두리 추가 */
-            border-radius: 5px; /* 테두리 둥글게 */
-            margin-bottom: 20px; /* 리뷰 간의 간격 */
-            padding: 15px; /* 패딩 추가 */
-            background-color: #fff; /* 배경색 */
-            transition: box-shadow 0.3s; /* 호버 효과 */
-        }
+<script src="/javascript/community/getReviewList.js"></script>
 
-        .__my-review-post:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
-        }
-
-        .__post-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* 세로 정렬 */
-            margin: 10px 0; /* 위아래 여백 */
-        }
-
-        .btn-like-inactive,
-        .btn-like-active {
-            border-radius: 50%;
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background-size: 50%; /* 아이콘 크기 조절 */
-            cursor: pointer;
-            margin-right: 700px;
-            transition: background 0.3s ease; /* 버튼 호버 효과 */
-        }
-
-        .btn-like-inactive {
-            background: #fff url('/file/community/icon_heart_white.png') center no-repeat; /* 비활성화 상태 */
-        }
-
-        .btn-like-active {
-            background: #fff url('/file/community/icon_heart_red.png') center no-repeat; /* 활성화 상태 */
-        }
-
-        .__content {
-            font-size: 1em; /* 텍스트 크기 조정 */
-            line-height: 1.5; /* 줄 간격 조정 */
-            margin-top: 10px; /* 상단 여백 */
-            width: 80%;
-            margin: 15px auto;
-        }
-
-        .__rating {
-            font-weight: bold; /* 평점 굵게 표시 */
-            font-size: 1.5em; /* 평점 크기 조정 */
-            color: #ffcc00; /* 평점 색상 */
-        }
-
-<!--        .restaurant-info {-->
-<!--            whidth: 850px;-->
-<!--            margin: 0 auto;-->
-<!--            margin-top: 15px; /* 상단 여백 */-->
-<!--            border-top: 1px solid #e2e2e2; /* 상단 테두리 */-->
-<!--            padding-top: 10px; /* 패딩 추가 */-->
-<!--        }-->
-
-        .like-count,
-        .comment-count {
-            font-weight: bold; /* 숫자 굵게 표시 */
-        }
-
-        /* 추가적인 스타일 및 반응형 디자인 추가 가능 */
-    </style>
-
-    <script type="text/javascript">
-
-        $(function() {
-
-            $('a#like').on('click', function() {
-
-                const $this = $(this);
-                const reviewNo = $this.data('review-no');
-                const userName = $this.data('username');
-
-                console.log(reviewNo);
-                console.log(userName);
-
-                const currentLikeCount = parseInt($('.like-count').text());
-                const isActive = $this.attr("class") === "btn-like-active";
-
-                let likeData = {
-                    userName: userName,
-                    relationNo: reviewNo,
-                    target: 'review',
-                };
-
-                $.ajax({
-                    url: "/api-review/addLike",
-                    method: "POST",
-                    data: JSON.stringify(likeData),
-                    dataType: "json",
-                    headers: {
-                        "Content-Type" : "application/json"
-                    },
-                    success: function(result) {
-
-                        alert(result);
-
-                        // 좋아요 취소
-                        if (result === "-1") {
-
-                            alert("좋아요 취소 성공");
-
-                        } else if (result === "1") {
-
-                            alert("좋아요 등록 성공");
-
-                        } else {
-                            alert("오류");
-                        }
-
-                        location.reload();
-
-                    }
-
-                });
-                // ajax End
-
-            });
-        });
-    </script>
 <body>
-<div th:include="~{common/header}"></div> <!-- 공통 헤더 포함 -->
 
 <div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
 <header id="header"></header> <!-- 페이지 헤더 -->
 
-GetReviewList임
+GetReviewList임 - getReviewList.html
 <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
         <main id="main">
@@ -245,6 +109,13 @@ GetReviewList임
                     </div> <!-- section-body 끝 -->
                 </div> <!-- container 끝 -->
             </section> <!-- section 끝 -->
+
+            <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+            <form name="pagingForm">
+                <input type="hidden" name="page">
+                <input type="hidden" name="type" value="allList">
+            </form>
             <!-- 페이징 처리 부분 생략 -->
         </main>
     </div> <!-- wrapperDiv 끝 -->
