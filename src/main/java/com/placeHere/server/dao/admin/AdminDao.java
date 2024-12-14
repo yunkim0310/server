@@ -23,4 +23,7 @@ public interface AdminDao {
 
     // 예약 상세
     public Reservation getRsrv(int id) throws Exception;
+
+    // 휴면계정 전환
+    public int userInactive() throws Exception;
 }

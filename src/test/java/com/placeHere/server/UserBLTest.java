@@ -4,6 +4,7 @@ import ch.qos.logback.core.net.SyslogOutputStream;
 import com.placeHere.server.domain.User;
 //import com.placeHere.server.service.user.UserService;
 //import io.jsonwebtoken.lang.Assert;
+import com.placeHere.server.service.admin.AdminService;
 import com.placeHere.server.service.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,18 @@ public class UserBLTest {
     @Qualifier("userServiceImpl")
     private UserService userService;
 
+    @Autowired
+    @Qualifier("adminServiceImpl")
+    private AdminService adminService;
+
+//    @Test
+//    public void test() {
+//        System.out.println("1234");
+//    }
+
     @Test
-    public void test() {
-        System.out.println("1234");
+    public void schedule() throws Exception{
+        adminService.printDate();
     }
 
     @Test
