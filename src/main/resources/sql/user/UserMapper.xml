@@ -50,13 +50,30 @@
         WHERE username = #{username}
     </select>
 
+    <select id="chkEmail" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
+        SELECT
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
+        FROM user
+        WHERE email = #{email}
+    </select>
+
     <update id="updateLoginDt" parameterType="java.lang.String">
         UPDATE user
         SET login_dt = NOW()
         WHERE username = #{username}
     </update>
 
-    <insert id="join" parameterType="com.placeHere.server.domain.User">
+    <insert id="join">
         INSERT INTO user (username, password, email, role, reg_dt, gender, birth )
         VALUES ( #{username}, #{password}, #{email}, #{role}, NOW(), #{gender}, #{birth}  )
     </insert>

@@ -61,8 +61,22 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
+    public boolean chkEmail(String email) throws Exception {
+
+        boolean result = false;
+        User user = userDao.chkEmail(email);
+
+        log.info("user :: " + user);
+
+        if(user != null) {
+            result = true;
+        }
+
+        return result;
+    }
+
     // 회원가입
-    public void join(User user) throws Exception {
+    public int join(User user) throws Exception {
 
         System.out.println("user 확인 :: " + user);
 
@@ -72,7 +86,8 @@ public class UserServiceImpl implements UserService {
 
 //        user.setPassword(encodedPassword);
 
-        userDao.join(user);
+
+        int result = userDao.join(user);
 
 
         String username = user.getUsername();
@@ -104,6 +119,8 @@ public class UserServiceImpl implements UserService {
 
 //        System.out.println("chk 11 :: " + rawPassword);
 //        System.out.println("chk 11 :: " + encodedPassword);
+
+        return result;
 
     }
 
@@ -180,6 +197,4 @@ public class UserServiceImpl implements UserService {
         result = userDao.updatePwd(user);
         return result;
     }
-
-
 }
