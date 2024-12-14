@@ -443,7 +443,7 @@ $(function() {
             console.log("uploadFile");
             console.log($storeImg.val());
 
-            uploadFile(file, "store").then(result => {
+            uploadFile(file, "store/store/").then(result => {
 
                 console.log(result);
                 $storeImg.val(result.filePath);
@@ -456,7 +456,7 @@ $(function() {
             console.log("updateFile");
             console.log($storeImg.val());
 
-            updateFile($storeImg.val(), file, "store").then(result => {
+            updateFile($storeImg.val(), file, "store/store/").then(result => {
 
                 console.log(result);
                 $storeImg.val(result.filePath);

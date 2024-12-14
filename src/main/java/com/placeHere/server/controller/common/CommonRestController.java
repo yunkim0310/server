@@ -32,15 +32,12 @@ public class CommonRestController {
 
         System.out.println("/api-common/uploadFile : POST");
 
-        if (path.equals("store")) {
-            path = "store/store/";
-        } else if (path.equals("menu")) {
-            path = "store/menu/";
-        } else if (path.equals("news")) {
-            path = "store/news/";
-        } else {
-            path = path + "/";
-        }
+        // 경로 마지막에 / 필수
+        // 경로는 예시 : user/
+        // store/store/
+        // point/product/
+
+        // TODO 오류 처리
 
         return ResponseEntity.ok(awsS3Service.uploadFile(file, path));
     }
@@ -53,16 +50,6 @@ public class CommonRestController {
                                                           @RequestPart("path") String path) throws IOException {
 
         System.out.println("/api-common/updateFile : POST");
-
-        if (path.equals("store")) {
-            path = "store/store/";
-        } else if (path.equals("menu")) {
-            path = "store/menu/";
-        } else if (path.equals("news")) {
-            path = "store/news/";
-        } else {
-            path = path + "/";
-        }
 
         return ResponseEntity.ok(awsS3Service.updateFile(beforeFile, newFile, path));
     }
