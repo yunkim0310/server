@@ -24,6 +24,12 @@ public interface AdminDao {
     // 예약 상세
     public Reservation getRsrv(int id) throws Exception;
 
-    // 휴면계정 전환
+    // 휴면계정전환
     public int userInactive() throws Exception;
+
+    // 예약확정 리스트 가져오기
+    public List<Reservation> getRsrvConfirmedList() throws Exception;
+
+    // 예약 상태값 변경 (예약확정 -> 이용완료)
+    public int updateServiceComplete() throws Exception;
 }
