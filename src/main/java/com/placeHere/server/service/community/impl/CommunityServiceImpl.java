@@ -55,19 +55,19 @@ public class CommunityServiceImpl implements CommunityService {
         int rsrvNo = review.getRsrvNo();
         System.out.println("rsrvNo : "+rsrvNo);
 
-        reservationService.updateRsrvStatus(rsrvNo, "리뷰 작성");
+
 
     }
 
 
     //리뷰 상세보기
     @Override
-    public Review getReview(int reviewNo) throws Exception {
+    public Review getReview(int reviewNo, Search search) throws Exception {
 
         System.out.println("getReview(reviewNo)");
 
         Review review = communityDao.getReview(reviewNo);
-        review.setCommentList(communityDao.getCommentList(review.getReviewNo()));
+        review.setCommentList(communityDao.getCommentListBySearch(review.getReviewNo(), search));
 
         return review;
     }
@@ -135,11 +135,11 @@ public class CommunityServiceImpl implements CommunityService {
 
     //댓글 불러오다
     @Override
-    public List<Comment> getCommentList(int reviewNo) throws Exception {
+    public List<Comment> getCommentList(int reviewNo, Search search) throws Exception {
 
         System.out.println("getCommentList(reviewNo)");
 
-        return communityDao.getCommentList(reviewNo);
+        return communityDao.getCommentListBySearch(reviewNo, search);
     }
 
 
@@ -167,5 +167,30 @@ public class CommunityServiceImpl implements CommunityService {
     public Comment getComment (int commentNo) throws  Exception{
         return communityDao.getCommentById(commentNo);
     }
+
+    // 탈퇴 회원이 작성한 모든 리뷰를 삭제하다.
+    @Override
+    public void deleteAllReviewsByUser(String username) throws Exception {
+        communityDao.deleteAllReviewsByUser(username);
+    }
+
+    // 탈퇴 회원이 작성한 모든 댓글을 삭제하다.
+    @Override
+    public void deleteAllCommentsByUser(String username) throws Exception {
+        communityDao.deleteAllCommentsByUser(username);
+    }
+
+    // 탈퇴 회원의 리뷰 리스트 조회
+    @Override
+    public List<Review> getDeletedUserReview(String username) throws Exception {
+        return communityDao.getDeletedUserReview(username);
+    }
+
+    // 탈퇴 회원의 댓글 리스트 조회
+    @Override
+    public List<Comment> getDeletedUserComment(String username) throws Exception {
+        return communityDao.getDeletedUserComment(username);
+    }
+
 
 }

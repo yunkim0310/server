@@ -8,14 +8,16 @@ import com.placeHere.server.service.admin.AdminService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalTime;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
 @Service("adminServiceImpl")
-
 @Transactional()
 public class AdminServiceImpl implements AdminService {
 
@@ -59,6 +61,22 @@ public class AdminServiceImpl implements AdminService {
         Reservation rsrv = adminDao.getRsrv(id);
         return rsrv;
     }
+
+//    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
+    // 매일 03시 진행
+    @Scheduled(cron = "0 0 3 * * ?")
+    public void userInactive() throws Exception {
+
+        // 1. 로그인 일시가 365가 지난 회원 조회
+
+        // 2. 상태값 update ACTIVE -> INACTIVE
+        int result = adminDao.userInactive();
+        log.info("10초 후 실행 => time : " + LocalTime.now());
+
+        // 3. 상태값 변경한 회원 로그 찍기
+        log.info( result + "개의 계정이 비활성화 되었습니다.");
+    }
+
 
 
 }

@@ -3,44 +3,74 @@
 <head>
     <title>예약 실패 페이지</title>
     <style>
-        body {
-            text-align: center; /* 전체 텍스트를 가운데 정렬 */
-            font-family: Arial, sans-serif; /* 폰트 설정 */
+        /* 사용자 정의 팝업 스타일 */
+        .custom-alert {
+            position: fixed;
+            top: 40%; /* 화면의 중간 근처에 위치 */
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #FFFFFF;
+            color: #333;
+            padding: 20px 30px;
+            border: 1px solid #4880FF;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            font-size: 16px;
+            text-align: center;
+            z-index: 1000;
         }
 
-        h1 {
-            font-size: 28px; /* 헤더 글자 크기 */
-            margin-bottom: 20px; /* 아래 간격 */
-        }
-
-        .button-container {
-            margin-top: 30px; /* 버튼 위쪽 간격 */
-        }
-
-        .btn {
-            display: inline-block;
-            padding: 10px 20px;
-            font-size: 18px;
-            color: #fff;
-            background-color: #4CAF50;
-            text-decoration: none;
+        .custom-alert button {
+            margin-top: 15px;
+            padding: 8px 15px;
+            background-color: #646D7A;
+            color: white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
-            border: none;
+            font-size: 14px;
         }
 
-        .btn:hover {
-            background-color: #45a049; /* 마우스 오버 시 색상 변경 */
+        .custom-alert button:hover {
+            background-color: #4880FF;
+        }
+
+        /* 화면 어두운 배경 */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
         }
     </style>
 </head>
 <body>
 <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
-<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
-<h1>예약이 실패 되었습니다</h1>
-<br/><br/><br/><br/><br/><br/><br/>
-<div class="button-container">
-    <a th:href="@{/reservation/addRsrv(storeId=${reservation.storeId})}" class="btn">확인</a>
+
+<!-- 팝업 영역 -->
+<div id="customPopup" class="overlay" style="display: none;">
+    <div class="custom-alert">
+        <p>예약이 실패 되었습니다</p>
+        <button onclick="redirectToReservation()">확인</button>
+    </div>
 </div>
+
+<script>
+    // 팝업 표시 함수
+    function showCustomPopup() {
+        document.getElementById("customPopup").style.display = "block";
+    }
+
+    // 확인 버튼 클릭 시 리다이렉트
+    function redirectToReservation() {
+        window.location.href = "/reservation/addRsrv?storeId=1"; // 원하는 storeId 값으로 설정
+    }
+
+    // 페이지 로드 시 팝업 표시
+    window.onload = showCustomPopup;
+</script>
 </body>
 </html>

@@ -12,7 +12,6 @@ import java.util.List;
 @Setter
 @ToString
 @NoArgsConstructor
-
 public class Review {
 
         // Field 리뷰
@@ -58,5 +57,8 @@ public class Review {
         private String storeName;
         // 가게 Id
         private int storeId;
+
+        //Like 상태체크
+        private Like like;
 
     }

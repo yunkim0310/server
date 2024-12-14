@@ -106,7 +106,9 @@ public class FriendServiceImpl implements FriendService {
     // friendReq 는 내 아이디, friendRes 는 상대 아이디
     public Friend chkFriend(Friend friend) throws Exception {
 
-        System.out.println("chkFriend 친구 상태 확인");
+        System.out.println("chkFriend 친구 상태 확인" );
+        System.out.println("friendNo1111 : " + friend.getFriendNo());
+
 
         return friendDao.chkFriend(friend);
     }

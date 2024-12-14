@@ -6,9 +6,10 @@
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
-    <link rel="stylesheet" href="/css/templates/header.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+
     <script>
 
         function stopPropagation(event) {
@@ -53,41 +54,6 @@
             document.getElementById("searchForm").submit();
         }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            const rows = document.querySelectorAll("tbody tr");
-
-            let lastDate = "";
-            let lastTime = "";
-
-            rows.forEach(row => {
-                const dateCell = row.querySelector("td:nth-child(1)"); // 예약 날짜 셀
-                const timeCell = row.querySelector("td:nth-child(2)"); // 예약 시간 셀
-                const countCell = row.querySelector("td:nth-child(7)"); // 총 예약 인수 셀
-
-                const currentDate = dateCell.textContent.trim();
-                const currentTime = timeCell.textContent.trim();
-
-                // 날짜 중복 처리
-                if (currentDate === lastDate) {
-                    dateCell.textContent = ""; // 중복된 날짜 숨기기
-                } else {
-                    lastDate = currentDate; // 새로운 날짜로 갱신
-                }
-
-                // 시간 중복 처리
-                if (currentTime === lastTime) {
-                    timeCell.textContent = ""; // 중복된 시간 숨기기
-                } else {
-                    lastTime = currentTime; // 새로운 시간으로 갱신
-                }
-
-                // 총 예약 인수 표시 조건
-                if (dateCell.textContent === "" && timeCell.textContent === "") {
-                    countCell.textContent = ""; // 날짜와 시간이 모두 숨겨졌다면 총 예약 인수도 숨기기
-                }
-            });
-        });
-
 
     </script>
 
@@ -95,23 +61,24 @@
 
 
         .allpoint1 {
-            position: absolute;
+            position: fixed;
             right: 10px;
             width: 330px;
             display: inline-flex;
-            justify-content: flex-end;
+            justify-content: center;
             flex-direction: row;
             gap: 10px;
+            align-items: center; /* 세로 정렬 (필요시 조정) */
         }
 
         .allpoint2 {
-            position: absolute;
             right: 1px; /* 오른쪽으로 이동 */
             left: 2px;
             margin: 0 auto;
-            width: 1000px; display: inline-flex; flex-direction: column; align-items: center;
+            width: 1610px; display: inline-flex; flex-direction: column; align-items: center;
             gap: 10px;
         }
+
 
         /* 기본 스타일 */
         body {
@@ -132,9 +99,10 @@
 
         /* 테이블 스타일 */
         table {
-            width: 90%;
+            width: 60%;
             border-collapse: collapse;
             margin: 0 auto; /* 테이블 수평 가운데 정렬 */
+            margin-left: 500px; /* 테이블 왼쪽 공백 추가 */
             margin-bottom: 20px;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -150,6 +118,7 @@
         th {
             background-color: #f5f5f5;
             font-weight: bold;
+            font-size: 1.2rem;
             color: #333;
         }
 
@@ -165,50 +134,32 @@
         form {
             display: flex;
             flex-direction: column; /* 요소를 세로로 배치 */
-            align-items: flex-start; /* 약간 왼쪽으로 정렬 */
+            align-items: center; /* 약간 왼쪽으로 정렬 */
             margin-left: auto; /* 자동 여백으로 약간 오른쪽으로 이동 */
             margin-right: 20px; /* 오른쪽 여백 */
-            margin-top: 10px; /* 폼 위쪽 간격 */
             width: 400px; /* 폼의 전체 너비 제한 */
+            height: 90%; /* 높이 설정 (원하는 값으로 수정) */
+            padding-top: 20px; /* 폼 내에서 여백을 추가 */
+            border: 3px solid #4880FF; /* 테두리 추가 */
+            border-radius: 8px; /* 테두리 모서리 둥글게 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
+            padding: 30px; /* 내부 여백 */
         }
 
-        /* 날짜와 버튼을 한 줄에 배치 */
-        .date-search-container {
-            display: flex;
-            align-items: center;
-            gap: 5px; /* 요소 간 간격 */
-            margin-bottom: 1px; /* 아래로 간격 */
-            width: 100%;
-        }
 
-        .date-search-container input[type="date"] {
-            flex: 1; /* 입력 필드가 동일한 크기를 가지도록 */
-            padding: 8px;
-        }
-
-        /* 검색 버튼 스타일 */
-        form button {
-            padding: 15px 30px;
-            background-color: #007BFF;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        form button:hover {
-            background-color: #0056b3; /* 버튼 호버 효과 */
-        }
 
         /* 상태 체크박스 */
         #searchStatuses {
+            display: grid;
+            place-items: center;
             margin-top: 20px;
+            width: 100%;
         }
 
         #searchStatuses label {
             display: block; /* 한 줄에 하나씩 표시 */
             margin-bottom: 15px; /* 위아래 간격 설정 */
-            font-size: 1.8rem; /* 글씨 크기 증가 */
+            font-size: 1.5rem; /* 글씨 크기 증가 */
             line-height: 1.5; /* 줄 간격 조정 */
         }
 
@@ -218,25 +169,6 @@
             margin-right: 8px; /* 글씨와 체크박스 사이 간격 */
         }
 
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9rem;
-            }
-
-            th, td {
-                padding: 8px 12px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h3 {
-                font-size: 1.2rem;
-            }
-        }
-
 
         .point-table th, .point-table td {
             padding: 10px;
@@ -244,50 +176,51 @@
             font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
         }
 
-        /* 거래 포인트의 색상 */
-        .point-table .red {
-            color: red;
-            font-weight: bold;
-        }
-
-        .point-table .blue {
-            color: blue;
-            font-weight: bold;
-        }
-
     </style>
 
 </head>
 <body>
+<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
 
-<div class="header">
-    <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
-    <br/><br/>
-    <h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
-</div>
-<br/><br/><br/><br/>
+<h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
+<br/>
 
 <div class="allpoint2">
     <!-- 결과 테이블 -->
     <table>
-        <thead>
-        <tr>
-            <th>예약 날짜</th>
-            <th>예약 시간</th>
+        <tbody th:each="reservation, iterStat : ${reservations}">
+
+
+        <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}" style="height: 50px; background-color: #FFFFFF">
+            <td colspan="5">
+            </td>
+        </tr>
+        <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}"
+            style="background-color: #4880FF; font-size: 30px; font-weight: bold;">
+            <td colspan="5" style="background-color: #4880FF; color: white;">
+                <span th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}" style="font-size: 30px; font-weight: bold;">[예약 날짜]</span>
+            </td>
+        </tr>
+
+        <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'HH:mm') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'HH:mm')))}">
+            <td colspan="3" style="font-size: 20px; font-weight: bold; background-color: #979EA8; color: white;">
+                <span style="position: relative; left: 200px;" th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">[예약 시간]</span>
+            </td>
+            <td colspan="2" style="padding-left: 100px; font-size: 15px; font-weight: bold; background-color: #979EA8; color: white;">
+                <span th:utext="'현재 예약 인원&nbsp;&nbsp;&nbsp;'+${reservationCountsByDate[reservation.rsrvDt]} + '&nbsp;&nbsp;명' ?: 0 + '명'">[현재 예약 인원]</span>
+            </td>
+        </tr>
+
+        <tr th:if="${iterStat.index == 0}">
             <th>예약 상태</th>
             <th>전화 번호</th>
             <th>인원 수</th>
             <th>요청 사항</th>
-            <th>총 예약 인수</th>
             <th></th>
         </tr>
-        </thead>
-        <tbody>
-        <tr th:each="reservation : ${reservations}"
-            th:attr="onclick='location.href=\'/reservation/getRsrv?rsrvNo=' + ${reservation.rsrvNo} + '\''"
+
+        <tr th:attr="onclick='location.href=\'/reservation/getRsrv?rsrvNo=' + ${reservation.rsrvNo} + '\''"
             style="cursor: pointer;">
-            <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}">예약 날짜</td>
-            <td th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">예약 시간</td>
             <td class="status-cell" th:text="${reservation.rsrvStatus}">[예약 상태]</td>
             <td th:text="${reservation.rsrvNumber}" data-phone>[전화 번호]</td>
             <td th:text="${reservation.rsrvPerson} + '명'">[예약 인원]</td>
@@ -297,7 +230,6 @@
         </span>
                 <span th:if="${reservation.rsrvReq == null || reservation.rsrvReq.isEmpty()}"></span>
             </td>
-            <td th:text="${reservationCountsByDate[reservation.rsrvDt]} ?: 0">총 예약 인수</td>
             <td class="action-cell" th:if="${reservation.rsrvStatus != '예약 요청'}" style="padding: 0; text-align: center; width: 100px; height: 40px; border-bottom: 1px solid #ddd;">
                 <div style="height: 100%;">&nbsp;</div>
             </td>
@@ -320,6 +252,7 @@
 
 </div>
 
+
 <div class="allpoint1">
     <!-- 검색 폼 -->
     <form id="searchForm" action="/reservation/getRsrvStoreList" method="POST">
@@ -332,45 +265,56 @@
                     <div class="css-176lya2 e1uzxhvi3">
                         <input class="css-1bkd15f e1uzxhvi2"
                                id="startDate" name="startDate"
-                               type="date" style="width: 80%;"
-                               th:value="${search.startDate ?: ''}">
-                        ~
+                               type="date" onchange="autoSubmitForm()" style="width: 100%;"
+                               th:max="${search.endDate}"
+                               th:value="${search.startDate}">
+                        <br/><br/><br/>
                         <input class="css-1bkd15f e1uzxhvi2"
                                id="endDate" name="endDate"
-                               type="date" style="width: 80%;"
-                               th:value="${search.endDate ?: ''}">
+                               type="date" onchange="autoSubmitForm()"style="width: 100%;"
+                               th:min="${search.startDate}"
+                               th:value="${search.endDate}" >
                     </div>
                 </div>
             </div>
-
-            <button type="submit">Search</button>
         </div>
 
-        <br/><br/><br/><br/><br/>
+        <br/><br/><br/><br/><br/><br/><br/>
 
         <div id="searchStatuses">
             <label>
                 <input type="checkbox" name="searchStatuses" value="예약 요청" onchange="autoSubmitForm()"
-                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 요청')}" /> 예약 요청 &nbsp;&nbsp;
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 요청')}" /> 예약 요청 &nbsp;&nbsp;&nbsp;
             </label>
             <label>
                 <input type="checkbox" name="searchStatuses" value="예약 확정" onchange="autoSubmitForm()"
-                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 확정')}" /> 예약 확정 &nbsp;&nbsp;
-            </label>
-            <label>
-
-                <input type="checkbox" name="searchStatuses" value="이용 완료" onchange="autoSubmitForm()"
-                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('이용 완료')}" /> 이용 완료 &nbsp;&nbsp;
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 확정')}" /> 예약 확정 &nbsp;&nbsp;&nbsp;
             </label>
             <label>
 
                 <input type="checkbox" name="searchStatuses" value="전화 예약" onchange="autoSubmitForm()"
-                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('전화 예약')}" /> 전화 예약 &nbsp;&nbsp;
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('전화 예약')}" /> 전화 예약 &nbsp;&nbsp;&nbsp;
+            </label>
+            <label>
+
+                <input type="checkbox" name="searchStatuses" value="이용 완료" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('이용 완료')}" /> 이용 완료 &nbsp;&nbsp;&nbsp;
+            </label>
+            <label>
+
+                <input type="checkbox" name="searchStatuses" value="리뷰 완료" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('리뷰 완료')}" /> 리뷰 완료 &nbsp;&nbsp;&nbsp;
+            </label>
+            <label>
+
+                <input type="checkbox" name="searchStatuses" value="예약 취소" onchange="autoSubmitForm()"
+                       th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 취소')}" /> 예약 취소 &nbsp;&nbsp;&nbsp;
             </label>
         </div>
 
     </form>
 </div>
+
 
 </body>
 </html>

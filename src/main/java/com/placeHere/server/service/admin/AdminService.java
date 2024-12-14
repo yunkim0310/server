@@ -2,7 +2,9 @@ package com.placeHere.server.service.admin;
 
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.User;
+import org.springframework.scheduling.annotation.Scheduled;
 
+import java.time.LocalTime;
 import java.util.List;
 
 public interface AdminService {
@@ -37,9 +39,12 @@ public interface AdminService {
     public List<Reservation> getRsrvList() throws Exception;
 
     /**
-     *
+     * 예약 상세보기
      */
     public Reservation getRsrv(int id) throws Exception;
+
+
+
 
 
 }

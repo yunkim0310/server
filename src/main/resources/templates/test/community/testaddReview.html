@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>즐거운 미식 생활의 시작, 캐치테이블</title>
+    <link rel="stylesheet" href="/css/detail.css">
+    <link rel="stylesheet" href="/css/collection_detail.css">
+</head>
+<body>
+testaddReview임
+<div id="root">
+    <header id="header">ㅎㄷㅎㄷ</header>
+    <div class="wrapper">
+        <main id="main" style="margin-top: 50px;">
+            <section class="section bg-gray mb-30" style="background-color: white;">
+                <div class="restaurant-reservation-detail">
+                    <div class="detail-box p-10">
+                        <div class="box">
+                            <div class="review">
+                                <div class="review-header">
+                                    <div class="review-title">리뷰 작성
+                                        <span style="color:rgb(255, 61, 0)">*</span>
+                                    </div>
+                                    <p class="description">레스토랑과 관련된 사진을 업로드 해주세요.</p>
+                                </div>
+                            </div>
+                            <form th:action="@{/review/addReview}" method="post" enctype="multipart/form-data" onsubmit="return confirm('리뷰 작성 하시겠습니까');">
+                                <!-- 여기서 필요한 hidden 필드와 요소들 추가 -->
+                                <div class="star-wrapper">
+                                    <div class="star-header">평균 별점</div>
+                                    <div class="star">
+                                        <input type="range" name="revScore" min="1" max="5" oninput="drawStar(this)">
+                                    </div>
+                                </div>
+                                <textarea name="reviewContent" placeholder="레스토랑과 유저들에게 도움이 되는 따뜻한 리뷰를 작성해주세요." required></textarea>
+                                <div>
+                                    <input type="file" name="files" multiple>
+                                </div>
+                                <button type="submit">등록</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+</div>
+</body>
+
+</html>

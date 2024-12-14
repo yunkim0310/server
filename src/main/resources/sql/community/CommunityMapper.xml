@@ -34,15 +34,13 @@
         <result property="reviewDt" column="review_Dt" jdbcType="DATE" />
         <result property="currReviewUpdate" column="currReview_Update" jdbcType="DATE"/>
         <result property="reviewViewStatus" column="review_ViewStatus" jdbcType="BOOLEAN"/>
-
         <result property="userName" column="username" jdbcType="VARCHAR"/>
         <result property="profileImg" column="profile_img" jdbcType="VARCHAR"/>
         <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
         <result property="storeId" column="store_id" jdbcType="INTEGER"/>
         <result property="reviewLikeCnt" column="review_like_cnt" jdbcType="INTEGER"/>
         <result property="reviewCommentCnt" column="review_comment_cnt" jdbcType="INTEGER"/>
-
-        <result property="reviewTotalCnt" column="review_total_cnt" jdbcType="INTEGER"/>
+        <result property="reviewTotalCnt" column="review_total_cnt" jdbcType="INTEGER" javaType="int"/>
 
         <association property="commentList" column="review_no" select="com.placeHere.server.dao.community.CommunityDao.getCommentList"/>
     </resultMap>
@@ -85,92 +83,64 @@
             review_user.review_no, reservation.store_id, reservation.store_name
 
     </select>
-<!--    <select id="getReview" parameterType="int" resultMap="ReviewResultMap">-->
 
-<!--        SELECT review_user_store.*, COALESCE(COUNT(CASE WHEN likes.target = 'review' THEN likes.like_id END), 0) AS review_like_cnt-->
+<!--    친구 리뷰 리스트 보기-->
+<!--    <select id="getFriendReviewList" parameterType="hashmap" resultMap="ReviewResultMap">-->
+<!--        SELECT review_user.*,-->
+<!--        reservation.store_id,-->
+<!--        reservation.store_name,-->
+<!--        COUNT(likes.like_id) AS review_like_cnt,-->
+<!--        COUNT(*) OVER() AS review_total_cnt-->
 <!--        FROM-->
-<!--        (SELECT review_user.*, reservation.store_id, reservation.store_name-->
-<!--        FROM-->
-<!--        (SELECT review.*, user.profile_img-->
-<!--        FROM review, user-->
-<!--        WHERE review.review_no = #{reviewNo}-->
-<!--        AND review.username = user.username) AS review_user,-->
-<!--        reservation-->
-<!--        WHERE reservation.rsrv_no = review_user.rsrv_no) AS review_user_store,-->
-<!--        likes-->
-<!--        WHERE review_user_store.review_no = likes.relation_no-->
-<!--        GROUP BY review_user_store.review_no-->
-
+<!--        (SELECT-->
+<!--            review.*,-->
+<!--            user.profile_img-->
+<!--        FROM review-->
+<!--        JOIN-->
+<!--            user ON review.username = user.username-->
+<!--        JOIN-->
+<!--        friend ON friend.friend_res = review.username-->
+<!--        WHERE-->
+<!--            review.review_ViewStatus = 1-->
+<!--        AND-->
+<!--            friend.friend_status != 0-->
+<!--        And friend.friend_req = #{friendReq}) AS review_user-->
+<!--        JOIN-->
+<!--            reservation ON reservation.rsrv_no = review_user.rsrv_no-->
+<!--        LEFT JOIN-->
+<!--            likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'-->
+<!--        GROUP BY-->
+<!--            review_user.review_no,-->
+<!--            reservation.store_id,-->
+<!--            reservation.store_name-->
+<!--        ORDER BY-->
+<!--            review_user.review_no DESC-->
+<!--        LIMIT #{startRowNum}, #{listSize}-->
 <!--    </select>-->
 
     <!--전체 리뷰 리스트 보기  -->
     <select id="getReviewList" parameterType="com.placeHere.server.domain.Search" resultMap="ReviewResultMap">
-        SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
+
+        SELECT review_user.*, reservation.store_id, reservation.store_name,
+            COUNT(likes.like_id) AS review_like_cnt, COUNT(*) OVER() AS review_total_cnt
         FROM
             (SELECT review.*, user.profile_img
             FROM review
             JOIN user ON review.username = user.username
             WHERE review.review_Viewstatus = true) AS review_user
-            JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
-            LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+        JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+        LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
         GROUP BY review_user.review_no, reservation.store_id, reservation.store_name
         ORDER BY review_user.review_no DESC
         LIMIT #{startRowNum}, #{listSize}
+
     </select>
 
-
-<!--    친구 리뷰 리스트 보기-->
-    <select id="getFriendReviewList" parameterType="hashmap" resultMap="ReviewResultMap">
-        SELECT review_user.*,
-        reservation.store_id,
-        reservation.store_name,
-        COUNT(likes.like_id) AS review_like_cnt
-        FROM
-        (SELECT
-            review.*,
-            user.profile_img
-        FROM review
-        JOIN
-            user ON review.username = user.username
-        JOIN
-        friend ON friend.friend_res = review.username
-        WHERE
-            review.review_ViewStatus = 1
-        AND
-            friend.friend_status != 0
-        And friend.friend_req = #{friendReq}) AS review_user
-        JOIN
-            reservation ON reservation.rsrv_no = review_user.rsrv_no
-        LEFT JOIN
-            likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
-        GROUP BY
-            review_user.review_no,
-            reservation.store_id,
-            reservation.store_name
-        ORDER BY
-            review_user.review_no DESC
-        LIMIT #{startRowNum}, #{listSize}
-    </select>
-
-
-
-
-
-
-
-<!--    <select id="getReviewList" resultMap="ReviewResultMap">-->
-<!--        SELECT-->
-<!--        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,-->
-<!--        currReview_update, review_Viewstatus, COUNT(*) OVER() AS total_cnt-->
-<!--        FROM Review-->
-<!--        WHERE review_Viewstatus = true-->
-<!--        ORDER BY review_Dt DESC-->
-<!--    </select>-->
 
     <!--  특정 가게의 리뷰 리스트 조회  -->
     <select id="getReviewListByStoreId" resultMap="ReviewResultMap">
 
-        SELECT *
+        SELECT *, COUNT(*) OVER() AS review_total_cnt
         FROM
             (SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
             FROM
@@ -187,10 +157,11 @@
 
     </select>
 
+
     <!--  특정 회원들의 리뷰 리스트 조회  -->
     <select id="getReviewListByUserName" resultMap="ReviewResultMap">
 
-        SELECT *
+        SELECT *, COUNT(*) OVER() AS review_total_cnt
         FROM
             (SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
             FROM
@@ -209,7 +180,6 @@
         LIMIT #{search.startRowNum}, #{search.listSize}
 
     </select>
-
 
     <!-- 리뷰 수정 -->
     <update id="updateReview" parameterType="com.placeHere.server.domain.Review">
@@ -245,8 +215,8 @@
 
     </insert>
 
-    <!-- 댓글 목록 불러오기 -->
-    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">
+    <!-- 댓글 목록 불러오기 - 리뷰 목록 조회(페이징 X) -->
+    <select id="getCommentList" parameterType="map" resultMap="CommentResultMap">
 
         SELECT comment_user.*, COUNT(likes.like_id) AS comment_like_cnt
         FROM
@@ -260,25 +230,25 @@
                 comment_user.review_no, comment_user.comments_viewstatus, comment_total_cnt
         ORDER BY comment_user.comment_no DESC
 
+    </select>
+
+    <!-- 댓글 목록 불러오기 - 리뷰 상세보기(페이징) -->
+    <select id="getCommentListBySearch" parameterType="map" resultMap="CommentResultMap">
+
+        SELECT comment_user.*, COUNT(likes.like_id) AS comment_like_cnt
+        FROM
+        (SELECT comment.*, user.profile_img, COUNT(comment.comment_no) OVER() AS comment_total_cnt
+        FROM comment
+        JOIN user ON comment.username = user.username
+        WHERE comment.review_no = #{reviewNo}
+        AND comment.comments_viewstatus = true ) AS comment_user
+        LEFT JOIN likes ON comment_user.comment_no = likes.relation_no AND likes.target = 'comment'
+        GROUP BY comment_user.comment_no, comment_user.username, comment_user.profile_img,
+        comment_user.review_no, comment_user.comments_viewstatus, comment_total_cnt
+        ORDER BY comment_user.comment_no DESC
+        LIMIT #{search.startRowNum}, #{search.listSize}
 
     </select>
-    <!-- LIMIT #{search.startRowNum}, #{search.commentSize} -->
-
-<!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
-<!--        SELECT comment_user.*-->
-<!--        (SELECT comment.*, user.profile_img, COUNT(comment.comment_no) OVER() comment_total_cnt-->
-<!--        FROM comment, user-->
-<!--        WHERE comment.username = user.username-->
-<!--        AND comment.review_no = #{reviewNo}-->
-<!--        AND comment.comments_viewstatus = true) AS comment_user-->
-
-<!--    </select>-->
-<!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
-<!--        SELECT-->
-<!--        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus-->
-<!--        FROM Comment-->
-<!--        WHERE comment_no = #{commentNo}-->
-<!--    </select>-->
 
     <!-- 댓글 수정 -->
     <update id="updateComment" parameterType="com.placeHere.server.domain.Comment">
@@ -300,5 +270,82 @@
             SELECT * FROM comment WHERE comment_no = #{commentNo}
         </select>
 
+<!--   탈퇴 회원이 작성한 모든 리뷰를 삭제 하다.-->
+    <update id="deleteAllReviewsByUser" parameterType="String">
+        UPDATE review
+        SET review_Viewstatus = 0
+        WHERE username = #{username}
+    </update>
+
+<!--    탈퇴 회원이 작성한 모든 댓글을 삭제 하다.  -->
+    <update id="deleteAllCommentsByUser" parameterType="String">
+        UPDATE comment
+        SET comments_viewstatus = 0
+        WHERE username = #{username}
+    </update>
+
+<!--    탈퇴 회원의 리뷰 리스트 조회-->
+    <select id="getDeletedUserReview" parameterType="String" resultMap="ReviewResultMap">
+        SELECT *
+        FROM review
+        WHERE username = #{username} AND review_Viewstatus = 1
+    </select>
+
+<!--    탈퇴 회원의 댓글 리스트 조회-->
+    <select id="getDeletedUserComment" parameterType="String" resultMap="CommentResultMap">
+    SELECT *
+    FROM comment
+    WHERE username = #{username} AND comments_viewstatus = 1;
+    </select>
+
 
 </mapper>
+
+
+
+
+        <!--    <select id="getReviewList" resultMap="ReviewResultMap">-->
+        <!--        SELECT-->
+        <!--        review_no, review_score, review_img1, review_img2, review_img3, review_content, review_Dt,-->
+        <!--        currReview_update, review_Viewstatus, COUNT(*) OVER() AS total_cnt-->
+        <!--        FROM Review-->
+        <!--        WHERE review_Viewstatus = true-->
+        <!--        ORDER BY review_Dt DESC-->
+        <!--    </select>-->
+
+
+        <!-- LIMIT #{search.startRowNum}, #{search.commentSize} -->
+
+        <!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
+        <!--        SELECT comment_user.*-->
+        <!--        (SELECT comment.*, user.profile_img, COUNT(comment.comment_no) OVER() comment_total_cnt-->
+        <!--        FROM comment, user-->
+        <!--        WHERE comment.username = user.username-->
+        <!--        AND comment.review_no = #{reviewNo}-->
+        <!--        AND comment.comments_viewstatus = true) AS comment_user-->
+
+        <!--    </select>-->
+        <!--    <select id="getCommentList" parameterType="int" resultMap="CommentResultMap">-->
+        <!--        SELECT-->
+        <!--        comment_no, comments_content, comments_dt, currcomments_update, comments_viewstatus-->
+        <!--        FROM Comment-->
+        <!--        WHERE comment_no = #{commentNo}-->
+        <!--    </select>-->
+
+        <!--    <select id="getReview" parameterType="int" resultMap="ReviewResultMap">-->
+
+        <!--        SELECT review_user_store.*, COALESCE(COUNT(CASE WHEN likes.target = 'review' THEN likes.like_id END), 0) AS review_like_cnt-->
+        <!--        FROM-->
+        <!--        (SELECT review_user.*, reservation.store_id, reservation.store_name-->
+        <!--        FROM-->
+        <!--        (SELECT review.*, user.profile_img-->
+        <!--        FROM review, user-->
+        <!--        WHERE review.review_no = #{reviewNo}-->
+        <!--        AND review.username = user.username) AS review_user,-->
+        <!--        reservation-->
+        <!--        WHERE reservation.rsrv_no = review_user.rsrv_no) AS review_user_store,-->
+        <!--        likes-->
+        <!--        WHERE review_user_store.review_no = likes.relation_no-->
+        <!--        GROUP BY review_user_store.review_no-->
+
+        <!--    </select>-->

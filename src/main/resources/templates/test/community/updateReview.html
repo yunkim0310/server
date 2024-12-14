@@ -139,25 +139,27 @@
 
     <label>이미지 업로드:</label>
 
-    <!-- 이미지 1 -->
-    <div class="file-upload">
-        <label for="img1-upload">이미지 1 선택</label>
-        <input type="file" id="img1-upload" name="reviewImg1" th:field="*{reviewImg1}" />
-        <span id="img1-name">선택된 파일 없음</span>
+    <div class="row">
+        <div class="col-xs-4 col-md-2"><strong>이미지 1 선택</strong></div>
+        <div class="col-xs-8 col-md-4">
+<!--            <img th:src="@{/images/uploadFiles/{fileName}(fileName=${product.fileName})}" width="300" height="300" alt="상품 이미지"/>-->
+        </div>
     </div>
 
     <!-- 이미지 2 -->
-    <div class="file-upload">
-        <label for="img2-upload">이미지 2 선택</label>
-        <input type="file" id="img2-upload" name="reviewImg2" th:field="*{reviewImg2}" />
-        <span id="img2-name">선택된 파일 없음</span>
+    <div class="row">
+        <div class="col-xs-4 col-md-2"><strong>이미지 2 선택</strong></div>
+        <div class="col-xs-8 col-md-4">
+            <!--            <img th:src="@{/images/uploadFiles/{fileName}(fileName=${product.fileName})}" width="300" height="300" alt="상품 이미지"/>-->
+        </div>
     </div>
 
     <!-- 이미지 3 -->
-    <div class="file-upload">
-        <label for="img3-upload">이미지 3 선택</label>
-        <input type="file" id="img3-upload" name="reviewImg3" th:field="*{reviewImg3}" />
-        <span id="img3-name">선택된 파일 없음</span>
+    <div class="row">
+        <div class="col-xs-4 col-md-2"><strong>이미지 3 선택</strong></div>
+        <div class="col-xs-8 col-md-4">
+            <!--            <img th:src="@{/images/uploadFiles/{fileName}(fileName=${product.fileName})}" width="300" height="300" alt="상품 이미지"/>-->
+        </div>
     </div>
 
     <button type="submit">리뷰 업데이트</button>

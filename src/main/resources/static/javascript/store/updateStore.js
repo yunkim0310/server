@@ -8,11 +8,9 @@ $(function() {
 
     // API Key
     let googleApiKey = ""
-    let kakaoApiKey = "";
 
     getApiKey().then(apiKey => {
         googleApiKey = apiKey.google;
-        kakaoApiKey = apiKey.kakao;
     });
 
     

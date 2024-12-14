@@ -1,6 +1,10 @@
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 
-    <head th:fragment="importFragment">
+    <th:block th:fragment="importFragment">
+
+        <title>PlaceHere</title>
+
+        <link rel="shortcut icon" href="/images/common/smallLogo.png">
 
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -17,6 +21,13 @@
         <!-- 공통 제작 css 적용 -->
         <link rel="stylesheet" href="/css/common/common.css">
 
+        <!-- pageNavigator -->
+        <script src="/javascript/common/pageNavigator.js"></script>
+        <link rel="stylesheet" href="/css/common/paging.css">
+
+        <!-- fileUploader -->
+        <script src="/javascript/common/fileUploader.js"></script>
+
         <script type="text/javascript">
 
           $(function () {
@@ -25,7 +36,11 @@
 
         </script>
 
-    </head>
+        <header id="header">
+            <div th:insert="~{common/header}"></div>
+        </header>
+
+    </th:block>
 
 
 </html>
