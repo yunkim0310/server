@@ -119,40 +119,40 @@
          </choose>
          #{foodCategoryId}, #{specialMenuNo},
         <choose>
-            <when test="storeImgList[0] != null and storeImgList[0] != ''">
-                #{storeImgList[0]}
+            <when test="storeImg1 != null and storeImg1 != ''">
+                #{storeImg1}
             </when>
             <otherwise>
                 NULL
             </otherwise>
         </choose>,
         <choose>
-            <when test="storeImgList[1] != null and storeImgList[1] != ''">
-                #{storeImgList[1]}
+            <when test="storeImg2 != null and storeImg2 != ''">
+                #{storeImg2}
             </when>
             <otherwise>
                 NULL
             </otherwise>
         </choose>,
         <choose>
-            <when test="storeImgList[2] != null and storeImgList[2] != ''">
-                #{storeImgList[2]}
+            <when test="storeImg3 != null and storeImg3 != ''">
+                #{storeImg3}
             </when>
             <otherwise>
                 NULL
             </otherwise>
         </choose>,
         <choose>
-            <when test="storeImgList[3] != null and storeImgList[3] != ''">
-                #{storeImgList[3]}
+            <when test="storeImg4 != null and storeImg4 != ''">
+                #{storeImg4}
             </when>
             <otherwise>
                 NULL
             </otherwise>
         </choose>,
         <choose>
-            <when test="storeImgList[4] != null and storeImgList[4] != ''">
-                #{storeImgList[4]}
+            <when test="storeImg5 != null and storeImg5 != ''">
+                #{storeImg5}
             </when>
             <otherwise>
                 NULL

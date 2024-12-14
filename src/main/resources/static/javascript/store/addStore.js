@@ -8,12 +8,10 @@ $(function() {
 
     let businessNoApiKey = ""
     let googleApiKey = ""
-    let kakaoApiKey = "";
 
     getApiKey().then(apiKey => {
         businessNoApiKey = apiKey.businessNo;
         googleApiKey = apiKey.google;
-        kakaoApiKey = apiKey.kakao;
     });
 
     function checkDuplicateBusinessNo(businessNo) {
@@ -114,10 +112,10 @@ $(function() {
        $("input[name='businessNo']")
            .prop("readonly", true)
            .css("background-color", "#f0f0f0");
-       
+
        $("#useBusinessNo span").text("변경하기");
        $("#useBusinessNo").attr("id", "changeBusinessNo");
-       
+
     });
 
 
@@ -184,7 +182,7 @@ $(function() {
 
     }
 
-    
+
     // 상세 분류 표시 함수
     $("input[name='foodCategory3']").on("change", function () {
 
@@ -389,7 +387,7 @@ $(function() {
         }
     });
 
-    
+
     // 다음 단계 버튼 함수
     $("button[name='submitBtn']").on("click", function () {
 
@@ -424,5 +422,48 @@ $(function() {
         });
 
     });
+
+
+    // 이미지 입력에 대한 이벤트처리
+    $("input[class^='storeImg']:file").on("change", function() {
+
+        const $this = $(this);
+        var className = $this.attr('class');
+
+        console.log(className)
+
+        const file = $this[0].files[0];
+
+        var $storeImg = $(`input[name='${className}']:hidden`);
+
+        console.log($storeImg.val() === "");
+
+        if ($storeImg.val() == null || $storeImg.val() === "") {
+
+            console.log("uploadFile");
+            console.log($storeImg.val());
+
+            uploadFile(file, "store/store/").then(result => {
+
+                console.log(result);
+                $storeImg.val(result.filePath);
+                $(`img.${className}`).attr("src", result.url)
+                $(`#${className}`).css("display", "flex");
+            });
+
+        } else {
+
+            console.log("updateFile");
+            console.log($storeImg.val());
+
+            updateFile($storeImg.val(), file, "store/store/").then(result => {
+
+                console.log(result);
+                $storeImg.val(result.filePath);
+                $(`img.${className}`).attr("src", result.url)
+            });
+        }
+
+    })
 
 });

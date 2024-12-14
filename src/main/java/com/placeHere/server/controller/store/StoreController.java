@@ -825,8 +825,8 @@ public class StoreController {
 
                 if (file != null && !file.isEmpty()) {
 
-                    String filePath = awsS3Service.uploadFile(file, "store/");
-                    filePathList.add(filePath);
+                    Map<String, String> fileMap = awsS3Service.uploadFile(file, "store/");
+                    filePathList.add(fileMap.get("filePath"));
                 }
             }
 

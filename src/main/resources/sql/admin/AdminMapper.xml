@@ -116,5 +116,11 @@
         WHERE rsrv_no = #{id}
     </select>
 
+    <update id="userInactive">
+        UPDATE user
+        SET active_status = 'INACTIVE'
+        WHERE DATEDIFF(NOW(), login_dt) > 365 and active_status = 'ACTIVE'
+    </update>
+
 
 </mapper>
