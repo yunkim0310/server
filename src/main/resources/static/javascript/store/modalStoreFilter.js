@@ -435,56 +435,6 @@ $(function() {
     });
 
 
-    // 필터 리셋 함수
-    function resetFilter() {
-
-        // 모든 input, select, textarea 리셋
-        $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
-
-        // 가격 필터 값 리셋
-        $("form[name='searchStore'] input[name='priceMin']").val(0);
-        $("form[name='searchStore'] input[name='priceMax']").val(100000);
-
-        // 채크박스, 라디오버튼 체크 리셋
-        $("form[name='searchStore'] input[type='checkbox'], form[name='searchStore'] input[type='radio']").prop('checked', false);
-
-        // 지역 필터 안 보이기
-        $('#region').text('미선택');
-        $("#regionFilter").css("display", "none");
-        $("button[name='regionFilter']").data("switchs", "off");
-
-        // 음식 카테고리 필터 안 보이기
-        $('#foodCategory').text('미선택');
-        $("#foodCategoryFilter").css("display", "none");
-        $("button[name='foodCategoryFilter']").data("switchs", "off");
-
-        // 음식 카테고리 2차 분류, 3차 분류 안 보이기
-        $("div[id^='foodCategory2']").css("display", "none");
-        $("div[id^='foodCategory3_']").css("display", "none");
-
-        // 가격 필터 안 보이기
-        $('#price').text('0 ~ 100,000');
-        $("#priceFilter").css("display", "none");
-        $("button[name='priceFilter']").data("switchs", "off");
-
-        // 해시태그 필터 안 보이기
-        $('#hashtag').text('미선택');
-        $("#hashtagFilter").css("display", "none");
-        $("button[name='hashtagFilter']").data("switchs", "off");
-
-        // 해시태그 입력창 제거 후 추가버튼 리셋
-        $(".addedHashtagInput").remove();
-        hashtagCnt = 1;
-        $('button[name="addHashtagInput"]').prop("disabled", false);
-
-        // 편의시설 필터 안 보이기
-        $('#amenities').text('미선택');
-        $("#amenitiesFilter").css("display", "none");
-        $("button[name='amenitiesFilter']").data("switchs", "off");
-
-    }
-
-
     // 초기화 버튼 이벤트 처리
     $("button[name='resetFilter']").on('click', function () {
 
@@ -610,3 +560,52 @@ $(function() {
     });
 
 });
+
+// 필터 리셋 함수
+function resetFilter() {
+
+    // 모든 input, select, textarea 리셋
+    $("form[name='searchStore'] input[type='text'], form[name='searchStore'] select, form[name='searchStore'] textarea").val('');
+
+    // 가격 필터 값 리셋
+    $("form[name='searchStore'] input[name='priceMin']").val(0);
+    $("form[name='searchStore'] input[name='priceMax']").val(100000);
+
+    // 채크박스, 라디오버튼 체크 리셋
+    $("form[name='searchStore'] input[type='checkbox'], form[name='searchStore'] input[type='radio']").prop('checked', false);
+
+    // 지역 필터 안 보이기
+    $('#region').text('미선택');
+    $("#regionFilter").css("display", "none");
+    $("button[name='regionFilter']").data("switchs", "off");
+
+    // 음식 카테고리 필터 안 보이기
+    $('#foodCategory').text('미선택');
+    $("#foodCategoryFilter").css("display", "none");
+    $("button[name='foodCategoryFilter']").data("switchs", "off");
+
+    // 음식 카테고리 2차 분류, 3차 분류 안 보이기
+    $("div[id^='foodCategory2']").css("display", "none");
+    $("div[id^='foodCategory3_']").css("display", "none");
+
+    // 가격 필터 안 보이기
+    $('#price').text('0 ~ 100,000');
+    $("#priceFilter").css("display", "none");
+    $("button[name='priceFilter']").data("switchs", "off");
+
+    // 해시태그 필터 안 보이기
+    $('#hashtag').text('미선택');
+    $("#hashtagFilter").css("display", "none");
+    $("button[name='hashtagFilter']").data("switchs", "off");
+
+    // 해시태그 입력창 제거 후 추가버튼 리셋
+    $(".addedHashtagInput").remove();
+    hashtagCnt = 1;
+    $('button[name="addHashtagInput"]').prop("disabled", false);
+
+    // 편의시설 필터 안 보이기
+    $('#amenities').text('미선택');
+    $("#amenitiesFilter").css("display", "none");
+    $("button[name='amenitiesFilter']").data("switchs", "off");
+
+}

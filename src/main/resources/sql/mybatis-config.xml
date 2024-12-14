@@ -42,7 +42,7 @@
 		<mapper resource="sql/reservation/ReservationMapper.xml"/>
 		<mapper resource="sql/friend/FriendMapper.xml"/>
 		<mapper resource="sql/like/LikeMapper.xml"/>
-
+		<mapper resource="sql/store/SearchMapper.xml"/>
 	</mappers>
 
 </configuration>
