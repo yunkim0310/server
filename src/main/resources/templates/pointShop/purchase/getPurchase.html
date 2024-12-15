@@ -32,7 +32,7 @@
 
             $("button[name='buyBtn']").on("click", function () {
                 var prodNo = $(this).data("prod-no");
-                self.location = "/product/getProduct?prodNo=" + prodNo;
+                self.location = "/purchase/addPurchase?prodNo=" + prodNo;
             });
 
             // 확인 버튼 클릭
@@ -497,10 +497,6 @@
                     <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240" th:if="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}"
                             height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
                         <span class="css-ymwvow e4nu7ef1 submit-button-span">재구매</span>
-                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
-                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                        <span class="css-ymwvow e4nu7ef1 submit-button-span">확인</span>
                     </button>
                 </div>
             </div>
@@ -635,6 +631,14 @@
                     </div>
                 </div>
             </section>
+            <div class="button-container">
+                <div class="css-137ca2h e1utgeno0" style="margin-right: 15px;">
+                    <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
+                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                        <span class="css-ymwvow e4nu7ef1 submit-button-span">확인</span>
+                    </button>
+                </div>
+            </div>
 
         </main>
     </div>

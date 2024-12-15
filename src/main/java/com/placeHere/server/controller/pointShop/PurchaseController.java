@@ -52,6 +52,12 @@ public class PurchaseController {
     @Value("${cloud.aws.s3.bucket-url}")
     private String bucketUrl;
 
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
+
     // Constructor
     public PurchaseController() {
         System.out.println(":: " + getClass().getSimpleName() + " default Constructor call\n");
@@ -222,7 +228,8 @@ public class PurchaseController {
 
     @RequestMapping( value="listPurchase")
     public String listPurchase(@SessionAttribute("user") User buyer,
-//                               @ModelAttribute("search") Search search ,
+                               @RequestParam(value = "order", required = false) String order,
+                               @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
@@ -231,7 +238,24 @@ public class PurchaseController {
 
         System.out.println("username's listPurchase : " + username);
 
-        List<Purchase> purchaseList = purchaseService.getPurchaseList(username);
+        search.setUsername(username);
+        search.setOrder(order);
+        search.setPageSize(pageSize);
+//        search.setListSize(30);
+        search.setListSize(5);
+        System.out.println("order: " + order);
+
+        if(search.getPage() == 0) {
+            search.setPage(1);
+        }
+
+        List<Purchase> purchaseList = purchaseService.getPurchaseList(search);
+        int prodTotalCnt = (purchaseList.isEmpty())? 0 : purchaseList.get(0).getPurchaseTotalCnt();
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
+        model.addAttribute("search" , search);
+        model.addAttribute("prodTotalCnt", prodTotalCnt);
 
         model.addAttribute("purchaseList", purchaseList);
         model.addAttribute("username", username);

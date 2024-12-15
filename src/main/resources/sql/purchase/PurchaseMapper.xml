@@ -20,6 +20,7 @@
         <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
         <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
         <result property="wishCartNo" column="wishcart_no" jdbcType="INTEGER"/>
+        <result property="purchaseTotalCnt" column="purchase_total_cnt" jdbcType="INTEGER"/>
 
         <association property="purchaseProd" column="prod_no" select="com.placeHere.server.dao.pointShop.ProductDao.getProduct"/>
         <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
@@ -67,7 +68,7 @@
         WHERE pt.prod_no = p.prod_no AND pt.tran_no = #{tranNo}
     </select>
 
-    <select id="getPurchaseList" parameterType="String" resultMap="purchaseSelectMap">
+    <select id="getPurchaseList" resultMap="purchaseSelectMap">
         SELECT
             pt.tran_no,
             pt.username,
@@ -75,10 +76,31 @@
             pt.point_dt,
             p.prod_name,
             p.prod_price,
-            p.prod_img1
+            p.prod_img1,
+            COUNT(*) OVER() AS purchase_total_cnt
         FROM Point_Transaction pt , Product p
-        WHERE pt.prod_no = p.prod_no AND pt.username = #{buyer.username}
-        ORDER BY pt.tran_no DESC
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                p.prod_name or p.prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
+            </if>
+            <if test="priceMin != null">
+                AND p.prod_price BETWEEN #{priceMin} AND #{priceMax}
+            </if>
+            AND pt.prod_no = p.prod_no AND pt.username = #{username}
+        </where>
+        <if test="order == 'asc'">
+            ORDER BY p.prod_price ASC
+        </if>
+        <if test="order == 'desc'">
+            ORDER BY p.prod_price DESC
+        </if>
+        <if test="order == 'default'">
+            ORDER BY pt.point_dt DESC
+        </if>
+        <if test="order == null">
+            ORDER BY pt.tran_no DESC
+        </if>
+        LIMIT #{startRowNum}, #{listSize}
     </select>
 
 <!--        <select id="getNextBarcodeNumber" resultType="String">-->

@@ -18,7 +18,7 @@ public interface PurchaseDao {
     public Purchase getPurchase(int tranNo) throws Exception;
 
     //구매 상품 목록
-    public List<Purchase> getPurchaseList(String username) throws Exception;
+    public List<Purchase> getPurchaseList(Search search) throws Exception;
 
     // 거래 포인트 계산 => 수정 필요
 //    public int calcTranPoint(String username)throws Exception;

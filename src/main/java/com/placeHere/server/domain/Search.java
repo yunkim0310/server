@@ -46,6 +46,8 @@ public class Search {
     // 정렬 기준 (ASC, DESC)
     private String order;
 
+    private String username;
+
 
     // Constructor
     public Search() {

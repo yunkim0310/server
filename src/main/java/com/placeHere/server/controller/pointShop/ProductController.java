@@ -299,6 +299,7 @@ public class ProductController {
 
         Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
         model.addAttribute("paging", paging);
+        model.addAttribute("prodTotalCnt", prodTotalCnt);
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);

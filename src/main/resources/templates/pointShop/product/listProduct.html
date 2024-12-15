@@ -450,7 +450,7 @@
 
 </head>
 <body>
-<br/><br/>
+<!--<br/><br/>-->
 <!--<br/><br/><br/><br/><br/><br/><br/><br/>-->
 <!--<div class="header-line"></div>-->
   <!-- 원래 스타일의 헤더 -->
@@ -468,7 +468,7 @@
 <!--    <div class="container">  style="margin-left: 150px-->
         <div class="row" style="width: 800px; margin-right: 470px; margin-left: auto;">
             <!-- 왼쪽 부분: 3컬럼 (정렬 및 검색폼) -->
-            <div class="col-md-3 text-left" style="position:fixed; margin-left:880px; margin-right:120px;">
+            <div class="col-md-3 text-left" style="margin-top: 90px; position:fixed; margin-left:880px; margin-right:120px;">
                 <form class="form-inline" name="detailForm" th:action="@{/product/listProduct}" method="post">
                     <input type="hidden" name="page" value="1">
                     <div class="form-group">
@@ -534,6 +534,16 @@
             <!-- 오른쪽 부분: 9컬럼 (상품 목록) -->
             <div class="col-md-9 text-right">
                 <table>
+
+                    <div class="search-header __autohide" style="background: none; top: 48px;">
+
+                        <div class="__search-result-header mb-20">
+                            <div class="__total-count" style="min-width: 121px">
+                                <strong th:text="|총 ${prodTotalCnt}개의 상품|">104</strong>
+                            </div>
+                        </div>
+
+                    </div>
                     <div class="product-list" >
                         <div th:each="product : ${productList}" class="product-card" th:data-prod-no="${product.prodNo}">
                             <div class="product-img">

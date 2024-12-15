@@ -26,6 +26,21 @@
             // var username = $("input[name='username']").val();
             // var prodStatus = $("input[name='prodStatus']").va l();
             // var cartList = $("input[name='cartList']").val();
+            var cartList = $("input[name='cartList']").val();
+
+            var hasInactiveProduct = false;
+
+            for (var i = 0; i < cartList.length; i++) {
+                if (!cartList[i].prodStatus) {
+                    hasInactiveProduct = true;
+                    break;
+                }
+            }
+
+            if (hasInactiveProduct) {
+                alert("판매 중지된 상품이 포함되어 있습니다.");
+                return; // 상품이 판매 중지 상태이면 submit을 하지 않음
+            }
 
             if (tranPoint > currPoint) {
                 alert("보유하신 포인트가 부족합니다.");
@@ -322,10 +337,12 @@
             <h3>구매하시겠습니까?</h3>
         </div>
     </div>
-    <div class="footer">
-        <p>상품 구매 시 유의사항: 해당 상품은 교환권으로 구매 이후 환불이 불가능합니다.</p>
-        <p>해당 상품은 교환권으로 구매 이후 환불이 불가능합니다.</p>
-        <p>PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+    <div th:if="${tranPoint != 0}">
+        <div class="footer">
+            <p>상품 구매 시 유의사항: 해당 상품은 교환권으로 구매 이후 환불이 불가능합니다.</p>
+            <p>해당 상품은 교환권으로 구매 이후 환불이 불가능합니다.</p>
+            <p>PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+        </div>
     </div>
     <div th:if="${tranPoint == 0}">
         <div class="product-container">
