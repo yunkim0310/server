@@ -42,10 +42,12 @@ dependencies {
     // 타임리프
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     implementation 'org.springframework.boot:spring-boot-starter-batch'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 //    implementation 'org.springframework.boot:spring-boot-starter-quartz'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     compileOnly 'org.projectlombok:lombok'

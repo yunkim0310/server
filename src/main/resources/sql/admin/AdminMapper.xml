@@ -119,8 +119,40 @@
     <update id="userInactive">
         UPDATE user
         SET active_status = 'INACTIVE'
-        WHERE DATEDIFF(NOW(), login_dt) > 365 and active_status = 'ACTIVE'
+        WHERE DATEDIFF(NOW(), login_dt) > 365 AND active_status = 'ACTIVE'
     </update>
+
+
+    <select id="getRsrvConfirmedList" resultType="com.placeHere.server.domain.Reservation">
+        SELECT
+            rsrv_no     as rsrvNo       ,
+            user_name   as userName     ,
+            rsrv_status as rsrvStatus   ,
+            rsrv_dt     as rsrvDt       ,
+            rsrv_person as rsrvPerson   ,
+            amount      as amount       ,
+            rsrv_number as rsrvNumber   ,
+            rsrv_req    as rsrvReq      ,
+            reason      as reason       ,
+            rsrv_create_time as rsrvCreateTime,
+            store_name  as storeName,
+            store_addr  as storeAddr,
+            rsrv_number as rsrvNumber
+        FROM reservation
+        ORDER BY    rsrv_no DESC
+    </select>
+
+    <update id="updateServiceComplete">
+        UPDATE reservation
+        SET rsrv_status = '이용 완료'
+        WHERE rsrv_status = '예약 확정' AND rsrv_dt <![CDATA[ < ]]> now();
+    </update>
+
+    <insert id="insertBatchlog" parameterType="com.placeHere.server.domain.Batch">
+        INSERT INTO batch
+            (batch_name, status, exec_dt)
+        VALUES ( #{batchName}, #{status}, #{exec_dt} )
+    </insert>
 
 
 </mapper>
