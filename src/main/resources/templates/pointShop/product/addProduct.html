@@ -18,74 +18,8 @@
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <link rel="stylesheet" href="/css/templates/header.css">
 
+    <script src="/javascript/pointShop/addProduct.js"></script>
 
-    <script type="text/javascript">
-        $(function() {
-            $("button[name='cancelBtn']").on("click", function () {
-                // history.go(-1);
-                self.location = "/product/listProduct";
-            });
-        });
-
-        $(function() {
-            $("button[name='submitBtn']").on("click", function() {
-                fncAddProduct();
-            });
-
-        });
-
-        function fncAddProduct() {
-            var prodName = $("input[name='prodName']").val();
-            var prodDetail = $("textarea[name='prodDetail']").val();
-            var prodImg1 = $("input[name='prodImg1']").val();
-            var prodPrice = $("input[name='prodPrice']").val();
-            var prodCateNo = $("select[name='prodCateNo']").val();
-
-            if (prodName == null || prodName.length < 1) {
-                alert("상품명은 반드시 입력하여야 합니다.");
-                history.go();
-            }
-
-            if (prodName.length > 20) {
-                alert("상품명은 20자까지 입력 가능합니다.");
-                // return;
-                history.go();
-            }
-
-            if (prodDetail == null || prodDetail.length < 1) {
-                alert("상품상세정보는 반드시 입력하여야 합니다.");
-                // return;
-                history.go();
-            }
-
-            if (prodDetail.length > 100) {
-                alert("상품 설명은 100자까지 입력 가능합니다.");
-                // return;
-                history.go();
-            }
-
-            if (prodImg1 == null || prodImg1.length < 1) {
-                alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
-                // return;
-                history.go();
-            }
-            if (prodPrice == null || prodPrice.length < 1) {
-                alert("가격은 반드시 입력하셔야 합니다.");
-                // return;
-                history.go();
-            }
-            if (prodCateNo == null || prodCateNo.length < 1) {
-                alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
-                // return;
-                history.go();
-            }
-
-            $("form").attr("method", "POST")
-                .attr("action", "/product/addProduct")
-                .attr("enctype", "multipart/form-data")
-                .submit();
-        }
-    </script>
 
     <style>
         .form-group.button-group {
@@ -139,10 +73,6 @@
 
 </head>
 <body>
-    <br/><br/>
-    <header id="header">
-        <div th:insert="~{common/header}"></div>
-    </header>
 
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
         <div class="side" style="margin-top: 80px;">
@@ -226,10 +156,15 @@
                                     </div><br/><br/>
                                     <div class="css-jmalg e1uzxhvi6">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-<!--                                            <input type="file" accept="image/*" name="prodImg1">-->
-                                            <input id="prodImg1" name="prodImg1"
-                                                   placeholder="상품 대표 이미지" type="text"
-                                                   class="css-1bkd15f e1uzxhvi2">
+                                            <input type="file" accept="image/*" class="prodImg1">
+                                            <input type="hidden" name="prodImg1">
+                                            <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
+                                            <div id="prodImg1" style="display: none;">
+                                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
+                                            </div>
+<!--                                            <input id="prodImg1" name="prodImg1"-->
+<!--                                                   placeholder="상품 대표 이미지" type="text"-->
+<!--                                                   class="css-1bkd15f e1uzxhvi2">-->
                                         </div>
                                     </div><br/>
                                 </div><br/><br/>
@@ -242,16 +177,21 @@
                                     </div>
                                     <div class="css-jmalg e1uzxhvi6">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-<!--                                            <input type="file" accept="image/*" name="prodImg2">-->
-                                            <input id="prodImg2" name="prodImg2"
-                                                   placeholder="상품 상세 이미지" type="text"
-                                                   class="css-1bkd15f e1uzxhvi2">
+                                            <input type="file" accept="image/*" class="prodImg2">
+                                            <input type="hidden" name="prodImg2">
                                         </div>
+                                        <div id="prodImg2" style="display: none;">
+                                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100">
+                                        </div>
+<!--                                            <input id="prodImg2" name="prodImg2"-->
+<!--                                                   placeholder="상품 상세 이미지" type="text"-->
+<!--                                                   class="css-1bkd15f e1uzxhvi2">-->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-<!--                                            <input type="file" accept="image/*" name="prodImg3">-->
-                                            <input id="prodImg3" name="prodImg3"
-                                                   placeholder="상품 상세 이미지" type="text"
-                                                   class="css-1bkd15f e1uzxhvi2">
+                                            <input type="file" accept="image/*" class="prodImg3">
+                                            <input type="hidden" name="prodImg3">
+                                        </div>
+                                        <div id="prodImg3" style="display: none;">
+                                            <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100">
                                         </div>
                                     </div>
                                 </div><br/><br/>

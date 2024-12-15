@@ -3,12 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>PlaceHere</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua7Kw1TIq0RtvO+fi6QxfhCpCz2vhK4U6Xvn8PBxJg4mtLOefW4Llmhks" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
-    <link rel="stylesheet" href="/css/templates/header.css">
+
+
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
     <link href="/css/templates/mypage.css" rel="stylesheet">
@@ -17,118 +21,7 @@
     <link href="/css/templates/style.css" rel="stylesheet">
 <!--    <script src="/javascript/templates/script.js" type="text/javascript"></script>-->
 
-    <script type="text/javascript">
-
-        $(function () {
-            $("button.btn-confirm").on("click", function () {
-                self.location = "/product/listProduct";
-            });
-
-            $("div.product-card").on("click", function () {
-                var prodNo = $(this).data("prod-no");
-                self.location = "/product/getProduct?prodNo=" + prodNo;
-            });
-
-            $("button.btn-primary.edit").on("click", function () {
-                var prodNo = $(this).data("prod-no");
-                self.location = "/product/updateProduct?prodNo=" + prodNo;
-            });
-
-            $("button.btn-primary.confirm").on("click", function () {
-                self.location = "/product/listProduct";
-            });
-        });
-
-        $(function () {
-            $("#searchKeyword").autocomplete({
-                source: function (request, response) {
-                    $.ajax({
-                        url: "/api-product/json/getProductAutocomplete/" + encodeURIComponent(request.term),
-                        method: "GET",
-                        dataType: "json",
-                        success: function (JSONData) {
-                            response(JSONData);
-                        }
-                    });
-                }
-            });
-        });
-
-        $(function () {
-            $("input[name='order']").on("change", function () {
-                let order = $(this).val();
-                fncGetList(order);
-            });
-        });
-
-        function fncGetList(order) {
-            $("form").attr("method", "POST").attr("action", "/product/listProduct").submit();
-        }
-
-            var price = /*[${product.prodPrice}]*/ 1234567; // 가격 값 가져오기 (템플릿에서 렌더링된 값)
-            var formattedPrice = price.toLocaleString(); // 천 단위 콤마 추가
-            document.getElementById('prodPrice').innerText = formattedPrice + 'P';
-
-        function updateSearchKeyword() {
-            // 카테고리 선택 값을 searchKeyword input에 자동으로 채워넣음
-            var selectedCategory = document.getElementById('prodCateNo').value;
-            if (selectedCategory !== "0") { // 선택된 값이 '0'이 아닐 때만
-                // 쉼표 제거 및 값을 입력
-                document.getElementById('searchKeyword').value = selectedCategory.replace(',', '');
-            }
-            $("form").attr("method", "POST").attr("action", "/product/listProduct").submit();
-        }
-
-        $(function () {
-            $(window).scroll(function() {
-                // 스크롤 맨 아래일 때
-                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 50) {
-
-                    // 타임리프 변수를 사용하여 현재 페이지와 최대 페이지 값 가져오기
-                    var currentPage = parseInt([[${currentPage}]]);
-                    var maxPage = parseInt([[${maxPage}]]);
-
-                    if (currentPage <= maxPage) {
-                        // 현재 페이지 번호 증가
-                        $("#page").val(currentPage + 1);
-
-                        // 검색 조건을 JSON 객체로 준비
-                        var search = {
-                            searchKeyword: $("#searchKeyword").val(),
-                            searchSorting: $("#searchSorting").val(),
-                            currentPage: $("#currentPage").val()
-                        };
-
-                        $.ajax({
-                            url: "/product/json/listProduct",
-                            method: "POST",
-                            dataType: "json",
-                            headers: {
-                                "Accept": "application/json",
-                                "Content-Type": "application/json"
-                            },
-                            async: false,
-                            data: JSON.stringify(search),
-                            success: function(JSONData, status) {
-                                console.log(JSONData); // 응답 내용 확인
-
-                                var list = JSONData['list'];
-
-                                // 응답 받은 데이터로 화면 갱신
-                                display(list);
-                            },
-                            complete: function() {
-                                // 완료 후 처리할 코드
-                            }
-                        });
-                    }
-                }
-            });
-        });
-
-
-
-    </script>
+    <script src="/javascript/pointShop/listProduct.js"></script>
 
     <style>
 
@@ -558,10 +451,7 @@
 </head>
 <body>
 <br/><br/>
-<div class="point-header">
-    <div th:insert="~{common/header}"></div>
-<!--    <div th:insert="~{pointShop/menuBar}"></div>-->
-</div>
+<!--<br/><br/><br/><br/><br/><br/><br/><br/>-->
 <!--<div class="header-line"></div>-->
   <!-- 원래 스타일의 헤더 -->
 
@@ -580,6 +470,7 @@
             <!-- 왼쪽 부분: 3컬럼 (정렬 및 검색폼) -->
             <div class="col-md-3 text-left" style="position:fixed; margin-left:880px; margin-right:120px;">
                 <form class="form-inline" name="detailForm" th:action="@{/product/listProduct}" method="post">
+                    <input type="hidden" name="page" value="1">
                     <div class="form-group">
                         <div id="searchSorting">
                             <strong>정렬</strong><br/><br/>
@@ -679,7 +570,10 @@
     </div>
 </div>
 
-<input type="hidden" id="page" name="page" th:value="${search.page}"/>
+<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+<!--<input type="hidden" id="page" name="page" th:value="${search.page}"/>-->
+
 <!--</div>-->
 </body>
 </html>

@@ -24,13 +24,8 @@
     </div>
     <link th:insert="~{common/import :: importFragment}">
 
-    <script type="text/javascript">
-        $(function() {
-            $("button[name='confirmBtn']").on("click", function () {
-                self.location = "/product/listProduct";
-            });
-        });
-    </script>
+    <script src="/javascript/pointShop/addUpdateProductResult.js"></script>
+
     <style>
 
 
@@ -420,9 +415,9 @@
 <br/><br/>
 <div id="root">
 
-    <header id="header">
-        <div th:insert="~{common/header}"></div>
-    </header>
+<!--    <header id="header">-->
+<!--        <div th:insert="~{common/header}"></div>-->
+<!--    </header>-->
 
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
         <div class="side" style="margin-top: 80px;">
@@ -439,11 +434,11 @@
                 <div class="video-swiper-wrapper">
                     <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
                         <h3 style="text-align: center; font-size: 30px;">상품 등록이</h3>
-                        <h3 style="text-align: center; font-size: 30px;">완료되었습니다.</h3><br/><br/>
+                        <h3 style="text-align: center; font-size: 30px;">완료되었습니다.</h3><br/><br/><br/><br/><br/><br/>
                         <div class="img-container" style="position: relative;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                                 <img class="guide-img" style="width: 100%; max-height:1000px; display: block;"
-                                     th:src="@{/file/pointShop/baemin.jpg}">
+                                     th:src="${url + product.prodImg1}">
                                 <img th:if="${product.prodStatus == false}" style="display: flex; justify-content: center; align-items: center; padding-top: 100px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 15%;"
                                      src="/file/pointShop/icon_X_circle.png">
                             </div>
@@ -510,9 +505,9 @@
                                     <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>
                                     <div style="text-align: center;">
                                         <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                        <img th:src="@{/file/pointShop/baemin.jpg}" alt="상품 상세 이미지">
+                                        <img th:src="${url + product.prodImg2}" alt="상품 상세 이미지">
                                         <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                        <img th:src="@{/file/pointShop/detailImg.jpg}" alt="상품 상세 이미지">
+                                        <img th:src="${url + product.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
                             </div>

@@ -17,68 +17,9 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
   <link rel="stylesheet" href="/css/templates/header.css">
 
-  <script type="text/javascript">
+  <script src="/javascript/pointShop/updateProduct.js"></script>
 
-    $(function() {
-      $("button[name='cancelBtn']").on("click", function () {
-        // history.go(-1);
-        self.location = "/product/listProduct";
-      });
-    });
 
-    $(function() {
-      $("button[name='submitBtn']").on("click", function() {
-        fncUpdateProduct();
-      });
-
-    });
-
-    function fncUpdateProduct() {
-      var prodName = $("input[name='prodName']").val();
-      var prodDetail = $("textarea[name='prodDetail']").val();
-      var prodImg1 = $("input[name='prodImg1']").val();
-      var prodPrice = $("input[name='prodPrice']").val();
-      var prodCateNo = $("select[name='prodCateNo']").val();
-
-      if (prodName == null || prodName.length < 1) {
-        alert("상품명은 반드시 입력하여야 합니다.");
-        return;
-      }
-
-      if (prodName.length > 20) {
-        alert("상품명은 20자까지 입력 가능합니다.");
-        return;
-      }
-
-      if (prodDetail == null || prodDetail.length < 1) {
-        alert("상품상세정보는 반드시 입력하여야 합니다.");
-        return;
-      }
-
-      if (prodDetail.length > 100) {
-        alert("상품 설명은 100자까지 입력 가능합니다.");
-        return;
-      }
-
-      if (prodImg1 == null || prodImg1.length < 1) {
-        alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
-        return;
-      }
-      if (prodPrice == null || prodPrice.length < 1) {
-        alert("가격은 반드시 입력하셔야 합니다.");
-        return;
-      }
-      if (prodCateNo == null || prodCateNo.length < 1) {
-        alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
-        return;
-      }
-
-      $("form").attr("method", "POST")
-              .attr("action", "/product/updateProduct")
-              .attr("enctype", "multipart/form-data")
-              .submit();
-    }
-  </script>
 
   <style>
     .form-group.button-group {
@@ -132,10 +73,6 @@
 
 </head>
 <body>
-    <br/><br/>
-    <header id="header">
-      <div th:insert="~{common/header}"></div>
-    </header>
 
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
       <div class="side" style="margin-top: 80px;">

@@ -227,7 +227,18 @@
             flex-direction: column; /* 수직으로 정렬 */
             align-items: center; /* 수평 중앙 정렬 */
             text-align: center; /* 텍스트 중앙 정렬 */
+
+            border: 1px solid #ddd;
+            /*border: 2px solid #4880FF;*/
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+
+        /*.__desc:hover {*/
+        /*    transform: translateY(-5px); !* 마우스를 올렸을 때 살짝 올라가는 효과 *!*/
+        /*}*/
 
         .news-item img {
             width: 200px;
@@ -236,16 +247,17 @@
             margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
         }
 
-        .news-item p {
+        .news-item {
             margin: 0;
             font-size: 14px; /* 원하는 텍스트 크기로 설정 */
             color: #333; /* 텍스트 색상 */
-            text-align: left;
+            text-align: center;
             padding: 10px;
             white-space: normal; /* 줄바꿈 허용 */
             overflow: visible; /* 오버플로우 제거 */
             text-overflow: clip; /* 텍스트 잘림 없음 */
             word-break: break-word; /* 긴 단어 강제 줄바꿈 */
+            cursor: pointer;
         }
 
         .restaurant-meta .info {
@@ -405,6 +417,64 @@
             background-color: #d0d0d0;
         }
 
+        /* footer 스타일 */
+        .footer {
+            /*position: fixed;  !* 화면 하단에 고정 *!*/
+            bottom: 0;        /* 화면 아래쪽에 위치 */
+            left: 0;          /* 화면 왼쪽에 맞춤 */
+            width: 100%;      /* 화면 너비를 100%로 설정 */
+            background-color: #f8f8f8; /* 배경색 */
+            color: #555555;   /* 텍스트 색상 */
+            text-align: left; /* 텍스트를 중앙 정렬 */
+            font-size: 12px;   /* 글자 크기 작게 설정 */
+            padding: 10px 0;   /* 위 아래 여백 */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+
+        .footer p {
+            margin: 0; /* p 태그의 기본 여백 제거 */
+        }
+
+
+
+        /* 상품 리스트 그리드 */
+        .product-list {
+            display: grid;
+            gap: 20px; /* 상품 간의 간격 */
+            margin: 0px;
+            min-height: 350px;
+
+
+
+            width: 200px;
+            height: 200px;
+            padding: 5px;
+            margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+        }
+
+        /* 상품 카드 스타일 */
+        .product-card {
+            border: 1px solid #ddd;
+            /*border: 2px solid #4880FF;*/
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            /*display: flex;*/
+            flex-direction: column;
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+            height: 360px;
+            display: flex;
+            flex-direction: column; /* 수직으로 정렬 */
+            align-items: center; /* 수평 중앙 정렬 */
+            text-align: center; /* 텍스트 중앙 정렬 */
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 올라가는 효과 */
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -421,7 +491,7 @@
                 self.location = "/product/updateProduct?prodNo=" + prodNo;
             });
 
-            $("button[name='viewBtn']").on("click", function () {
+            $("div.__desc").on("click", function () {
                 var prodNo = $(this).data("prod-no");
                 self.location = "/product/getProduct?prodNo=" + prodNo;
             });
@@ -509,9 +579,6 @@
     <!--    <br/><br/>-->
     <!--    <h1>상품 상세 정보</h1>-->
     <!--</div>-->
-    <header id="header">
-        <div th:insert="~{common/header}"></div>
-    </header>
 
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
         <div class="side" style="margin-top: 80px;">
@@ -559,47 +626,35 @@
                             상품 가격
 <!--                            th:src="/file/pointShop/nimbus_money.png"-->
                         </p>
-                        <p class="slogan"  th:class="${product.prodStatus == true ? 'available' : 'unavailable'}"
-                              th:text="'&ensp;'+${product.prodStatus == true ? '구매 가능' : '판매 중지'}">
+                        <div>
+                            <p class="slogan" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}"
+                               th:text="'&ensp;'+${product.prodStatus == true ? '구매 가능' : '판매 중지'}"
+                               style="display: inline-block; vertical-align: middle;">
+                            </p>
 
-                        <div class="button-container" style="margin-left: 700px;">
-                            <div th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}" class="user">
-                                <!--                    <button class="btn-primary buy" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}">구매</button>&nbsp;&nbsp;&nbsp;&nbsp;-->
-                                <!--                    <button class="btn-primary confirm">확인</button>-->
-                                <div class="css-137ca2h e1utgeno0">
-                                    <button class="css-18m884r e4nu7ef3" id="buyy" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}"
-                                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                                        <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
-                                    </button>
-                                </div>
-
-                            </div>
-                            <div th:if="${session.user.role == 'ROLE_POINT' || product.prodStatus == false}" class="point">
-                                <div class="css-137ca2h e1utgeno0">
-                                    <button class="css-18m884r e4nu7ef3" id="edit" name="editBtn" type="button" width="240" th:data-prod-no="${product.prodNo}"
-                                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                                        <span class="css-ymwvow e4nu7ef1 submit-button-span">수&nbsp;정</span>
-                                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                    <button class="css-18m884r e4nu7ef3" name="confirmBtn" type="button" width="240"
-                                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                                        <span class="css-ymwvow e4nu7ef1 submit-button-span">돌아가기</span>
-                                    </button>
-                                </div>
-                            </div>
+                            <span class="button-container" th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}"
+                                  style="display: inline-block; vertical-align: middle;">
+                                <button class="css-18m884r e4nu7ef3" id="buy1" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}"
+                                        th:data-prod-no="${product.prodNo}"
+                                        height="56" radius="3"
+                                        style="margin-left:610px; margin-bottom: auto; margin-top: 0px; width: 100px; text-align: center; background-color: #4880FF;">
+                                    <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
+                                </button>
+                            </span>
                         </div>
-                        </p>
-                    </div>
 
-<!--                    <div class="restaurant-meta mb-16">-->
-<!--                        <div class="rating">-->
-<!--                            <span class="star" th:text="'&ensp;'+${product.prodPrice}+P">상품 가격</span>-->
-<!--                        </div><br/>-->
-<!--                        <div class="storeBasicInfo">-->
-<!--                            <span class="slogan" style="padding-left: 30px;" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}"-->
-<!--                                  th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}">-->
-<!--                                </span>-->
+                        <!--                        <div>-->
+<!--                        <p class="slogan"  th:class="${product.prodStatus == true ? 'available' : 'unavailable'}"-->
+<!--                           th:text="'&ensp;'+${product.prodStatus == true ? '구매 가능' : '판매 중지'}">-->
+<!--                        </p>-->
+<!--                        <span  class="button-container" th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}">-->
+<!--                        <button class="css-18m884r e4nu7ef3" id="buy1" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}"-->
+<!--                                height="56" radius="3" style="margin-left:700px; margin-bottom: auto; margin-top: 10px; width: 100px; text-align: center;background-color: #4880FF;">-->
+<!--                            <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>-->
+<!--                        </button>-->
+<!--                        </span>-->
 <!--                        </div>-->
-<!--                    </div>-->
+                    </div>
                 </div>
             </section>
             <hr class="separator">
@@ -638,11 +693,17 @@
                                 </dl>
                             </div>
                             <div class="desc-block">
+                                <div class="footer">
+                                    <p>상품 구매 시 유의사항</p>
+                                    <p>▪ 해당 상품은 교환권으로 구매 이후 환불이 불가능합니다.</p>
+                                    <p>▪ PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </section>
+
 
             <div class="button-container">
                 <div th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}" class="user">
@@ -660,7 +721,7 @@
                     </div>
 
                 </div>
-                <div th:if="${session.user.role == 'ROLE_POINT' || product.prodStatus == false}" class="point">
+                <div th:if="${session.user.role == 'ROLE_POINT' && product.prodStatus == false}" class="point">
                     <div class="css-137ca2h e1utgeno0">
                         <button class="css-18m884r e4nu7ef3" id="edit" name="editBtn" type="button" width="240" th:data-prod-no="${product.prodNo}"
                                 height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
@@ -672,6 +733,15 @@
                         </button>
                     </div>
                 </div>
+                <div th:if="${product.prodStatus == false}" class="point">
+                    <div class="css-137ca2h e1utgeno0">
+                        <button class="css-18m884r e4nu7ef3" name="confirmBtn" type="button" width="240"
+                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                            <span class="css-ymwvow e4nu7ef1 submit-button-span">돌아가기</span>
+                        </button>
+                    </div>
+                </div>
+
             </div><br/><br/>
 
             <hr class="separator">
@@ -692,11 +762,41 @@
                                                 <div class="__pic">
                                                     <div class="img"></div>
                                                 </div>
-                                                <div class="__desc" th:each="products : ${productList}"  th:if="${products.prodStatus == true and products.prodNo != product.prodNo}">
+<!--                                                <div class="product-list" >-->
+<!--                                                    <div th:each="product : ${productList}" class="product-card" th:data-prod-no="${product.prodNo}">-->
+<!--                                                        <div class="product-img">-->
+<!--                                                            &lt;!&ndash;                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">&ndash;&gt;-->
+<!--                                                            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">-->
+<!--                                                            &lt;!&ndash;                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">&ndash;&gt;-->
+<!--                                                        </div>-->
+<!--                                                        <div class="product-info">-->
+<!--                                                            <p th:text="${product.prodCateName}">상품 카테고리</p>-->
+<!--                                                            <h3 th:text="${product.prodName}">상품명</h3>-->
+<!--                                                            <p style="color: #FB5555; font-weight: bold;" th:text="${product.prodPrice} + 'P'">상품 가격</p>-->
+<!--                                                        </div>-->
+<!--                                                        <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">-->
+<!--                                                            <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>-->
+<!--                                                        </div><br/>-->
+<!--                                                        <div th:if="${session.user.role == 'ROLE_POINT'}" class="user">-->
+<!--                                                            &lt;!&ndash;                            <div class="product-actions">&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                            <div th:if="${session.user.role == 'ROLE_USER'}" class="user">&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                <div class="product-actions">&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                    <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                                </div>&ndash;&gt;-->
+<!--                                                            &lt;!&ndash;                            </div>&ndash;&gt;-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+                                                <div class="__desc" th:each="products : ${productList}"  th:if="${products.prodStatus == true and products.prodNo != product.prodNo}" th:data-prod-no="${products.prodNo}">
                                                     <div class="news-item">
                                                         <img th:src="@{/file/pointShop/delivery.png}" width="300" height="300" style="padding: 5px;align-items: self-end;">
+                                                        <p th:text="${products.prodCateName}" style="font-size: 15px;">상품 카테고리</p>
                                                         <p th:text="${products.prodName}" style="font-weight: bold; font-size: 22px;">상품명</p>
-                                                        <p th:text="${products.prodPrice}+P" style="font-size: 17px;">상품 가격</p>
+                                                        <p th:text="${products.prodPrice}+P" style="font-size: 17px; color: #FB5555;">상품 가격</p>
                                                         <p th:class="${products.prodStatus == true ? 'available'  : 'unavailable'}"
                                                            th:style="${products.prodStatus == true ? 'color: green; font-weight: bold;' : 'color: red; font-weight: bold;'}"
                                                                 th:text="${products.prodStatus == true ? '구매 가능' : '판매 중지'}" style="font-size: 17px;">상품 가격</p>
@@ -706,11 +806,12 @@
 <!--                                                                <span class="css-ymwvow e4nu7ef1 submit-button-span">보&nbsp;기</span>-->
 <!--                                                            </button>-->
                                                         <br/><br/><br/>
-                                                        <button type="button" class="btn btn-default" name="viewBtn" th:data-prod-no="${products.prodNo}" style=" background-color: #4880FF; color: white;">보기</button>&nbsp;
+<!--                                                        <button type="button" class="btn btn-default" name="viewBtn" th:data-prod-no="${products.prodNo}" style=" background-color: #4880FF; color: white;">보기</button>&nbsp;-->
 <!--                                                        </div>-->
                                                     </div>
                                                 </div>
                                             </div>
+<!--                                            </div>-->
                                         </article>
                                     </div>
                                 </div>

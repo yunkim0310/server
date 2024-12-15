@@ -6,6 +6,7 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
@@ -47,6 +48,9 @@ public class PurchaseController {
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService userService;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
 
     // Constructor
     public PurchaseController() {
@@ -151,6 +155,7 @@ public class PurchaseController {
 
         String fileName = file.getOriginalFilename();
         String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+
         File barcodeDirectory = new File(uploadPath);
         if (!barcodeDirectory.exists()) {
             barcodeDirectory.mkdirs();
@@ -189,6 +194,9 @@ public class PurchaseController {
         System.out.println("Barcode Number: " + barcodeNumber);  // 바코드 번호 출력
         System.out.println("Barcode File Name: " + barcodeFileName);  // 바코드 이미지 파일명 출력
 
+//        AwsS3Service s3Service = new AwsS3Service(bucketUrl);
+//        s3Service.uploadFile(barcodeFileName, barcodeFilePath);
+
         System.out.println("/purchase/addPurchase : POST");
 
 
@@ -208,7 +216,8 @@ public class PurchaseController {
         model.addAttribute("username", username);
 
 //        return "pointShop/purchase/addPurchaseResult";
-        return "pointShop/purchase/listPurchase";
+//        return "pointShop/purchase/getPurchase";
+        return "redirect:/purchase/listPurchase";
     }
 
     @RequestMapping( value="listPurchase")

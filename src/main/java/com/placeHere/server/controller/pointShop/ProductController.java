@@ -1,9 +1,6 @@
 package com.placeHere.server.controller.pointShop;
 
-import com.placeHere.server.domain.Product;
-import com.placeHere.server.domain.Purchase;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.User;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import jakarta.servlet.ServletContext;
@@ -36,6 +33,15 @@ public class ProductController {
     @Autowired
     @Qualifier("purchaseServiceImpl")
     private PurchaseService purchaseService;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
 
 
     public ProductController(){
@@ -126,6 +132,8 @@ public class ProductController {
 
         productService.addProduct(product);
 
+        model.addAttribute("url", bucketUrl);
+
         return "/pointShop/product/addProductResult";
     }
 
@@ -165,7 +173,18 @@ public class ProductController {
 //        prodCateName = product.getProdCateName();
         search.setSearchKeyword(categoryName);
         System.out.println("categoryName : " + categoryName);
+
+        search.setPageSize(pageSize);
+//        search.setStartRowNum(1);
+//        search.setListSize(30);
+        search.setListSize(15);
         List<Product> productList = productService.getProductList(search);
+        int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
+
+        System.out.println(productList);
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
         model.addAttribute("productList", productList);
 
         Cookie[] cookies = request.getCookies();
@@ -263,8 +282,9 @@ public class ProductController {
         System.out.println("priceMax : " + search.getPriceMax());
 
         search.setOrder(order);
-        search.setPageSize(9);
-        search.setListSize(9);
+        search.setPageSize(pageSize);
+//        search.setListSize(30);
+        search.setListSize(15);
         System.out.println("order: " + order);
 
         if(search.getPage() == 0) {
@@ -273,7 +293,12 @@ public class ProductController {
 //        search.setPageSize(pageSize);
 
         List<Product> productList = productService.getProductList(search);
+        int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
 
+        System.out.println(productList);
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);

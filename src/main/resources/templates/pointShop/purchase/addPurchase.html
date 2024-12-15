@@ -27,12 +27,12 @@
     <script type="text/javascript">
         $(function() {
 
-            $("button.btn-primary.buy").on("click", function () {
+            $("button[name='buyBtn']").on("click", function () {
                 fncAddPurchase();
             });
         });
         $(function() {
-            $("button.btn-primary.confirm").on("click", function () {
+            $("button[name='confirmBtn']").on("click", function () {
                 // self.location = "/product/getProduct";
                 history.go(-1);
             });
@@ -277,6 +277,155 @@
             background-color: #d0d0d0;
         }
 
+
+
+
+
+        table {
+            border-spacing: 0 10px; /* 행 간 간격 */
+            border-collapse: separate; /* 셀 간 간격 유지 */
+            width: 100%; /* 테이블 전체 너비 */
+            font-size: 150px;
+        }
+
+        th, td {
+            padding: 10px 15px; /* 셀 내부 여백 */
+            text-align: left; /* 텍스트를 왼쪽 정렬 */
+            vertical-align: top; /* 텍스트 수직 정렬 */
+            font-weight: bold;
+            word-wrap: break-word; /* 단어를 줄바꿈 */
+            word-break: break-word; /* 긴 단어를 자르고 줄바꿈 */
+            white-space: normal; /* 텍스트를 여러 줄로 표시 */
+            font-size: 18px;
+        }
+
+        th {
+            font-weight: bold; /* 제목 굵게 */
+        }
+
+        /* flexbox 스타일 */
+        .user-actions {
+            display: flex;
+            justify-content: center; /* 가운데 정렬 */
+            align-items: center;
+            flex-direction: row; /* 가로로 배치 */
+            margin-top: 50px;
+        }
+
+        /* 모달 스타일 */
+        .modal {
+            display: none; /* 기본적으로 숨김 */
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 모달 콘텐츠 크기 및 스타일 */
+        .modal-content {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            width: 30%; /* 모달 창 가로 크기 */
+            height: 60%; /* 모달 창 세로 크기 */
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .close {
+            color: #aaa;
+            font-size: 24px;
+            font-weight: bold;
+            cursor: pointer;
+            align-self: flex-end;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+        }
+
+        .modal-header {
+            font-size: 30px;
+            font-weight: bold;
+            margin-top: 40px; /* 헤더 아래로 이동 */
+            text-align: center;
+        }
+
+        .modal-body {
+            margin: 60px 0;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            margin-top: 60px; /* 풋터 위로 간격 추가 */
+        }
+
+        .modal-footer button {
+            background-color: #4880FF;
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-footer button:hover {
+            background-color: #4880FF;
+        }
+
+        .modal-footer .cancel-btn {
+            background-color: #646D7A;
+        }
+
+        .wrapper {
+            border: 2px solid #4880FF; /* 테두리 두께, 스타일, 색상 */
+            border-radius: 10px; /* 테두리 모서리를 둥글게 */
+            padding: 30px; /* 내부 여백 추가 */
+            /*margin: 20px; !* 외부 여백 추가 *!*/
+            max-width: 500px;
+            margin-bottom: 100px;
+            margin: 0 auto;
+            /* background: #fff; */
+            width: auto;
+            position: relative;
+            background: #fff;
+            min-height: 20%;
+            /* box-shadow: 0 0 20px rgb(0 0 0 / 5%); */
+        }
+
+        /* footer 스타일 */
+        .footer {
+            /*position: fixed;  !* 화면 하단에 고정 *!*/
+            bottom: 0;        /* 화면 아래쪽에 위치 */
+            left: 0;          /* 화면 왼쪽에 맞춤 */
+            width: 100%;      /* 화면 너비를 100%로 설정 */
+            background-color: #f8f8f8; /* 배경색 */
+            color: #555555;   /* 텍스트 색상 */
+            text-align: left; /* 텍스트를 중앙 정렬 */
+            font-size: 12px;   /* 글자 크기 작게 설정 */
+            padding: 10px 0;   /* 위 아래 여백 */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+
+        .footer p {
+            margin: 0; /* p 태그의 기본 여백 제거 */
+        }
+
+
     </style>
 
 <!--    <style>-->
@@ -439,10 +588,6 @@
 
 <div id="root">
 
-    <header id="header">
-        <div th:insert="~{common/header}"></div>
-    </header>
-
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
         <div class="side" style="margin-top: 80px;">
             <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 구매</div>
@@ -456,8 +601,6 @@
             <section class="restaurant-detail-header mb-40" style="position: relative; z-index: 0;">
                 <div class="video-swiper-wrapper">
                     <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
-                        <h3 style="text-align: center; font-size: 30px;">해당 상품은 환불이 불가능한 상품입니다.</h3>
-                        <h3 style="text-align: center; font-size: 30px;">구매하시겠습니까?</h3><br/><br/>
                         <div class="img-container" style="position: relative;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                                 <img class="guide-img" style="width: 100%; max-height:1000px; display: block;"
@@ -471,75 +614,46 @@
             <section class="section">
                 <div class="container gutter-sm">
                     <div class="restaurant-summary mb-20" style="margin-left: 0;">
-                        <div style="display: inline-flex; align-items: center">
-                            <h2 id="resa_bis_name" class="name" th:text="${product.prodName}" style="font-size: 30px;">
-                                상품명
-                            </h2>
-                            <span style="padding-left: 30px; font-size: 15px;"
-                                  th:text="${product.prodCateName}"></span>
-                        </div>
-                        <p class="slogan" style="line-height: 1.5; font-size: 25px;"
-                           th:text="'&ensp;'+${product.prodPrice}+P">
-                            상품 가격
-                        </p>
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <th style="width: 30%;">회원 아이디</th>
+                                    <td th:text="${session.user.username}" style="width: 80%;" data-phone></td>
+                                </tr>
+                            <tr>
+                                <th style="width: 30%;">상품명</th>
+                                <td th:text="${product.prodName}" style="width: 80%;"></td>
+                            </tr>
+<!--                                <tr>-->
+<!--                                    <th style="width: 30%;">상품명</th>-->
+<!--                                    <td th:text="${product.prodCateName}" style="width: 80%;"></td>-->
+<!--                                </tr>-->
+<!--                                <tr>-->
+<!--                                    <th style="width: 30%;">상품 가격</th>-->
+<!--                                    <td th:text="${product.prodPrice}+P" style="width: 80%;"></td>-->
+<!--                                </tr>-->
+                            <tr>
+                                <th style="width: 30%;">거래 포인트</th>
+                                <td th:text="${tranPoint}+P" style="width: 80%; color: #FB5555; font-weight: bold;"></td>
+                            </tr>
+                            <tr>
+                                <th style="width: 30%;">보유 포인트</th>
+                                <td th:text="${currPoint}+P" style="width: 80%; color: #4880FF;"></td>
+                            </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </section>
 
+            <h3 style="text-align: center; font-size: 30px;">
+                해당 상품은 <span style="color: red;">&nbsp;환불</span>이 불가능한 상품입니다.
+            </h3>
+            <h3 style="text-align: center; font-size: 30px;">구매하시겠습니까?</h3>
 
 
-<div class="point-header">
 
-</div>
-<div class="header-line"></div>
-<div class="product-container">
-    <br/>
-
-    <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
-    <h3>구매하시겠습니까?</h3>
-    <br/><br/>
-
-        <div class="product-img">
-            <!--        <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
-            <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
-        </div><br/><br/>
-    <div class="product-info">
-        <br/><br/>
-        <div>
-            <strong>상품명</strong><br/><br/>
-            <span class="value" th:text="${product.prodName}">상품명</span>
-            <span th:if="${additionalItemsText != ''}" th:text="${additionalItemsText}"></span>
-        </div>
-        <br/><br/>
-<!--        <div>-->
-<!--            <strong>상품 번호</strong><br/><br/>-->
-<!--            <span class="value" th:text="${product.prodNo}">상품 번호</span>-->
-<!--        </div>-->
-<!--        <br/><br/>-->
-        <div>
-            <strong>상품 가격</strong><br/><br/>
-            <span class="value" th:text="${product.prodPrice}+P">상품 가격</span>
-        </div>
-        <br/><br/>
-        <div>
-            <strong>상품 수량</strong><br/><br/>
-            <span class="value" th:text="${product.cntProd}">상품 수량</span>
-        </div>
-        <br/><br/>
-        <div>
-            <strong>거래 포인트</strong><br/><br/>
-            <span class="value" th:text="${tranPoint}+P">결제 포인트</span>
-        </div>
-        <br/><br/>
-        <div>
-            <strong>보유 포인트</strong><br/><br/>
-            <span class="value" th:text="${currPoint}+P">보유 포인트</span>
-        </div>
-        <br/><br/>
-    </div>
-    </div>
-
-    <form>
+            <form>
         <input type="hidden" name="username" th:value="${username}">
         <input type="hidden" name="cntProd" th:value="${product.cntProd}">
         <input type="hidden" name="prodNo" th:value="${product.prodNo}">
@@ -548,14 +662,23 @@
         <input type="file" name="file" id="file" style="display:none;">
 
         <div class="button-container">
-            <button type="button" class="btn-primary buy">구매</button>
-            <button type="button" class="btn-primary confirm">취소</button>
-        </div><br/><br/>
+            <div class="css-137ca2h e1utgeno0">
+                <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240"
+                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                    <span class="css-ymwvow e4nu7ef1 submit-button-span">구&nbsp;매</span>
+                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="css-18m884r e4nu7ef3" name="confirmBtn" type="button" width="240"
+                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #646D7A;">
+                    <span class="css-ymwvow e4nu7ef1 submit-button-span">취소</span>
+                </button>
+            </div>
+<!--            <button type="button" class="btn-primary buy">구매</button>-->
+<!--            <button type="button" class="btn-primary confirm">취소</button>-->
+        </div>
     </form>
 
-
-
-</div>
-
+        </main>
+    </div>
+    </div><br/><br/>
 </body>
 </html>
