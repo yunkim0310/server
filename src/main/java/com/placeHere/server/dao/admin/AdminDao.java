@@ -1,5 +1,6 @@
 package com.placeHere.server.dao.admin;
 
+import com.placeHere.server.domain.Batch;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.User;
 import org.apache.ibatis.annotations.Mapper;
@@ -32,4 +33,6 @@ public interface AdminDao {
 
     // 예약 상태값 변경 (예약확정 -> 이용완료)
     public int updateServiceComplete() throws Exception;
+
+    public int insertBatchlog(Batch batch) throws Exception;
 }

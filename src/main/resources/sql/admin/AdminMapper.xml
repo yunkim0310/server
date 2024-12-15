@@ -148,5 +148,11 @@
         WHERE rsrv_status = '예약 확정' AND rsrv_dt <![CDATA[ < ]]> now();
     </update>
 
+    <insert id="insertBatchlog" parameterType="com.placeHere.server.domain.Batch">
+        INSERT INTO batch
+            (batch_name, status, exec_dt)
+        VALUES ( #{batchName}, #{status}, #{exec_dt} )
+    </insert>
+
 
 </mapper>
