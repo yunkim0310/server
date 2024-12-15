@@ -197,4 +197,16 @@ public class UserServiceImpl implements UserService {
         result = userDao.updatePwd(user);
         return result;
     }
+
+    @Override
+    public int updateProfile(User user) throws Exception {
+
+        log.info(" >> updateProfile input username  >> :: " + user.getUsername());
+        log.info(" >> updateProfile input profileImg  >> :: " + user.getProfileImg());
+
+        int result = 0;
+        result = userDao.updateProfile(user);
+
+        return result;
+    }
 }

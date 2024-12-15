@@ -34,4 +34,6 @@ public interface UserService {
     public boolean resetPwdValidation(User user) throws Exception;
 
     public int updatePwd(User user) throws Exception;
+
+    public int updateProfile (User user) throws Exception;
 }

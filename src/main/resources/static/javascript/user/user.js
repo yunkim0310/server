@@ -310,3 +310,58 @@ function emailCheck(email){
   // }
 
 }
+
+function photoEdit() {
+  
+  // 파일보기 버튼 사용 안하려고 사용
+  $('#profileImg').click();
+
+  $('#profileImg').change(function() {
+
+    const username = $(".username").text();
+    const file = event.target.files[0];
+    const fileName = file.name;
+
+    console.log("선택된 파일:", file);
+    console.log("선택된 파일 22 :", fileName);
+
+    console.log('username :: ', username);
+    console.log('fileName :: ', fileName);
+
+    const user = {
+      username : username,
+      profileImg : fileName
+    }
+
+    uploadFile(file, "user/")
+      .then(result => {
+        console.log(result);
+        $('#profileImgView').attr("src",result.url);
+
+        return $.ajax({
+          url: "/api-user/updateProfile",
+          method: "POST",
+          data: JSON.stringify(user),
+          contentType: "application/json"
+        });
+      })
+      .then(response => {
+        // $.ajax 요청이 성공적으로 완료된 후
+        console.log("Profile updated:", response);
+      })
+      .catch(error => {
+        // 에러 처리
+        console.error("Error:", error);
+      });
+
+  });
+
+
+
+
+
+
+
+
+
+}
