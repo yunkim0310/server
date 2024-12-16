@@ -375,8 +375,7 @@ function photoEdit() {
       });
 
   });
-
-}
+} // end of photoEdit
 
 // 비밀번호 재설정
 function resetPwd() {
@@ -452,7 +451,8 @@ function goodBye() {
         console.log('data :: ',data);
 
         if (data === "SUCCESS") {
-          alert("환불처리 될 예약 건수 :: "  );
+          // alert("환불처리 될 예약 건수 :: "  );
+          alert("탈퇴 되었습니다.");
           location.href='/';
         } else {
           alert("실패!");

@@ -130,20 +130,28 @@ public class UserRestController {
     }
 
     @PostMapping("/goodBye")
-    public ResponseEntity<?> goodBye(@RequestBody User user) throws Exception {
+    public ResponseEntity<?> goodBye(@RequestBody User user, HttpSession session) throws Exception {
 
         log.info("goodBye - post 요청");
         log.info(">> goodBye input user 확인 :: " + user);
+        user.setActiveStatus("DELETED");
 
         // 일반회원
         if (user.getRole() == "ROLE_USER" || user.getRole().equals("ROLE_USER")) {
             log.info("일반회원 탈퇴");
-            userService.updateUserStatus(user);
+
+            // 리뷰삭제(상태값 변경)
+
+            // 댓글삭제(상태값 변경)
 
             // 점주 회원
         } else {
             log.info("점주회원 탈퇴");
         }
+        // 최종 회원 상태 변경 ACTIVE -> DELETED
+        userService.updateUserStatus(user);
+        // 세션 삭제
+        session.invalidate();
 
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
