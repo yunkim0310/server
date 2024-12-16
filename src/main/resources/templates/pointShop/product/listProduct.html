@@ -445,6 +445,24 @@
         }
 
 
+        .product-header {
+            display: flex; /* flexbox 사용 */
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            margin-bottom: 10px; /* 헤더와 다른 내용 사이의 간격 */
+        }
+
+        .product-header h1 {
+            font-size: 15px;
+            margin: 0; /* 기본 margin 제거 */
+        }
+
+        .product-header span {
+            font-size: 12px;
+            margin-left: 10px; /* h1과 구매번호 간의 간격 */
+        }
+
+
 
     </style>
 
@@ -534,7 +552,7 @@
             <!-- 오른쪽 부분: 9컬럼 (상품 목록) -->
             <div class="col-md-9 text-right">
                 <table>
-
+                    <div th:if="${prodTotalCnt != 0}">
                     <div class="search-header __autohide" style="background: none; top: 48px;">
 
                         <div class="__search-result-header mb-20">
@@ -542,14 +560,14 @@
                                 <strong th:text="|총 ${prodTotalCnt}개의 상품|">104</strong>
                             </div>
                         </div>
-
+                    </div>
                     </div>
                     <div class="product-list" >
                         <div th:each="product : ${productList}" class="product-card" th:data-prod-no="${product.prodNo}">
                             <div class="product-img">
 <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
 <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
-                                <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                                <img th:src="${url + product.prodImg1}" alt="상품 대표 이미지">
 <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
                             </div>
                             <div class="product-info">
@@ -560,18 +578,14 @@
                             <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
                                 <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
                             </div><br/>
-                            <div th:if="${session.user.role == 'ROLE_POINT'}" class="user">
-<!--                            <div class="product-actions">-->
-<!--                                <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>-->
-<!--                                <button class="btn-primary edit" th:data-prod-no="${product.prodNo}">수정</button>-->
-<!--                            </div>-->
-<!--                            </div>-->
-<!--                            <div th:if="${session.user.role == 'ROLE_USER'}" class="user">-->
-<!--                                <div class="product-actions">-->
-<!--                                    <button class="btn-primary view" th:data-prod-no="${product.prodNo}">보기</button>-->
-<!--                                </div>-->
-<!--                            </div>-->
-                            </div>
+                        </div>
+                        <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
+                            <h1>해당하는 상품이 없습니다.</h1>
+                        </div>
+                        <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
+                            <div class="button-container">
+                                <button type="button" class="btn-primary list">둘러보기</button>
+                            </div><br/><br/>
                         </div>
                     </div>
                 </table>
@@ -579,11 +593,8 @@
         </div>
     </div>
 </div>
-
+<div th:if="${prodTotalCnt != 0}">
 <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
-
-<!--<input type="hidden" id="page" name="page" th:value="${search.page}"/>-->
-
-<!--</div>-->
+</div>
 </body>
 </html>

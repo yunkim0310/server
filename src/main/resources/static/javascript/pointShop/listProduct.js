@@ -47,6 +47,10 @@ $(function () {
         let order = $(this).val();
         fncGetList(order);
     });
+
+    $("button.btn-primary.list").on("click", function () {
+        self.location = "/product/listProduct";
+    });
 });
 
 function fncGetList(order) {

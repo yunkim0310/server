@@ -209,7 +209,7 @@ public class ProductController {
             response.addCookie(cookie);
         }
 
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product" , product);
         if (wishCartNo != null) {
             model.addAttribute("wishCartNo", wishCartNo);
@@ -226,7 +226,7 @@ public class ProductController {
         System.out.println("/product/updateProduct : GET");
 
         Product product = productService.getProduct(prodNo);
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product" , product);
 
         return "/pointShop/product/updateProduct";
@@ -262,7 +262,7 @@ public class ProductController {
 //        }
 
         productService.updateProduct(product);
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product", product);
 
         System.out.println("Product: " + product);
@@ -303,7 +303,7 @@ public class ProductController {
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);
-
+        model.addAttribute("url", bucketUrl);
 //        model.addAttribute("menu", menu);
         model.addAttribute("productList", productList);
 //        model.addAttribute("resultPage" , resultPage);

@@ -64,3 +64,48 @@ function fncUpdateProduct() {
         .attr("enctype", "multipart/form-data")
         .submit();
 }
+
+$(function (){
+
+    $("input[class^='prodImg']:file").on("change", function() {
+
+        const $this = $(this);
+        var className = $this.attr('class');
+
+        console.log(className)
+
+        const file = $this[0].files[0];
+
+        var $prodImg = $(`input[name='${className}']:hidden`);
+
+        console.log($prodImg.val() === "");
+
+        if ($prodImg.val() == null || $prodImg.val() === "") {
+
+            console.log("uploadFile");
+            console.log($prodImg.val());
+
+            uploadFile(file, "point/product/").then(result => {
+
+                console.log(result);
+                $prodImg.val(result.filePath);
+                $(`img.${className}`).attr("src", result.url)
+                $(`#${className}`).css("display", "flex");
+            });
+
+        } else {
+
+            console.log("updateFile");
+            console.log($prodImg.val());
+
+            updateFile($prodImg.val(), file, "point/product/").then(result => {
+
+                console.log(result);
+                $prodImg.val(result.filePath);
+                $(`img.${className}`).attr("src", result.url)
+            });
+        }
+
+    })
+
+});
