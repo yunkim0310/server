@@ -2,6 +2,7 @@ package com.placeHere.server.controller.user;
 
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.store.StoreService;
 import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,10 @@ public class UserRestController {
     @Autowired
     @Qualifier("communityServiceImpl")
     private CommunityService communityService;
+
+    @Autowired
+    @Qualifier("storeServiceImpl")
+    private StoreService storeService;
 
 
     // getUser
@@ -143,15 +148,16 @@ public class UserRestController {
         user.setActiveStatus("DELETED");
         int commentResult = 0;
         int reviewResult = 0;
+        int storeId = 0;
 
 
         // 일반회원
         if (user.getRole() == "ROLE_USER" || user.getRole().equals("ROLE_USER")) {
             log.info("일반회원 탈퇴");
 
-            // 댓글삭제(상태값 변경)
+            // 댓글삭제(상태값 변경) 1 -> 0
             commentResult = communityService.deleteAllCommentsByUser(user.getUsername() );
-            // 리뷰삭제(상태값 변경)
+            // 리뷰삭제(상태값 변경) 1 -> 0
             reviewResult = communityService.deleteAllReviewsByUser(user.getUsername() );
 
             log.info("commentResult :: " + commentResult);
@@ -160,7 +166,13 @@ public class UserRestController {
             // 점주 회원
         } else {
             log.info("점주회원 탈퇴");
+            storeId = storeService.getStoreId(user.getUsername() );
+            log.info("storeId :: " + storeId);
+
+            // 가게 상태값 변경 0 -> 1
+            storeService.removeStore(storeId);
         }
+
         // 최종 회원 상태 변경 ACTIVE -> DELETED
         userService.updateUserStatus(user);
         // 세션 삭제

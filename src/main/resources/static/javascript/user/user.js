@@ -439,7 +439,9 @@ function goodBye() {
 
   // true면 실행
   if( result ) {
+    
 
+    // cnt 받은 다음 시작
     $.ajax({
       url: '/api-user/goodBye',
       type: 'POST',
@@ -461,8 +463,7 @@ function goodBye() {
         console.error('Error:', error);
         alert("안되지롱");
       }
-
-    });
+    }); // end of ajax2
 
   }
   
