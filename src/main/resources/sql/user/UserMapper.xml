@@ -35,17 +35,18 @@
 
     <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
         SELECT
-            username,
-            password,
-            email,
-            role,
-            active_status,
-            reg_dt,
-            profile_img,
-            login_dt,
-            update_dt,
-            gender,
-            birth
+            id              as id,
+            username        as username,
+            password        as password,
+            email           as email,
+            role            as role,
+            active_status   as activeStatus,
+            reg_dt          as regDt,
+            profile_img     as profileImg,
+            login_dt        as loginDt,
+            update_dt       as updateDt,
+            gender          as gender,
+            birth           as birth
         FROM user
         WHERE username = #{username}
     </select>
@@ -146,6 +147,12 @@
         SET password = #{password},
             update_dt = now()
         WHERE username = #{username}
+    </update>
+
+    <update id="updateProfile" parameterType="com.placeHere.server.domain.User">
+        UPDATE user
+        SET profile_img = #{profileImg}
+        WHERE username = #{username};
     </update>
 
 

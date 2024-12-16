@@ -67,8 +67,8 @@ public class AdminServiceImpl implements AdminService {
      * 예약 확정 -> 이용 완료
      * @throws Exception
      */
-//    @Scheduled(cron = "0 0 0 * * ?")
-    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
+    @Scheduled(cron = "0 0 0 * * ?")
+//    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     public void updateServiceComplete() throws Exception {
 
         // 1. 예약상태 update 예약 확정 -> 이용 완료

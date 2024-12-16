@@ -91,6 +91,29 @@ public class UserRestController {
         }
     }
 
+    @PostMapping("/updateProfile")
+    public ResponseEntity<?> updateProfile( @RequestBody User user) throws Exception{
+
+        log.info("updateProfile Controller - post 호출");
+        log.info("updateProfile input >>  " + user);
+
+        int result = userService.updateProfile(user);
+
+        log.info("updateProfile result :: " + result);
+
+        if( result > 0 ) {
+            log.info("updateProfile ! - SUCCESS");
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        }
+        else {
+            log.info("updateProfile ! - FAIL");
+            return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
+
+
 
 
 

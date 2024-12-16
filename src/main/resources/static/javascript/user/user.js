@@ -310,3 +310,77 @@ function emailCheck(email){
   // }
 
 }
+
+function photoEdit() {
+  
+  // 파일보기 버튼 사용 안하려고 사용
+  $('#profileImg').click();
+
+  $('#profileImg').change(function() {
+
+    const username = $(".username").text();
+    const file = event.target.files[0];
+    const fileName = file.name;
+
+    console.log("선택된 파일:", file);
+    console.log("선택된 파일 22 :", fileName);
+
+    console.log('username :: ', username);
+    console.log('fileName :: ', fileName);
+
+    // const user = {
+    //   username : username,
+    //   profileImg : fileName
+    // }
+
+    uploadFile(file, "user/")
+      .then(result => {
+        console.log(result);
+        // console.log("uuid file name :: " , result.url)
+        console.log("uuid file path :: " , result.filePath)
+        // https://placehere.s3.ap-northeast-2.amazonaws.com/user/20241216d64806bc.jpg
+
+        // const resultUrl = result.url;
+        const resultUrl = result.filePath;
+        const cvrtStr = "user/";
+        const replaceFileName = resultUrl.replace(cvrtStr, '');
+        
+        // uuid 로 변환된 파일명만 추출
+        console.log('after :: ', replaceFileName);
+
+        // $('#profileImgView').attr("src",result.url);
+        $('#profileImgView').attr("src",replaceFileName);
+
+        const user = {
+          username : username,
+          profileImg : replaceFileName
+        }
+
+        return $.ajax({
+          url: "/api-user/updateProfile",
+          method: "POST",
+          data: JSON.stringify(user),
+          contentType: "application/json"
+        });
+
+      })
+      .then(response => {
+        // $.ajax 요청이 성공적으로 완료된 후
+        console.log("Profile updated:", response);
+      })
+      .catch(error => {
+        // 에러 처리
+        console.error("Error:", error);
+      });
+
+  });
+
+
+
+
+
+
+
+
+
+}

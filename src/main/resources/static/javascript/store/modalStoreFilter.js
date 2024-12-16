@@ -454,6 +454,19 @@ $(function() {
 
         if (mode === "search") {
             resetFilter();
+        } else {
+
+            $("form[name='searchStore']")[0].reset();
+
+            // 초기 상태에서 선택된 1차, 2차, 3차 분류에 따라 표시 설정
+            initCategoryDisplay();
+
+            // 필터 텍스트 적용
+            updateRegionText();
+            updateFoodCategoryText();
+            updatePriceText();
+            updateHashtagText();
+            updateAmenitiesText();
         }
 
         $("#filterModal").hide();  // 모달을 닫음

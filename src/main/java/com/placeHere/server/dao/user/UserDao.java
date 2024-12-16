@@ -31,4 +31,6 @@ public interface UserDao {
 
     public int updatePwd(User user) throws Exception;
 
+    public int updateProfile(User user) throws Exception;
+
 }

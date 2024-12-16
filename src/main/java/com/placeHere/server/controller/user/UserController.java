@@ -178,6 +178,8 @@ public class UserController {
         log.info("setting - get 요청");
         User user = (User) session.getAttribute("user");
 
+        log.info("user :: " + user);
+
         session.getAttribute("setting user chk :: " + user);
         model.addAttribute("user", user);
 
