@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
-import org.springframework.mock.web.MockMultipartFile;
+//import org.springframework.mock.web.MockMultipartFile;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -138,27 +138,11 @@ public class PurchaseController {
         return (10 - (sum % 10)) % 10;  // 10으로 나눈 나머지를 이용해 체크디지털 계산
     }
 
-//    private String generateBarcode(String barcodeText, String filePath, int width, int height) throws Exception {
-//
-//        BarcodeFormat format = BarcodeFormat.CODE_128;
-//        Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
-////        hints.put(EncodeHintType.MARGIN, 5);  // 바코드 주변 여백
-//
-//        MultiFormatWriter writer = new MultiFormatWriter();
-//        BitMatrix bitMatrix = writer.encode(barcodeText, format, width, height, hints);
-//
-//        File outputFile = new File(filePath);
-//        MatrixToImageWriter.writeToFile(bitMatrix, "PNG", outputFile);  // 바코드 이미지를 PNG 파일로 저장
-//
-//        Map<String, String> result = awsS3Service.uploadFile(outputFile, "point/barcode/");
-//
-//        return result.get("filePath");
-//    }
-
-
     private String generateBarcode(String barcodeText, String filePath, int width, int height) throws Exception {
+
         BarcodeFormat format = BarcodeFormat.CODE_128;
         Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+//        hints.put(EncodeHintType.MARGIN, 5);  // 바코드 주변 여백
 
         MultiFormatWriter writer = new MultiFormatWriter();
         BitMatrix bitMatrix = writer.encode(barcodeText, format, width, height, hints);
@@ -166,21 +150,37 @@ public class PurchaseController {
         File outputFile = new File(filePath);
         MatrixToImageWriter.writeToFile(bitMatrix, "PNG", outputFile);  // 바코드 이미지를 PNG 파일로 저장
 
-        // File을 MultipartFile로 변환
-        MultipartFile multipartFile = convertFileToMultipartFile(outputFile);
-
-        // multipartFile을 AWS S3에 업로드
-        Map<String, String> result = awsS3Service.uploadFile(multipartFile, "point/barcode/");
+        Map<String, String> result = awsS3Service.uploadFile(outputFile, "point/barcode/");
 
         return result.get("filePath");
     }
 
-    private MultipartFile convertFileToMultipartFile(File file) throws IOException {
-        try (FileInputStream fileInputStream = new FileInputStream(file)) {
-            // "file"는 MultipartFile의 이름이고, "image.png"는 업로드되는 파일의 이름입니다.
-            return new MockMultipartFile("file", file.getName(), "image/png", fileInputStream);
-        }
-    }
+
+//    private String generateBarcode(String barcodeText, String filePath, int width, int height) throws Exception {
+//        BarcodeFormat format = BarcodeFormat.CODE_128;
+//        Hashtable<EncodeHintType, Object> hints = new Hashtable<>();
+//
+//        MultiFormatWriter writer = new MultiFormatWriter();
+//        BitMatrix bitMatrix = writer.encode(barcodeText, format, width, height, hints);
+//
+//        File outputFile = new File(filePath);
+//        MatrixToImageWriter.writeToFile(bitMatrix, "PNG", outputFile);  // 바코드 이미지를 PNG 파일로 저장
+//
+//        // File을 MultipartFile로 변환
+//        MultipartFile multipartFile = convertFileToMultipartFile(outputFile);
+//
+//        // multipartFile을 AWS S3에 업로드
+//        Map<String, String> result = awsS3Service.uploadFile(multipartFile, "point/barcode/");
+//
+//        return result.get("filePath");
+//    }
+
+//    private MultipartFile convertFileToMultipartFile(File file) throws IOException {
+//        try (FileInputStream fileInputStream = new FileInputStream(file)) {
+//            // "file"는 MultipartFile의 이름이고, "image.png"는 업로드되는 파일의 이름입니다.
+//            return new MockMultipartFile("file", file.getName(), "image/png", fileInputStream);
+//        }
+//    }
 
 
     @PostMapping("/addPurchase")
