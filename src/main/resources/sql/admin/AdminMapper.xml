@@ -125,20 +125,21 @@
 
     <select id="getRsrvConfirmedList" resultType="com.placeHere.server.domain.Reservation">
         SELECT
-            rsrv_no     as rsrvNo       ,
-            user_name   as userName     ,
-            rsrv_status as rsrvStatus   ,
-            rsrv_dt     as rsrvDt       ,
-            rsrv_person as rsrvPerson   ,
-            amount      as amount       ,
-            rsrv_number as rsrvNumber   ,
-            rsrv_req    as rsrvReq      ,
-            reason      as reason       ,
-            rsrv_create_time as rsrvCreateTime,
-            store_name  as storeName,
-            store_addr  as storeAddr,
-            rsrv_number as rsrvNumber
+            rsrv_no             as rsrvNo       ,
+            user_name           as userName     ,
+            rsrv_status         as rsrvStatus   ,
+            rsrv_dt             as rsrvDt       ,
+            rsrv_person         as rsrvPerson   ,
+            amount              as amount       ,
+            rsrv_number         as rsrvNumber   ,
+            rsrv_req            as rsrvReq      ,
+            reason              as reason       ,
+            rsrv_create_time    as rsrvCreateTime,
+            store_name          as storeName    ,
+            store_addr          as storeAddr    ,
+            rsrv_number         as rsrvNumber
         FROM reservation
+        WHERE rsrv_status = '이용 완료'
         ORDER BY    rsrv_no DESC
     </select>
 
