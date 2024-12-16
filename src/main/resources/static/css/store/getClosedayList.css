@@ -42,7 +42,7 @@
 }
 
 /* 테이블 스타일 */
-table {
+.listTable {
     width: 50%;
     border-collapse: collapse;
     margin: 0 auto; /* 테이블 수평 가운데 정렬 */
@@ -51,43 +51,43 @@ table {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-th, td {
+.listTable th, td {
     padding: 12px 20px;
     text-align: center;
     font-size: 1rem;
     border-bottom: 1px solid #ddd;
 }
 
-th {
+.listTable th {
     background-color: #f5f5f5;
     font-weight: bold;
     color: #333;
 }
 
-td {
+.listTable td {
     background-color: #fff;
     color: #333;
 }
 
-td input[type="hidden"] {
+.listTable td input[type="hidden"] {
     display: none;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-    table {
+    .listTable table {
         font-size: 0.9rem;
     }
 
-    th, td {
+    .listTable th, td {
         padding: 8px 12px;
     }
 
-    h1 {
+    .listTable h1 {
         font-size: 2rem;
     }
 
-    h3 {
+    .listTable h3 {
         font-size: 1.2rem;
     }
 }

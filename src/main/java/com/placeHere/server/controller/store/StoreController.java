@@ -408,6 +408,7 @@ public class StoreController {
         // search 페이지양, 리스트양 설정
         search.setPageSize(pageSize);
         search.setListSize(listSize);
+        System.out.println(search);
 
         // 검색어가 있을 경우 검색 기록 등록
         if (search.getSearchKeyword() != null && !search.getSearchKeyword().trim().isEmpty()) {
@@ -419,6 +420,8 @@ public class StoreController {
 
         if (selectedCategoryList.get(0).equals("")) {
             selectedCategoryList = List.of("","","");
+        } else if (selectedCategoryList.size() == 1) {
+            selectedCategoryList = List.of(selectedCategoryList.get(0), "전체", "전체");
         }
 
         // 선택한 음식 카테고리 변경 (전체, 기타 제거) - 검색을 위해서
@@ -429,8 +432,11 @@ public class StoreController {
 
         // 입력값없는 해시태그 제거
         List<String> hashtagList = search.getHashtagList();
-        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
-        search.setHashtagList(hashtagList);
+
+        if (hashtagList != null && !hashtagList.isEmpty()) {
+            hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+            search.setHashtagList(hashtagList);
+        }
 
         // 가게 목록 검색
         List<Store> storeList = storeService.getStoreList(search);

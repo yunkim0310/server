@@ -221,11 +221,29 @@
                 ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
                 <if test="searchKeyword != null and searchKeyword != ''">
                     <where>
-                        store_name LIKE CONCAT('%',#{searchKeyword},'%')
-                        OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-                        OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
-                        OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
-                        OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                        </foreach>
+                        OR
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+                        </foreach>
+                        OR
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                        </foreach>
+                        OR
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                        </foreach>
+                        OR
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+                        </foreach>
+                        OR
+                        <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                            store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                        </foreach>
                     </where>
                 </if>
             ) AS store
@@ -290,11 +308,29 @@
         ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
         <if test="searchKeyword != null and searchKeyword != ''">
             <where>
-                store_name LIKE CONCAT('%',#{searchKeyword},'%')
-                OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-                OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
-                OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
-                OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    store_name LIKE CONCAT('%',#{searchKeyword},'%')
+                </foreach>
+                OR
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    store_addr LIKE CONCAT('%',#{searchKeyword},'%')
+                </foreach>
+                OR
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                </foreach>
+                OR
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
+                </foreach>
+                OR
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    hashtag LIKE CONCAT('%',#{searchKeyword},'%')
+                </foreach>
+                OR
+                <foreach collection="searchKeywordArray" item="searchKeyword" separator=" OR " open=" (" close=") ">
+                    store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%'))
+                </foreach>
             </where>
         </if>
         ) AS store
