@@ -140,6 +140,7 @@
             rsrv_number         as rsrvNumber
         FROM reservation
         WHERE rsrv_status = '이용 완료'
+            #             WHERE rsrv_status = '예약 확정' AND rsrv_dt <![CDATA[ < ]]> now()
         ORDER BY    rsrv_no DESC
     </select>
 

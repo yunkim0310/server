@@ -381,6 +381,28 @@ function photoEdit() {
 // 비밀번호 재설정
 function resetPwd() {
   
+  alert('비밀번호 변경');
+
+  $.ajax({
+    url: '/api-user/join',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(user),
+    success: function(data) {
+      if (data.success) {
+        alert("회원가입 성공!");
+        location.href='/loginView';
+      } else {
+        alert("회원가입 실패!");
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+      alert("회원가입 중 오류가 발생했습니다.");
+    }
+  });
+
+  
   
   
 }
