@@ -60,6 +60,8 @@ public class ReservationRestController {
             map.put("storeId", storeId);
             map.put("effectDt", effectDt);
             StoreReservation storeReservation = reservationService.getStoreReservation(map);
+            System.out.println("11");
+            System.out.println(storeReservation);
 
             if (storeReservation != null) {
                 return ResponseEntity.ok(storeReservation);

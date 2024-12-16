@@ -345,7 +345,7 @@ public class ReservationBLTest {
     @Test
     public void getRemoveStoreRsrvNos() throws Exception {
 
-        int storeId = 2;
+        int storeId = 1;
 
         // 메서드 호출
         List<Integer> removeStoreRsrvNos = reservationService.getRemoveStoreRsrvNos(storeId);

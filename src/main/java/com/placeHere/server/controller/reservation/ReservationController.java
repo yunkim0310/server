@@ -127,6 +127,7 @@ public class ReservationController {
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.GET)
     public String getRsrvStoreList(
             HttpSession session,
+            @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             @ModelAttribute("search") Search search,
             Model model) throws Exception {
 
@@ -134,6 +135,9 @@ public class ReservationController {
         System.out.println("/reservation/getRsrvStoreList : GET");
 
         User user = (User) session.getAttribute("user");
+
+        search.setPageSize(pageSize);
+        search.setListSize(30);
 
 
         if(!"ROLE_STORE".equals(user.getRole())){
@@ -148,13 +152,17 @@ public class ReservationController {
         }
 
         int storeId = storeService.getStoreId(user.getUsername());
-
-        search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약")); // 모든 상태 포함
-
+        if (searchStatuses == null) {
+            search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약")); // 모든 상태 포함
+        }
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
 
+        Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
 
+        System.out.println(reservations);
 
         Map<Date, Integer> reservationCountsByDate = new HashMap<>();
         for (Reservation reservation : reservations) {
@@ -169,6 +177,7 @@ public class ReservationController {
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
+        model.addAttribute("totalCnt", totalCnt);
 
         // 뷰 반환
         return "reservation/getRsrvStoreList";
@@ -176,7 +185,7 @@ public class ReservationController {
 
 
     @RequestMapping(value = "getRsrvStoreList", method = RequestMethod.POST)
-    public String getRsrvStoreList(
+    public String postRsrvStoreList(
             HttpSession session,
             @RequestParam(value = "searchStatuses", required = false) List<String> searchStatuses,
             @ModelAttribute("search") Search search,
@@ -188,6 +197,9 @@ public class ReservationController {
         if(!"ROLE_STORE".equals(user.getRole())){
             return "reservation/sendRsrvHome";
         }
+
+        search.setPageSize(pageSize);
+        search.setListSize(30);
 
         System.out.println(user);
 
@@ -211,6 +223,11 @@ public class ReservationController {
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
+
+        Paging paging = new Paging(totalCnt, search.getPage(), pageSize, 30);
+        model.addAttribute("paging", paging);
+
         Map<Date, Integer> reservationCountsByDate = new HashMap<>();
         for (Reservation reservation : reservations) {
             Date rsrvDt = reservation.getRsrvDt();
@@ -223,6 +240,7 @@ public class ReservationController {
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", searchStatuses);
+        model.addAttribute("totalCnt", totalCnt);
 
         return "reservation/getRsrvStoreList";
     }
@@ -233,6 +251,8 @@ public class ReservationController {
     public String getRsrvUserList(
             @ModelAttribute Search search,
             HttpSession session,
+            @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
+            @RequestParam(value = "order", required = false) String order,
             Model model) throws Exception {
 
         User user = (User) session.getAttribute("user");
@@ -248,19 +268,35 @@ public class ReservationController {
             return "reservation/sendRsrvHome";
         }
 
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
+
 
         String userName = user.getUsername();
 
-        // 초기 Search 객체 설정 (기본값)
-        search.setOrder("desc"); // 기본 정렬
-        search.setSearchKeyword(null); // 모든 상태 포함
+        if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
+            searchKeyword = ""; // 기본값 설정
+        }
+        search.setSearchKeyword(searchKeyword);
+
+        if (order == null) {
+            // 초기 Search 객체 설정 (기본값)
+            search.setOrder("desc"); // 기본 정렬
+        }
+
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
+
+        Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
+
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
+        model.addAttribute("totalCnt", totalCnt);
 
         // 뷰 반환
         return "reservation/getRsrvUserList";
@@ -268,7 +304,7 @@ public class ReservationController {
 
 
     @RequestMapping(value = "getRsrvUserList", method = RequestMethod.POST)
-    public String getRsrvUserList(
+    public String postRsrvUserList(
             @ModelAttribute Search search,
             HttpSession session,
             @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
@@ -285,6 +321,9 @@ public class ReservationController {
 
         }
 
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
+
         String userName = user.getUsername();
 
         // 조건 설정: 값이 있을 때만 설정
@@ -295,10 +334,15 @@ public class ReservationController {
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
+
+        Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
+        model.addAttribute("totalCnt", totalCnt);
 
         return "reservation/getRsrvUserList";
     }
