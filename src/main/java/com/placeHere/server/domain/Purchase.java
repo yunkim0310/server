@@ -47,6 +47,8 @@ public class Purchase {
 
 
     private int selected;
+    // 총 개수
+    private int purchaseTotalCnt;
 
 
 //    private String prodName;

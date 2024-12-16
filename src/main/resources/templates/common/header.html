@@ -5,6 +5,40 @@
     <link rel="stylesheet" href="/css/templates/header.css">
     <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
     <script defer src="/javascript/templates/header.js"></script>
+
+    <style>
+        .header-wrap{
+            position: fixed;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            top: 0; /* 화면 상단에 고정 */
+            left: 0; /* 화면 왼쪽에 고정 */
+            transition: top 0.3s ease-in-out;
+        }
+
+        .small_header {
+            position: fixed;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            top: -100%; /* 초기 위치 */
+            left: 0;
+            transition: top 0.3s ease-in-out; /* 부드러운 전환 효과 */
+        }
+
+        /* 화면이 작은 경우 small_header를 활성화 */
+        @media screen and (max-width: 768px) {
+            .small_header {
+                top: 0; /* 화면에 나타나게 설정 */
+            }
+            .header {
+                top: -100%; /* header는 화면에서 숨김 */
+            }
+        }
+
+    </style>
+
 </head>
 <body>
 <header th:fragment="header" class="header-wrap">
@@ -17,15 +51,15 @@
 
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
-                    <li class="non-side-bar"><span id="username" class="text-white me-2">[[ ${session.user.username} ]]</span></li>
-                    <li id="/user/setting" class="non-side-bar"><a href="/user/setting">설정</a></li>
-                    <li id="logout"><a href="/user/logout">로그아웃</a></li>
+                    <li class="non-side-bar"><span style="font-weight: bold;" id="username" class="text-white me-2">[[ ${session.user.username} ]]</span></li>
+                    <li id="/user/setting" class="non-side-bar"><a href="/user/setting"><img class="logout" src="/images/common/settings.png" /></a></li>
+                    <li id="logout"><a href="/user/logout"><img style="margin-left:5px; margin-top:5px;" class="logout" src="/images/common/logout.png" /></a></li>
                 </ul>
             </div>
 
             <div th:if="${session.user == null}" class="login">
                 <ul class="loginMenu">
-                    <li id="login" class="non-side-bar"><a href="/user/login">로그인</a></li>
+                    <li id="login" class="non-side-bar"><a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></a></li>
                 </ul>
             </div>
         </div>
@@ -81,5 +115,5 @@
         <hr class="lastLine">
     </div>
 </header>
-</body>
+</body><br/><br/><br/><br/><br/><br/>
 </html>

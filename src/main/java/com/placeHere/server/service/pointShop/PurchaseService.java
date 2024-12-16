@@ -17,7 +17,7 @@ public interface PurchaseService {
     public Purchase getPurchase(int tranNo) throws Exception;
 
     //구매 상품 목록
-    public List<Purchase> getPurchaseList(String username) throws Exception;
+    public List<Purchase> getPurchaseList(Search search) throws Exception;
 
     //바코드 번호
     public String getNextBarcodeNumber() throws Exception;
@@ -53,4 +53,6 @@ public interface PurchaseService {
 
     @Transactional
     public void purchaseProducts(String username) throws Exception;
+
+    public void clearWishCartByUsername(String username) throws Exception;
 }

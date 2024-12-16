@@ -3,6 +3,7 @@ package com.placeHere.server.service.pointShop.impl;
 import com.placeHere.server.dao.pointShop.PointDao;
 import com.placeHere.server.dao.pointShop.PurchaseDao;
 import com.placeHere.server.domain.Purchase;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import lombok.Setter;
@@ -61,9 +62,9 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     // 구매한 상품 목록 조회 => 수정 필요
     @Override
-    public List<Purchase> getPurchaseList(String username) throws Exception{
+    public List<Purchase> getPurchaseList(Search search) throws Exception{
 
-        List<Purchase> list = purchaseDao.getPurchaseList(username);
+        List<Purchase> list = purchaseDao.getPurchaseList(search);
 
         return list;
     }
@@ -158,4 +159,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseDao.clearWishCartByUsername(username);  // 장바구니 비우기
     }
 
+    public void clearWishCartByUsername(String username) throws Exception {
+
+        purchaseDao.clearWishCartByUsername(username);
+    }
 }

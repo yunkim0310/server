@@ -34,7 +34,8 @@ public class Product {
     private boolean prodStatus;
     //int 타입의 상품 수량
     private int cntProd;
-    //
+    // 총 개수
+    private int prodTotalCnt;
 
 
 

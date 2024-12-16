@@ -28,16 +28,15 @@
         }
     </style>
     <script type="text/javascript">
-        const friendRes = document.getElementById('friendRes').value;
-        const friendReq = document.getElementById('friendReq').value;
-
+        function confirmDelete() {
+            return confirm("정말 친구 삭제하시겠습니까?");
+        }
     </script>
 
     <link rel="stylesheet" href="path/to/your/styles.css">
 </head>
 <body>
 <div th:include="~{common/header}"></div>
-<!--<div th:include="~{community/menuBar}"></div>-->
 
 <h1>친구 리뷰 목록 getFriendReviewList</h1>
 
@@ -71,30 +70,24 @@
     </div>
 </div>
 
-<div>
-    <p>현재 사용자: <span th:text="${friendUsername}"></span></p>
-    <p>친구 상태: <span th:text="${friendStatus}"></span></p>
-</div>
-
-<!-- 친구 신청 및 삭제 버튼 -->
 <div class="fixed-button">
-    <!--    <div th:if="${friendUsername != null}">-->
-    <!--        <div th:if="${friendStatus == 1}"> &lt;!&ndash; 친구인 경우 &ndash;&gt;-->
-    <form th:action="@{/review/remove}" method="post">
-        <!--                <input type="text" name="friendNo" th:value="${friend.friendNo}" />-->
-        <input type="text" name="friendNo" value="56" />
-        <button type="submit" class="btn-primary del">친구 삭제</button>
-    </form>
-</div>
-<!--        <div th:if="${friendStatus == 0}"> &lt;!&ndash; 친구가 아닌 경우 &ndash;&gt;-->
-<form th:action="@{/review/sendFriendReq}" method="post">
-    <p>친구 이름: <span th:text="${friendUsername}"></span></p>
-    <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
-    <button type="submit" class="btn-primary">친구 신청</button>
-</form>
-</div>
-</div>
+    <!-- 친구 삭제 버튼 -->
+    <div th:if="${friendStatus == true}">
+        <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
+            <input type="hidden" name="friendNo" th:value="${friendNo}" /> <!-- 친구 번호 -->
+            <button type="submit" class="btn-primary del">친구 삭제</button>
+        </form>
+    </div>
+
+    <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
+    <div th:if="${friendStatus == false}">
+        <form th:action="@{/review/sendFriendReq}" method="post">
+            <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
+            <button type="submit" class="btn-primary">친구 신청</button>
+        </form>
+    </div>
 </div>
 
+<p>현재 <span th:text="${friendUsername}"></span>님의 Feed 입니다</p>
 </body>
 </html>

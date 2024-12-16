@@ -1,22 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+<meta charset="UTF-8">
+<title>PlaceHere</title>
+
+<link th:insert="~{common/import :: importFragment}">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-pzjw8f+ua7Kw1TIq0RtvO+fi6QxfhCpCz2vhK4U6Xvn8PBxJg4mtLOefW4Llmhks" crossorigin="anonymous">
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
-<link rel="stylesheet" href="/css/templates/header.css">
+
+
 <link rel="stylesheet" href="/css/templates/collection_detail.css">
 <link rel="stylesheet" href="/css/templates/regist_hp.css">
+<link href="/css/templates/mypage.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<!--    <link href="/css/templates/collection_detail.css" rel="stylesheet">-->
+<link href="/css/templates/style.css" rel="stylesheet">
+<!--    <script src="/javascript/templates/script.js" type="text/javascript"></script>-->
+
 <head>
     <title>PlaceHere</title>
     <script type="text/javascript">
 
         $(function() {
-
-            $("button.btn-primary.buy").on("click", function () {
+            // 구매 버튼 클릭
+            $("button[name='buyBtn']").on("click", function () {
                 fncAddPurchase();
-                // alert("점검중입니다.");
-                // history.go();
+            });
+
+            // 확인 버튼 클릭
+            $("button[name='confirmBtn']").on("click", function () {
+                self.location = "/product/listProduct";
+            });
+
+            $("div.product-card").on("click", function () {
+                var prodNo = $(this).data("prod-no");
+                self.location = "/product/getProduct?prodNo=" + prodNo;
             });
         });
 
@@ -26,18 +47,28 @@
             // var username = $("input[name='username']").val();
             // var prodStatus = $("input[name='prodStatus']").va l();
             // var cartList = $("input[name='cartList']").val();
+            // var cartList = $("input[name='cartList']").val();
+            //
+            // var hasInactiveProduct = false;
+            //
+            // for (var i = 0; i < cartList.length; i++) {
+            //     if (!cartList[i].prodStatus) {
+            //         hasInactiveProduct = true;
+            //         break;
+            //     }
+            // }
+            //
+            // if (hasInactiveProduct) {
+            //     alert("판매 중지된 상품이 포함되어 있습니다.");
+            //     return; // 상품이 판매 중지 상태이면 submit을 하지 않음
+            // }
 
             if (tranPoint > currPoint) {
                 alert("보유하신 포인트가 부족합니다.");
                 return;
+            }else{
+                alert("일괄 구매가 완료되었습니다.")
             }
-            // if (prodStatus === false){
-            //     alert("판매 중지된 상품이 포함되어 있습니다.")
-            //     return;
-            // }
-            // if (cartList.length() === 0){
-            //     alert("장바구니가 비었습니다.");
-            // }
 
             $("form").attr("method", "POST")
                 .attr("action", "/purchase/addPurchaseCart")
@@ -56,7 +87,7 @@
                 self.location = "/product/listProduct";
             });
 
-            $("button.btn-primary.removeCart").on("click", function () {
+            $("button.btn-remove-cart").on("click", function () {
                 var userName = $(this).data("user-name");
                 var prodNo = $(this).data("prod-no");
                 $.ajax({
@@ -73,119 +104,258 @@
                 });
             });
 
+
+            $("button.btn-clear-cart").on("click", function () {
+                var userName = $(this).data("user-name");
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api-purchase/clearCart",
+                    data: { userName: userName },
+                    success: function(response) {
+                        alert("장바구니에서 전체 상품이 삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("장바구니 삭제 실패함: " + error);
+                    }
+                });
+            });
+
         });
 
     </script>
 
     <style>
 
-        .product-img {
+        .product-card {
+            display: flex; /* flexbox 사용 */
+            flex-direction: row; /* 이미지와 정보가 좌우로 배치되도록 설정 */
+            align-items: center; /* 세로 가운데 정렬 */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             width: 100%;
-            height: 200px;
+            height: 200px; /* 높이를 적당히 설정 */
+            transition: transform 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 올라가는 효과 */
+        }
+
+        .product-img {
+            width: 40%; /* 이미지 영역을 전체 카드의 40%로 설정 */
+            height: 100%;
+            background-color: #fff;
             display: flex;
             justify-content: center;
             align-items: center;
-            /*background-color: #f0f0f0; !* 기본 배경색 *!*/
-            background-color: #fff;
-            color: #999; /* 텍스트 색상 */
-            font-size: 16px; /* 텍스트 크기 */
-            text-align: center;
-            border: 1px solid #ddd; /* 이미지를 표시하지 않을 때 테두리 표시 */
         }
 
         .product-img img {
-            width: 100%; /* 가로를 100%로 설정 */
-            height: 100%; /* 세로도 100%로 설정 */
-            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
-            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
-        .product-img span {
+        .product-info {
+            width: 60%; /* 정보 영역을 전체 카드의 60%로 설정 */
+            padding: 15px;
+            text-align: left;
+        }
+
+        .product-info h3 {
             font-size: 1.2rem;
-            font-weight: bold;
-            color: #666;
-        }
-        /* 기본 스타일 */
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #ffffff;
-            margin: 0;
-            padding: 0;
-            color: #333;
+            margin-bottom: 10px;
         }
 
-        h3 {
-            font-size: 1.5rem;
-        }
-
-        /* 테이블 영역 스타일 */
-        .container {
-            width: 60%;
-            margin: 0 auto;
-            padding-top: 30px;
-            position: relative;
-        }
-
-        /* 테이블 스타일 */
-        table {
-            width: 80%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-            padding-top: 30px;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        th, td {
-            padding: 12px 20px;
-            text-align: center;
+        .product-info p {
             font-size: 1rem;
-            border-bottom: 1px solid #ddd;
-            align-items: flex-start; /* 수직 정렬 (위쪽 정렬) */
-            vertical-align: middle; /* 텍스트를 상단에 정렬 */
+            color: #555;
+            margin: 5px 0;
         }
 
-        th {
-            background-color: #f5f5f5;
+        /*.product-card:after {*/
+        /*    content: '▶'; !* 화살표 아이콘 *!*/
+        /*    font-size: 1.5rem; !* 화살표 크기 *!*/
+        /*    color: #4880FF; !* 화살표 색상 *!*/
+        /*    !*position: absolute;*!*/
+        /*    right: 10px; !* 카드 오른쪽 끝에 배치 *!*/
+        /*    top: 50%; !* 세로 중앙 정렬 *!*/
+        /*    transform: translateY(-50%); !* 정확한 중앙 정렬 *!*/
+        /*    cursor: pointer; !* 클릭 가능하도록 설정 *!*/
+        /*    !*margin-right:10px;*!*/
+        /*}*/
+
+        /* 상품 액션 버튼 */
+        .product-actions {
+            display: flex;
+            justify-content: space-around;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+
+        .css-luwwab {
+            /*display: flex;*/
+            width: 100%;
+            padding: 50px 0px 80px;
+            margin: 0px auto;
+            flex-direction: row;
+            -webkit-box-pack: justify;
+        }
+
+
+        /*.product-img {*/
+        /*    width: 100%;*/
+        /*    height: 200px;*/
+        /*    !*display: flex;*!*/
+        /*    justify-content: center;*/
+        /*    align-items: center;*/
+        /*    !*background-color: #f0f0f0; !* 기본 배경색 *!*!*/
+        /*    background-color: #fff;*/
+        /*    color: #999; !* 텍스트 색상 *!*/
+        /*    font-size: 16px; !* 텍스트 크기 *!*/
+        /*    text-align: center;*/
+        /*    border: 1px solid #ddd; !* 이미지를 표시하지 않을 때 테두리 표시 *!*/
+        /*}*/
+
+        /*!*.product-img img {*!*/
+        /*!*    display: none; !* 이미지가 표시되지 않을 때 *!*!*/
+        /*!*}*!*/
+
+
+        /*.product-img img {*/
+        /*    width: 100%; !* 가로를 100%로 설정 *!*/
+        /*    height: 100%; !* 세로도 100%로 설정 *!*/
+        /*    object-fit: cover; !* 이미지 비율을 유지하면서 영역을 채움 *!*/
+        /*    display: block;*/
+        /*}*/
+
+        /*!*.product-img img {*!*/
+        /*!*    width: 100%; !* 가로를 100%로 설정 *!*!*/
+        /*!*    height: 100%; !* 세로도 100%로 설정 *!*!*/
+        /*!*    object-fit: contain; !* 이미지 비율을 유지하면서 영역을 채움 *!*!*/
+        /*!*    display: block;*!*/
+        /*!*}*!*/
+
+        /*.product-img span {*/
+        /*    font-size: 1.2rem;*/
+        /*    font-weight: bold;*/
+        /*    color: #666;*/
+        /*}*/
+        /* 폼을 왼쪽 정렬로 배치하는 스타일 */
+        .form-inline {
+            /*display: flex;*/
+            flex-direction: column;  /* 세로로 나열 */
+            align-items: flex-start;  /* 왼쪽 정렬 */
+            margin-left: 380px;  /* 왼쪽 여백 추가 */
+            /*background-color: #f4f7f6;  !* 연한 회색 배경색 *!*/
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            /*border: 1px solid #ddd;*/
+            border: 2px solid #4880FF;
+            margin-top: 0px;
+        }
+
+        /* 각 폼 그룹 간의 여백을 주어 구분 */
+        .form-group {
+            margin-bottom: 15px;  /* 폼 그룹 간의 간격 */
+        }
+
+        /* 레이블과 입력 필드 사이의 간격 */
+        .form-group strong {
+            font-size: 1.1rem;
+            margin-right: 10px;
             font-weight: bold;
+        }
+
+        /* 입력 필드 크기 조정 */
+        .form-group input[type="text"] {
+            width: 220px;
+            padding: 8px;
+            margin-right: 10px; /* label과의 간격을 위한 여백 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* 버튼 스타일 */
+        .form-group button {
+            padding: 10px 20px;
+            font-size: 1rem;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            margin-top: 10px;  /* 버튼 위쪽에 여백 추가 */
+            /*margin: 0;*/
+            /*padding: 0;*/
+            /*border: 0;*/
+            /*-webkit-appearance: none;*/
+            /*appearance: none;*/
+            /*border-radius: 0;*/
+            /*box-shadow: none;*/
+            /*cursor: pointer;*/
+            /*font-family: inherit;*/
+            /*font-size: inherit;*/
+            /*background: 0 0;*/
+            /*color: #000;*/
+        }
+
+        /* 버튼 기본 스타일 */
+        .btn-primary {
+            background-color: #4880FF;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #005bb5;
+        }
+
+        .btn-default {
+            background-color: #e0e0e0;
             color: #333;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
         }
 
-        th text{
-            background-color: #f5f5f5;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
+        .btn-default:hover {
+            background-color: #cccccc;
         }
 
-        td {
-            padding-top: 100px;
-            background-color: #fff;
-            color: #333;
+        /* 상품 리스트 그리드 */
+        .product-list {
+            display: grid;
+            /*grid-template-columns: repeat(3, 1fr); !* 한 줄에 3개 열 *!*/
+            gap: 20px; /* 상품 간의 간격 */
+            margin: 0px;
+            min-height: 350px;
         }
 
-        td input[type="hidden"] {
-            display: none;
+        body {
+            scrollbar-color: white;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            overflow-x: hidden;
         }
 
-        /* 반응형 디자인 */
-        @media (max-width: 768px) {
-            table {
-                font-size: 0.9rem;
-            }
-
-            th, td {
-                padding: 8px 12px;
-            }
-
-            h1 {
-                font-size: 2rem;
-            }
-
-            h3 {
-                font-size: 1.2rem;
-            }
+        .container {
+            width: 100%;
+            /*width: 80%;*/
+            /*max-width: 100%;  !* 최대 너비도 100%로 설정 *!*/
+            margin: 0 auto;
         }
+
+        /* 헤더 스타일 */
         .point-header {
             background-color: #ffffff;
             padding: 30px;
@@ -200,149 +370,324 @@
             margin-top: 10px;
         }
 
-        /* 테이블 전체 텍스트 크기 */
-        .purchase-table {
+        /* 테이블 스타일 */
+        table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 1.2rem; /* 전체 테이블의 폰트 크기를 키움 */
+            margin-top: 30px;
+            background-color: #ffffff;
         }
 
-        .purchase-table th, .purchase-table td {
-            padding: 10px;
+        table th, table td {
+            padding: 12px;
             text-align: center;
-            font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+            border: 1px solid #ddd;
+        }
+
+        table th {
+            background-color: #f2f2f2;
+        }
+
+        /* 버튼과 입력 필드 스타일 */
+        .btn-primary.view, .btn-primary.edit {
+            margin: 5px;
+        }
+
+        .form-group input[type="text"] {
+            width: 220px;
+            margin-bottom: 10px;
+        }
+
+        input[type="radio"] {
+            cursor: pointer;
+        }
+
+        [type="radio"]:checked {
+            /* min-width: 24px;
+            min-height: 24px;
+            display: inline-block;
+            position: relative;
+            border-radius: 50%;
+            background-color: #ff3d00; */
+            transition: border 0.5s ease-in-out;
+
+            /* border: 0.4em solid tomato; */
+            /*border: 0.4em solid #ff3d00;*/
+            border: 0.4em solid #4880FF;
         }
 
         .available {
             color: green;
             font-weight: bold;
+            text-align: center;
         }
 
         .unavailable {
             color: red;
             font-weight: bold;
+            text-align: center;
         }
 
-        .product-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center; /* 수직 중앙 정렬 */
-            align-items: center; /* 수평 중앙 정렬 */
-            background-color: #fff;
-            padding: 20px;
-            margin: 20px auto;
-            width: 50%;
-            box-sizing: border-box;
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .btn-primary {
-            padding: 12px 20px;
-            background-color: #007bff;
-            color: white;
-            border: none;
+        /* 카테고리 레이블 스타일 */
+        .category-label {
+            /*border: 2px solid #4880FF;*/
+            border: 1px solid #ddd;
             border-radius: 5px;
-            cursor: pointer;
+            padding: 10px;
             font-size: 16px;
+            color: #333;
+            margin-bottom: 12px;
+            font-weight: bold;
+            display: block;
+            background-color: #fff;
+        }
+
+        /* 드롭다운 스타일 */
+        .category-select {
+            width: 100%;
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+            cursor: pointer;
+            appearance: none; /* 기본 브라우저 스타일 제거 */
+            transition: all 0.3s ease-in-out;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        /* 드롭다운 마우스 오버 시 스타일 */
+        .category-select:hover {
+            border-color: #888;
+            background-color: #fafafa;
+        }
+
+        /* 드롭다운 포커스 시 스타일 */
+        .category-select:focus {
+            border-color: #4a90e2;
+            background-color: #f7faff;
+            box-shadow: 0 0 5px rgba(74, 144, 226, 0.6);
+        }
+
+        /* 드롭다운 아이콘을 추가하기 위한 스타일 */
+        .category-select::after {
+            content: '▼'; /* 화살표 모양 */
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* 드롭다운 항목 스타일 */
+        .category-select option {
+            padding: 12px 20px;
+            font-size: 16px;
+            color: #333;
+            background-color: #fff;
+            border: none;
             transition: background-color 0.3s ease;
         }
 
-        .btn-primary:hover {
-            background-color: #0056b3;
+        /* 옵션에 마우스 오버 시 색상 변경 */
+        .category-select option:hover {
+            background-color: #f0f0f0;
         }
+
+
+        .product-header {
+            display: flex; /* flexbox 사용 */
+            justify-content: flex-start; /* 왼쪽 정렬 */
+            align-items: center; /* 세로 중앙 정렬 */
+            margin-bottom: 10px; /* 헤더와 다른 내용 사이의 간격 */
+        }
+
+        .product-header h1 {
+            font-size: 15px;
+            margin: 0; /* 기본 margin 제거 */
+        }
+
+        .product-header span {
+            font-size: 12px;
+            margin-left: 10px; /* h1과 구매번호 간의 간격 */
+        }
+
+        /* footer 스타일 */
+        .footer {
+            /*position: fixed;  !* 화면 하단에 고정 *!*/
+            bottom: 0;        /* 화면 아래쪽에 위치 */
+            left: 0;          /* 화면 왼쪽에 맞춤 */
+            width: 100%;      /* 화면 너비를 100%로 설정 */
+            background-color: #f8f8f8; /* 배경색 */
+            color: #555555;   /* 텍스트 색상 */
+            text-align: left; /* 텍스트를 중앙 정렬 */
+            font-size: 12px;   /* 글자 크기 작게 설정 */
+            padding: 10px 0;   /* 위 아래 여백 */
+            box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+        }
+
+        .footer p {
+            margin: 0; /* p 태그의 기본 여백 제거 */
+        }
+
+        /*.product-container {*/
+        /*    display: flex;*/
+        /*    flex-direction: column;*/
+        /*    justify-content: center; !* 수직 중앙 정렬 *!*/
+        /*    align-items: center; !* 수평 중앙 정렬 *!*/
+        /*    background-color: #fff;*/
+        /*    padding: 20px;*/
+        /*    margin: 20px auto;*/
+        /*    width: 50%;*/
+        /*    box-sizing: border-box;*/
+        /*}*/
+
+
+        .btn-remove-cart {
+            /*position: absolute;*/
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            font-weight: bold;
+            color: grey;
+            cursor: pointer;
+            padding: 0;
+            margin-bottom: 150px;
+        }
+
+        .btn-remove-cart:hover {
+            color: red;
+        }
+
 
     </style>
 </head>
 <body>
-<br/><br/>
-<div class="point-header">
-    <div th:insert="~{common/header}"></div>
-    <div th:insert="~{pointShop/menuBar}"></div>
-    <br/><br/>
-    <h1>장바구니</h1>
-</div>
-<div class="header-line"></div>
-<!--<form action="/purchase/addPurchase" method="POST">-->
 <div class="container">
-    <div th:if="${tranPoint != 0}">
-        <table class="purchase-table">
-            <thead>
-            <tr>
-                <th>상품 대표 이미지</th>
-                <th>상품명</th>
-                <th>상품 가격</th>
-                <th>판매 가능 상태</th>
-        <!--        <th>상품 수량</th>-->
-                <th></th>
-            </tr>
-            </thead>
-        <!--    <tbody th:if="${cartList.size()} != 0">-->
-            <tbody>
-            <tr th:each="purchase : ${cartList}">
-                <td class="product-img">
-                    <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
-                    <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
-                    <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
-                    <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
-                </td>
-                <td th:text="${purchase.purchaseProd.prodName}"></td>
-                <td id="prodPrice" th:text="${purchase.purchaseProd.prodPrice}+P"></td>
-                <td th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}">
-                    <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
-                </td>
-        <!--        <td id="cntProd" th:text="${purchase.purchaseProd.cntProd}"></td>-->
-                <td>
-                    <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
-                    <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
-                    <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
-                    <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
-                    <button type="button" class="btn-primary view" th:data-prod-no="${purchase.prodNo}">보기</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button class="btn-primary removeCart" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">삭제</button>
-                </td>
-            </tr>
-            </tbody>
-        </table><br/>
+    <div class="css-luwwab eug5r8l1">
+        <div class="css-833hqy ecbxmj4">
+            <div class="side" style="margin-top:50px;position:fixed; margin-left: 138px;">
+                <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
+    padding: 5px 0px 35px 1px;">🛒&nbsp;장바구니</div>
+                <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
+            </div>
+        </div>
 
-        <div id="totalPriceSection">
-            <h3>결제 포인트 : <span th:text="${tranPoint}">0</span> 원</h3>
-            <h3>보유 포인트 : <span th:text="${currPoint}">0</span> 원</h3>
+        <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:930px; margin-right:20px;">
+            <form class="form-inline" th:if="${tranPoint != 0}">
+                <div class="form-group">
+                    <div>
+                        <div class="product-container" style="text-align: center; font-size: 20px; font-weight: bold;">
+                            <h3>해당 상품은 <span style="color: red;">&nbsp;환불</span>이 불가능한 </h3>
+                            <h3>상품입니다.</h3>
+                            <h3>구매하시겠습니까?</h3>
+                        </div>
+                    </div><br/><br/>
+                    <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
+                        <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${tranPoint}+P">0</span></h3>
+                        <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${currPoint}+P">0</span></h3>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div th:if="${tranPoint != 0}">
+                        <div class="button-container">
+                            <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+                            <input type="hidden" name="cartList" th:value="${cartList}">
+                            <input type="hidden" name="purchase" th:value="${purchase}">
+                            <input type="hidden" name="currPoint" th:value="${currPoint}">
+                            <input type="file" name="file" id="file" style="display:none;">
+                            <input type="hidden" th:value="${username}" name="username">
+                            <div class="css-137ca2h e1utgeno0">
+                                <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240"
+                                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                                    <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+
+        <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 470px; margin-left: auto;">
+            <div class="col-md-9 text-right">
+
+
+
+                <div class="button-container">
+                    <button class="btn-clear-cart" style="margin-left:730px; margin-bottom: 20px;" th:data-user-name="${username}">전체 삭제</button>
+                </div>
+                <table>
+                    <div th:if="${tranPoint != 0}">
+                        <div class="product-list">
+                            <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
+                                <div class="product-img">
+                                    <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                                </div>
+                                <div class="product-info">
+                                    <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
+                                    <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
+                                    <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                    <p th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}"
+                                       th:style="${purchase.purchaseProd.prodStatus == true ? 'color: green; text-align: left;' : 'color: red; text-align: left;'}">
+                                        <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+                                    </p>
+                                </div>
+                                <div class="button-container">
+                                    <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
+                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
+                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
+                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
+                                    <!-- X 버튼을 위한 스타일 추가 -->
+                                    <button class="btn-remove-cart" style="margin-right:30px;" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">x</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </table>
+
+
+                <div class="desc-block" th:if="${tranPoint != 0}">
+                    <div class="footer" >
+                        <p>상품 구매 시 유의사항</p>
+                        <p>▪ 해당 상품들은 교환권으로, 구매 이후 환불이 불가능합니다.</p>
+                        <p>▪ PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+                    </div>
+                </div><br/><br/>
+            </div>
         </div>
     </div>
+</div>
 
 <input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
-    <div th:if="${tranPoint != 0}">
-        <div class="product-container">
-            <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>
-            <h3>구매하시겠습니까?</h3>
-        </div>
-    </div>
+<!--    <div th:if="${tranPoint != 0}">-->
+<!--        <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">-->
+<!--            <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>-->
+<!--            <h3>구매하시겠습니까?</h3>-->
+<!--        </div>-->
+<!--    </div>-->
     <div th:if="${tranPoint == 0}">
-        <div class="product-container">
+        <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">
             <h3>장바구니가 비어있습니다.</h3>
         </div>
     </div>
 
     <form>
-    <div th:if="${tranPoint != 0}">
-        <div class="button-container">
-            <input type="hidden" name="tranPoint" th:value="${tranPoint}">
-            <input type="hidden" name="cartList" th:value="${cartList}">
-            <input type="hidden" name="purchase" th:value="${purchase}">
-            <input type="hidden" name="currPoint" th:value="${currPoint}">
-            <input type="file" name="file" id="file" style="display:none;">
-            <input type="hidden" th:value="${username}" name="username">
-            <button type="button" class="btn-primary buy">구매</button>
-        </div><br/><br/>
-    </div>
         <div th:if="${tranPoint == 0}">
             <div class="button-container">
-                <button type="button" class="btn-primary list">둘러보기</button>
+                <div class="css-137ca2h e1utgeno0">
+                    <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
+                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                        <span class="css-ymwvow e4nu7ef1 submit-button-span">둘러보기</span>
+                    </button>
+                </div>
             </div><br/><br/>
         </div>
     </form>

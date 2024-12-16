@@ -12,14 +12,14 @@
 
     <title>설정</title>
 
-    <script type="text/javascript" src="/inc/common/js/jquery.min.js"></script>
+    <!-- 윤지추가 -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- fileUploader -->
+    <script src="/javascript/common/fileUploader.js"></script>
+    <!--    <link th:insert="~{common/import :: importFragment}">-->
+    <script src="/javascript/user/user.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/inc/user/css/account.min.css?r=240906"> -->
 <!--    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />-->
-    <script type="text/javascript" src="/inc/common/js/lcslog.js?r=20221103"></script>
-    <script type="text/javascript" src="/inc/common/js/nclk_v0.8.1.js?r=20221103"></script>
-    <script type="text/javascript" src="/inc/common/js/ko/commonUtil.js?20240221"></script>
-    <script type="text/javascript" src="/inc/common/js/lua.js?r=20220411"></script>
-    <script type="text/javascript" src="/inc/esign/js/agent_check.js?r=220411"></script>
 
 
     <script type="text/javascript">
@@ -35,15 +35,8 @@
         gnb_item_hide_option : 0
       }
 
-      lcs_do();
 
-      function gnbClose(){
-        $('#wrap').click(function(e){
-          if( !$('#gnb').has(e.target).length ){
-            gnbAllLayerClose();
-          }
-        });
-      }
+
       //120919 win8 이슈 대응 : capslock 자동설정해제
       document.msCapsLockWarningOff = true;
       function setContainerHeight(height) {}
@@ -57,7 +50,7 @@
 </head>
 
 
-<body onclick="clearDocs(); gnbClose();" id="mainBody" class="bgother">
+<body id="mainBody" class="bgother">
 <div id="wrap" class="wrap naverid" >
     <!-- skip navigation -->
     <link rel="stylesheet" th:href="@{/css/user/setting.css}">
@@ -84,12 +77,19 @@
                 </div>
 
                 <div class="profile_inner">
-                    <a href="#" onclick="changeImage()" class="photo">
-                        <img src="https://phinf.pstatic.net/contact/20180510_205/1525930147706nu3jQ_PNG/avatar_profile.png?type=s160" width="84"
-                             height="84" alt="프로필 이미지">
-                        <span class="photo_edit"></span>
+<!--                    <a href="#" onclick="changeImage()" class="photo">-->
+<!--                        <img src="https://phinf.pstatic.net/contact/20180510_205/1525930147706nu3jQ_PNG/avatar_profile.png?type=s160" width="84"-->
+<!--                             height="84" alt="프로필 이미지">-->
+<!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
+<!--                    </a>-->
+                    <a href="#" class="photo">
+                        <img id="profileImgView" th:src="@{'https://placehere.s3.ap-northeast-2.amazonaws.com/user/' + ${user.profileImg}}" alt="프로필사진">
+<!--                        <img id="profileImgView" alt="프로필사진">-->
+<!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
+                            <span class="photo_edit" onclick="photoEdit()" ></span>
+                        <input type="file" id="profileImg" name="profileImg" class="profileImg" style="display: none;" accept="image/*">
                     </a>
-                    <div class="profile">
+                    <div class="profile" >
                         <th:if #{user !=" null"}>
                             <p class="username">[[ ${user.username} ]]</p>
                             <p class="email">[[ ${user.email} ]]</p>
@@ -99,6 +99,7 @@
                             <p class="birth" th:text="${#dates.format(user.birth, 'yyyy-MM-dd')}"></p>
 <!--                            <p class="birth">[[ ${user.birth} ]]</p>-->
                         </th:if>
+
                     </div>
                 </div>
             </div>
@@ -115,75 +116,7 @@
             </div>
         </div>
     </header>
-    <script>
-      var rurl = encodeURIComponent(document.location.href);
-      var rawRurl = document.location.href;
-      var myInfoV2HomeUrl = encodeURIComponent("https://nid.naver.com/user2/help/myInfoV2?lang=" + "ko_KR");
 
-      // 작은 화면 - 영문일 때 메뉴 텍스트 길이 짤리지 않도록
-      if (window.innerWidth <= 385) {
-        var lnbAreaScrollLeft = $('#lnbArea').scrollLeft();
-      }
-
-      function changeImage() {
-        nclk(this,'nid.prfedit','','',event);
-        document.location.href = "/user2/help/naverProfile?lang=ko_KR&returnUrl=" + rurl;
-      }
-
-      function landscapeHandler() {
-        if (window.innerWidth <= window.innerHeight) {
-          $('body').removeClass('landscape');
-          $('div .container').addClass('floating');
-        } else {
-          $('body').addClass('landscape');
-          $('div .container').removeClass('floating');
-        }
-      }
-
-      function logout() {
-        nclk(this,'fot.logout','','',event);
-        if (confirm("로그아웃 하시겠습니까?") == true) {
-          var returnUrl;
-          returnUrl = "https://nid.naver.com/nidlogin.logout?url=" + myInfoV2HomeUrl;
-          $(location).attr('href', returnUrl);
-        }
-      }
-
-      function goHelpPage() {
-        nclk(this,'fot.help','','',event);
-        document.location.href = "https://help.naver.com/alias/membership/p.membership/main.naver";
-      }
-
-      function changeLanguage() {
-        var baseUrl = "/user2/help/myInfoV2?";
-
-        baseUrl += "m=viewSecurity&";
-
-        nclk(this,'fot.english','','',event);
-        baseUrl += "lang=en_US";
-        document.location.href = baseUrl;
-      }
-
-      function toggleLeftLangSelectList() {
-        nclk(this, 'fot.lang', '', '', event);
-
-        var leftLangSelectListBtn = $("#leftLangSelectListBtn");
-        if (leftLangSelectListBtn.attr("aria-expanded") === "true") {
-          leftLangSelectListBtn.attr("aria-expanded", "false");
-          leftLangSelectListBtn.removeClass("fold");
-        } else {
-          leftLangSelectListBtn.attr("aria-expanded", "true");
-          leftLangSelectListBtn.addClass("fold");
-        }
-
-        $("#leftLangSelectList").toggle();
-      }
-
-      function goSimpleSignIn() {
-        nclk(this,'fot.simplesignin','','',event);
-        document.location.href = "https://nid.naver.com/nidlogin.login?svctype=262144&url=" + myInfoV2HomeUrl;
-      }
-    </script>
     <div id="container" class="container">
         <!-- container -->
         <div id="content" class="content">
@@ -217,7 +150,6 @@
                             <li>
                                 <div class="row_item lock">
                                     <span class="item_text">비밀번호 재설정</span>
-<!--                                    <button type="button" class="btn_edit" onclick="goChangePassword()">-->
                                     <button type="button" class="btn_edit" onclick="goChangePassword()">
                                         <span class="text">수정</span>
                                     </button>
@@ -229,10 +161,11 @@
                                     <span class="item_text">회원탈퇴</span>
                                     <button type="button"
                                             class="btn_accent"
-                                            onclick="excuteNclicksAs2StepVerification();go2StepVerification()">
-                        <span class="text">
-                                탈퇴
-                        </span>
+                                            onclick="excuteNclicksAs2StepVerification()">
+<!--                                        <span class="text">-->
+<!--                                                탈퇴-->
+<!--                                        </span>-->
+                                        <span class="text">탈퇴</span>
                                     </button>
                                 </div>
                             </li>
@@ -240,215 +173,22 @@
                     </div>
                 </div>
                 <!--//-->
-
-
-
-
-
-
-
-                <script type="text/javascript" src="/inc/user/js/loginSafetyV2_security.js?r=220304"></script>
+=
                 <script>
-                  window.onpageshow = function() {
-                    if (window.performance && window.PerformanceNavigation && performance.navigation.type === PerformanceNavigation.TYPE_BACK_FORWARD) {
-                      document.getElementById("selTp1Option" + loginSafetyInfo.info.userRegion1).selected = "true";
-                      document.getElementById("selTp2Option" + loginSafetyInfo.info.userRegion2).selected = "true";
-                    }
-                  }
-
-                  $(document).ready(function () {
-                    loginSafety.init(loginSafetyInfo.info, loginSafetyInfo.message, loginSafetyInfo.dom, loginSafetyInfo.method, loginSafetyInfo.url);
-
-                    var that = this;
-                    var nClickCodeArray = ["help", "blockhelp", "pprotecthelp", "sidhelp", "signinnotihelp"];
-                    $("a[id^='info']").click(function() {
-                      var $this = $(this);
-                      var infoId = $this.attr("id").substr(4,1);
-                      if($(this).attr("aria-expanded") == "false"){
-                        nclk(that,'pmn.' + nClickCodeArray[infoId -1],'','',event);
-                      }
-                    })
-                  });
-
-                  var loginSafetyInfo = {
-                    info: {
-                      regionList: [
-                        {val: "", text: "지역선택 "}
-                        , {val: "01", text: "서울시/인천시/경기도"}
-                        , {val: "02", text: "강원도"}
-                        , {val: "03", text: "대전시/세종시/충청남도"}
-                        , {val: "04", text: "충청북도"}
-                        , {val: "05", text: "대구시/경상북도"}
-                        , {val: "06", text: "부산시/울산시/경상남도"}
-                        , {val: "07", text: "전북도"}
-                        , {val: "08", text: "광주시/전라남도"}
-                        , {val: "09", text: "제주도"}
-                      ],
-                      lang: "ko_KR",
-                      token: "8TmJbeT1hzM27X80",
-                      useNewDeviceAlarm : false,
-                      useAbroadIpBlock: true,
-                      useRegionIpBlock: false,
-                      userRegion1: "",
-                      userRegion2: "",
-                      beforeUserRegion1: "",
-                      beforeUserRegion2: ""
-                    },
-
-                    url: {
-                      securityMainUrl: "/user2/help/myInfoV2?m=viewSecurity&lang=ko_KR"
-                    },
-
-                    message: {
-                      temporaryAccessErr: "일시적인 오류입니다. 잠시 후 다시 시도해 주세요.",
-                      pleaseSelectRegion: "지역을 선택해 주세요 ",
-                      releaseRegionIpBlockFirst: "타지역 설정 해제 후, 변경이 가능합니다."
-                    },
-
-                    dom: {
-                      $regionIpPanel: $("#divRegionIp"),
-                      $regionIpBlockBtn: $("#regionIp"),
-                      $regionSelBox1: $("#selTp1"),
-                      $regionSelBox2: $("#selTp2"),
-                      $newDeviceAlarmBtn : $("#newDevice"),
-                      $abroadIpBlockBtn: $("#abroadIp")
-                    },
-
-                    method: {
-                      turnOnBtn: function ($btn) {
-                        $btn.prop("checked", true);
-                        if ($btn.attr('id') === 'regionIp') {
-                          $('#regionIp_toggle_switch_on').attr('aria-checked', 'true');
-                          $('#regionIp_toggle_switch_off').attr('aria-checked', 'false');
-                        } else if ($btn.attr('id') === 'abroadIp') {
-                          $('#abroadIp_toggle_switch_on').attr('aria-checked', 'true');
-                          $('#abroadIp_toggle_switch_off').attr('aria-checked', 'false');
-                        } else if($btn.attr('id') === 'newDevice') {
-                          $('#newDevice_toggle_switch_on').attr('aria-checked', 'true');
-                          $('#newDevice_toggle_switch_off').attr('aria-checked', 'false');
-                        }
-                      },
-
-                      turnOffBtn: function ($btn) {
-                        $btn.prop("checked", false);
-                        if ($btn.attr('id') === 'regionIp') {
-                          $('#regionIp_toggle_switch_on').attr('aria-checked', 'false');
-                          $('#regionIp_toggle_switch_off').attr('aria-checked', 'true');
-                        } else if ($btn.attr('id') === 'abroadIp') {
-                          $('#abroadIp_toggle_switch_on').attr('aria-checked', 'false');
-                          $('#abroadIp_toggle_switch_off').attr('aria-checked', 'true');
-                        } else if($btn.attr('id') === 'newDevice') {
-                          $('#newDevice_toggle_switch_on').attr('aria-checked', 'false');
-                          $('#newDevice_toggle_switch_off').attr('aria-checked', 'true');
-                        }
-                      },
-
-                      isTurnOn: function ($btn) {
-                        return $btn.prop("checked");
-                      }
-                    }
-                  };
 
                   function goChangePassword() {
                     document.location.href = "/user/resetPwd";
                   }
 
-                  function changeSecretId() {
-                    document.location.href = "/user2/help/secretId?lang=ko_KR"
-                  }
 
-                  function deleteSecretId() {
-                    nclk(this,'pmn.siddelete','','',event);
-                    if (!confirm("정말 해제하시겠습니까?\n안전한 네이버 사용을 위해서는 로그인 전용 아이디를 사용하시는 것이 좋습니다.\n\n해제 후에는 기존 네이버 아이디(tndufqnswk)로 다시 로그인 해주세요.")) {
-                      return;
-                    }
-                    document.location.href = "/user2/help/secretId?m=actionReleaseSecretId&token_help=8TmJbeT1hzM27X80&lang=ko_KR";
-                  }
 
-                  function goPrivacyProtection() {
-                    document.location.href = "/user2/private/auth/setup";
-                  }
 
-                  function excuteNclicksAs2StepVerification() {
-                    nclk(this,'pmn.otpsetting','','',event)
-                  }
-
-                  function excuteNclicksAsRegionIp() {
-                    var $regionIp = $("#regionIp");
-                    if ($regionIp.is(":checked")) {
-                      nclk(this, 'pmn.blockregionon', '', '', event)
-                    } else {
-                      nclk(this, 'pmn.blockregionoff', '', '', event)
-                    }
-                  }
-
-                  function excuteNclicksAsAbroadIp() {
-                    var $abroadIp = $("#abroadIp");
-                    if ($abroadIp.is(":checked")) {
-                      nclk(this, 'pmn.blockabroadon', '', '', event)
-                    } else {
-                      nclk(this, 'pmn.blockabroadoff', '', '', event)
-                    }
-                  }
-
-                  function excuteNclicksAsNewDevice() {
-                    var $newDevice = $("#newDevice");
-                    if ($newDevice.is(":checked")) {
-                      nclk(this, 'pmn.signinnotion', '', '', event)
-                    } else {
-                      nclk(this, 'pmn.signinnotioff', '', '', event)
-                    }
-                  }
-
-                  function toggleNewEnvironmentNotificationExplain() {
-                    var newEnvironmentNotificationExplain = document.getElementById("newEnvironmentNotificationExplain");
-                    var newEnvironmentNotificationButton = document.getElementById("newEnvironmentNotificationButton");
-                    if(newEnvironmentNotificationExplain.style.display == "none") {
-                      nclk(this,'pmn.newenvhelp','','',event)
-                      displayObj("newEnvironmentNotificationExplain");
-                      newEnvironmentNotificationButton.ariaExpanded = "true";
-                    } else {
-                      hiddenObj("newEnvironmentNotificationExplain");
-                      newEnvironmentNotificationButton.ariaExpanded = "false";
-                    }
-                  }
-
-                  function goRegisteredDevicesList() {
-                    nclk(this, 'pmn.registerdevcheck', '', '', event)
-                    document.location.href = "/user2/help/userLoginLog?m=viewRegistedDevice&token_help=8TmJbeT1hzM27X80";
-                  }
                 </script>
 
 
-                <script>
-
-                  function goSmartBotChat() {
-                    nclk(this,'fot.smartbot','','',event);
-                    document.location.href = "https://nca.naver.com/chat/account/view";
-                  }
-
-                  function goMemberTalkTalk() {
-                    nclk(this,'fot.membertalktalk','','',event);
-                    document.location.href = "https://talk.naver.com/ct/wc4bsu#nafullscreen";
-                  }
-                </script>            </div>
 
             <script>
 
-              function toggleLangSelectList() {
-                nclk(this, 'fot.lang', '', '', event);
-
-                var langSelectListBtn = $("#langSelectListBtn");
-                if (langSelectListBtn.attr("aria-expanded") === "true") {
-                  langSelectListBtn.attr("aria-expanded", "false");
-                  langSelectListBtn.removeClass("fold");
-                } else {
-                  langSelectListBtn.attr("aria-expanded", "true");
-                  langSelectListBtn.addClass("fold");
-                }
-
-                $("#langSelectList").toggle();
-              }
 
               $("#leftLangSelectList .lang_item").click(function() {
                 var $this = $(this);

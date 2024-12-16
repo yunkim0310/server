@@ -7,78 +7,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PlaceHere</title>
+  <link th:insert="~{common/import :: importFragment}">
 
   <link rel="stylesheet" href="/css/templates/collection_detail.css">
   <link rel="stylesheet" href="/css/templates/regist_hp.css">
   <link href="/css/templates/mypage.css" rel="stylesheet">
 
-  <link th:insert="~{common/import :: importFragment}">
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  <link rel="stylesheet" href="/css/templates/header.css">
 
-  <script type="text/javascript">
+  <script src="/javascript/pointShop/updateProduct.js"></script>
 
-    $(function() {
-      $("button[name='cancelBtn']").on("click", function () {
-        // history.go(-1);
-        self.location = "/product/listProduct";
-      });
-    });
 
-    $(function() {
-      $("button[name='submitBtn']").on("click", function() {
-        fncUpdateProduct();
-      });
-
-    });
-
-    function fncUpdateProduct() {
-      var prodName = $("input[name='prodName']").val();
-      var prodDetail = $("textarea[name='prodDetail']").val();
-      var prodImg1 = $("input[name='prodImg1']").val();
-      var prodPrice = $("input[name='prodPrice']").val();
-      var prodCateNo = $("select[name='prodCateNo']").val();
-
-      if (prodName == null || prodName.length < 1) {
-        alert("상품명은 반드시 입력하여야 합니다.");
-        return;
-      }
-
-      if (prodName.length > 20) {
-        alert("상품명은 20자까지 입력 가능합니다.");
-        return;
-      }
-
-      if (prodDetail == null || prodDetail.length < 1) {
-        alert("상품상세정보는 반드시 입력하여야 합니다.");
-        return;
-      }
-
-      if (prodDetail.length > 100) {
-        alert("상품 설명은 100자까지 입력 가능합니다.");
-        return;
-      }
-
-      if (prodImg1 == null || prodImg1.length < 1) {
-        alert("상품 대표 이미지는 반드시 입력하셔야 합니다.");
-        return;
-      }
-      if (prodPrice == null || prodPrice.length < 1) {
-        alert("가격은 반드시 입력하셔야 합니다.");
-        return;
-      }
-      if (prodCateNo == null || prodCateNo.length < 1) {
-        alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
-        return;
-      }
-
-      $("form").attr("method", "POST")
-              .attr("action", "/product/updateProduct")
-              .attr("enctype", "multipart/form-data")
-              .submit();
-    }
-  </script>
 
   <style>
     .form-group.button-group {
@@ -92,6 +32,20 @@
       border: none;
       border-radius: 5px;
       margin-top: 10px;
+    }
+
+    [type="radio"]:checked {
+      /* min-width: 24px;
+      min-height: 24px;
+      display: inline-block;
+      position: relative;
+      border-radius: 50%;
+      background-color: #ff3d00; */
+      transition: border 0.5s ease-in-out;
+
+      /* border: 0.4em solid tomato; */
+      /*border: 0.4em solid #ff3d00;*/
+      border: 0.4em solid #4880FF;
     }
 
     /*.btn-primary {*/
@@ -118,19 +72,15 @@
 
 </head>
 <body>
-    <br/><br/>
-    <header id="header">
-      <div th:insert="~{common/header}"></div>
-    </header>
-
-    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px">
-      <div class="side">
-        <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
-        <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
-      </div>
-    </div>
 
     <div id="root">
+
+        <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+            <div class="side" style="margin-top: 80px;">
+                <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
+                <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
+            </div>
+        </div>
 
       <form>
 
@@ -206,11 +156,19 @@
                             class="css-qq9ke6 e744wfw0">*</span>
                       <p class="font-12 color-gray mt-10">1장 필수</p></label>
                   </div><br/><br/>
-                  <div class="css-jmalg e1uzxhvi6">
-                    <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg1" th:value="${product.prodImg1}">
-                    </div>
-                  </div><br/>
+                    <div class="css-jmalg e1uzxhvi6">
+                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                            <input type="file" accept="image/*" class="prodImg1" th:src="${url + product.prodImg1}">
+                            <input type="hidden" name="prodImg1">
+                            <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
+                            <div id="prodImg1" style="display: none;">
+                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
+                            </div>
+                            <!--                                            <input id="prodImg1" name="prodImg1"-->
+                            <!--                                                   placeholder="상품 대표 이미지" type="text"-->
+                            <!--                                                   class="css-1bkd15f e1uzxhvi2">-->
+                        </div>
+                    </div><br/>
                 </div><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
@@ -221,11 +179,22 @@
                   </div>
                   <div class="css-jmalg e1uzxhvi6">
                     <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg2" th:value="${product.prodImg2}">
+<!--                      <input type="file" accept="image/*" name="prodImg2" th:value="${product.prodImg2}">-->
+                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                            <input type="file" accept="image/*" class="prodImg2">
+                            <input type="hidden" name="prodImg2">
+                        </div>
+                        <div id="prodImg2" style="display: none;">
+                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100">
+                        </div>
                     </div>
-                    <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                      <input type="file" accept="image/*" name="prodImg3" th:value="${product.prodImg3}">
-                    </div>
+                      <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                          <input type="file" accept="image/*" class="prodImg3">
+                          <input type="hidden" name="prodImg3">
+                      </div>
+                      <div id="prodImg3" style="display: none;">
+                          <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100">
+                      </div>
                   </div>
                 </div><br/><br/>
 

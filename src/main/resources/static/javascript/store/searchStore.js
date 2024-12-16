@@ -3,7 +3,7 @@ $(function () {
     // 검색 함수
     function search(page) {
 
-        var searchKeyword = $("input[name='searchKeyword']:text").val();
+        var searchKeyword = $.trim($("input[name='searchKeyword']:text").val());
 
         var category1 = $("input[name='foodCategory1']:checked").val();
         var category2 = $("input[name='foodCategory2']:checked").val();
@@ -23,6 +23,10 @@ $(function () {
 
             $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/");
         }
+
+        $("input[name='foodCategory1']:checked").attr("disabled", true);
+        $("input[name='foodCategory2']:checked").attr("disabled", true);
+        $("input[name='foodCategory3']:checked").attr("disabled", true);
 
         // 해시태그 변경 (공백, # 제거)
         $("input[name='hashtagList']").each(function () {
@@ -78,5 +82,12 @@ $(function () {
 
     // 페이징
     pageNavigator(search);
+
+    $(".popularKeyword").on("click", function () {
+
+        resetFilter();
+        $("input[name='searchKeyword']:text").val($(this).text());
+        search(1);
+    })
 
 });

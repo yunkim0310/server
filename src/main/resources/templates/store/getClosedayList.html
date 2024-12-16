@@ -116,7 +116,7 @@
 
                 <br/><br/>
 
-                <table border="1">
+                <table border="1" class="listTable">
                     <thead>
                     <tr>
                         <th colspan="3">휴무일</th>
@@ -133,56 +133,6 @@
                     </tr>
                     </tbody>
                 </table>
-
-
-                <div class="containerList">
-                    <div class="containerItem" th:each="storeNews : ${storeNewsList}">
-                        <table>
-                            <tbody>
-
-                            <tr>
-                                <td colspan="2">
-                                    <div class="containerHeader">
-                                        <span class="containerData" th:text="${storeNews.regDt}"/>
-                                        <div class="containerTitle">
-                                            <div class="css-1w0ksfz e744wfw2">
-                                                <div class="btnContainer">
-                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="updateStoreNewsForm" type="button"
-                                                            th:attr="data-newsid=${storeNews.newsId}">
-                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">수정</span>
-                                                    </button>
-                                                    &ensp;
-                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="removeStoreNews" type="button"
-                                                            th:attr="data-newsid=${storeNews.newsId}">
-                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            <tr style="display: flex; align-items: flex-start;margin-top: 5%;">
-                                <td style="flex-shrink: 0;width: 300px; height: 300px">
-                                    <img src="/images/store/storeNewsImgTest.jpg" th:alt="${storeNews.newsImg}"
-                                         width="300" height="300">
-                                </td>
-                                <td style="flex-grow: 1; padding-left: 20px;">
-                                    <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                                    <textarea class="css-1bkd15f e1uzxhvi2"
-                                                              placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
-                                                              maxlength="200"
-                                                              rows="10" cols="50" style="height: 300px; padding-top: 10px"
-                                                              th:text="${storeNews.newsContents}" disabled></textarea>
-                                    </div>
-                                </td>
-                            </tr>
-
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
 
             </form>
 

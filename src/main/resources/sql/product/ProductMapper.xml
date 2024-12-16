@@ -19,6 +19,7 @@
         <result property="regDt" column="reg_dt" jdbcType="DATE"/>
         <result property="prodStatus" column="prod_status" jdbcType="BOOLEAN"/>
         <result property="cntProd" column="cnt_prod" jdbcType="INTEGER"/>
+        <result property="prodTotalCnt" column="prod_total_cnt" jdbcType="INTEGER"/>
     </resultMap>
 
     <insert id="addProduct"	parameterType="com.placeHere.server.domain.Product">
@@ -64,21 +65,15 @@
     </update>
 
     <select id="getProductList" parameterType="com.placeHere.server.domain.Search" resultMap="productSelectMap">
-        SELECT prod_no, prod_name, prod_price, prod_status, prod_img1
+        SELECT prod_no, prod_name, prod_price, prod_status, prod_img1, prod_category_name, COUNT(*) OVER() AS prod_total_cnt
         FROM product
         <where>
             <if test="searchKeyword != null and searchKeyword != ''">
-                prod_name LIKE CONCAT('%',#{searchKeyword},'%') || prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
+                prod_name or prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
             </if>
             <if test="priceMin != null">
                 AND prod_price BETWEEN #{priceMin} AND #{priceMax}
             </if>
-<!--            <if test="priceMin != 0">-->
-<!--                prod_price &gt;= #{priceMin}-->
-<!--            </if>-->
-<!--            <if test="priceMax != 0">-->
-<!--                prod_price &lt;= #{priceMax}-->
-<!--            </if>-->
         </where>
         <if test="order == 'asc'">
             ORDER BY prod_price ASC
@@ -95,6 +90,7 @@
         <if test="order == null">
             ORDER BY prod_category_no ASC , prod_price ASC
         </if>
+        LIMIT #{startRowNum}, #{listSize}
     </select>
 
     <select id="getAutocomplete" parameterType="String" resultType="String">

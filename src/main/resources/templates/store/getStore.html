@@ -61,8 +61,8 @@
                                 </div>
                             </div>
                             <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
-                                <a style="cursor: pointer;" id="chat"
-                                   class="btn-chat">채팅</a>
+                                <a style="cursor: pointer;" id="chat" class="btn-chat"
+                                   th:href="${(session.user != null) ? 'http://192.168.0.8:3000/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
                                 <a style="cursor: pointer" id="like"
                                    th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
                                    th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>

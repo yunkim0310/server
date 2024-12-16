@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
@@ -23,6 +24,9 @@ public class StoreRestController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private AwsS3Service awsS3Service;
+
     @Value("${page_size}")
     private int pageSize;
 
@@ -34,9 +38,6 @@ public class StoreRestController {
 
     @Value("${google_api}")
     private String googleApiKey;
-
-    @Value("${kakao_api}")
-    private String kakaoApiKey;
 
 
     // Constructor
@@ -143,19 +144,41 @@ public class StoreRestController {
         Map<String, String> response = new HashMap<>();
         response.put("businessNo", businessNoApiKey);
         response.put("google", googleApiKey);
-        response.put("kakao", kakaoApiKey);
 
         return ResponseEntity.ok(response);
     }
 
 
     // 가게 위치 전달
-    @GetMapping("getStoreLocation")
+    @GetMapping("/getStoreLocation")
     public ResponseEntity<List<Map<String,String>>> getStoreLocation(@ModelAttribute Search search,
                                                                      @RequestParam(value = "storeId", required = false, defaultValue = "0") int storeId) {
         System.out.println("/api-store/getStoreLocation : GET");
 
         if (storeId == 0) {
+
+            // 필터에서 선택한 음식 카테고리
+            List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
+
+            if (selectedCategoryList.get(0).equals("")) {
+                selectedCategoryList = List.of("","","");
+            } else if (selectedCategoryList.size() == 1) {
+                selectedCategoryList = List.of(selectedCategoryList.get(0), "전체", "전체");
+            }
+
+            // 선택한 음식 카테고리 변경 (전체, 기타 제거) - 검색을 위해서
+            String foodCategoryId = search.getFoodCategoryId();
+            foodCategoryId = foodCategoryId.replace("전체/", "").replace("기타/", "");
+            search.setFoodCategoryId(foodCategoryId);
+            System.out.println(search);
+
+            // 입력값없는 해시태그 제거
+            List<String> hashtagList = search.getHashtagList();
+
+            if (hashtagList != null && !hashtagList.isEmpty()) {
+                hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+                search.setHashtagList(hashtagList);
+            }
 
             List<Map<String,String>> storeLocationList = storeService.getStoreLocationList(search);
             System.out.println(storeLocationList);
@@ -173,7 +196,8 @@ public class StoreRestController {
     }
 
 
-    @GetMapping(value = "getStatistics", params = "storeId")
+    // 예약 통계 데이터 전달
+    @GetMapping(value = "/getStatistics", params = "storeId")
     public ResponseEntity<Map<String,Map<String, Integer>>> getStatistics(@RequestParam("storeId") int storeId) {
 
         System.out.println("/api-store/getStatistics : GET");
@@ -181,6 +205,15 @@ public class StoreRestController {
         Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
         return ResponseEntity.ok(statistics);
+    }
+
+
+    // 사진 삭제 테스트
+    @GetMapping("/removeFile")
+    public void removeFile(@RequestParam("filePath") String filePath) {
+
+        awsS3Service.deleteFile(filePath);
+
     }
 
 }

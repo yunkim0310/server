@@ -111,4 +111,27 @@ public class PurchaseRestController {
             return "장바구니 삭제 실패: " + e.getMessage();
         }
     }
+
+    @DeleteMapping("/clearCart")
+    public String clearCart(@ModelAttribute("purchase") Purchase purchase,
+                             @SessionAttribute("user") User buyer, Model model) {
+
+        System.out.println("removeCart");
+
+        try {
+            String username = buyer.getUsername();
+            System.out.println("username : " + username);
+            purchase.setBuyer(buyer);
+            System.out.println("Buyer : " + buyer);
+            purchaseService.clearWishCartByUsername(username);
+            model.addAttribute("username", username);
+
+//            purchaseService.removeWishCart(wishCartNo);
+            return "상품이 삭제되었습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "장바구니 삭제 실패: " + e.getMessage();
+        }
+    }
+
 }

@@ -1,9 +1,6 @@
 package com.placeHere.server.controller.pointShop;
 
-import com.placeHere.server.domain.Product;
-import com.placeHere.server.domain.Purchase;
-import com.placeHere.server.domain.Search;
-import com.placeHere.server.domain.User;
+import com.placeHere.server.domain.*;
 import com.placeHere.server.service.pointShop.ProductService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import jakarta.servlet.ServletContext;
@@ -21,6 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -35,6 +33,15 @@ public class ProductController {
     @Autowired
     @Qualifier("purchaseServiceImpl")
     private PurchaseService purchaseService;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
+
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
 
 
     public ProductController(){
@@ -125,6 +132,8 @@ public class ProductController {
 
         productService.addProduct(product);
 
+        model.addAttribute("url", bucketUrl);
+
         return "/pointShop/product/addProductResult";
     }
 
@@ -164,7 +173,18 @@ public class ProductController {
 //        prodCateName = product.getProdCateName();
         search.setSearchKeyword(categoryName);
         System.out.println("categoryName : " + categoryName);
+
+        search.setPageSize(pageSize);
+//        search.setStartRowNum(1);
+//        search.setListSize(30);
+        search.setListSize(15);
         List<Product> productList = productService.getProductList(search);
+        int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
+
+        System.out.println(productList);
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
         model.addAttribute("productList", productList);
 
         Cookie[] cookies = request.getCookies();
@@ -189,7 +209,7 @@ public class ProductController {
             response.addCookie(cookie);
         }
 
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product" , product);
         if (wishCartNo != null) {
             model.addAttribute("wishCartNo", wishCartNo);
@@ -206,7 +226,7 @@ public class ProductController {
         System.out.println("/product/updateProduct : GET");
 
         Product product = productService.getProduct(prodNo);
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product" , product);
 
         return "/pointShop/product/updateProduct";
@@ -242,7 +262,7 @@ public class ProductController {
 //        }
 
         productService.updateProduct(product);
-
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("product", product);
 
         System.out.println("Product: " + product);
@@ -262,6 +282,9 @@ public class ProductController {
         System.out.println("priceMax : " + search.getPriceMax());
 
         search.setOrder(order);
+        search.setPageSize(pageSize);
+//        search.setListSize(30);
+        search.setListSize(15);
         System.out.println("order: " + order);
 
         if(search.getPage() == 0) {
@@ -270,10 +293,17 @@ public class ProductController {
 //        search.setPageSize(pageSize);
 
         List<Product> productList = productService.getProductList(search);
+        int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
+
+        System.out.println(productList);
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
+        model.addAttribute("prodTotalCnt", prodTotalCnt);
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);
-
+        model.addAttribute("url", bucketUrl);
 //        model.addAttribute("menu", menu);
         model.addAttribute("productList", productList);
 //        model.addAttribute("resultPage" , resultPage);

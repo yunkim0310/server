@@ -1,9 +1,11 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
+import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
+import com.placeHere.server.service.store.SearchService;
 import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
@@ -38,8 +41,11 @@ public class StoreController {
     @Qualifier("reservationServiceImpl")
     private ReservationService reservationService;
 
-    @Value("${store_upload_dir}")
-    private String uploadDir;
+    @Autowired
+    private AwsS3Service awsS3Service;
+
+    @Autowired
+    private SearchService searchService;
 
     @Value("${amenities_name_list}")
     private List<String> amenitiesNameList;
@@ -55,6 +61,9 @@ public class StoreController {
 
     @Value("${google_api}")
     private String googleApi;
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
 
 
     // Constructor
@@ -378,6 +387,7 @@ public class StoreController {
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
         model.addAttribute("search", new Search());
+        model.addAttribute("popularKeywordList", searchService.getPopularKeyword());
 
         return "store/searchStore";
     }
@@ -390,39 +400,53 @@ public class StoreController {
                                Model model) {
 
         System.out.println("/getStoreList : GET");
-
+        
+        // 로그인 한 유저
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
-
+        
+        // search 페이지양, 리스트양 설정
         search.setPageSize(pageSize);
         search.setListSize(listSize);
+        System.out.println(search);
 
+        // 검색어가 있을 경우 검색 기록 등록
+        if (search.getSearchKeyword() != null && !search.getSearchKeyword().trim().isEmpty()) {
+            searchService.addSearch(search.getSearchKeyword());
+        }
+
+        // 필터에서 선택한 음식 카테고리
         List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
 
         if (selectedCategoryList.get(0).equals("")) {
             selectedCategoryList = List.of("","","");
+        } else if (selectedCategoryList.size() == 1) {
+            selectedCategoryList = List.of(selectedCategoryList.get(0), "전체", "전체");
         }
 
-        List<String> hashtagList = search.getHashtagList();
-
-        hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
-
-        search.setHashtagList(hashtagList);
-
-        model.addAttribute("mode", "result");
-        model.addAttribute("search", search);
-        model.addAttribute("selectedCategoryList", selectedCategoryList);
-        
-        // 가게 목록 검색
+        // 선택한 음식 카테고리 변경 (전체, 기타 제거) - 검색을 위해서
         String foodCategoryId = search.getFoodCategoryId();
         foodCategoryId = foodCategoryId.replace("전체/", "").replace("기타/", "");
         search.setFoodCategoryId(foodCategoryId);
         System.out.println(search);
 
+        // 입력값없는 해시태그 제거
+        List<String> hashtagList = search.getHashtagList();
+
+        if (hashtagList != null && !hashtagList.isEmpty()) {
+            hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+            search.setHashtagList(hashtagList);
+        }
+
+        // 가게 목록 검색
         List<Store> storeList = storeService.getStoreList(search);
         int totalCnt = (storeList.isEmpty()) ? 0 : storeList.get(0).getTotalCnt();
-
         System.out.println(storeList);
+        
+        // 검색, 필터 관련
+        model.addAttribute("mode", "result");
+        model.addAttribute("search", search);
+        model.addAttribute("selectedCategoryList", selectedCategoryList);
 
         // 페이징
         Paging paging = new Paging(totalCnt, search.getPage(), pageSize, listSize);
@@ -800,6 +824,35 @@ public class StoreController {
         }
 
         return "redirect:/store/getMyStore?mode=" + mode;
+    }
+
+
+    // 파일업로드 테스트
+    @RequestMapping("/store/file")
+    public String fileUploadTest(@RequestParam(value = "file", required = false) MultipartFile[] files, Model model) throws Exception {
+
+        System.out.println("/store/file : GET");
+
+        List<String> filePathList = new ArrayList<String>();
+
+        if (files != null && files.length > 0) {
+
+            for (MultipartFile file : files) {
+
+                if (file != null && !file.isEmpty()) {
+
+                    Map<String, String> fileMap = awsS3Service.uploadFile(file, "store/");
+                    filePathList.add(fileMap.get("filePath"));
+                }
+            }
+
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("filePathList", filePathList);
+
+            System.out.println(filePathList);
+        }
+
+        return "test/store/fileUploadTest";
     }
 
 }

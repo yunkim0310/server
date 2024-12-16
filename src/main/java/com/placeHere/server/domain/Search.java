@@ -15,6 +15,8 @@ public class Search {
     // Field
     // 검색어
     private String searchKeyword = "";
+    // 검색어 분할
+    private String[] searchKeywordArray;
     // 지역필터
     private List<String> regionList;
     // 가격 범위
@@ -28,7 +30,7 @@ public class Search {
     // 해시태그 목록
     private List<String> hashtagList;
     // 음식 카테고리
-    private String foodCategoryId;
+    private String foodCategoryId = "";
     // 검색일시
     private LocalDateTime searchDt;
     // 페이징 관련
@@ -45,6 +47,8 @@ public class Search {
     private List<String> searchStatuses;
     // 정렬 기준 (ASC, DESC)
     private String order;
+
+    private String username;
 
 
     // Constructor
@@ -88,6 +92,13 @@ public class Search {
     // Method
     public int getStartRowNum() {
         return (getPage() - 1)*getListSize();
+    }
+
+
+    public void setSearchKeyword(String searchKeyword) {
+
+        this.searchKeyword = searchKeyword;
+        searchKeywordArray = searchKeyword.split(" ");
     }
 
 }

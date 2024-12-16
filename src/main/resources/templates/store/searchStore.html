@@ -11,9 +11,10 @@
 
         <link th:insert="~{common/import :: importFragment}">
 
+        <link rel="stylesheet" href="/css/store/getClosedayList.css">
         <link rel="stylesheet" href="/css/store/modalStoreFilter.css">
 
-        <script type="text/javascript" src="/javascript/store/modalStoreFilter.js"></script>
+        <script src="/javascript/store/modalStoreFilter.js"></script>
         <script type="module" src="/javascript/store/searchStore.js"></script>
 
 
@@ -44,6 +45,33 @@
 
                     <div th:insert="~{store/modalStoreFilter :: filterFragment}"></div>
 
+                </div>
+
+                <div class="containerList">
+                    <div class="popularSearchKeyword" style="display: flex;justify-content: space-between;">
+
+                        <table border="1" class="listTable">
+                            <thead>
+                                <tr>
+                                    <th colspan="2">
+                                        인기 검색어
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>순위</th>
+                                    <th>검색어</th>
+                                </tr>
+                            </thead>
+
+                            <tbody th:each="keyword, iterStat : ${popularKeywordList}">
+                                <tr>
+                                    <td th:text="${iterStat.count}">검색 순위</td>
+                                    <td th:text="${keyword}" class="popularKeyword">검색어</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
                 </div>
 
             </div>
