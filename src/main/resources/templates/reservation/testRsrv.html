@@ -9,13 +9,11 @@
       // 사용자 입력 가져오기
       const role = document.getElementById("role").value;
       const userName = document.getElementById("userName").value;
-      const storeId = document.getElementById("storeId").value;
 
       // 요청 payload 생성
       const payload = {
         role: role,
-        userName: userName,
-        storeId: storeId ? parseInt(storeId) : null // storeId가 없으면 null로 설정
+        userName: userName
       };
 
       try {
@@ -56,12 +54,8 @@
     </select>
   </div>
   <div style="margin-bottom: 20px;">
-    <label for="userName">User Name (for ROLE_USER):</label>
-    <input type="text" id="userName" placeholder="Enter User Name">
-  </div>
-  <div style="margin-bottom: 20px;">
-    <label for="storeId">Store ID (for ROLE_STORE):</label>
-    <input type="number" id="storeId" placeholder="Enter Store ID">
+    <label for="userName">User Name:</label>
+    <input type="text" id="userName" placeholder="Enter User Name" required>
   </div>
   <button onclick="testCountReservations()" style="padding: 10px 20px; font-size: 16px;">테스트</button>
   <div id="result" style="margin-top: 30px; font-size: 16px;"></div>

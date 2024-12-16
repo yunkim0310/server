@@ -4,6 +4,7 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.StoreOperation;
 import com.placeHere.server.domain.StoreReservation;
 import com.placeHere.server.service.reservation.ReservationService;
+import com.placeHere.server.service.store.StoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,8 +22,8 @@ public class ReservationRestController {
     @Autowired
     private ReservationService reservationService;
 
-//    @Autowired
-//    private StoreDao storeDao;
+    @Autowired
+    private StoreService storeService;
 
 
     public ReservationRestController(){
@@ -75,15 +76,14 @@ public class ReservationRestController {
 
 
 
-    
+
     @RequestMapping(value = "countReservations", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
     public ResponseEntity<Map<String, Object>> countReservations(@RequestBody Map<String, Object> payload) {
         try {
-            // role과 userName, storeId를 payload에서 가져옴
+            // role과 userName을 payload에서 가져옴
             String role = (String) payload.get("role");
             String userName = (String) payload.get("userName");
-            Integer storeId = (Integer) payload.get("storeId"); // storeId가 null일 수 있으므로 Integer로 받음
 
             // 반환 결과를 담을 Map
             Map<String, Object> result = new HashMap<>();
@@ -100,23 +100,32 @@ public class ReservationRestController {
                 int finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
 
                 result.put("reservationCount", finalRsrvCount);
+
             } else if ("ROLE_STORE".equalsIgnoreCase(role)) {
                 // ROLE_STORE 처리
+                if (userName == null || userName.trim().isEmpty()) {
+                    result.put("error", "userName is required for ROLE_STORE");
+                    return ResponseEntity.ok(result);
+                }
+
+                // userName을 통해 storeId를 조회
+                Integer storeId = storeService.getStoreId(userName);
+
                 int finalRsrvCount = 0;
                 int finalPhoneRsrvCount = 0;
 
-                if (storeId != null) {
-                    // 탈퇴할 점주 회원의 예약 권수 카운팅 (전화 예약 제외)
+                if (storeId != null && storeId > 0) {
+                    // storeId가 유효할 경우 예약 건수와 전화 예약 건수 조회
                     Integer rsrvCount = reservationService.getCountRsrvStore(storeId);
                     Integer phoneRsrvCount = reservationService.getCountRsrvNumber(storeId);
 
-                    // null 값 처리를 위해 기본값 0으로 설정
                     finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
                     finalPhoneRsrvCount = phoneRsrvCount != null ? phoneRsrvCount : 0;
                 }
 
                 result.put("reservationCount", finalRsrvCount);
                 result.put("phoneReservationCount", finalPhoneRsrvCount);
+
             } else {
                 // role이 유효하지 않은 경우
                 result.put("error", "Invalid role. Supported roles: ROLE_USER, ROLE_STORE");
@@ -131,5 +140,6 @@ public class ReservationRestController {
             return ResponseEntity.ok(errorResult);
         }
     }
+
 
 }
