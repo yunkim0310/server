@@ -48,7 +48,7 @@ public class UserController {
             session.setAttribute("user", dbUser);
         }
 
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/logout")
@@ -57,7 +57,7 @@ public class UserController {
         log.info("logout Controller - get 호출");
         session.invalidate();
 
-        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/selectRole")
@@ -104,6 +104,8 @@ public class UserController {
     public String resetPwdValidation() {
 
         log.info("resetPwdValidation - get 요청");
+
+
 
         return "user/resetPwdValidation";
     }
@@ -160,16 +162,18 @@ public class UserController {
 
             log.info("user 정보 확인 ");
             log.info( "username :: " + user.getUsername() );
-            log.info( "password :: " + user.getPassword() );
+            log.info( "password :: " + password );
+
+            user.setPassword(password);
 
             userService.updatePwd(user);
         }
 
-
         // 비밀번호 변경 후, 세션에서 사용자 정보 삭제
         session.removeAttribute("user");
 
-        return "user/loginView";
+//        return "index";
+        return "redirect:/";
     }
 
     @GetMapping("/setting")

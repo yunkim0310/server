@@ -311,6 +311,7 @@ function emailCheck(email){
 
 }
 
+// 프로필 사진 업로드
 function photoEdit() {
   
   // 파일보기 버튼 사용 안하려고 사용
@@ -375,12 +376,11 @@ function photoEdit() {
 
   });
 
+}
 
-
-
-
-
-
-
-
+// 비밀번호 재설정
+function resetPwd() {
+  
+  
+  
 }

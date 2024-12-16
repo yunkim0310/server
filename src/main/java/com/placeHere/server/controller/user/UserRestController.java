@@ -2,6 +2,7 @@ package com.placeHere.server.controller.user;
 
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.user.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -110,6 +111,16 @@ public class UserRestController {
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+
+//    @PostMapping("/resetPwd")
+//    public ResponseEntity<?> resetPwd(@RequestBody User user, HttpSession session) throws Exception{
+//
+//        log.info("resetPwd - post 요청");
+//
+//        log.info(">> resetPwd input user 확인 :: " + user);
+//
+//
+//    }
 
 
 
