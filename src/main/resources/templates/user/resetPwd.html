@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Place Here</title>
     <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascript/user/user.js"></script>
 
 
@@ -19,14 +20,13 @@
                 <a id="home" href="/">
                     <img class="logoImg" src="/images/common/logo.png"/></a>
             </div>
-
 <!--            <form th:action="@{/user/resetPwd}" method="post" onsubmit="return changePwd()">-->
 <!--            <form th:action="@{/user/resetPwd}" method="post">-->
             <form>
                 <div class="input-group">
 
                     <div th:if="${session.user != null}" class="login">
-                        <input type="hidden" id="username" name="username">
+                        <input type="hidden" id="username" name="username" th:value="${session.user.username}">
                     </div>
 
                     <label for="password">비밀번호</label>
