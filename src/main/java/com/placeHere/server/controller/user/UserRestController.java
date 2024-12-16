@@ -112,15 +112,15 @@ public class UserRestController {
         }
     }
 
-//    @PostMapping("/resetPwd")
-//    public ResponseEntity<?> resetPwd(@RequestBody User user, HttpSession session) throws Exception{
-//
-//        log.info("resetPwd - post 요청");
-//
-//        log.info(">> resetPwd input user 확인 :: " + user);
-//
-//
-//    }
+    @PostMapping("/resetPwd")
+    public ResponseEntity<?> resetPwd(@RequestBody User user, HttpSession session) throws Exception{
+
+        log.info("resetPwd - post 요청");
+        log.info(">> resetPwd input user 확인 :: " + user);
+
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+
+    }
 
 
 
