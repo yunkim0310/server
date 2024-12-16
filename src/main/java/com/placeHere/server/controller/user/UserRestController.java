@@ -120,7 +120,6 @@ public class UserRestController {
 
         return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
 
-
     }
 
 

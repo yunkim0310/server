@@ -380,26 +380,41 @@ function photoEdit() {
 
 // 비밀번호 재설정
 function resetPwd() {
+
+  event.preventDefault();
   
-  alert('비밀번호 변경');
+  var username = $('#username').val();
+  const password = $('#password').val();
+
+  console.log('username :: ' + username);
+  console.log('password :: ' + password);
+
+  const user = {
+    username : username,
+    password : password
+  }
 
   $.ajax({
-    url: '/api-user/join',
+    url: '/api-user/resetPwd',
     type: 'POST',
     contentType: 'application/json',
     data: JSON.stringify(user),
     success: function(data) {
-      if (data.success) {
-        alert("회원가입 성공!");
-        location.href='/loginView';
+
+      console.log('data :: ',data);
+
+      if (data === "SUCCESS") {
+        alert("비밀번호가 변경되었습니다!");
+        location.href='/';
       } else {
-        alert("회원가입 실패!");
+        alert("실패!");
       }
     },
     error: function(xhr, status, error) {
       console.error('Error:', error);
-      alert("회원가입 중 오류가 발생했습니다.");
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
     }
+
   });
 
   
