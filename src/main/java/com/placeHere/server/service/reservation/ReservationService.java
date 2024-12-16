@@ -47,19 +47,13 @@ public interface ReservationService {
     public int getCountDayRsrv(Date rsrvDt, int storeId) throws Exception;
 
     // 탈퇴할 일반 회원의 예약 권수 카운팅
-    public int getCountRsrvUser(String userName) throws Exception;
+        public int getCountRsrvUser(String userName) throws Exception;
 
-    // 탈퇴할 점주 회원의 예약 권수 카운팅 단, 전화 예약 제외 미완
+    // 탈퇴할 점주 회원의 예약 권수 카운팅 단, 전화 예약 제외
     public int getCountRsrvStore(int storeId) throws Exception;
 
     // 탈퇴할 점주 회원의 전화 예약 권수 카운팅
     public int getCountRsrvNumber(int storeId) throws Exception;
-
-    // 예약 확정이면서 예약 일시가 지나간 예약 번호 리스트
-    List<Integer> getPastRsrvNos() throws Exception;
-
-    // 예약 확정이면서 예약 일시가 지나간 예약 업데이트
-    public void updateRsrvStatusDay() throws Exception;
 
     // 탈퇴 예정인 일반 회원의 예약 번호 리스트
     List<Integer> getRemoveUserRsrvNos(String userName) throws Exception;
@@ -72,6 +66,12 @@ public interface ReservationService {
 
     // 탈퇴 예정인 점주 회원의 일괄 환불
     public void getRemoveStoreRefundPayment(int storeId) throws Exception;
+
+    // 예약 확정이면서 예약 일시가 지나간 예약 번호 리스트
+    List<Integer> getPastRsrvNos() throws Exception;
+
+    // 예약 확정이면서 예약 일시가 지나간 예약 업데이트
+    public void updateRsrvStatusDay() throws Exception;
 
     //가게 예약 일시 인원 수
     StoreReservation getStoreReservation(Map<String, Object> params) throws Exception;

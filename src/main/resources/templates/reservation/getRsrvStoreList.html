@@ -2,6 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>점주 회원 예약 목록</title>
+    <link th:insert="~{common/import :: importFragment}">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
@@ -9,8 +10,11 @@
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
     <link rel="stylesheet" href="/css/templates/style.css">
+    <script type="module" src="/javascript/store/searchStore.js"></script>
+
 
     <script>
+        $(function(){
 
         function stopPropagation(event) {
             event.stopPropagation();
@@ -50,9 +54,19 @@
             });
         });
 
-        function autoSubmitForm() {
-            document.getElementById("searchForm").submit();
+
+
+
+
+        function search(page) {
+
+            $("input[name='page']").val(page);
+            $("form[name='searchForm']").attr("action", "/reservation/getRsrvStoreList").attr("method", "post").submit();
+
         }
+            pageNavigator(search);
+        });
+
 
 
     </script>
@@ -180,7 +194,6 @@
 
 </head>
 <body>
-<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
 
 <h1><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 목록</h1>
 <br/>
@@ -255,7 +268,7 @@
 
 <div class="allpoint1">
     <!-- 검색 폼 -->
-    <form id="searchForm" action="/reservation/getRsrvStoreList" method="POST">
+    <form name="searchForm">
 
         <input type="hidden" name="storeId" th:value="${param.storeId}"/>
 
@@ -311,10 +324,10 @@
                        th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 취소')}" /> 예약 취소 &nbsp;&nbsp;&nbsp;
             </label>
         </div>
-
+        <input type="hidden" name="page">
     </form>
 </div>
 
-
+<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
 </body>
 </html>

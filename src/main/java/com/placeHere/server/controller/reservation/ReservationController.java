@@ -135,6 +135,9 @@ public class ReservationController {
 
         User user = (User) session.getAttribute("user");
 
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
+
 
         if(!"ROLE_STORE".equals(user.getRole())){
             return "reservation/sendRsrvHome";
@@ -153,8 +156,12 @@ public class ReservationController {
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
 
+        Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
 
+        System.out.println(reservations);
 
         Map<Date, Integer> reservationCountsByDate = new HashMap<>();
         for (Reservation reservation : reservations) {
@@ -169,6 +176,7 @@ public class ReservationController {
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
+        model.addAttribute("totalCnt", totalCnt);
 
         // 뷰 반환
         return "reservation/getRsrvStoreList";
@@ -188,6 +196,9 @@ public class ReservationController {
         if(!"ROLE_STORE".equals(user.getRole())){
             return "reservation/sendRsrvHome";
         }
+
+        search.setPageSize(pageSize);
+        search.setListSize(listSize);
 
         System.out.println(user);
 
@@ -211,6 +222,11 @@ public class ReservationController {
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
 
+        int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
+
+        Paging paging = new Paging(totalCnt, search.getPage(), pageSize, listSize);
+        model.addAttribute("paging", paging);
+
         Map<Date, Integer> reservationCountsByDate = new HashMap<>();
         for (Reservation reservation : reservations) {
             Date rsrvDt = reservation.getRsrvDt();
@@ -223,6 +239,7 @@ public class ReservationController {
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
         model.addAttribute("searchStatuses", searchStatuses);
+        model.addAttribute("totalCnt", totalCnt);
 
         return "reservation/getRsrvStoreList";
     }
@@ -257,6 +274,7 @@ public class ReservationController {
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);

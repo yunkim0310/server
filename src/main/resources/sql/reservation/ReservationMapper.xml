@@ -184,7 +184,7 @@
     </select>
 
 
-    <select id="getRsrvStoreList" resultMap="ReservationResultMap">
+    <select id="getRsrvStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="ReservationResultMap">
         SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
@@ -222,6 +222,9 @@
             </if>
         </where>
         ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
+        <if test="search.listSize != null and search.listSize != 0">
+            LIMIT #{search.startRowNum}, #{search.listSize}
+        </if>
     </select>
 
 
