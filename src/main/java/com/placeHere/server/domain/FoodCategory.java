@@ -1,7 +1,6 @@
 package com.placeHere.server.domain;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,13 +14,19 @@ public class FoodCategory {
     private final List<String> mainCategory;
     private final List<String> subCategory;
     private final Map<String, List<String>> detailCategory;
+    private final Map<String, String> categoryImg;
 
 
     // Constructor
     public FoodCategory() {
 
+        // 1차 분류
         mainCategory = new ArrayList<String>(List.of("한식", "중식", "일식", "양식", "퓨전", "기타"));
+
+        // 2차 분류
         subCategory = new ArrayList<String>(List.of("전체", "밥", "빵-과자", "면-만두", "죽-스프", "국-탕", "찌개", "찜", "구이", "전-부침", "볶음", "조림", "튀김", "나물-무침", "회", "기타"));
+
+        // 3차 분류
         detailCategory = new HashMap<String, List<String>>();
         detailCategory.put("전체", List.of("전체"));
         detailCategory.put("기타", List.of("기타"));
@@ -39,6 +44,15 @@ public class FoodCategory {
         detailCategory.put("튀김", List.of("전체", "어패류튀김", "육류튀김", "채소, 해조류튀김", "기타"));
         detailCategory.put("나물-무침", List.of("전체", "생채류", "샐러드류", "숙채류", "어패류무침", "육류무침", "기타"));
         detailCategory.put("회", List.of("전체", "어패류회", "육류회", "스시, 초밥", "기타"));
+
+        // 카테고리 이미지 "한식", "중식", "일식", "양식", "퓨전", "기타"
+        categoryImg = new HashMap<String, String>();
+        categoryImg.put("한식", "https://d21sjc85fy47a6.cloudfront.net/aaaaaqx/md/_0006_korean_food.jpg?small200");
+        categoryImg.put("중식", "https://d21sjc85fy47a6.cloudfront.net/aaaaaqx/md/0706_chinese_food.jpg?small200");
+        categoryImg.put("일식", "https://lh3.googleusercontent.com/proxy/BfMdyVCh0BuwN0LDpBOBcuk58n5zVCRB5QUX3vSyTItz-iTm7j1_QgcletDMa_Qg83le6fuU4D9tX9Vjawozx0bAxWF42Vi78ZXbfM0UalY");
+        categoryImg.put("양식", "https://i.namu.wiki/i/8HjXHmgc7e_5KZVmId552aTeMjiaDhyamd_XO9WUzD0AIG9jK4c6ULrJrec8MZMFiFm8tNO6wbr6sNGJkzbFJw.webp");
+        categoryImg.put("퓨전", "https://d21sjc85fy47a6.cloudfront.net/aaaaaqx/md/_0002_french.jpg?small200");
+        categoryImg.put("기타", "https://d21sjc85fy47a6.cloudfront.net/aaaaaqx/md/_0001_brunch.jpg?small200");
 
     }
 }

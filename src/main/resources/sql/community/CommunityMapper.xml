@@ -298,6 +298,29 @@
     WHERE username = #{username} AND comments_viewstatus = 1;
     </select>
 
+    <!-- 인기 리뷰용 -->
+    <select id="getReviewListByReviewNo" resultMap="ReviewResultMap">
+
+        SELECT *, COUNT(*) OVER() AS review_total_cnt
+        FROM
+        (SELECT review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
+        FROM
+        (SELECT review.*, user.profile_img
+        FROM review
+        JOIN user ON review.username = user.username
+        WHERE review.review_Viewstatus = true) AS review_user
+        JOIN reservation ON reservation.rsrv_no = review_user.rsrv_no
+        LEFT JOIN likes ON review_user.review_no = likes.relation_no AND likes.target = 'review'
+        GROUP BY review_user.review_no, reservation.store_id, reservation.store_name) AS review_info
+        WHERE review_info.review_no IN
+        <foreach collection="reviewNoList" item="reviewNo" open="(" close=")" separator=",">
+            #{reviewNo}
+        </foreach>
+        ORDER BY review_info.review_like_cnt DESC
+        LIMIT 0, 5
+
+    </select>
+
 
 </mapper>
 

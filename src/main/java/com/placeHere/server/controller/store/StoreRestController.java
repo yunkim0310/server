@@ -157,6 +157,29 @@ public class StoreRestController {
 
         if (storeId == 0) {
 
+            // 필터에서 선택한 음식 카테고리
+            List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
+
+            if (selectedCategoryList.get(0).equals("")) {
+                selectedCategoryList = List.of("","","");
+            } else if (selectedCategoryList.size() == 1) {
+                selectedCategoryList = List.of(selectedCategoryList.get(0), "전체", "전체");
+            }
+
+            // 선택한 음식 카테고리 변경 (전체, 기타 제거) - 검색을 위해서
+            String foodCategoryId = search.getFoodCategoryId();
+            foodCategoryId = foodCategoryId.replace("전체/", "").replace("기타/", "");
+            search.setFoodCategoryId(foodCategoryId);
+            System.out.println(search);
+
+            // 입력값없는 해시태그 제거
+            List<String> hashtagList = search.getHashtagList();
+
+            if (hashtagList != null && !hashtagList.isEmpty()) {
+                hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
+                search.setHashtagList(hashtagList);
+            }
+
             List<Map<String,String>> storeLocationList = storeService.getStoreLocationList(search);
             System.out.println(storeLocationList);
 
