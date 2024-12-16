@@ -32,10 +32,10 @@ public interface ReservationService {
     public List<Reservation> getRsrvList() throws Exception;
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception;
+    public List<Reservation> getRsrvUserList(@Param("userName") String userName, @Param("search") Search search) throws Exception;
 
     // 예약 목록 조회 점주 회원
-    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception;
+    public List<Reservation> getRsrvStoreList(@Param("storeId") int storeId, @Param("search") Search search) throws Exception;
 
     // 예약 일시(rsrsDate)의 예약 인수들의 합
     int getCountRsrv(Date rsrvDt, int storeId) throws Exception;
@@ -47,7 +47,7 @@ public interface ReservationService {
     public int getCountDayRsrv(Date rsrvDt, int storeId) throws Exception;
 
     // 탈퇴할 일반 회원의 예약 권수 카운팅
-        public int getCountRsrvUser(String userName) throws Exception;
+    public int getCountRsrvUser(String userName) throws Exception;
 
     // 탈퇴할 점주 회원의 예약 권수 카운팅 단, 전화 예약 제외
     public int getCountRsrvStore(int storeId) throws Exception;
