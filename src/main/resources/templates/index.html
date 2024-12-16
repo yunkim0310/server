@@ -1,14 +1,351 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
-<div th:insert="~{common/header}"></div>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-index.html 입니다.
 
-</body>
+
+        <link th:insert="~{common/import :: importFragment}">
+
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/slider.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/css/swiper.min.css"/>
+        <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+                integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+                crossorigin="anonymous"></script>
+
+        <script src="/javascript/templates/slide.js"></script>
+        <script src="/javascript/templates/drag1.js"></script>
+        <script src="/javascript/templates/drag2.js"></script>
+        <script src="/javascript/templates/drag3.js"></script>
+        <script src="/javascript/templates/drag4.js"></script>
+        <script src="/javascript/templates/drag5.js"></script>
+        <script src="/javascript/templates/menu.js"></script>
+        <script src="/javascript/templates/slider.js"></script>
+        <script src="/javascript/templates/brand.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/js/swiper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<!--        <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/614007/sliiide.min.js"></script>-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenMax.min.js"></script>
+
+        <style>
+            .swiper-slide {
+                height: 80%;
+            }
+        </style>
+
+    </head>
+
+    <body>
+
+        <div id="root">
+
+            <div class="wrapper" style="max-width: 1100px;">
+                <main id="dock">
+                    <!-- 추천 카테고리 TODO 수정 필요 -->
+<!--                    <div class="__shortcut-list-wrap">-->
+<!--                        <div class="__shortcut-list">-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisRegion/청담?sort=revScore">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085260325.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;">-->
+<!--                                        <div class="balloon">-->
+<!--                                            <div class="title" style="background-color: rgb(255, 102, 50);">추천해요!</div>-->
+<!--                                            <svg-->
+<!--                                                    width="8" height="4" viewBox="0 0 8 4" fill="none"-->
+<!--                                                    xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">-->
+<!--                                                <path-->
+<!--                                                        d="M0.863735 3.56813C0.544995 3.7275 0.192685 3.42195 0.305377 3.08387L1.33333 0L8 4.03788e-07L0.863735 3.56813Z"-->
+<!--                                                        fill="#FF6632"></path>-->
+<!--                                            </svg>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="title">청담 모임</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisRegion/강남?sort=revScore">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_group.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">강남 모임</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/오마카세">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_omakase.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">오마카세</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/우마카세">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_umakase.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">우마카세</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/이탈리안">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_guidebook-v2.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">이탈리안</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/중식">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085268139.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">중식</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/카페">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112217324694065.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">카페</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/브런치">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_date.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">브런치</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/파스타">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085271176.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;">-->
+<!--                                    </div>-->
+<!--                                    <div class="title">파스타</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/기타">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src=" https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112217312994265.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">기타</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="__shortcut-list-dummy-bottom"></div>-->
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                    <!-- 추천 음식 카테고리 TODO 수정 필요 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header">
+                                <h3 class="section-title ebold">음식 카테고리</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="v-scroll items3">
+                                    <div class="v-scroll-inner">
+                                        <div class="best-food-list">
+                                            <a class="best-food-list-item item"
+                                               th:each="category : ${foodCategory.mainCategory}"
+                                               th:href="'/getStoreList?foodCategoryId='+${category}">
+                                                    <span class="tb">
+                                                        <img th:src="${foodCategory.categoryImg.get(category)}">
+                                                    </span>
+                                                <span class="name" th:text="${category}">음식 카테고리</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 지역 필터 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header">
+                                <h3 class="section-title ebold">어디로 가시나요?</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div class="quick-search items">
+                                            <a th:each="regionImg, iterStat : ${regionImgList}"
+                                               th:href="'/getStoreList?regionList='+${regionList[iterStat.index]}" class="item"
+                                               th:attr="style='background-image: url('+${regionImg}+');'">
+                                                <span class="label" th:text="${regionList[iterStat.index]}"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 인기 리뷰 TODO 변경 필요 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header section-header-v">
+                                <h3 class="section-title ebold">유저의 리얼리뷰 Pick</h3>
+                                <p style="color: rgb(98, 98, 98);">방문자들이 남긴 솔직한 리뷰를 만나보세요</p>
+                            </div>
+                            <div class="section-body">
+                                <div id="sectionReviewVscroll" class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div id="sectionReviewVscroll" class="best-review items1"
+                                             style="display: flex; flex-wrap: nowrap;">
+                                            <div th:each="review :${reviewList}" class="best-review-item item">
+                                                <a th:href="'reveiw/getReviewList?type=otherFeed&userName='+${review.userName}"
+                                                   class="best-review-item-header">
+                                                    <div class="user">
+                                                        <!-- TODO 유저 사진으로 변경 필요 -->
+                                                        <span class="profile-pic"
+                                                              style="background-image: url('https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/noimg/profile_default_v2.png');"></span>
+                                                        <span th:text="${review.userName}"
+                                                              class="name username ">리뷰 작성자</span>
+                                                    </div>
+                                                    <div class="date" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + '(수정됨)'}">최근 방문일<br></div>
+                                                </a>
+                                                <a th:href="'reveiw/getReview?userName='+${review.userName}"
+                                                   class="best-review-item-body">
+                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                        <div class="img">
+                                                            <img src="https://d3kzx7mqemhf0.cloudfront.net/catchtable/common/comm_232918085777781.webp?small400"
+                                                                 alt="">
+                                                        </div>
+                                                    </th:block>
+                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                        <th:block>
+                                                            <div class="img"
+                                                                 th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
+                                                                     class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+review.reviewImg1}">
+                                                            </div>
+                                                            <div class="img"
+                                                                 th:unless="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
+                                                                     class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+review.reviewImg1}">
+                                                            </div>
+                                                        </th:block>
+                                                    </th:block>
+                                                    <div class="review-post-info">
+                                                        <p th:text="${review.reviewContent}">
+                                                            리뷰 내용
+                                                        <p>
+                                                    </div>
+                                                </a>
+                                                <div class="best-review-item-footer">
+                                                    <a th:href="'/getStore?storeId='+${review.storeId}"
+                                                       class="restaurant-detail">
+                                                        <h3 class="name" th:text="${review.storeName}">
+                                                            리뷰 매장명
+                                                         </h3>
+                                                        <div class="meta">
+                                                            <span class="tags">
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+
+                    <!-- 인기 가게 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header section-header-v">
+                                <h3 class="section-title ebold">
+                                    <span th:text="|${month}월 ${week}주차|"></span>&nbsp;인기 레스토랑</h3>
+                                <p style="color: rgb(98, 98, 98);">가장 주목 받는 맛집을 모아봤어요</p>
+                            </div>
+                            <div class="section-body">
+                                <div id="publicPopularShop_15" class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div id="publicPopularShop_23" class="restaurant-list restaurant-list-sm items2"
+                                             style="display: flex; flex-wrap: nowrap;">
+                                            <div th:each="store : ${storeList}" class="restaurant-list-item item">
+                                                <div class="img">
+                                                    <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
+                                                        <!-- 가게 이미지 TODO 수정 필요 -->
+                                                        <th:block th:if="${store.storeImgList== null}">
+                                                            <div class="img">
+                                                                <img th:src="${url + store.storeImg1}"
+                                                                     th:alt="${store.storeImg1}">
+                                                            </div>
+                                                        </th:block>
+                                                        <th:block th:if="${store.storeImgList != null && url == null}">
+                                                            <div class="imageContainer"
+                                                                 th:if="${store.storeImg1 != null}">
+                                                                <img class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+store.storeImg1}">
+                                                            </div>
+                                                            <div class="imageContainer"
+                                                                 th:unless="${store.storeImg1 != null}">
+                                                                <img class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+store.storeImg2}">
+                                                            </div>
+                                                        </th:block>
+                                                    </a>
+                                                </div>
+                                                <div class="detail">
+                                                    <a th:href="'/getStore?storeId='+${store.storeId}">
+                                                        <h3 th:text="${store.storeName}" class="name">매장명</h3>
+                                                        <div class="meta">
+                                                            <span class="tags" th:text=" ${(store.storeAddr.split(' ')[1])+ '&ensp;|&ensp;' + (store.foodCategoryId.split('/')[0]+'&ensp;'+((store.foodCategoryId.split('/').length>3) ? store.foodCategoryId.split('/')[3] : ''))}">
+                                                                주소(구) | 음식 카테고리
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                </main>
+
+            </div>
+
+        </div>
+
+    </body>
+
 </html>

@@ -192,5 +192,11 @@ public class CommunityServiceImpl implements CommunityService {
         return communityDao.getDeletedUserComment(username);
     }
 
+    @Override
+    public List<Review> getReviewListByReviewNo(List<Integer> reviewNoList) throws Exception {
+
+        return communityDao.getReviewListByReviewNo(reviewNoList);
+    }
+
 
 }

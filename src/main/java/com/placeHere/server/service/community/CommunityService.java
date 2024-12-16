@@ -3,6 +3,7 @@ package com.placeHere.server.service.community;
 import com.placeHere.server.domain.Comment;
 import com.placeHere.server.domain.Review;
 import com.placeHere.server.domain.Search;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -56,5 +57,7 @@ public interface CommunityService {
     // 탈퇴 회원의 댓글 리스트 조회
     public List<Comment> getDeletedUserComment(String username) throws Exception;
 
+    // 댓글 목록 조회 - 인기 리뷰용 (reviewNo List 로 조회)
+    public List<Review> getReviewListByReviewNo(List<Integer> reviewNoList) throws Exception;
 
 }
