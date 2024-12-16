@@ -3,64 +3,42 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Test Reservation APIs</title>
+  <title>Test Count Reservations API</title>
   <script>
-    async function testCountRsrvStore() {
+    async function testCountReservations() {
+      // 사용자 입력 가져오기
+      const role = document.getElementById("role").value;
+      const userName = document.getElementById("userName").value;
       const storeId = document.getElementById("storeId").value;
 
-      if (!storeId) {
-        alert("Store ID를 입력해주세요.");
-        return;
-      }
+      // 요청 payload 생성
+      const payload = {
+        role: role,
+        userName: userName,
+        storeId: storeId ? parseInt(storeId) : null // storeId가 없으면 null로 설정
+      };
 
       try {
-        const response = await fetch('/api-reservation/countRsrvStore', {
+        // API 호출
+        const response = await fetch('/api-reservation/countReservations', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ storeId: parseInt(storeId) })
+          body: JSON.stringify(payload)
         });
 
         if (!response.ok) {
           throw new Error(`API 호출 실패: ${response.statusText}`);
         }
 
+        // 결과 처리
         const result = await response.json();
-        document.getElementById("storeResult").innerHTML = `
-                    <p>Reservation Count (전화 예약 제외): ${result.reservationCount ?? 0}</p>
-                    <p>Phone Reservation Count: ${result.phoneReservationCount ?? 0}</p>
+        document.getElementById("result").innerHTML = `
+                    <h3>결과</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
                 `;
       } catch (error) {
-        document.getElementById("storeResult").innerHTML = `
-                    <p style="color: red;">에러 발생: ${error.message}</p>
-                `;
-      }
-    }
-
-    async function testCountRsrvUser() {
-      const userName = document.getElementById("userName").value;
-
-      if (!userName) {
-        alert("User Name을 입력해주세요.");
-        return;
-      }
-
-      try {
-        const response = await fetch('/api-reservation/countRsrvUser', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ userName: userName })
-        });
-
-        if (!response.ok) {
-          throw new Error(`API 호출 실패: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        document.getElementById("userResult").innerHTML = `
-                    <p>Reservation Count: ${result.reservationCount ?? 0}</p>
-                `;
-      } catch (error) {
-        document.getElementById("userResult").innerHTML = `
+        // 에러 처리
+        document.getElementById("result").innerHTML = `
                     <p style="color: red;">에러 발생: ${error.message}</p>
                 `;
       }
@@ -69,27 +47,24 @@
 </head>
 <body>
 <div style="text-align: center; margin-top: 50px;">
-  <h1>Test Reservation APIs</h1>
-
-  <!-- countRsrvStore 테스트 -->
-  <div style="margin-bottom: 30px;">
-    <h2>Test countRsrvStore</h2>
-    <label for="storeId">Store ID:</label>
-    <input type="number" id="storeId" placeholder="Enter Store ID">
-    <button onclick="testCountRsrvStore()" style="padding: 10px 20px; margin-left: 10px; cursor: pointer;">테스트</button>
-    <div id="storeResult" style="margin-top: 20px; font-size: 16px;"></div>
+  <h1>Test Count Reservations API</h1>
+  <div style="margin-bottom: 20px;">
+    <label for="role">Role:</label>
+    <select id="role">
+      <option value="ROLE_USER">ROLE_USER</option>
+      <option value="ROLE_STORE">ROLE_STORE</option>
+    </select>
   </div>
-
-  <hr>
-
-  <!-- countRsrvUser 테스트 -->
-  <div style="margin-bottom: 30px;">
-    <h2>Test countRsrvUser</h2>
-    <label for="userName">User Name:</label>
+  <div style="margin-bottom: 20px;">
+    <label for="userName">User Name (for ROLE_USER):</label>
     <input type="text" id="userName" placeholder="Enter User Name">
-    <button onclick="testCountRsrvUser()" style="padding: 10px 20px; margin-left: 10px; cursor: pointer;">테스트</button>
-    <div id="userResult" style="margin-top: 20px; font-size: 16px;"></div>
   </div>
+  <div style="margin-bottom: 20px;">
+    <label for="storeId">Store ID (for ROLE_STORE):</label>
+    <input type="number" id="storeId" placeholder="Enter Store ID">
+  </div>
+  <button onclick="testCountReservations()" style="padding: 10px 20px; font-size: 16px;">테스트</button>
+  <div id="result" style="margin-top: 30px; font-size: 16px;"></div>
 </div>
 </body>
 </html>

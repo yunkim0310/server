@@ -364,7 +364,7 @@ public class ReservationBLTest {
     @Test
     public void getRemoveStoreRefundPayment() throws Exception {
 
-        int StoreId = 2;
+        int StoreId = 11;
 
         reservationService.getRemoveStoreRefundPayment(StoreId);
 

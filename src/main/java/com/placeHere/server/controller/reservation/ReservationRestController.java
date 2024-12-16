@@ -73,56 +73,63 @@ public class ReservationRestController {
         }
     }
 
-    @RequestMapping(value = "countRsrvStore", method = RequestMethod.POST, consumes = "application/json")
+
+
+    
+    @RequestMapping(value = "countReservations", method = RequestMethod.POST, consumes = "application/json")
     @ResponseBody
-    public ResponseEntity<Map<String, Integer>> countRsrvStore(@RequestBody Map<String, Object> payload) {
+    public ResponseEntity<Map<String, Object>> countReservations(@RequestBody Map<String, Object> payload) {
         try {
-            int storeId = (int) payload.get("storeId");
+            // role과 userName, storeId를 payload에서 가져옴
+            String role = (String) payload.get("role");
+            String userName = (String) payload.get("userName");
+            Integer storeId = (Integer) payload.get("storeId"); // storeId가 null일 수 있으므로 Integer로 받음
 
-            // 탈퇴할 점주 회원의 예약 권수 카운팅 (전화 예약 제외)
-            Integer rsrvCount = reservationService.getCountRsrvStore(storeId);
-            Integer phoneRsrvCount = reservationService.getCountRsrvNumber(storeId);
+            // 반환 결과를 담을 Map
+            Map<String, Object> result = new HashMap<>();
 
-            // null 값 처리를 위해 기본값 0으로 설정
-            int finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
-            int finalPhoneRsrvCount = phoneRsrvCount != null ? phoneRsrvCount : 0;
+            if ("ROLE_USER".equalsIgnoreCase(role)) {
+                // ROLE_USER 처리
+                if (userName == null || userName.trim().isEmpty()) {
+                    result.put("error", "userName is required for ROLE_USER");
+                    return ResponseEntity.ok(result);
+                }
 
-            // 결과를 Map에 담아 반환
-            Map<String, Integer> result = new HashMap<>();
-            result.put("reservationCount", finalRsrvCount); // 전화 예약 제외한 예약 권수
-            result.put("phoneReservationCount", finalPhoneRsrvCount); // 전화 예약 권수
+                // 탈퇴할 일반 회원의 예약 권수 카운팅
+                Integer rsrvCount = reservationService.getCountRsrvUser(userName);
+                int finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
+
+                result.put("reservationCount", finalRsrvCount);
+            } else if ("ROLE_STORE".equalsIgnoreCase(role)) {
+                // ROLE_STORE 처리
+                int finalRsrvCount = 0;
+                int finalPhoneRsrvCount = 0;
+
+                if (storeId != null) {
+                    // 탈퇴할 점주 회원의 예약 권수 카운팅 (전화 예약 제외)
+                    Integer rsrvCount = reservationService.getCountRsrvStore(storeId);
+                    Integer phoneRsrvCount = reservationService.getCountRsrvNumber(storeId);
+
+                    // null 값 처리를 위해 기본값 0으로 설정
+                    finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
+                    finalPhoneRsrvCount = phoneRsrvCount != null ? phoneRsrvCount : 0;
+                }
+
+                result.put("reservationCount", finalRsrvCount);
+                result.put("phoneReservationCount", finalPhoneRsrvCount);
+            } else {
+                // role이 유효하지 않은 경우
+                result.put("error", "Invalid role. Supported roles: ROLE_USER, ROLE_STORE");
+                return ResponseEntity.ok(result);
+            }
 
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             // 예외 발생 시 에러 응답 반환
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(null);
+            Map<String, Object> errorResult = new HashMap<>();
+            errorResult.put("error", "Error occurred while counting reservations: " + e.getMessage());
+            return ResponseEntity.ok(errorResult);
         }
-    }
-
-
-
-
-
-
-
-
-    @RequestMapping(value = "countRsrvUser", method = RequestMethod.POST, consumes = "application/json")
-    @ResponseBody
-    public ResponseEntity<Map<String, Integer>> countRsrvUser(@RequestBody Map<String, Object> payload) throws Exception{
-            // userName을 payload에서 가져옴
-            String userName = (String) payload.get("userName");
-            // 탈퇴할 일반 회원의 예약 권수 카운팅
-            Integer rsrvCount = reservationService.getCountRsrvUser(userName);
-
-            // null 값 처리를 위해 기본값 0으로 설정
-            int finalRsrvCount = rsrvCount != null ? rsrvCount : 0;
-
-            // 결과를 Map에 담아 반환
-            Map<String, Integer> result = new HashMap<>();
-            result.put("reservationCount", finalRsrvCount);
-
-            return ResponseEntity.ok(result);
     }
 
 }
