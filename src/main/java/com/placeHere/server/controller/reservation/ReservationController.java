@@ -274,10 +274,14 @@ public class ReservationController {
 
         String userName = user.getUsername();
 
-        if (searchKeyword == null && order == null) {
+        if (searchKeyword == null || searchKeyword.trim().isEmpty()) {
+            searchKeyword = ""; // 기본값 설정
+        }
+        search.setSearchKeyword(searchKeyword);
+
+        if (order == null) {
             // 초기 Search 객체 설정 (기본값)
             search.setOrder("desc"); // 기본 정렬
-            search.setSearchKeyword(null); // 모든 상태 포함
         }
 
 
