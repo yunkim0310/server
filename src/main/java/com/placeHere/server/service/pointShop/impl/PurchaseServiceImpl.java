@@ -159,4 +159,8 @@ public class PurchaseServiceImpl implements PurchaseService {
         purchaseDao.clearWishCartByUsername(username);  // 장바구니 비우기
     }
 
+    public void clearWishCartByUsername(String username) throws Exception {
+
+        purchaseDao.clearWishCartByUsername(username);
+    }
 }

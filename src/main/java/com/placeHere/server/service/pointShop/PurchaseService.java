@@ -53,4 +53,6 @@ public interface PurchaseService {
 
     @Transactional
     public void purchaseProducts(String username) throws Exception;
+
+    public void clearWishCartByUsername(String username) throws Exception;
 }

@@ -422,7 +422,8 @@ public class PurchaseController {
 
         model.addAttribute("username", username);
 
-        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
+//        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
+        return "redirect:/purchase/listPurchase";
     }
 
 

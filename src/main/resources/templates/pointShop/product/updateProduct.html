@@ -7,15 +7,14 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PlaceHere</title>
+  <link th:insert="~{common/import :: importFragment}">
 
   <link rel="stylesheet" href="/css/templates/collection_detail.css">
   <link rel="stylesheet" href="/css/templates/regist_hp.css">
   <link href="/css/templates/mypage.css" rel="stylesheet">
 
-  <link th:insert="~{common/import :: importFragment}">
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-  <link rel="stylesheet" href="/css/templates/header.css">
 
   <script src="/javascript/pointShop/updateProduct.js"></script>
 
@@ -74,14 +73,14 @@
 </head>
 <body>
 
-    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
-      <div class="side" style="margin-top: 80px;">
-        <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
-        <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
-      </div>
-    </div>
-
     <div id="root">
+
+        <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+            <div class="side" style="margin-top: 80px;">
+                <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 관리</div>
+                <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
+            </div>
+        </div>
 
       <form>
 
@@ -157,14 +156,19 @@
                             class="css-qq9ke6 e744wfw0">*</span>
                       <p class="font-12 color-gray mt-10">1장 필수</p></label>
                   </div><br/><br/>
-                  <div class="css-jmalg e1uzxhvi6">
-                    <div class="css-176lya2 e1uzxhvi3 under-name-block">
-<!--                      <input type="file" accept="image/*" name="prodImg1" th:value="${product.prodImg1}">-->
-                      <input id="prodImg1" name="prodImg1"
-                             placeholder="상품 대표 이미지" type="text"
-                             class="css-1bkd15f e1uzxhvi2">
-                    </div>
-                  </div><br/>
+                    <div class="css-jmalg e1uzxhvi6">
+                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                            <input type="file" accept="image/*" class="prodImg1">
+                            <input type="hidden" name="prodImg1">
+                            <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
+                            <div id="prodImg1" style="display: none;">
+                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
+                            </div>
+                            <!--                                            <input id="prodImg1" name="prodImg1"-->
+                            <!--                                                   placeholder="상품 대표 이미지" type="text"-->
+                            <!--                                                   class="css-1bkd15f e1uzxhvi2">-->
+                        </div>
+                    </div><br/>
                 </div><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
