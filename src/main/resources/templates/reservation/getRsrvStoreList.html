@@ -14,7 +14,6 @@
 
 
     <script>
-        $(function(){
 
         function stopPropagation(event) {
             event.stopPropagation();
@@ -55,17 +54,16 @@
         });
 
 
-
-
-
         function search(page) {
 
             $("input[name='page']").val(page);
             $("form[name='searchForm']").attr("action", "/reservation/getRsrvStoreList").attr("method", "post").submit();
-
         }
+            function autoSubmitForm() {
+                document.getElementById("searchForm").submit();
+            }
+
             pageNavigator(search);
-        });
 
 
 
@@ -268,7 +266,7 @@
 
 <div class="allpoint1">
     <!-- 검색 폼 -->
-    <form name="searchForm">
+    <form id="searchForm" name="searchForm">
 
         <input type="hidden" name="storeId" th:value="${param.storeId}"/>
 
@@ -324,7 +322,7 @@
                        th:checked="${search.searchStatuses != null && search.searchStatuses.contains('예약 취소')}" /> 예약 취소 &nbsp;&nbsp;&nbsp;
             </label>
         </div>
-        <input type="hidden" name="page">
+        <input type="hidden" name="page" th:value="1">
     </form>
 </div>
 

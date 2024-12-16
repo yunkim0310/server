@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -211,8 +213,36 @@ public class ReservationServiceImpl implements ReservationService{
         StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
         List<ReservationTimeStatus> reservationTimeStatusList = reservationDao.getRsrvTimeStatus(params);
         StoreReservation storeReservation = new StoreReservation();
+
+
+
         storeReservation.setStoreOperation(operation);
         storeReservation.setReservationTimeStatusList(reservationTimeStatusList);
+
+
+        if (reservationTimeStatusList != null && LocalDate.now().toString().equals(effectDt)) {
+            // 08:00부터 현재 시간까지 30분 단위로 반복해서 추가
+            LocalTime startTime = LocalTime.of(8, 0); // 시작 시간: 08:00
+            LocalTime currentTime = LocalTime.now(); // 현재 시간
+
+            while (!startTime.isAfter(currentTime)) {
+                // 새로운 ReservationTimeStatus 객체 생성
+                ReservationTimeStatus status = new ReservationTimeStatus();
+                status.setRsrvDt(effectDt + " " + startTime.toString()); // 예약 시간 (effectDt 날짜 + 시간)
+                status.setRsrvPerson(100); // 고정 예약 인원: 100
+
+                // 리스트에 추가
+                reservationTimeStatusList.add(status);
+
+                // 시간 30분 증가
+                startTime = startTime.plusMinutes(30);
+            }
+
+            // 다시 storeReservation에 설정
+            storeReservation.setReservationTimeStatusList(reservationTimeStatusList);
+        }
+
+
         return storeReservation;
     }
 
