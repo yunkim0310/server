@@ -316,7 +316,7 @@ public class ReservationBLTest {
     @Test
     public void getRemoveUserRsrvNos() throws Exception {
 
-        String userName = "user12";
+        String userName = "user01";
 
         // 메서드 호출
         List<Integer> removeUserRsrvNos = reservationService.getRemoveUserRsrvNos(userName);
@@ -335,7 +335,7 @@ public class ReservationBLTest {
     @Test
     public void getRemoveUserRefundPayment() throws Exception {
 
-        String userName = "user12";
+        String userName = "user100";
 
         reservationService.getRemoveUserRefundPayment(userName);
 
