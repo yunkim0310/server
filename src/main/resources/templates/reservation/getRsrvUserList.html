@@ -147,7 +147,7 @@
             // 리뷰 작성 버튼 클릭 시 네비게이션 제외
             if (event.target.classList.contains("review-button")) {
 
-              const review = `/review/addReview?rsrvNo=${reservationNumber}`; // 이동할 링크
+              const review = `/review/addReview`; // 이동할 링크
               return window.location.href = review; // 해당 링크로 네비게이션
             }
 

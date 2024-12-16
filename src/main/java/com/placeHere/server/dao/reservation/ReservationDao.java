@@ -38,10 +38,10 @@ public interface ReservationDao {
     public List<Reservation> getRsrvList() throws Exception;
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception;
+    public List<Reservation> getRsrvUserList(@Param("userName") String userName, @Param("search") Search search) throws Exception;
 
     // 예약 목록 조회 점주 회원
-    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception;
+    public List<Reservation> getRsrvStoreList(@Param("storeId") int storeId, @Param("search")Search search) throws Exception;
 
     // 예약 일시(rsrvDt)의 예약 인수들의 합
     public int getCountRsrv(Map<String, Object> params) throws Exception;

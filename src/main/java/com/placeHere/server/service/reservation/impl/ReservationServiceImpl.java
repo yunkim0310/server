@@ -101,13 +101,13 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception {
+    public List<Reservation> getRsrvUserList(@Param("userName") String userName, @Param("search") Search search) throws Exception {
         return reservationDao.getRsrvUserList(userName, search);
     }
 
 
     // 예약 목록 조회 점주
-    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception {
+    public List<Reservation> getRsrvStoreList(@Param("storeId") int storeId, @Param("search") Search search) throws Exception {
         return reservationDao.getRsrvStoreList(storeId, search);
     }
 

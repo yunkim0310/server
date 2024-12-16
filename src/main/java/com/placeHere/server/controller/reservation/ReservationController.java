@@ -663,6 +663,15 @@ public class ReservationController {
 //    }
 
 
+    @RequestMapping( value="testRsrv", method=RequestMethod.GET )
+    public String testRsrv(HttpSession session,
+                           Model model) throws Exception {
+
+        User user = (User) session.getAttribute("user");
+
+
+        return "reservation/testRsrv";
+    }
 
 
 }

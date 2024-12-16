@@ -43,12 +43,9 @@
         }
 
         .fc-day-selected {
-            background-color: #719cfe !important;
+            background-color: #c3d5fe !important;
         }
 
-        .fc-day-today {
-            background-color: #a4c0ff !important; /* 원하는 배경색으로 변경 */
-        }
 
 
             .amount-box {
@@ -373,7 +370,7 @@
                         selectedTime = time;
 
                         document.querySelectorAll('.time').forEach(el => el.style.backgroundColor = "");
-                        button.style.backgroundColor = "#719cfe";
+                        button.style.backgroundColor = "#c3d5fe";
 
                         selectedDateInput.value = `${selectedDate}T${selectedTime}`;
 
@@ -479,6 +476,8 @@
 </head>
 <body>
 <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+
+<br/><br/><br/>
 
 <div class="container">
     <h1 th:text="${store.storeName}"></h1>
