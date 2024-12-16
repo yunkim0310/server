@@ -83,11 +83,11 @@
 <!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
 <!--                    </a>-->
                     <a href="#" class="photo">
-<!--                        <img id="profileImgView" th:src="@{'/file/user/' + ${user.profileImg}}" alt="프로필사진">-->
-                        <img id="profileImgView" th:src="@{'https://placehere-bucket.s3.ap-northeast-2.amazonaws.com/user/' + ${user.profileImg}}" alt="프로필사진">
+                        <img id="profileImgView" th:src="@{'https://placehere.s3.ap-northeast-2.amazonaws.com/user/' + ${user.profileImg}}" alt="프로필사진">
+<!--                        <img id="profileImgView" alt="프로필사진">-->
 <!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
                             <span class="photo_edit" onclick="photoEdit()" ></span>
-<!--                        <input type="file" id="profileImg" name="profileImg" class="profileImg" style="display: none;" accept="image/*">-->
+                        <input type="file" id="profileImg" name="profileImg" class="profileImg" style="display: none;" accept="image/*">
                     </a>
                     <div class="profile" >
                         <th:if #{user !=" null"}>

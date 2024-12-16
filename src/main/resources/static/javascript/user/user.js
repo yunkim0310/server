@@ -328,15 +328,33 @@ function photoEdit() {
     console.log('username :: ', username);
     console.log('fileName :: ', fileName);
 
-    const user = {
-      username : username,
-      profileImg : fileName
-    }
+    // const user = {
+    //   username : username,
+    //   profileImg : fileName
+    // }
 
     uploadFile(file, "user/")
       .then(result => {
         console.log(result);
-        $('#profileImgView').attr("src",result.url);
+        // console.log("uuid file name :: " , result.url)
+        console.log("uuid file path :: " , result.filePath)
+        // https://placehere.s3.ap-northeast-2.amazonaws.com/user/20241216d64806bc.jpg
+
+        // const resultUrl = result.url;
+        const resultUrl = result.filePath;
+        const cvrtStr = "user/";
+        const replaceFileName = resultUrl.replace(cvrtStr, '');
+        
+        // uuid 로 변환된 파일명만 추출
+        console.log('after :: ', replaceFileName);
+
+        // $('#profileImgView').attr("src",result.url);
+        $('#profileImgView').attr("src",replaceFileName);
+
+        const user = {
+          username : username,
+          profileImg : replaceFileName
+        }
 
         return $.ajax({
           url: "/api-user/updateProfile",
@@ -344,6 +362,7 @@ function photoEdit() {
           data: JSON.stringify(user),
           contentType: "application/json"
         });
+
       })
       .then(response => {
         // $.ajax 요청이 성공적으로 완료된 후
