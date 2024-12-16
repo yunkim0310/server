@@ -59,7 +59,6 @@
     <header class="header" role="banner" >
         <div class="header_subindex">
 
-            <!--프로필-사진,아이디,메일주소,2단계인증알림-->
             <div class="profile_area">
 
                 <div class="header_left" >
@@ -76,19 +75,25 @@
                     </ul>
                 </div>
 
+                <!-- profile_inner 시작 -->
                 <div class="profile_inner">
-<!--                    <a href="#" onclick="changeImage()" class="photo">-->
-<!--                        <img src="https://phinf.pstatic.net/contact/20180510_205/1525930147706nu3jQ_PNG/avatar_profile.png?type=s160" width="84"-->
-<!--                             height="84" alt="프로필 이미지">-->
-<!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
-<!--                    </a>-->
-                    <a href="#" class="photo">
-                        <img id="profileImgView" th:src="@{'https://placehere.s3.ap-northeast-2.amazonaws.com/user/' + ${user.profileImg}}" alt="프로필사진">
-<!--                        <img id="profileImgView" alt="프로필사진">-->
-<!--                        <span class="photo_edit" onclick="photoEdit()" style="background-color: red"></span>-->
+                    <span th:text="${user.role}" style="display: none;"></span>
+                    <input type="hidden" th:value="${user.role}" class="role">
+
+                    <!-- 점주일때 -->
+                    <th:block th:if="${user.role == 'ROLE_STORE'}">
+                    </th:block>
+
+
+                    <th:block th:if="${user.role == 'ROLE_USER'}">
+                        <a href="#" class="photo">
+                            <img id="profileImgView" th:src="@{'https://placehere.s3.ap-northeast-2.amazonaws.com/user/' + ${user.profileImg} }" alt="프로필사진">
                             <span class="photo_edit" onclick="photoEdit()" ></span>
-                        <input type="file" id="profileImg" name="profileImg" class="profileImg" style="display: none;" accept="image/*">
-                    </a>
+                            <input type="file" id="profileImg" name="profileImg" class="profileImg" style="display: none;" accept="image/*">
+                        </a>
+                    </th:block>
+
+                    <!-- profile 시작 -->
                     <div class="profile" >
                         <th:if #{user !=" null"}>
                             <p class="username">[[ ${user.username} ]]</p>
@@ -97,11 +102,11 @@
                             <p th:if="${user.gender == 'F'}" class="gender" >여성👩</p>
                             <p th:if="${user.gender == 'M'}" class="gender" >남성👨</p>
                             <p class="birth" th:text="${#dates.format(user.birth, 'yyyy-MM-dd')}"></p>
-<!--                            <p class="birth">[[ ${user.birth} ]]</p>-->
                         </th:if>
-
                     </div>
+                    <!-- profile 끝 -->
                 </div>
+                <!-- profile_inner 끝 -->
             </div>
 
             <div id="headerLeft" class="header_left">
@@ -161,10 +166,7 @@
                                     <span class="item_text">회원탈퇴</span>
                                     <button type="button"
                                             class="btn_accent"
-                                            onclick="excuteNclicksAs2StepVerification()">
-<!--                                        <span class="text">-->
-<!--                                                탈퇴-->
-<!--                                        </span>-->
+                                            onclick="goodBye()">
                                         <span class="text">탈퇴</span>
                                     </button>
                                 </div>
@@ -173,7 +175,7 @@
                     </div>
                 </div>
                 <!--//-->
-=
+
                 <script>
 
                   function goChangePassword() {

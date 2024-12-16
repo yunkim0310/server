@@ -20,7 +20,7 @@ public interface UserDao {
 
     public int join(User user) throws Exception;
 
-    public void updateUserStatus (String username) throws Exception;
+    public int updateUserStatus (User user) throws Exception;
 
     public int updateLoginDt (String username) throws Exception;
 

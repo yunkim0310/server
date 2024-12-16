@@ -382,8 +382,8 @@ function photoEdit() {
 function resetPwd() {
 
   event.preventDefault();
-  
-  var username = $('#username').val();
+
+  const username = $('#username').val();
   const password = $('#password').val();
 
   console.log('username :: ' + username);
@@ -404,7 +404,7 @@ function resetPwd() {
       console.log('data :: ',data);
 
       if (data === "SUCCESS") {
-        alert("비밀번호가 변경되었습니다!");
+        alert("비밀번호가 변경되었습니다! 재로그인 해주세요.");
         location.href='/';
       } else {
         alert("실패!");
@@ -418,6 +418,54 @@ function resetPwd() {
   });
 
   
+}
+
+// 회원탈퇴 함수
+function goodBye() {
+
+  // username 가져오기
+  const username = $(".username").text();
+  const role = $(".role").val();
+
+  console.log("username :: ", username);
+  console.log("role :: ", role);
+
+  const result = confirm("탈퇴하시겠습니까?");
+  console.log('result :: ', result);
+
+  const user = {
+    username : username,
+    role : role
+  }
+
   
+  if( result ) {
+    console.log('확인누른거임');
+
+    $.ajax({
+      url: '/api-user/goodBye',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(user),
+      success: function(data) {
+
+        console.log('data :: ',data);
+
+        if (data === "SUCCESS") {
+          alert("환불처리 될 예약 건수 :: "  );
+          location.href='/';
+        } else {
+          alert("실패!");
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+        alert("안되지롱");
+      }
+
+    });
+
+
+  }
   
 }
