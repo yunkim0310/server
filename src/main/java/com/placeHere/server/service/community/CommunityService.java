@@ -46,10 +46,12 @@ public interface CommunityService {
     public Comment getComment (int commentNo) throws  Exception;
 
     // 탈퇴 회원이 작성한 모든 리뷰를 삭제하다.
-    public void deleteAllReviewsByUser(String username) throws Exception;
+//    public void deleteAllReviewsByUser(String username) throws Exception;
+    public int deleteAllReviewsByUser(String username) throws Exception;
 
     // 탈퇴 회원이 작성한 모든 댓글을 삭제하다.
-    public void deleteAllCommentsByUser(String username) throws Exception;
+//    public void deleteAllCommentsByUser(String username) throws Exception;
+    public int deleteAllCommentsByUser(String username) throws Exception;
 
     // 탈퇴 회원의 리뷰 리스트 조회
     public List<Review> getDeletedUserReview(String username) throws Exception;

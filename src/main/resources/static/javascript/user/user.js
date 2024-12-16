@@ -437,9 +437,8 @@ function goodBye() {
     role : role
   }
 
-  
+  // true면 실행
   if( result ) {
-    console.log('확인누른거임');
 
     $.ajax({
       url: '/api-user/goodBye',
@@ -464,7 +463,6 @@ function goodBye() {
       }
 
     });
-
 
   }
   

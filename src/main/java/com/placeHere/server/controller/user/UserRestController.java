@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.user;
 
 import com.placeHere.server.domain.User;
+import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,11 @@ public class UserRestController {
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService userService;
+
+    @Autowired
+    @Qualifier("communityServiceImpl")
+    private CommunityService communityService;
+
 
     // getUser
     @GetMapping("/getUser")
@@ -135,14 +141,21 @@ public class UserRestController {
         log.info("goodBye - post 요청");
         log.info(">> goodBye input user 확인 :: " + user);
         user.setActiveStatus("DELETED");
+        int commentResult = 0;
+        int reviewResult = 0;
+
 
         // 일반회원
         if (user.getRole() == "ROLE_USER" || user.getRole().equals("ROLE_USER")) {
             log.info("일반회원 탈퇴");
 
-            // 리뷰삭제(상태값 변경)
-
             // 댓글삭제(상태값 변경)
+            commentResult = communityService.deleteAllCommentsByUser(user.getUsername() );
+            // 리뷰삭제(상태값 변경)
+            reviewResult = communityService.deleteAllReviewsByUser(user.getUsername() );
+
+            log.info("commentResult :: " + commentResult);
+            log.info("reviewResult :: " + reviewResult);
 
             // 점주 회원
         } else {

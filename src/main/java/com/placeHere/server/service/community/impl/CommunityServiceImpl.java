@@ -170,14 +170,14 @@ public class CommunityServiceImpl implements CommunityService {
 
     // 탈퇴 회원이 작성한 모든 리뷰를 삭제하다.
     @Override
-    public void deleteAllReviewsByUser(String username) throws Exception {
-        communityDao.deleteAllReviewsByUser(username);
+    public int deleteAllReviewsByUser(String username) throws Exception {
+        return communityDao.deleteAllReviewsByUser(username);
     }
 
     // 탈퇴 회원이 작성한 모든 댓글을 삭제하다.
     @Override
-    public void deleteAllCommentsByUser(String username) throws Exception {
-        communityDao.deleteAllCommentsByUser(username);
+    public int deleteAllCommentsByUser(String username) throws Exception {
+        return communityDao.deleteAllCommentsByUser(username);
     }
 
     // 탈퇴 회원의 리뷰 리스트 조회
