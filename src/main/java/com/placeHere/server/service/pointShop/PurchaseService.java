@@ -42,6 +42,8 @@ public interface PurchaseService {
 
     public int isProductInWishList(Purchase purchase) throws Exception;
 
+    public int isProductInCartList(Purchase purchase) throws Exception;
+
     public int getWishListCount(String username);
 
     public int getCartListCount(String username);
@@ -55,4 +57,6 @@ public interface PurchaseService {
     public void purchaseProducts(String username) throws Exception;
 
     public void clearWishCartByUsername(String username) throws Exception;
+
+    public void clearWishByUsername(String username) throws Exception;
 }

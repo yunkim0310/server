@@ -134,7 +134,8 @@ public class ProductController {
 
         model.addAttribute("url", bucketUrl);
 
-        return "/pointShop/product/addProductResult";
+//        return "/pointShop/product/addProductResult";
+        return "redirect:/product/listProduct";
     }
 
 //    @RequestMapping( value="getProduct", method=RequestMethod.GET)
@@ -267,7 +268,8 @@ public class ProductController {
 
         System.out.println("Product: " + product);
 
-        return "/pointShop/product/updateProductResult";
+//        return "/pointShop/product/updateProductResult";
+        return "redirect:/product/listProduct";
     }
 
     // @RequestParam("menu") String menu,

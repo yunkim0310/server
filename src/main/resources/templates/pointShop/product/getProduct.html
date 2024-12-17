@@ -475,6 +475,50 @@
             transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 올라가는 효과 */
         }
 
+
+        .expandable-section {
+            margin-bottom: 20px;
+        }
+
+        .expand-btn {
+            background-color: #fff;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center; /* 텍스트와 화살표를 세로로 정렬 */
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-left: 340px;
+        }
+
+        /*.expand-btn:hover {*/
+        /*    background-color: #0056b3; !* 마우스 오버 시 색상 변경 *!*/
+        /*}*/
+
+        /*.arrow {*/
+        /*    margin-left: 10px; !* 화살표와 텍스트 간격 *!*/
+        /*    transition: transform 0.3s ease; !* 애니메이션 효과 *!*/
+        /*    color:black;*/
+        /*}*/
+
+        /*!* 펼친 상태에서 화살표 회전 *!*/
+        /*.expandable-section.open .arrow {*/
+        /*    transform: rotate(180deg);*/
+        /*}*/
+
+        .content {
+            margin-top: 10px;
+            padding: 15px;
+            /*border: 1px solid #ddd;*/
+            /*border-radius: 5px;*/
+            /*background-color: #f9f9f9;*/
+        }
+
     </style>
 
     <script type="text/javascript">
@@ -504,6 +548,7 @@
             // 장바구니 아이콘 클릭
             $("a#cart").on("click", function () {
                 var prodNo = $(this).data("prod-no");
+                var username = $(this).data("user-name");
                 var prodStatus = $(this).data("prod-status");
                 console.log(prodStatus);
 
@@ -516,9 +561,23 @@
                     type: "POST",
                     url: "/api-purchase/addCart",
                     contentType: "application/json",
-                    data: JSON.stringify({ prodNo: prodNo, cntProd: 1 }),
+                    data: JSON.stringify({ username : username, prodNo: prodNo, cntProd: 1 }),
                     success: function(response) {
-                        alert("장바구니에 제품이 추가되었습니다.");
+
+                        alert(response);
+                        // if(response === "이미 추가된 상품입니다."){
+                        //
+                        //     alert(response);
+                        //
+                        // }else if(response === "장바구니가 꽉찼습니다."){
+                        //
+                        //     alert(response);
+                        //
+                        // }else{
+                        //
+                        //     alert(response);
+                        //
+                        // }
                     },
                     error: function(xhr, status, error) {
                         alert("장바구니 추가 실패: " + error);
@@ -568,6 +627,22 @@
 
             });
         });
+        function toggleContent() {
+            var content = event.target.nextElementSibling; // 클릭된 버튼 바로 다음의 div.content를 찾음
+            var button = event.target;
+            var arrow = button.querySelector('.arrow');
+
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block"; // 내용 펼침
+                button.innerText = "설명 숨기기 ^"; // 버튼 텍스트 변경
+            } else {
+                content.style.display = "none"; // 내용 접기
+                button.innerText = "자세히 보기 v"; // 버튼 텍스트 변경
+            }
+
+            // 화살표 회전 효과
+            button.closest('.expandable-section').classList.toggle('open');
+        }
     </script>
 </head>
 <body>
@@ -593,9 +668,9 @@
             <section class="restaurant-detail-header mb-40" style="position: relative; z-index: 0;">
                 <div class="video-swiper-wrapper">
                     <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
-                        <div class="img-container" style="position: relative;">
+                        <div class="img-container" style="position: relative; object-fit: contain;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                                <img class="guide-img" style="width: 100%; max-height:1000px; display: block;"
+                                <img class="guide-img" style="width: 50%; max-height:500px; display: block; "
                                      th:src="${url + product.prodImg1}">
                                 <img th:if="${product.prodStatus == false}" style="display: flex; justify-content: center; align-items: center; padding-top: 100px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 15%;"
                                      src="/file/pointShop/icon_X_circle.png">
@@ -690,16 +765,19 @@
 <!--                                    </dd>-->
 <!--                                </dl>-->
 <!--                            </div><br/><br/>-->
-                            <div class="desc-block">
+                            <div class="expandable-section">
+                                <button class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
+                                <div class="content" style="display: none;">
                                 <dl>
-                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>
+<!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
                                     <div style="text-align: center;">
                                     <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                    <img th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url + product.prodImg2}" alt="상품 상세 이미지">
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url + product.prodImg2}" alt="상품 상세 이미지"><br/><br/>
                                     <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                    <img th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url + product.prodImg3}" alt="상품 상세 이미지">
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url + product.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
+                                </div>
                             </div>
                             <div class="desc-block">
                                 <div class="footer">
@@ -715,41 +793,23 @@
 
 
             <div class="button-container">
-                <div th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}" class="user">
-                    <!--                    <button class="btn-primary buy" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}">구매</button>&nbsp;&nbsp;&nbsp;&nbsp;-->
-                    <!--                    <button class="btn-primary confirm">확인</button>-->
-                    <div class="css-137ca2h e1utgeno0">
-                        <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}"
-                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                            <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
-                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
-                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                            <span class="css-ymwvow e4nu7ef1 submit-button-span">돌아가기</span>
-                        </button>
-                    </div>
+<!--                <div th:if="${session.user.role == 'ROLE_USER' and product.prodStatus == true}" class="user">-->
+<!--                    &lt;!&ndash;                    <button class="btn-primary buy" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}">구매</button>&nbsp;&nbsp;&nbsp;&nbsp;&ndash;&gt;-->
+<!--                    &lt;!&ndash;                    <button class="btn-primary confirm">확인</button>&ndash;&gt;-->
+<!--                    <div class="css-137ca2h e1utgeno0">-->
+<!--                        <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}" th:data-prod-no="${product.prodNo}"-->
+<!--                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">-->
+<!--                            <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>-->
+<!--                        </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-->
+<!--                    </div>-->
 
-                </div>
-                <div th:if="${session.user.role == 'ROLE_POINT'}" class="point">
-                <div class="css-137ca2h e1utgeno0">
-                    <button class="css-18m884r e4nu7ef3" id="edit" name="editBtn" type="button" width="240" th:data-prod-no="${product.prodNo}"
-                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                        <span class="css-ymwvow e4nu7ef1 submit-button-span">수&nbsp;정</span>
-                    </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                    <button class="css-18m884r e4nu7ef3" name="confirmBtn" type="button" width="240"
-                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                        <span class="css-ymwvow e4nu7ef1 submit-button-span">돌아가기</span>
-                    </button>
-                </div>
-            </div>
-                <div th:if="${product.prodStatus == false}" class="point">
+<!--                </div>-->
                     <div class="css-137ca2h e1utgeno0">
                         <button class="css-18m884r e4nu7ef3" name="confirmBtn" type="button" width="240"
                                 height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
                             <span class="css-ymwvow e4nu7ef1 submit-button-span">돌아가기</span>
                         </button>
                     </div>
-                </div>
 
             </div><br/><br/>
 

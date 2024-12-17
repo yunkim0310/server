@@ -122,6 +122,11 @@ public class PurchaseServiceImpl implements PurchaseService {
         return count;
     }
 
+    public int isProductInCartList(Purchase purchase) throws Exception {
+        int count = purchaseDao.isProductInCartList(purchase);
+        return count;
+    }
+
     @Override
     public int getWishListCount(String username) {
 
@@ -162,5 +167,10 @@ public class PurchaseServiceImpl implements PurchaseService {
     public void clearWishCartByUsername(String username) throws Exception {
 
         purchaseDao.clearWishCartByUsername(username);
+    }
+
+    public void clearWishByUsername(String username) throws Exception{
+
+        purchaseDao.clearWishByUsername(username);
     }
 }

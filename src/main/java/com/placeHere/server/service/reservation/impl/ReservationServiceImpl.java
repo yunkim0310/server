@@ -258,6 +258,8 @@ public class ReservationServiceImpl implements ReservationService{
                     // 예약 상태를 "예약 취소"로 업데이트
                     reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
 
+                    reservationDao.updateRsrvReason(rsrvNo, "회원 탈퇴로 인한 환불");
+
                     // 예약 정보 가져오기
                     Reservation reservation = reservationDao.getRsrv(rsrvNo);
 
@@ -303,6 +305,8 @@ public class ReservationServiceImpl implements ReservationService{
                 for (int rsrvNo : removeStoreRsrvNos) {
                     // 예약 상태를 "예약 취소"로 업데이트
                     reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
+
+                    reservationDao.updateRsrvReason(rsrvNo, "가게 탈퇴로 인한 환불");
 
                     // 예약 정보 가져오기
                     Reservation reservation = reservationDao.getRsrv(rsrvNo);

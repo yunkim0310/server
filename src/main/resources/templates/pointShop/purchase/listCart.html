@@ -44,24 +44,6 @@
         function fncAddPurchase() {
             var tranPoint = Number($("input[name='tranPoint']").val());
             var currPoint = Number($("input[name='currPoint']").val());
-            // var username = $("input[name='username']").val();
-            // var prodStatus = $("input[name='prodStatus']").va l();
-            // var cartList = $("input[name='cartList']").val();
-            // var cartList = $("input[name='cartList']").val();
-            //
-            // var hasInactiveProduct = false;
-            //
-            // for (var i = 0; i < cartList.length; i++) {
-            //     if (!cartList[i].prodStatus) {
-            //         hasInactiveProduct = true;
-            //         break;
-            //     }
-            // }
-            //
-            // if (hasInactiveProduct) {
-            //     alert("판매 중지된 상품이 포함되어 있습니다.");
-            //     return; // 상품이 판매 중지 상태이면 submit을 하지 않음
-            // }
 
             if (tranPoint > currPoint) {
                 alert("보유하신 포인트가 부족합니다.");
@@ -569,128 +551,140 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="css-luwwab eug5r8l1">
-        <div class="css-833hqy ecbxmj4">
-            <div class="side" style="margin-top:50px;position:fixed; margin-left: 138px;">
-                <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
-    padding: 5px 0px 35px 1px;">🛒&nbsp;장바구니</div>
-                <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
+    <div class="container">
+        <div class="css-luwwab eug5r8l1">
+            <div class="css-833hqy ecbxmj4">
+                <div class="side" style="margin-top:50px;position:fixed; margin-left: 138px;">
+                    <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
+        padding: 5px 0px 35px 1px;">🛒&nbsp;장바구니</div>
+                    <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
+                </div>
+            </div>
+            <input type="file" name="file" style="display:none;">
+            <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:930px; margin-right:20px;">
+                <div class="form-inline" th:if="${tranPoint != 0}">
+                    <div class="form-group">
+                        <div>
+                            <div class="product-container" style="text-align: center; font-size: 20px; font-weight: bold;">
+                                <h3>해당 상품은 <span style="color: red;">&nbsp;환불</span>이 불가능한 </h3>
+                                <h3>상품입니다.</h3>
+                                <h3>구매하시겠습니까?</h3>
+                            </div>
+                        </div><br/><br/>
+                        <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
+                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${tranPoint}+P">0</span></h3>
+                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${currPoint}+P">0</span></h3>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div th:if="${tranPoint != 0}">
+                            <form>
+                                <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+                                <input type="hidden" name="cartList" th:value="${cartList}">
+                                <input type="hidden" name="purchase" th:value="${purchase}">
+                                <input type="hidden" name="currPoint" th:value="${currPoint}">
+                                <input type="file" name="file" id="file" style="display:none;">
+                                <input type="hidden" th:value="${username}" name="username">
+                                <div class="button-container">
+                                    <div class="css-137ca2h e1utgeno0">
+                                        <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240"
+                                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                                            <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 470px; margin-left: auto;">
+                <div class="col-md-9 text-right">
+
+
+                    <div th:if="${tranPoint != 0}">
+                        <div class="button-container">
+                            <button class="btn-clear-cart" style="margin-left:730px; margin-bottom: 20px;" th:data-user-name="${username}">전체 삭제</button>
+                        </div>
+                    </div>
+                    <table>
+                        <div th:if="${tranPoint != 0}">
+                            <div class="product-list">
+                                <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
+                                    <div class="product-img">
+                                        <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                                    </div>
+                                    <div class="product-info">
+                                        <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
+                                        <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
+                                        <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                        <p th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}"
+                                           th:style="${purchase.purchaseProd.prodStatus == true ? 'color: green; text-align: left;' : 'color: red; text-align: left;'}">
+                                            <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
+                                        </p>
+                                    </div>
+                                    <div class="button-container">
+                                        <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
+                                        <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
+                                        <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
+                                        <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
+                                        <!-- X 버튼을 위한 스타일 추가 -->
+                                        <button class="btn-remove-cart" style="margin-right:30px;" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">x</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </table>
+
+
+                    <div class="desc-block" th:if="${tranPoint != 0}">
+                        <div class="footer" >
+                            <p>상품 구매 시 유의사항</p>
+                            <p>▪ 해당 상품들은 교환권으로, 구매 이후 환불이 불가능합니다.</p>
+                            <p>▪ PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+                        </div>
+                    </div><br/><br/>
+                </div>
+            </div>
+        </div>
+    </div>
+
+        <input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
+        <!--    <div th:if="${tranPoint != 0}">-->
+        <!--        <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">-->
+        <!--            <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>-->
+        <!--            <h3>구매하시겠습니까?</h3>-->
+        <!--        </div>-->
+        <!--    </div>-->
+        <div th:if="${tranPoint == 0}">
+            <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">
+                <h3>장바구니가 비어있습니다.</h3>
             </div>
         </div>
 
-        <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:930px; margin-right:20px;">
-            <form class="form-inline" th:if="${tranPoint != 0}">
-                <div class="form-group">
-                    <div>
-                        <div class="product-container" style="text-align: center; font-size: 20px; font-weight: bold;">
-                            <h3>해당 상품은 <span style="color: red;">&nbsp;환불</span>이 불가능한 </h3>
-                            <h3>상품입니다.</h3>
-                            <h3>구매하시겠습니까?</h3>
-                        </div>
-                    </div><br/><br/>
-                    <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
-                        <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${tranPoint}+P">0</span></h3>
-                        <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${currPoint}+P">0</span></h3>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div th:if="${tranPoint != 0}">
-                        <div class="button-container">
-                            <input type="hidden" name="tranPoint" th:value="${tranPoint}">
-                            <input type="hidden" name="cartList" th:value="${cartList}">
-                            <input type="hidden" name="purchase" th:value="${purchase}">
-                            <input type="hidden" name="currPoint" th:value="${currPoint}">
-                            <input type="file" name="file" id="file" style="display:none;">
-                            <input type="hidden" th:value="${username}" name="username">
-                            <div class="css-137ca2h e1utgeno0">
-                                <button class="css-18m884r e4nu7ef3" id="buy" name="buyBtn" type="button" width="240"
-                                        height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                                    <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-
-        <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 470px; margin-left: auto;">
-            <div class="col-md-9 text-right">
-
-
-
+        <form>
+            <div th:if="${tranPoint == 0}">
                 <div class="button-container">
-                    <button class="btn-clear-cart" style="margin-left:730px; margin-bottom: 20px;" th:data-user-name="${username}">전체 삭제</button>
-                </div>
-                <table>
-                    <div th:if="${tranPoint != 0}">
-                        <div class="product-list">
-                            <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
-                                <div class="product-img">
-                                    <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
-                                </div>
-                                <div class="product-info">
-                                    <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
-                                    <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
-                                    <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
-                                    <p th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}"
-                                       th:style="${purchase.purchaseProd.prodStatus == true ? 'color: green; text-align: left;' : 'color: red; text-align: left;'}">
-                                        <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
-                                    </p>
-                                </div>
-                                <div class="button-container">
-                                    <input type="hidden" name="wishCartNo" th:value="${purchase.wishCartNo}">
-                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].wishCartNo" th:value="${purchase.wishCartNo}">
-                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
-                                    <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
-                                    <!-- X 버튼을 위한 스타일 추가 -->
-                                    <button class="btn-remove-cart" style="margin-right:30px;" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">x</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </table>
-
-
-                <div class="desc-block" th:if="${tranPoint != 0}">
-                    <div class="footer" >
-                        <p>상품 구매 시 유의사항</p>
-                        <p>▪ 해당 상품들은 교환권으로, 구매 이후 환불이 불가능합니다.</p>
-                        <p>▪ PlaceHere 회원 탈퇴시 구매한 상품은 모두 삭제됩니다.</p>
+                    <div class="css-137ca2h e1utgeno0">
+                        <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
+                                height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
+                            <span class="css-ymwvow e4nu7ef1 submit-button-span">둘러보기</span>
+                        </button>
                     </div>
                 </div><br/><br/>
             </div>
-        </div>
-    </div>
-</div>
-
-<input type="hidden" id="tranPoint" name="purchase.tranPoint" value="0">
-<!--    <div th:if="${tranPoint != 0}">-->
-<!--        <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">-->
-<!--            <h3>해당 상품은 환불이 불가능한 상품입니다.</h3>-->
-<!--            <h3>구매하시겠습니까?</h3>-->
-<!--        </div>-->
-<!--    </div>-->
-    <div th:if="${tranPoint == 0}">
-        <div class="product-container" style="text-align: center; font-size: 30px; font-weight: bold;">
-            <h3>장바구니가 비어있습니다.</h3>
-        </div>
-    </div>
-
+        </form>
+    <input type="file" name="file" style="display:none;">
     <form>
-        <div th:if="${tranPoint == 0}">
-            <div class="button-container">
-                <div class="css-137ca2h e1utgeno0">
-                    <button class="css-18m884r e4nu7ef3" id="confirm" name="confirmBtn" type="button" width="240"
-                            height="56" radius="3" style="margin-bottom: auto; margin-top: 12px; width: 100px; text-align: center;background-color: #4880FF;">
-                        <span class="css-ymwvow e4nu7ef1 submit-button-span">둘러보기</span>
-                    </button>
-                </div>
-            </div><br/><br/>
-        </div>
+        <input type="hidden" name="tranPoint" th:value="${tranPoint}">
+        <input type="hidden" name="cartList" th:value="${cartList}">
+        <input type="hidden" name="purchase" th:value="${purchase}">
+        <input type="hidden" name="currPoint" th:value="${currPoint}">
+        <input type="file" name="file" style="display:none;">
+        <input type="hidden" th:value="${username}" name="username">
     </form>
-</div>
 </body>
 </html>

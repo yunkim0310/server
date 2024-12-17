@@ -553,14 +553,23 @@
             <div class="col-md-9 text-right">
                 <table>
                     <div th:if="${prodTotalCnt != 0}">
-                    <div class="search-header __autohide" style="background: none; top: 48px;">
+                        <div class="search-header __autohide" style="background: none; top: 48px;">
 
-                        <div class="__search-result-header mb-20">
-                            <div class="__total-count" style="min-width: 121px">
-                                <strong th:text="|총 ${prodTotalCnt}개의 상품|">104</strong>
+                            <div class="__search-result-header mb-20">
+                                <div class="__total-count" style="min-width: 121px">
+                                    <strong th:text="|총 ${prodTotalCnt}개의 상품|">104</strong>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <div th:if="${prodTotalCnt == 0}" style=" margin-top:150px; text-align: center">
+                        <h1>해당하는 상품이 없습니다.</h1>
+                    </div>
+                    <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
+                        <div class="button-container">
+                            <button type="button" class="btn-primary list">둘러보기</button>
+                        </div>
                     </div>
                     <div class="product-list" >
                         <div th:each="product : ${productList}" class="product-card" th:data-prod-no="${product.prodNo}">
@@ -578,14 +587,6 @@
                             <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
                                 <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
                             </div><br/>
-                        </div>
-                        <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
-                            <h1>해당하는 상품이 없습니다.</h1>
-                        </div>
-                        <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
-                            <div class="button-container">
-                                <button type="button" class="btn-primary list">둘러보기</button>
-                            </div><br/><br/>
                         </div>
                     </div>
                 </table>

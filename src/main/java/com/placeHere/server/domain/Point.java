@@ -36,4 +36,6 @@ public class Point {
     //int 타입의 보유 포인트
     private int currPoint;
 
+    // 총 개수
+    private int pointTotalCnt;
 }
