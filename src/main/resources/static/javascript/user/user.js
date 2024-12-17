@@ -473,7 +473,7 @@ function goodBye() {
 
             secondYn = confirm(`
                               환불처리 될 예약 건수
-                              - 전화예약 : ${rsrvCnt} ,
+                              - 전화예약 : ${phoneRsrvCnt} ,
                               - 일반예약 :  ${rsrvCnt} 입니다.
                               진행하시겠습니까?"
                         `);
@@ -481,6 +481,8 @@ function goodBye() {
           }
 
           if ( secondYn ) {
+
+            console.log("secondYn :: " + secondYn);
 
             // cnt 받은 다음 시작
             $.ajax({

@@ -208,6 +208,10 @@ public class UserRestController {
 
         log.info("goodBye - post 요청");
         log.info(">> goodBye input user 확인 :: " + user);
+
+        String username = user.getUsername();
+        String role = user.getRole();
+
         user.setActiveStatus("DELETED");
         int commentResult = 0;
         int reviewResult = 0;
@@ -225,6 +229,10 @@ public class UserRestController {
 
             log.info("commentResult :: " + commentResult);
             log.info("reviewResult :: " + reviewResult);
+
+            // 예약 환불 요청
+            reservationService.getRemoveUserRefundPayment(username);
+
 
             // 점주 회원
         } else {
