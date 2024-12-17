@@ -77,7 +77,7 @@
                                                                 <div class="tb">
                                                                     <a th:href="'/getStore?storeId='+${store.storeId}">
                                                                         <img class="img" style="height: 180px;width: 150px;"
-                                                                             src="/images/templates/1.jpg">
+                                                                             th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}">
                                                                     </a>
                                                                 </div>
                                                                 <div id="toast"></div>

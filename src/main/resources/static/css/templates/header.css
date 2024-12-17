@@ -46,10 +46,11 @@
 }
 /* 로그인 메뉴 관련 */
 .loginMenu{
-  display: flex;
+  display: inline-flex;
   list-style: none;
   padding-left: 0;
   font-size: 16px;
+  align-items: center;
 }
 /* 가운데 회색 줄 */
 .centerLine{
