@@ -2,6 +2,7 @@ package com.placeHere.server.controller.user;
 
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.reservation.ReservationService;
 import com.placeHere.server.service.store.StoreService;
 import com.placeHere.server.service.user.UserService;
 import jakarta.servlet.http.HttpSession;
@@ -14,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -32,6 +35,9 @@ public class UserRestController {
     @Autowired
     @Qualifier("storeServiceImpl")
     private StoreService storeService;
+
+    @Autowired
+    private ReservationService reservationService;
 
 
     // getUser
@@ -138,6 +144,63 @@ public class UserRestController {
             log.info("resetPwd ! - FAIL");
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @PostMapping("/goodByeRsrvCnt")
+    public ResponseEntity<?> goodByeRsrvCnt(@RequestBody User user, HttpSession session) throws Exception {
+
+        log.info("goodByeRsrvCnt - post 요청");
+
+        String username = user.getUsername();
+        String role = user.getRole();
+
+        int rsrvCnt = 0;
+        int phoneRsrvCnt = 0;
+
+        log.info("username :: " + username);
+        log.info("role :: " + role);
+
+        Map<String, Object> result = new HashMap<>();
+
+        // 일반회원
+        if ( role.equals("ROLE_USER") ) {
+
+            // 일반회원 예약 cnt
+            Integer rsrvCount = reservationService.getCountRsrvUser(username);
+            rsrvCnt = rsrvCount != null ? rsrvCount : 0;
+
+
+            result.put("rsrvCnt", rsrvCnt);
+            result.put("status", "SUCCESS");
+            result.put("role", role);
+
+            return ResponseEntity.ok(result);
+
+        // 점주회원
+        } else {
+
+            // username을 통해 storeId get
+            Integer storeId = storeService.getStoreId(username);
+
+            // storeId가 유효할 경우 예약 cnt와 전화 예약 cnt 조회
+            if (storeId != null && storeId > 0) {
+
+                Integer rsrvCount = reservationService.getCountRsrvStore(storeId);
+                Integer phoneRsrvCount = reservationService.getCountRsrvNumber(storeId);
+
+                rsrvCnt = rsrvCount != null ? rsrvCount : 0;
+                phoneRsrvCnt = phoneRsrvCount != null ? phoneRsrvCount : 0;
+            }
+
+            result.put("rsrvCnt", rsrvCnt);
+            result.put("phoneRsrvCnt", phoneRsrvCnt);
+            result.put("status", "SUCCESS");
+            result.put("role", role);
+
+            return ResponseEntity.ok(result);
+
+        }
+
     }
 
     @PostMapping("/goodBye")

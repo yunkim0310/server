@@ -14,12 +14,12 @@
 
     <!-- 윤지추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/user/user.js"></script>
     <!-- fileUploader -->
     <script src="/javascript/common/fileUploader.js"></script>
     <!--    <link th:insert="~{common/import :: importFragment}">-->
-    <script src="/javascript/user/user.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/inc/user/css/account.min.css?r=240906"> -->
-<!--    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />-->
+    <!--    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />-->
 
 
     <script type="text/javascript">
@@ -189,176 +189,177 @@
 
 
 
-            <script>
+                <script>
 
 
-              $("#leftLangSelectList .lang_item").click(function() {
-                var $this = $(this);
-                if ($this.attr("aria-selected") === "true") {
-                  var leftLangSelectListBtn = $("#leftLangSelectListBtn");
-                  leftLangSelectListBtn.attr("aria-expanded", "false");
-                  leftLangSelectListBtn.removeClass("fold");
-                  $("#leftLangSelectList").hide();
+                  $("#leftLangSelectList .lang_item").click(function() {
+                    var $this = $(this);
+                    if ($this.attr("aria-selected") === "true") {
+                      var leftLangSelectListBtn = $("#leftLangSelectListBtn");
+                      leftLangSelectListBtn.attr("aria-expanded", "false");
+                      leftLangSelectListBtn.removeClass("fold");
+                      $("#leftLangSelectList").hide();
 
-                  nclk(this,'fot.korean','','',event);
+                      nclk(this,'fot.korean','','',event);
 
-                  return;
-                }
-                changeLanguage();
-              });
+                      return;
+                    }
+                    changeLanguage();
+                  });
 
-              $("#langSelectList .lang_item").click(function() {
-                var $this = $(this);
-                if ($this.attr("aria-selected") === "true") {
-                  var langSelectListBtn = $("#langSelectListBtn");
-                  langSelectListBtn.attr("aria-expanded", "false");
-                  langSelectListBtn.removeClass("fold");
-                  $("#langSelectList").hide();
+                  $("#langSelectList .lang_item").click(function() {
+                    var $this = $(this);
+                    if ($this.attr("aria-selected") === "true") {
+                      var langSelectListBtn = $("#langSelectListBtn");
+                      langSelectListBtn.attr("aria-expanded", "false");
+                      langSelectListBtn.removeClass("fold");
+                      $("#langSelectList").hide();
 
-                  nclk(this,'fot.korean','','',event);
+                      nclk(this,'fot.korean','','',event);
 
-                  return;
-                }
-                changeLanguage();
-              });
-            </script>        </div>
-        <!-- //container -->
+                      return;
+                    }
+                    changeLanguage();
+                  });
+                </script>        </div>
+            <!-- //container -->
+        </div>
     </div>
-</div>
-<!--팝업딥드-->
-<div id="dimmed2" class="dimmed" aria-hidden="true" style="display:none;"></div>
-<!--팝업내용-->
-<div id="twoStepVerificationPopUpLayer" class="layer" style="display:none;">
-    <div class="popup_layer">
-        <div class="popup_layer_inner">
-            <div class="popup_content">
-                <!--팝업콘텐츠영역-->
-                <div class="contact_2step_popup" style="width:329px;">
-                    <h4 class="contact_edit_title">
-                        새로운 <strong class="bold">2단계 인증</strong>으로 바꿔 보세요.<br>
-                        "번거로운 숫자 대신, 한번의 클릭"
-                    </h4>
-                    <div class="contact_edit_desc">
-                        보안성은 그대로, 편리함을 더한 새로운 '2단계 인증'으로 바꿔 보세요.
-                        스마트 기기 알림 화면에서 '예' 버튼만 클릭하면 안전하게 로그인할 수 있습니다.
-                        새로운 기능 제공으로 현재 OTP 관리 기능은 지원하지 않습니다.
+    <!--팝업딥드-->
+    <div id="dimmed2" class="dimmed" aria-hidden="true" style="display:none;"></div>
+    <!--팝업내용-->
+    <div id="twoStepVerificationPopUpLayer" class="layer" style="display:none;">
+        <div class="popup_layer">
+            <div class="popup_layer_inner">
+                <div class="popup_content">
+                    <!--팝업콘텐츠영역-->
+                    <div class="contact_2step_popup" style="width:329px;">
+                        <h4 class="contact_edit_title">
+                            새로운 <strong class="bold">2단계 인증</strong>으로 바꿔 보세요.<br>
+                            "번거로운 숫자 대신, 한번의 클릭"
+                        </h4>
+                        <div class="contact_edit_desc">
+                            보안성은 그대로, 편리함을 더한 새로운 '2단계 인증'으로 바꿔 보세요.
+                            스마트 기기 알림 화면에서 '예' 버튼만 클릭하면 안전하게 로그인할 수 있습니다.
+                            새로운 기능 제공으로 현재 OTP 관리 기능은 지원하지 않습니다.
+                        </div>
+                        <div class="contact_edit_desc">
+                            <strong>OTP 로그인을 해제한 후, 2단계 인증을 설정하세요.</strong>
+                        </div>
+                        <div class="btn_duo_popup ratio">
+                            <a href="/user2/help/2StepVerif?m=viewReleaseSettings&token_help=8TmJbeT1hzM27X80&lang=ko_KR"
+                               class="btn_item on" role="button" onclick="nclk(this,'2fc.otprelease','','',event)">
+                                <span class="btn_text">OTP 해제하기</span>
+                            </a>
+                            <a href="javascript:;" class="btn_item" role="button" onclick="nclk(this,'2fc.otplater','','',event);hide2StepVerificationPopUp()">
+                                <span class="btn_text">나중에 하기</span>
+                            </a>
+                        </div>
+                        <button type="button" class="close_popup" onclick="nclk(this,'2fc.otprx','','',event);hide2StepVerificationPopUp()"><span
+                                class="blind">닫기</span></button>
                     </div>
-                    <div class="contact_edit_desc">
-                        <strong>OTP 로그인을 해제한 후, 2단계 인증을 설정하세요.</strong>
-                    </div>
-                    <div class="btn_duo_popup ratio">
-                        <a href="/user2/help/2StepVerif?m=viewReleaseSettings&token_help=8TmJbeT1hzM27X80&lang=ko_KR"
-                           class="btn_item on" role="button" onclick="nclk(this,'2fc.otprelease','','',event)">
-                            <span class="btn_text">OTP 해제하기</span>
-                        </a>
-                        <a href="javascript:;" class="btn_item" role="button" onclick="nclk(this,'2fc.otplater','','',event);hide2StepVerificationPopUp()">
-                            <span class="btn_text">나중에 하기</span>
-                        </a>
-                    </div>
-                    <button type="button" class="close_popup" onclick="nclk(this,'2fc.otprx','','',event);hide2StepVerificationPopUp()"><span
-                            class="blind">닫기</span></button>
+                    <!-- // -->
                 </div>
-                <!-- // -->
             </div>
         </div>
     </div>
-</div>
 
-<script>
-  function show2StepVerificationPopUp() {
-    displayObj('dimmed2');
-    displayObj('twoStepVerificationPopUpLayer');
-    document.getElementById("wrap").classList.add("is_fixed");
-  }
-
-  function hide2StepVerificationPopUp() {
-    hiddenObj('dimmed2');
-    hiddenObj('twoStepVerificationPopUpLayer');
-    document.getElementById("wrap").classList.remove("is_fixed");
-  }
-
-  function go2StepVerification() {
-    var twoStepVerifBaseUrl = "/user2/help/2StepVerif?";
-
-
-    twoStepVerifBaseUrl += "m=viewGuide&token_help=8TmJbeT1hzM27X80&lang=ko_KR";
-
-    document.location.href = twoStepVerifBaseUrl;
-  }
-</script>
-<script type="text/javascript">
-  getGNB();
-
-  window.onresize = function() {
-    setContainerHeight(document.getElementById('content').clientHeight);
-  }
-
-  function landscapeHandler() {
-    var headerLeft = document.querySelector("#headerLeft")
-    var headerTop = document.querySelector("#headerTop");
-    if (window.innerWidth >= 1024) {
-      headerLeft.ariaHidden = "false";
-      headerTop.ariaHidden = "false";
-    } else {
-      headerLeft.ariaHidden = "true";
-      headerTop.ariaHidden = "true";
-    }
-  }
-
-  $(document).ready(function(){
-    landscapeHandler();
-
-    $("a[id^='info']").click(function () {
-      var $this = $(this);
-      if($this.attr("aria-expanded") === "true"){
-        $this.attr("aria-expanded", "false");
-        var info = "#" + $this.attr("id");
-        var infoToolTip = $(info + "ToolTip");
-        infoToolTip.attr("aria-hidden", "true");
-        infoToolTip.css("display", "none");
-      } else {
-        $this.attr("aria-expanded", "true");
-        var infoToolTip = $("#" + $this.attr("id") + "ToolTip");
-        infoToolTip.attr("aria-hidden", "false");
-        infoToolTip.css("display", "block");
+    <script>
+      function show2StepVerificationPopUp() {
+        displayObj('dimmed2');
+        displayObj('twoStepVerificationPopUpLayer');
+        document.getElementById("wrap").classList.add("is_fixed");
       }
-    })
 
-    $("button[id^='infoExit']").click(function () {
-      var info = "#info" + $(this).attr("id").substr(8, 1);
-      $(info).attr("aria-expanded", "false");
-      var infoToolTip = $(info + "ToolTip");
-      infoToolTip.attr("aria-hidden", "true");
-      infoToolTip.css("display", "none");
-    })
+      function hide2StepVerificationPopUp() {
+        hiddenObj('dimmed2');
+        hiddenObj('twoStepVerificationPopUpLayer');
+        document.getElementById("wrap").classList.remove("is_fixed");
+      }
 
-    // https://stackoverflow.com/questions/47226824/iphonex-and-notch-detection
-    // Really basic check for the ios platform
-    // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
-    var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+      function go2StepVerification() {
+        var twoStepVerifBaseUrl = "/user2/help/2StepVerif?";
 
-    // Get the device pixel ratio
-    var ratio = window.devicePixelRatio || 1;
 
-    // Define the users device screen dimensions
-    var screen = {
-      width : window.screen.width * ratio,
-      height : window.screen.height * ratio
-    };
+        twoStepVerifBaseUrl += "m=viewGuide&token_help=8TmJbeT1hzM27X80&lang=ko_KR";
 
-    // iPhone X Detection
-    if (iOS && screen.width == 1125 && screen.height === 2436) {
-      document.getElementById("mainBody").style.padding =
-        "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
-    }
-  });
+        document.location.href = twoStepVerifBaseUrl;
+      }
+    </script>
+    <script type="text/javascript">
+      getGNB();
 
-  var timer; // 디바운싱
-  window.addEventListener('resize', function () {
-    clearTimeout(timer);
-    timer = setTimeout(landscapeHandler, 300);
-  });
+      window.onresize = function() {
+        setContainerHeight(document.getElementById('content').clientHeight);
+      }
 
-</script>
+      function landscapeHandler() {
+        var headerLeft = document.querySelector("#headerLeft")
+        var headerTop = document.querySelector("#headerTop");
+        if (window.innerWidth >= 1024) {
+          headerLeft.ariaHidden = "false";
+          headerTop.ariaHidden = "false";
+        } else {
+          headerLeft.ariaHidden = "true";
+          headerTop.ariaHidden = "true";
+        }
+      }
+
+      $(document).ready(function(){
+        landscapeHandler();
+
+        $("a[id^='info']").click(function () {
+          var $this = $(this);
+          if($this.attr("aria-expanded") === "true"){
+            $this.attr("aria-expanded", "false");
+            var info = "#" + $this.attr("id");
+            var infoToolTip = $(info + "ToolTip");
+            infoToolTip.attr("aria-hidden", "true");
+            infoToolTip.css("display", "none");
+          } else {
+            $this.attr("aria-expanded", "true");
+            var infoToolTip = $("#" + $this.attr("id") + "ToolTip");
+            infoToolTip.attr("aria-hidden", "false");
+            infoToolTip.css("display", "block");
+          }
+        })
+
+        $("button[id^='infoExit']").click(function () {
+          var info = "#info" + $(this).attr("id").substr(8, 1);
+          $(info).attr("aria-expanded", "false");
+          var infoToolTip = $(info + "ToolTip");
+          infoToolTip.attr("aria-hidden", "true");
+          infoToolTip.css("display", "none");
+        })
+
+        // https://stackoverflow.com/questions/47226824/iphonex-and-notch-detection
+        // Really basic check for the ios platform
+        // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        // Get the device pixel ratio
+        var ratio = window.devicePixelRatio || 1;
+
+        // Define the users device screen dimensions
+        var screen = {
+          width : window.screen.width * ratio,
+          height : window.screen.height * ratio
+        };
+
+        // iPhone X Detection
+        if (iOS && screen.width == 1125 && screen.height === 2436) {
+          document.getElementById("mainBody").style.padding =
+            "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
+        }
+      });
+
+      var timer; // 디바운싱
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(landscapeHandler, 300);
+      });
+
+    </script>
+</div>
 </body>
 </html>

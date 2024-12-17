@@ -429,8 +429,8 @@ function goodBye() {
   console.log("username :: ", username);
   console.log("role :: ", role);
 
-  const result = confirm("탈퇴하시겠습니까?");
-  console.log('result :: ', result);
+  const firstYn = confirm("탈퇴하시겠습니까?");
+  console.log('result :: ', firstYn);
 
   const user = {
     username : username,
@@ -438,12 +438,10 @@ function goodBye() {
   }
 
   // true면 실행
-  if( result ) {
-    
+  if( firstYn ) {
 
-    // cnt 받은 다음 시작
     $.ajax({
-      url: '/api-user/goodBye',
+      url: '/api-user/goodByeRsrvCnt',
       type: 'POST',
       contentType: 'application/json',
       data: JSON.stringify(user),
@@ -451,8 +449,65 @@ function goodBye() {
 
         console.log('data :: ',data);
 
-        if (data === "SUCCESS") {
-          // alert("환불처리 될 예약 건수 :: "  );
+        const status = data.status;
+        const rsrvCnt = data.rsrvCnt;
+        const phoneRsrvCnt = data.phoneRsrvCnt;
+        const role = data.role;
+
+        let secondYn;
+
+        if (status === "SUCCESS") {
+
+          // 일반회원
+          if(role === "ROLE_USER") {
+
+
+            secondYn = confirm(`
+                          환불처리 될 예약 건수 :: ${rsrvCnt} 입니다.
+                          진행하시겠습니까?
+                      `);
+
+
+
+          } else {
+
+            secondYn = confirm(`
+                              환불처리 될 예약 건수
+                              - 전화예약 : ${rsrvCnt} ,
+                              - 일반예약 :  ${rsrvCnt} 입니다.
+                              진행하시겠습니까?"
+                        `);
+
+          }
+
+          if ( secondYn ) {
+
+            // cnt 받은 다음 시작
+            $.ajax({
+              url: '/api-user/goodBye',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(user),
+              success: function(data) {
+
+                console.log('data :: ',data);
+
+                if (data === "SUCCESS") {
+                  // alert("환불처리 될 예약 건수 :: "  );
+                  alert("탈퇴 되었습니다.");
+                  location.href='/';
+                } else {
+                  alert("실패!");
+                }
+              },
+              error: function(xhr, status, error) {
+                console.error('Error:', error);
+                alert("안되지롱");
+              }
+            }); // end of ajax2
+
+          }
+
           alert("탈퇴 되었습니다.");
           location.href='/';
         } else {
@@ -464,6 +519,30 @@ function goodBye() {
         alert("안되지롱");
       }
     }); // end of ajax2
+
+    // cnt 받은 다음 시작
+    // $.ajax({
+    //   url: '/api-user/goodBye',
+    //   type: 'POST',
+    //   contentType: 'application/json',
+    //   data: JSON.stringify(user),
+    //   success: function(data) {
+    //
+    //     console.log('data :: ',data);
+    //
+    //     if (data === "SUCCESS") {
+    //       // alert("환불처리 될 예약 건수 :: "  );
+    //       alert("탈퇴 되었습니다.");
+    //       location.href='/';
+    //     } else {
+    //       alert("실패!");
+    //     }
+    //   },
+    //   error: function(xhr, status, error) {
+    //     console.error('Error:', error);
+    //     alert("안되지롱");
+    //   }
+    // }); // end of ajax2
 
   }
   
