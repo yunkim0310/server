@@ -285,24 +285,30 @@ $(function() {
                     '<td>&nbsp;</td>' +
                 '</tr>' +
                 '<tr>' +
-                    '<td rowspan="6">' +
+                    '<td rowspan="7">' +
                         `<input type="radio" name="specialMenuNo" value="${menuCnt + 1}">` +
                         `<input type="hidden" name="menuList[${menuCnt}].menuNo" value="${menuCnt+1}">` +
                     '</td>' +
                     '<td>' +
                         '<div class="css-1pjgd36 e744wfw6">' +
-                            '<div class="css-82a6rk e744wfw3">' +
+                            '<div class="css-82a6rk e744wfw3" style="display: inline-flex">' +
                                 `<input type="file" accept="image/*" class="menuImg${menuCnt+1}">` +
                                 `<input type="hidden" class="menuImg${menuCnt+1}" name="menuList[${menuCnt}].menuImg"` +
                             '</div>' +
-                            '<div class="css-1w0ksfz e744wfw2">' +
-                                '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
-                                    '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
-                                '</button>' +
+                            '<div style="display: flex; justify-content: flex-end;padding-left: 34%;">' +
+                                '<div class="css-1w0ksfz e744wfw2">' +
+                                    '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
+                                        '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
+                                    '</button>' +
+                                '</div>' +
                             '</div>' +
-                            `<div id="menuImg${menuCnt+1}" style="display: none;">` +
-                                `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
-                            '</div>' +
+                        '</div>' +
+                    '</td>' +
+                '</tr>' +
+                '<tr>' +
+                    '<td>' +
+                        `<div id="menuImg${menuCnt+1}" style="display: none;">` +
+                            `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
                         '</div>' +
                     '</td>' +
                 '</tr>' +
