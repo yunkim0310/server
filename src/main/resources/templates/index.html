@@ -280,17 +280,19 @@
                         <div class="container gutter-sm">
                             <div class="section-header section-header-v">
                                 <h3 class="section-title ebold">
-                                    <span th:text="|${month}월 ${week}주차|"></span>&nbsp;인기 레스토랑</h3>
+                                    <span th:text="|${month}월 ${week}주차|"></span>
+                                    &nbsp;인기 레스토랑
+                                </h3>
                                 <p style="color: rgb(98, 98, 98);">가장 주목 받는 맛집을 모아봤어요</p>
+                                <div th:if="${storeList == null || storeList.isEmpty()}" style="padding-top: 20px;">
+                                    <div>인기 가게 집계 중입니다.</div>
+                                </div>
                             </div>
                             <div class="section-body">
                                 <div id="publicPopularShop_15" class="v-scroll">
                                     <div class="v-scroll-inner">
                                         <div id="publicPopularShop_23" class="restaurant-list restaurant-list-sm items2"
                                              style="display: flex; flex-wrap: nowrap;">
-                                            <div th:if="${storeList == null || storeList.isEmpty()}">
-                                                인기 가게 집계 중입니다.
-                                            </div>
                                             <div th:if="${storeList != null && !storeList.isEmpty()}" th:each="store : ${storeList}" class="restaurant-list-item item">
                                                 <div class="img">
                                                     <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
