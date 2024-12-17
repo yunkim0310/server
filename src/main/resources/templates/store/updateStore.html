@@ -160,7 +160,7 @@
                                     <div class="css-jmalg e1uzxhvi6">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg1">
-                                            <input type="hidden" class="storeImg1" name="storeImg1" th:value="store.storeImg1">
+                                            <input type="hidden" class="storeImg1" name="storeImg1" th:value="${store.storeImg1}">
                                             <span class="font-12 color-gray mt-10">매장을 대표하는 사진을 골라주세요.</span>
                                         </div>
                                         <div id="storeImg1" th:attr="style='display: '+${(store.storeImg1 == null || store.storeImg1 == '')? 'none;': 'flex;'}">
@@ -416,17 +416,27 @@
                                                 <table id="menuInputs">
                                                     <tbody th:each="menu, iterStat : ${store.menuList}" th:if="${iterStat.index == 0}">
                                                         <tr>
-                                                            <td rowspan="6">
-                                                                <input type="radio" name="specialMenuNo" value="1" th:attr="checked=${store.specialMenuNo == 1 ? 'checked' : null}">
+                                                            <td rowspan="7">
+                                                                <input type="radio" name="specialMenuNo" value="1" th:attr="checked=${store.specialMenuNo == 1 ? 'checked' : null}" id="defaultMenu">
                                                                 <input type="hidden" name="menuList[0].menuNo" value="1">
                                                             </td>
                                                             <!-- TODO 사진 변경 버튼 생성 -->
                                                             <td>
                                                                 <div class="css-1pjgd36 e744wfw6">
                                                                     <div class="css-82a6rk e744wfw3">
-                                                                        <input type="file" accept="image/*" name="menuList[0].menuImgFile">
+                                                                        <input type="file" accept="image/*" class="menuImg1">
+                                                                        <input type="hidden" class="menuImg1" name="menuList[0].menuImg" th:value="${menu.menuImg}">
                                                                         <span class="font-12 color-gray mt-10">메뉴 사진을 골라주세요.</span>
                                                                     </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <div id="menuImg1" th:attr="style='padding-bottom: 10px;display: '+${(menu.menuImg == null || menu.menuImg == '')? 'none;': 'flex;'}">
+                                                                    <img class="menuImg1" alt="메뉴 사진" width="100" height="100"
+                                                                         th:src="${(menu.menuImg != null && menu.menuImg.indexOf('_') != -1)? '/images/store/menu/' + menu.menuImg : url + menu.menuImg}">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -512,20 +522,31 @@
                                                             <td>&nbsp;</td>
                                                         </tr>
                                                         <tr>
-                                                            <td rowspan="6">
+                                                            <td rowspan="7">
                                                                 <input type="radio" name="specialMenuNo" th:value="${iterStat.index + 1}" th:attr="checked=${store.specialMenuNo == iterStat.count ? 'checked' : null}">
                                                                 <input type="hidden" th:name="'menuList['+${iterStat.index}+'].menuNo'" th:value="${iterStat.count}">
                                                             </td>
                                                             <td>
                                                                 <div class="css-1pjgd36 e744wfw6">
-                                                                    <div class="css-82a6rk e744wfw3">
-                                                                        <input type="file" accept="image/*" th:name="'menuList['+${iterStat.index}+'].menuImgFile'">
+                                                                    <div class="css-82a6rk e744wfw3" style="display: inline-flex">
+                                                                        <input type="file" accept="image/*" th:class="'menuImg' + ${iterStat.index + 1}">
+                                                                        <input type="hidden" th:class="'menuImg' + ${iterStat.index + 1}" th:name="'menuList['+${iterStat.index}+'].menuImg'" th:value="${menu.menuImg}">
                                                                     </div>
-                                                                    <div class="css-1w0ksfz e744wfw2">
-                                                                        <button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">
-                                                                            <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
-                                                                        </button>
+                                                                    <div style="display: flex; justify-content: flex-end;padding-left: 34%;">
+                                                                        <div class="css-1w0ksfz e744wfw2">
+                                                                            <button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">
+                                                                                <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div th:id="'menuImg'+${iterStat.index + 1}" th:attr="style='padding-bottom: 10px;display: '+${(menu.menuImg == null || menu.menuImg == '')? 'none;': 'flex;'}">
+                                                                    <img th:class="'menuImg' + ${iterStat.index + 1}" alt="메뉴 사진" width="100" height="100"
+                                                                         th:src="${(menu.menuImg != null && menu.menuImg.indexOf('_') != -1)? '/images/store/menu/' + menu.menuImg : url + menu.menuImg}">
                                                                 </div>
                                                             </td>
                                                         </tr>

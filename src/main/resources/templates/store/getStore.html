@@ -137,16 +137,6 @@
                     <input type="hidden" name="mode" th:value="${mode}">
                     <input type="hidden" name="storeId" th:value="${store.storeId}">
 
-<!--                    <hr class="separator">-->
-<!--                    <section class="section pb-30" style="padding-top: 30px;">-->
-<!--                        <div class="container gutter-sm" style="margin: 0">-->
-<!--                            <div class="section-body">-->
-<!--                                <div class="btn-centered"><a-->
-<!--                                        th:href="'/reservation/addRsrv?storeId='+${store.storeId}"-->
-<!--                                        class="btn btn-rounded btn-outline-red"><span-->
-<!--                                        class="label arrow">예약가능 날짜 찾기</span></a></div>-->
-<!--                    </section>-->
-
                     <hr class="separator">
 
                     <th:block th:if="${mode == 'nearby'}">

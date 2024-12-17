@@ -260,7 +260,7 @@ $(function() {
     });
 
     $(document).on('click', "button[name='removeHashtagInput']", function() {
-        $(this).closest('.addedHashtagInput').remove();  // 해당 div 삭제
+        $(this).closest('.addedHashtagInput').remove();
         hashtagCnt--;
 
         if (hashtagCnt < 5) {
@@ -385,9 +385,10 @@ $(function() {
     });
 
 
+    // TODO 기존 선택한 대표메뉴 삭제시 #defaultMenu로 체크되게 변경
     $(document).on('click', "button[name='removeMenuInput']", function() {
 
-        $(this).closest('.addedMenuInput').remove();  // 해당 div 삭제
+        $(this).closest('.addedMenuInput').remove();
         menuCnt--;
 
         if (menuCnt < 20) {
