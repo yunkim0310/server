@@ -17,6 +17,7 @@
         <!-- 카카오 맵 주소 검색 -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+        <script src="/javascript/store/fileUploadEvent.js"></script>
         <script type="module" src="/javascript/store/addStore.js"></script>
 
     </head>
@@ -161,11 +162,11 @@
                                     <div class="css-jmalg e1uzxhvi6">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg1">
-                                            <input type="hidden" name="storeImg1">
+                                            <input type="hidden" class="storeImg1" name="storeImg1">
                                             <span class="font-12 color-gray mt-10">매장을 대표하는 사진을 골라주세요.</span>
-                                            <div id="storeImg1" style="display: none;">
-                                                <img class="storeImg1" alt="매장 대표사진" width="100" height="100">
-                                            </div>
+                                        </div>
+                                        <div id="storeImg1" style="display: none;">
+                                            <img class="storeImg1" alt="매장 대표사진" width="100" height="100">
                                         </div>
                                     </div>
                                 </div>
@@ -183,7 +184,7 @@
                                         <!-- 매장 사진 1 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg2">
-                                            <input type="hidden" name="storeImg2">
+                                            <input type="hidden" class="storeImg2" name="storeImg2">
                                         </div>
                                         <div id="storeImg2" style="display: none;">
                                             <img class="storeImg2" alt="매장 사진 1" width="100" height="100">
@@ -192,7 +193,7 @@
                                         <!-- 매장 사진 2 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg3">
-                                            <input type="hidden" name="storeImg3">
+                                            <input type="hidden" class="storeImg3" name="storeImg3">
                                         </div>
                                         <div id="storeImg3" style="display: none;">
                                             <img class="storeImg3" alt="매장 사진 2" width="100" height="100">
@@ -201,7 +202,7 @@
                                         <!-- 매장 사진 3 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg4">
-                                            <input type="hidden" name="storeImg4">
+                                            <input type="hidden" class="storeImg4" name="storeImg4">
                                         </div>
                                         <div id="storeImg4" style="display: none;">
                                             <img class="storeImg4" alt="매장 사진 3" width="100" height="100">
@@ -210,7 +211,7 @@
                                         <!-- 매장 사진 4 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                             <input type="file" accept="image/*" class="storeImg5">
-                                            <input type="hidden" name="storeImg5">
+                                            <input type="hidden" class="storeImg5" name="storeImg5">
                                         </div>
                                         <div id="storeImg5" style="display: none;">
                                             <img class="storeImg5" alt="매장 사진 3" width="100" height="100">
@@ -388,8 +389,12 @@
                                                             <td>
                                                                 <div class="css-1pjgd36 e744wfw6">
                                                                     <div class="css-82a6rk e744wfw3">
-                                                                        <input type="file" accept="image/*" name="menuList[0].menuImgFile">
+                                                                        <input type="file" accept="image/*" class="menuImg1">
+                                                                        <input type="hidden" class="menuImg1" name="menuList[0].menuImg">
                                                                         <span class="font-12 color-gray mt-10">메뉴 사진을 골라주세요.</span>
+                                                                    </div>
+                                                                    <div id="menuImg1" style="display: none;">
+                                                                        <img class="menuImg1" alt="메뉴 사진" width="100" height="100">
                                                                     </div>
                                                                 </div>
                                                             </td>

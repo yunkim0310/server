@@ -56,19 +56,7 @@ public class MainController {
         List<Integer> storeIdList = likeService.likeList("store");
         List<Store> storeList = new ArrayList<Store>();
 
-        if (!storeIdList.isEmpty()) {
-
-            storeList = storeService.getStoreList(storeIdList);
-
-        }
-
-        // TODO 이후 삭제 필요
-        else {
-            Search search = new Search();
-            search.setPageSize(5);
-            search.setListSize(5);
-            storeList = storeService.getStoreList(search);
-        }
+        storeList = storeService.getStoreList(storeIdList);
 
         System.out.println(storeIdList);
         System.out.println(storeList);

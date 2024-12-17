@@ -508,7 +508,7 @@ public class StoreController {
 
         System.out.println(store);
 
-        if (store == null) {
+        if (store == null || store.getStoreOperation() == null) {
             return "redirect:/";
         }
 

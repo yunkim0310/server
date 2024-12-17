@@ -292,12 +292,16 @@ $(function() {
                     '<td>' +
                         '<div class="css-1pjgd36 e744wfw6">' +
                             '<div class="css-82a6rk e744wfw3">' +
-                                `<input type="file" accept="image/*" name="menuList[${menuCnt}].menuImgFile">` +
+                                `<input type="file" accept="image/*" class="menuImg${menuCnt+1}">` +
+                                `<input type="hidden" class="menuImg${menuCnt+1}" name="menuList[${menuCnt}].menuImg"` +
                             '</div>' +
                             '<div class="css-1w0ksfz e744wfw2">' +
                                 '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
                                     '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
                                 '</button>' +
+                            '</div>' +
+                            `<div id="menuImg${menuCnt+1}" style="display: none;">` +
+                                `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
                             '</div>' +
                         '</div>' +
                     '</td>' +
@@ -425,45 +429,48 @@ $(function() {
 
 
     // 이미지 입력에 대한 이벤트처리
-    $("input[class^='storeImg']:file").on("change", function() {
+    // $("input[class^='storeImg']:file").on("change", function() {
+    //
+    //     const $this = $(this);
+    //     var className = $this.attr('class');
+    //
+    //     console.log(className)
+    //
+    //     const file = $this[0].files[0];
+    //
+    //     var $storeImg = $(`input[name='${className}']:hidden`);
+    //
+    //     console.log($storeImg.val() === "");
+    //
+    //     if ($storeImg.val() == null || $storeImg.val() === "") {
+    //
+    //         console.log("uploadFile");
+    //         console.log($storeImg.val());
+    //
+    //         uploadFile(file, "store/store/").then(result => {
+    //
+    //             console.log(result);
+    //             $storeImg.val(result.filePath);
+    //             $(`img.${className}`).attr("src", result.url)
+    //             $(`#${className}`).css("display", "flex");
+    //         });
+    //
+    //     } else {
+    //
+    //         console.log("updateFile");
+    //         console.log($storeImg.val());
+    //
+    //         updateFile($storeImg.val(), file, "store/store/").then(result => {
+    //
+    //             console.log(result);
+    //             $storeImg.val(result.filePath);
+    //             $(`img.${className}`).attr("src", result.url)
+    //         });
+    //     }
+    //
+    // })
 
-        const $this = $(this);
-        var className = $this.attr('class');
-
-        console.log(className)
-
-        const file = $this[0].files[0];
-
-        var $storeImg = $(`input[name='${className}']:hidden`);
-
-        console.log($storeImg.val() === "");
-
-        if ($storeImg.val() == null || $storeImg.val() === "") {
-
-            console.log("uploadFile");
-            console.log($storeImg.val());
-
-            uploadFile(file, "store/store/").then(result => {
-
-                console.log(result);
-                $storeImg.val(result.filePath);
-                $(`img.${className}`).attr("src", result.url)
-                $(`#${className}`).css("display", "flex");
-            });
-
-        } else {
-
-            console.log("updateFile");
-            console.log($storeImg.val());
-
-            updateFile($storeImg.val(), file, "store/store/").then(result => {
-
-                console.log(result);
-                $storeImg.val(result.filePath);
-                $(`img.${className}`).attr("src", result.url)
-            });
-        }
-
-    })
+    fileUploadEvent("storeImg", "store/store/");
+    fileUploadEvent("menuImg", "store/menu/");
 
 });
