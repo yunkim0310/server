@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -13,38 +14,38 @@
 
     <!-- 윤지추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/user/user.js"></script>
     <!-- fileUploader -->
     <script src="/javascript/common/fileUploader.js"></script>
     <!--    <link th:insert="~{common/import :: importFragment}">-->
-    <script src="/javascript/user/user.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="/inc/user/css/account.min.css?r=240906"> -->
     <!--    <link href="https://nid.naver.com/favicon_1024.png" rel="apple-touch-icon-precomposed" sizes="1024x1024" />-->
 
 
     <script type="text/javascript">
-        var gnbBrightness = 1;
+      var gnbBrightness = 1;
 
 
-        var gnb_option = {
-            gnb_service : "nid",
-            gnb_template : "gnb_utf8",
-            gnb_logout : encodeURIComponent("https://nid.naver.com/user2/help/myInfoV2?lang=ko_KR"),
-            gnb_brightness : gnbBrightness,
-            gnb_one_naver : 0,
-            gnb_item_hide_option : 0
-        }
+      var gnb_option = {
+        gnb_service : "nid",
+        gnb_template : "gnb_utf8",
+        gnb_logout : encodeURIComponent("https://nid.naver.com/user2/help/myInfoV2?lang=ko_KR"),
+        gnb_brightness : gnbBrightness,
+        gnb_one_naver : 0,
+        gnb_item_hide_option : 0
+      }
 
 
 
-        //120919 win8 이슈 대응 : capslock 자동설정해제
-        document.msCapsLockWarningOff = true;
-        function setContainerHeight(height) {}
-        function clearDocs(){}
+      //120919 win8 이슈 대응 : capslock 자동설정해제
+      document.msCapsLockWarningOff = true;
+      function setContainerHeight(height) {}
+      function clearDocs(){}
     </script>
     <meta name="decorator" content="NEW_USER_MYINFO_V2">
     <script type="text/javascript">
-        var g_ssc = "my.protect" + "";
-        var ccsrv = "cc.naver.com";
+      var g_ssc = "my.protect" + "";
+      var ccsrv = "cc.naver.com";
     </script>
 </head>
 
@@ -165,7 +166,7 @@
                                     <span class="item_text">회원탈퇴</span>
                                     <button type="button"
                                             class="btn_accent"
-                                            onclick="confirmGoodbye()">
+                                            onclick="goodBye()">
                                         <span class="text">탈퇴</span>
                                     </button>
                                 </div>
@@ -177,9 +178,9 @@
 
                 <script>
 
-                    function goChangePassword() {
-                        document.location.href = "/user/resetPwd";
-                    }
+                  function goChangePassword() {
+                    document.location.href = "/user/resetPwd";
+                  }
 
 
 
@@ -191,35 +192,35 @@
                 <script>
 
 
-                    $("#leftLangSelectList .lang_item").click(function() {
-                        var $this = $(this);
-                        if ($this.attr("aria-selected") === "true") {
-                            var leftLangSelectListBtn = $("#leftLangSelectListBtn");
-                            leftLangSelectListBtn.attr("aria-expanded", "false");
-                            leftLangSelectListBtn.removeClass("fold");
-                            $("#leftLangSelectList").hide();
+                  $("#leftLangSelectList .lang_item").click(function() {
+                    var $this = $(this);
+                    if ($this.attr("aria-selected") === "true") {
+                      var leftLangSelectListBtn = $("#leftLangSelectListBtn");
+                      leftLangSelectListBtn.attr("aria-expanded", "false");
+                      leftLangSelectListBtn.removeClass("fold");
+                      $("#leftLangSelectList").hide();
 
-                            nclk(this,'fot.korean','','',event);
+                      nclk(this,'fot.korean','','',event);
 
-                            return;
-                        }
-                        changeLanguage();
-                    });
+                      return;
+                    }
+                    changeLanguage();
+                  });
 
-                    $("#langSelectList .lang_item").click(function() {
-                        var $this = $(this);
-                        if ($this.attr("aria-selected") === "true") {
-                            var langSelectListBtn = $("#langSelectListBtn");
-                            langSelectListBtn.attr("aria-expanded", "false");
-                            langSelectListBtn.removeClass("fold");
-                            $("#langSelectList").hide();
+                  $("#langSelectList .lang_item").click(function() {
+                    var $this = $(this);
+                    if ($this.attr("aria-selected") === "true") {
+                      var langSelectListBtn = $("#langSelectListBtn");
+                      langSelectListBtn.attr("aria-expanded", "false");
+                      langSelectListBtn.removeClass("fold");
+                      $("#langSelectList").hide();
 
-                            nclk(this,'fot.korean','','',event);
+                      nclk(this,'fot.korean','','',event);
 
-                            return;
-                        }
-                        changeLanguage();
-                    });
+                      return;
+                    }
+                    changeLanguage();
+                  });
                 </script>        </div>
             <!-- //container -->
         </div>
@@ -264,100 +265,101 @@
     </div>
 
     <script>
-        function show2StepVerificationPopUp() {
-            displayObj('dimmed2');
-            displayObj('twoStepVerificationPopUpLayer');
-            document.getElementById("wrap").classList.add("is_fixed");
-        }
+      function show2StepVerificationPopUp() {
+        displayObj('dimmed2');
+        displayObj('twoStepVerificationPopUpLayer');
+        document.getElementById("wrap").classList.add("is_fixed");
+      }
 
-        function hide2StepVerificationPopUp() {
-            hiddenObj('dimmed2');
-            hiddenObj('twoStepVerificationPopUpLayer');
-            document.getElementById("wrap").classList.remove("is_fixed");
-        }
+      function hide2StepVerificationPopUp() {
+        hiddenObj('dimmed2');
+        hiddenObj('twoStepVerificationPopUpLayer');
+        document.getElementById("wrap").classList.remove("is_fixed");
+      }
 
-        function go2StepVerification() {
-            var twoStepVerifBaseUrl = "/user2/help/2StepVerif?";
+      function go2StepVerification() {
+        var twoStepVerifBaseUrl = "/user2/help/2StepVerif?";
 
 
-            twoStepVerifBaseUrl += "m=viewGuide&token_help=8TmJbeT1hzM27X80&lang=ko_KR";
+        twoStepVerifBaseUrl += "m=viewGuide&token_help=8TmJbeT1hzM27X80&lang=ko_KR";
 
-            document.location.href = twoStepVerifBaseUrl;
-        }
+        document.location.href = twoStepVerifBaseUrl;
+      }
     </script>
     <script type="text/javascript">
-        getGNB();
+      getGNB();
 
-        window.onresize = function() {
-            setContainerHeight(document.getElementById('content').clientHeight);
+      window.onresize = function() {
+        setContainerHeight(document.getElementById('content').clientHeight);
+      }
+
+      function landscapeHandler() {
+        var headerLeft = document.querySelector("#headerLeft")
+        var headerTop = document.querySelector("#headerTop");
+        if (window.innerWidth >= 1024) {
+          headerLeft.ariaHidden = "false";
+          headerTop.ariaHidden = "false";
+        } else {
+          headerLeft.ariaHidden = "true";
+          headerTop.ariaHidden = "true";
         }
+      }
 
-        function landscapeHandler() {
-            var headerLeft = document.querySelector("#headerLeft")
-            var headerTop = document.querySelector("#headerTop");
-            if (window.innerWidth >= 1024) {
-                headerLeft.ariaHidden = "false";
-                headerTop.ariaHidden = "false";
-            } else {
-                headerLeft.ariaHidden = "true";
-                headerTop.ariaHidden = "true";
-            }
+      $(document).ready(function(){
+        landscapeHandler();
+
+        $("a[id^='info']").click(function () {
+          var $this = $(this);
+          if($this.attr("aria-expanded") === "true"){
+            $this.attr("aria-expanded", "false");
+            var info = "#" + $this.attr("id");
+            var infoToolTip = $(info + "ToolTip");
+            infoToolTip.attr("aria-hidden", "true");
+            infoToolTip.css("display", "none");
+          } else {
+            $this.attr("aria-expanded", "true");
+            var infoToolTip = $("#" + $this.attr("id") + "ToolTip");
+            infoToolTip.attr("aria-hidden", "false");
+            infoToolTip.css("display", "block");
+          }
+        })
+
+        $("button[id^='infoExit']").click(function () {
+          var info = "#info" + $(this).attr("id").substr(8, 1);
+          $(info).attr("aria-expanded", "false");
+          var infoToolTip = $(info + "ToolTip");
+          infoToolTip.attr("aria-hidden", "true");
+          infoToolTip.css("display", "none");
+        })
+
+        // https://stackoverflow.com/questions/47226824/iphonex-and-notch-detection
+        // Really basic check for the ios platform
+        // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
+        var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+
+        // Get the device pixel ratio
+        var ratio = window.devicePixelRatio || 1;
+
+        // Define the users device screen dimensions
+        var screen = {
+          width : window.screen.width * ratio,
+          height : window.screen.height * ratio
+        };
+
+        // iPhone X Detection
+        if (iOS && screen.width == 1125 && screen.height === 2436) {
+          document.getElementById("mainBody").style.padding =
+            "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
         }
+      });
 
-        $(document).ready(function(){
-            landscapeHandler();
-
-            $("a[id^='info']").click(function () {
-                var $this = $(this);
-                if($this.attr("aria-expanded") === "true"){
-                    $this.attr("aria-expanded", "false");
-                    var info = "#" + $this.attr("id");
-                    var infoToolTip = $(info + "ToolTip");
-                    infoToolTip.attr("aria-hidden", "true");
-                    infoToolTip.css("display", "none");
-                } else {
-                    $this.attr("aria-expanded", "true");
-                    var infoToolTip = $("#" + $this.attr("id") + "ToolTip");
-                    infoToolTip.attr("aria-hidden", "false");
-                    infoToolTip.css("display", "block");
-                }
-            })
-
-            $("button[id^='infoExit']").click(function () {
-                var info = "#info" + $(this).attr("id").substr(8, 1);
-                $(info).attr("aria-expanded", "false");
-                var infoToolTip = $(info + "ToolTip");
-                infoToolTip.attr("aria-hidden", "true");
-                infoToolTip.css("display", "none");
-            })
-
-            // https://stackoverflow.com/questions/47226824/iphonex-and-notch-detection
-            // Really basic check for the ios platform
-            // https://stackoverflow.com/questions/9038625/detect-if-device-is-ios
-            var iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-
-            // Get the device pixel ratio
-            var ratio = window.devicePixelRatio || 1;
-
-            // Define the users device screen dimensions
-            var screen = {
-                width : window.screen.width * ratio,
-                height : window.screen.height * ratio
-            };
-
-            // iPhone X Detection
-            if (iOS && screen.width == 1125 && screen.height === 2436) {
-                document.getElementById("mainBody").style.padding =
-                    "env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)";
-            }
-        });
-
-        var timer; // 디바운싱
-        window.addEventListener('resize', function () {
-            clearTimeout(timer);
-            timer = setTimeout(landscapeHandler, 300);
-        });
+      var timer; // 디바운싱
+      window.addEventListener('resize', function () {
+        clearTimeout(timer);
+        timer = setTimeout(landscapeHandler, 300);
+      });
 
     </script>
+</div>
 </body>
 </html>
