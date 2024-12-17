@@ -6,14 +6,15 @@
 
         <title>PlaceHere</title>
 
-        <link rel="stylesheet" href="/css/templates/collection_detail.css">
-        <link rel="stylesheet" href="/css/templates/regist_hp.css">
-
         <link th:insert="~{common/import :: importFragment}">
 
+        <!-- 인기 검색어 표 -->
         <link rel="stylesheet" href="/css/store/getClosedayList.css">
-        <link rel="stylesheet" href="/css/store/modalStoreFilter.css">
 
+        <!-- 검색, 필터 관련 -->
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+        <link rel="stylesheet" href="/css/store/modalStoreFilter.css">
         <script src="/javascript/store/modalStoreFilter.js"></script>
         <script type="module" src="/javascript/store/searchStore.js"></script>
 
@@ -64,7 +65,7 @@
                             </thead>
 
                             <tbody th:each="keyword, iterStat : ${popularKeywordList}">
-                                <tr>
+                                <tr class="keywordList">
                                     <td th:text="${iterStat.count}">검색 순위</td>
                                     <td th:text="${keyword}" class="popularKeyword">검색어</td>
                                 </tr>

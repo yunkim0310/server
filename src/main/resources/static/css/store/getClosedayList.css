@@ -58,6 +58,13 @@
     border-bottom: 1px solid #ddd;
 }
 
+.listTable .keywordList th, td {
+    padding: 20px 20px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+}
+
 .listTable th {
     background-color: #f5f5f5;
     font-weight: bold;
@@ -67,6 +74,12 @@
 .listTable td {
     background-color: #fff;
     color: #333;
+}
+
+.listTable .keywordList td {
+    background-color: #fff;
+    color: #333;
+    font-size: 17px;
 }
 
 .listTable td input[type="hidden"] {

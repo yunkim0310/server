@@ -26,9 +26,6 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public List<String> getPopularKeyword() {
 
-        List<String> popularKeywordList = searchDao.getPopularKeywordList();
-        System.out.println(popularKeywordList);
-
-        return popularKeywordList;
+        return searchDao.getPopularKeywordList();
     }
 }

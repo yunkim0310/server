@@ -78,6 +78,8 @@ $(function () {
             search(1);
         }
 
+        $("header.header-wrap").show();
+
     });
 
     // 페이징
@@ -85,9 +87,14 @@ $(function () {
 
     $(".popularKeyword").on("click", function () {
 
-        resetFilter();
-        $("input[name='searchKeyword']:text").val($(this).text());
-        search(1);
+        const keyword = $(this).text();
+
+        if (keyword !== "") {
+            resetFilter();
+            $("input[name='searchKeyword']:text").val(keyword);
+            search(1);
+        }
+
     })
 
 });
