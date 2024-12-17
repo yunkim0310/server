@@ -339,6 +339,9 @@ $(function() {
         }
     });
 
-
+    
+    // 파일 업로드 모듈
+    fileUploadEvent("storeImg", "store/store/");
+    fileUploadEvent("menuImg", "store/menu/");
 
 });

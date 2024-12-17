@@ -434,48 +434,7 @@ $(function() {
     });
 
 
-    // 이미지 입력에 대한 이벤트처리
-    // $("input[class^='storeImg']:file").on("change", function() {
-    //
-    //     const $this = $(this);
-    //     var className = $this.attr('class');
-    //
-    //     console.log(className)
-    //
-    //     const file = $this[0].files[0];
-    //
-    //     var $storeImg = $(`input[name='${className}']:hidden`);
-    //
-    //     console.log($storeImg.val() === "");
-    //
-    //     if ($storeImg.val() == null || $storeImg.val() === "") {
-    //
-    //         console.log("uploadFile");
-    //         console.log($storeImg.val());
-    //
-    //         uploadFile(file, "store/store/").then(result => {
-    //
-    //             console.log(result);
-    //             $storeImg.val(result.filePath);
-    //             $(`img.${className}`).attr("src", result.url)
-    //             $(`#${className}`).css("display", "flex");
-    //         });
-    //
-    //     } else {
-    //
-    //         console.log("updateFile");
-    //         console.log($storeImg.val());
-    //
-    //         updateFile($storeImg.val(), file, "store/store/").then(result => {
-    //
-    //             console.log(result);
-    //             $storeImg.val(result.filePath);
-    //             $(`img.${className}`).attr("src", result.url)
-    //         });
-    //     }
-    //
-    // })
-
+    // 파일 업로드 모듈
     fileUploadEvent("storeImg", "store/store/");
     fileUploadEvent("menuImg", "store/menu/");
 

@@ -219,6 +219,7 @@ public class StoreController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
+        model.addAttribute("url", bucketUrl);
 
         // 로그인 안 한 경우
         if (user == null) {
