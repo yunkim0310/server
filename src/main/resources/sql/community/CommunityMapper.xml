@@ -67,10 +67,7 @@
     <select id="getReview" parameterType="int" resultMap="ReviewResultMap">
 
         SELECT
-            review_user.*,
-            reservation.store_id,
-            reservation.store_name,
-            COUNT(likes.like_id) AS review_like_cnt
+            review_user.*, reservation.store_id, reservation.store_name, COUNT(likes.like_id) AS review_like_cnt
         FROM
             (SELECT review.*, user.profile_img
             FROM review

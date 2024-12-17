@@ -95,12 +95,16 @@
 </head>
 <body>
 <div th:include="~{common/header}"></div>
-<div th:include="~{community/menuBar}"></div>
+<!--<div th:include="~{community/getCommunityAside}"></div>-->
+<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
 <h1>친구 목록</h1>
 <div class="search-container">
-    <input type="text" placeholder="검색어 입력" th:name="searchTerm">
-    <button type="button">검색</button>
+    <!-- 검색 폼 추가 -->
+    <form th:action="@{/review/getFriendList}" method="get">
+        <input type="text" placeholder="검색어 입력" name="keyword" th:value="${keyword}"> <!-- 입력된 검색어 유지 -->
+        <button type="submit">검색</button>
+    </form>
 </div>
 
 <ul>

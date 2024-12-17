@@ -30,7 +30,7 @@ public interface FriendDao {
     public void removeFriend(Friend friend) throws Exception;
 
     //친구 목록을 조회하다 TODO
-    public List<Friend> getFriendList(@Param("userName") String userName,@Param("search") Search search) throws Exception;
+    public List<Friend> getFriendList(@Param("userName") String userName,@Param("search") Search search, @Param("keyword") String keyword) throws Exception;
 
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
     public void updateChkfriendReq(String userName) throws Exception;

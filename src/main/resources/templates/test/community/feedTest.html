@@ -5,6 +5,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>즐거운 미식 생활의 시작, 캐치테이블</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
     <link rel="stylesheet" href="/css/templates/mypage.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
     <link rel="stylesheet" href="/css/templates/style.css">
@@ -131,19 +134,19 @@
                     },
                     success: function(result) {
 
-                        alert(result);
+<!--                        alert(result);-->
 
                         // 좋아요 취소
                         if (result === "-1") {
 
-                            alert("좋아요 취소 성공");
+<!--                            alert("좋아요 취소 성공");-->
 
                         } else if (result === "1") {
 
-                            alert("좋아요 등록 성공");
+<!--                            alert("좋아요 등록 성공");-->
 
                         } else {
-                            alert("오류");
+<!--                            alert("오류");-->
                         }
 
                         location.reload();
@@ -157,13 +160,39 @@
         });
     </script>
 <body>
-<div th:include="~{common/header}"></div> <!-- 공통 헤더 포함 -->
 
+<!--<div th:include="~{community/getCommunityAside}"></div>-->
 <div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
-<header id="header"></header> <!-- 페이지 헤더 -->
-testGetReviewList임
+<header id="header"></header> <!-- 페이지 헤더 --> <!-- todo   페이징처림(제대로 작동 되는지 확인) , 친구삭제 신청버튼추가-->
+testGetReviewList임=>  feedTest.html
 <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+
+    <!-- 친구 신청, 삭제 버튼 -->
+    <div class="fixed-button" style="margin-right: 320px; text-align:right; z-index: 1000;">
+    <!-- 친구 삭제 버튼 -->
+        <div th:if="${friendStatus == true}">
+            <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
+                <input type="hidden" name="friendNo" th:value="${friendNo}" /> <!-- 친구 번호 -->
+                <button type="submit" class="btn-primary del" style="border: none; background: none; cursor: pointer;">
+                    <img th:src="@{/file/community/removeFriend_icon.png}" alt="친구 삭제" style="width: 40px; height: 40px;">
+                    친구 삭제
+                </button>
+            </form>
+        </div>
+
+        <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
+        <div th:if="${friendStatus == false}">
+            <form th:action="@{/review/sendFriendReq}" method="post">
+                <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
+                <button type="submit" class="btn-primary" style="border: none; background: none; cursor: pointer;">
+                    <img th:src="@{/file/community/addFriend_icon.png}" alt="친구 신청" style="width: 40px; height: 40px;">
+                    친구 신청
+                </button>
+            </form>
+        </div>
+    </div>
+
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
         <main id="main">
             <section class="section mb-50">
@@ -188,19 +217,19 @@ testGetReviewList임
 
                                         <div class="__body" style="position: relative; padding: 0px;">
                                             <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
-                                                <div th:if="${review.reviewImg1 != null}">
+                                                <div th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점1.jpg}">
+                                                        <img th:src="${url + review.reviewImg1}">
                                                     </div>
                                                 </div>
-                                                <div th:if="${review.reviewImg2 != null}">
+                                                <div th:if="${review.reviewImg2 != null && !review.reviewImg2.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점2.jpg}">
+                                                        <img th:src="${url + review.reviewImg2}">
                                                     </div>
                                                 </div>
-                                                <div th:if="${review.reviewImg3 != null}">
+                                                <div th:if="${review.reviewImg3 != null && !review.reviewImg3.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점3.jpg}">
+                                                        <img th:src="${url + review.reviewImg3}">
                                                     </div>
                                                 </div>
                                             </div>
@@ -248,5 +277,12 @@ testGetReviewList임
         </main>
     </div> <!-- wrapperDiv 끝 -->
 </div> <!-- root 끝 -->
+
+<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+<form name="paginForm">
+    <input type="hidden" name="page">
+    <input type="hidden" name="type" value="friendList">
+</form>
+
 </body>
 </html>

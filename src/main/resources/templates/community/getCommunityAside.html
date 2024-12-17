@@ -1,0 +1,32 @@
+<ul class="css-1x9bshx ecbxmj2" th:fragment="getPointShopAside" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+        <li class="css-0 ecbxmj1">
+            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=allList'">
+                전체 리뷰 리스트
+                <span class="css-e41glx e1x0rfoo0"></span>
+            </a>
+        </li>
+
+        <li class="css-0 ecbxmj1">
+            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=myFeed'">
+                My Feed
+                <span class="css-e41glx e1x0rfoo0"></span>
+            </a>
+        </li>
+
+        <li class="css-0 ecbxmj1">
+            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'">
+                친구 목록
+                <span class="css-e41glx e1x0rfoo0"></span>
+            </a>
+        </li>
+
+        <li class="css-0 ecbxmj1">
+            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendReqStatus'">
+                친구 요청 현황
+                <span class="css-e41glx e1x0rfoo0"></span>
+            </a>
+        </li>
+    </div>
+
+</ul>
