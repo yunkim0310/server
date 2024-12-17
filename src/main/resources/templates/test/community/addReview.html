@@ -3,6 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>리뷰 작성</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/javascript/community/fileUpload.js"></script>
+
     <style>
         body {
             display: flex;
@@ -12,52 +18,85 @@
             min-height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
+            background-color: #f0f2f5; /* 배경색 */
         }
 
         .container {
             width: 80%;
-            margin-top: 20px;
+            max-width: 600px; /* 최대 너비 설정 */
+            margin-top: 40px; /* 위치 조정 */
             padding: 20px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            background-color: #f9f9f9;
-            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+            background-color: #ffffff; /* 흰색 배경 */
+            border-radius: 10px; /* 둥근 모서리 */
+            transition: box-shadow 0.3s; /* 호버 효과 */
+        }
+
+        .container:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
         }
 
         h1 {
             text-align: center;
-            color: #333;
+            color: #333333; /* 제목 색상 */
+            margin-bottom: 20px; /* 하단 여백 */
         }
 
         label {
             margin-top: 10px;
             display: block;
             font-weight: bold;
+            color: #555; /* 레이블 색상 */
         }
 
         select, input[type="text"], input[type="number"], textarea {
             width: 100%;
-            padding: 10px;
-            margin: 5px 0 15px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 0px;
+            margin: 50px 0 30px;
+            border: 1px solid #04080b; /* 테두리 색상 */
+            border-radius: 5px; /* 둥근 테두리 */
+            font-size: 17px; /* 폰트 크기 */
+        }
+
+        .star-rating {
+            display: flex;
+            justify-content: flex-start;
+            margin: 10px 0;
+        }
+
+        .star {
+            font-size: 24px; /* 별 크기 조정 */
+            color: #ddd; /* 별 기본 색상 */
+            cursor: pointer; /* 마우스 포인터 변경 */
+            transition: color 0.2s; /* 색상 변화 전환 */
+        }
+
+        .star.filled {
+            color: #ffcc00; /* 색칠된 별 색상 */
         }
 
         button {
-            padding: 10px 20px;
-            background-color: #28a745;
+            padding: 12px 20px;
+            background-color: #007bff; /* 파란색으로 변경 */
             color: white;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px; /* 폰트 크기 */
+            float: right; /* 버튼 오른쪽 정렬 */
+            margin-top: 10px; /* 버튼 위치 조정 */
         }
 
         button:hover {
-            background-color: #218838;
+            background-color: #0056b3; /* 버튼 호버 색상 */
         }
     </style>
+
 </head>
 <body>
-<div th:include="~{common/header}"></div>
+
+<!--<div th:include="~{community/getCommunityAside}"></div>-->
+<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
 <div class="container">
     <h1>리뷰 작성</h1>
@@ -68,32 +107,79 @@
             <option value="" disabled selected>예약 내역을 선택하세요</option>
             <div th:each="reservation : ${reservations}">
                 <option th:value="${reservation.rsrvNo}"
-                        th:text="${reservation.storeName} + ' (' + ${reservation.rsrvDt} + ')'"></option>
+                        th:text="${reservation.storeName}+${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}"></option>
             </div>
         </select>
 
         <label for="reviewScore">리뷰 점수:</label>
-        <input type="number" id="reviewScore" name="reviewScore" min="1" max="5" required>
+        <div class="star-rating" id="star-rating">
+            <span class="star" data-value="1">★</span>
+            <span class="star" data-value="2">★</span>
+            <span class="star" data-value="3">★</span>
+            <span class="star" data-value="4">★</span>
+            <span class="star" data-value="5">★</span>
+            <input type="hidden" id="reviewScore" name="reviewScore" required>
+        </div>
 
-        <label for="reviewImg1">리뷰 이미지 1 (URL 형식):</label>
-        <input type="text" id="reviewImg1" name="reviewImg1">
+        <!-- 리뷰 사진 1 -->
+        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+            <input type="file" accept="image/*" class="reviewImg1">
+            <input type="hidden" name="reviewImg1">
+        </div>
+        <div id="reviewImg1" style="display: none;">
+            <img class="reviewImg1" alt="리뷰 사진 1" width="100" height="100">
+        </div>
 
-        <label for="reviewImg2">리뷰 이미지 2 (URL 형식):</label>
-        <input type="text" id="reviewImg2" name="reviewImg2">
+        <!-- 리뷰 사진 2 -->
+        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+            <input type="file" accept="image/*" class="reviewImg2">
+            <input type="hidden" name="reviewImg2">
+        </div>
+        <div id="reviewImg2" style="display: none;">
+            <img class="reviewImg2" alt="리뷰 사진 2" width="100" height="100">
+        </div>
 
-        <label for="reviewImg3">리뷰 이미지 3 (URL 형식):</label>
-        <input type="text" id="reviewImg3" name="reviewImg3">
+        <!-- 리뷰 사진 3 -->
+        <div class="css-176lya2 e1uzxhvi3 under-name-block">
+            <input type="file" accept="image/*" class="reviewImg3">
+            <input type="hidden" name="reviewImg3">
+        </div>
+        <div id="reviewImg3" style="display: none;">
+            <img class="reviewImg3" alt="리뷰 사진 3" width="100" height="100">
+        </div>
+
 
         <label for="reviewContent">리뷰 내용:</label>
         <textarea id="reviewContent" name="reviewContent" rows="5" required></textarea>
 
-        <label for="userName">작성자:</label>
-        <input type="text" id="userName" name="userName" required>
-
-
+        <input type="hidden" id="userName" name="userName" th:value="${currentUser.username}" />
 
         <button type="submit">리뷰 작성</button>
     </form>
 </div>
+
+<script>
+    const stars = document.querySelectorAll('.star');
+    const reviewScoreInput = document.getElementById('reviewScore');
+
+    stars.forEach(star => {
+        star.addEventListener('click', () => {
+            const rating = star.getAttribute('data-value');
+            reviewScoreInput.value = rating; // 리뷰 점수 입력란에 값 설정
+            updateStars(rating);
+        });
+    });
+
+    function updateStars(rating) {
+        stars.forEach(star => {
+            if (star.getAttribute('data-value') <= rating) {
+                star.classList.add('filled'); // 별 채우기
+            } else {
+                star.classList.remove('filled'); // 별 비우기
+            }
+        });
+    }
+</script>
+
 </body>
 </html>

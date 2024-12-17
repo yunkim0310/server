@@ -23,6 +23,7 @@
 
 <body>
 
+<!--<div th:include="~{community/getCommunityAside}"></div>-->
 <div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
 <header id="header"></header> <!-- 페이지 헤더 -->
@@ -53,19 +54,19 @@ GetReviewList임 - getReviewList.html
 
                                         <div class="__body" style="position: relative; padding: 0px;">
                                             <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
-                                                <div th:if="${review.reviewImg1 != null}">
+                                                <div th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점1.jpg}">
+                                                        <img th:src="${url + review.reviewImg1}">
                                                     </div>
                                                 </div>
-                                                <div th:if="${review.reviewImg2 != null}">
+                                                <div th:if="${review.reviewImg2 != null && !review.reviewImg2.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점2.jpg}">
+                                                        <img th:src="${url + review.reviewImg2}">
                                                     </div>
                                                 </div>
-                                                <div th:if="${review.reviewImg3 != null}">
+                                                <div th:if="${review.reviewImg3 != null && !review.reviewImg3.isEmpty()}">
                                                     <div class="swiper-slide" style="margin-right: 16px;">
-                                                        <img th:src="@{/file/community/보배반점3.jpg}">
+                                                        <img th:src="${url + review.reviewImg3}">
                                                     </div>
                                                 </div>
                                             </div>

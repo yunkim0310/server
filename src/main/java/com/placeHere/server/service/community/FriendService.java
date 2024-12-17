@@ -28,7 +28,7 @@ public interface FriendService {
     public void removeFriend(Friend friend) throws Exception;
 
     //친구 목록을 조회하다 TODO
-    public List<Friend> getFriendList(String userName, Search search) throws Exception;
+    public List<Friend> getFriendList(String userName, Search search, String keyword) throws Exception;
 
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
     public void updateChkfriendReq(String userName) throws Exception;

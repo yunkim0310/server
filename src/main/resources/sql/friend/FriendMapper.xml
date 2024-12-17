@@ -75,14 +75,16 @@
     <select id="getFriendList" parameterType="map" resultMap="friendMap">
         SELECT *
         FROM
-            (SELECT User.username, User.profile_img
-            FROM Friend
-            JOIN User ON (Friend.friend_req = User.username OR Friend.friend_res = User.username)
-            WHERE (Friend.friend_req = #{userName} OR Friend.friend_res = #{userName})
-            AND Friend.friend_status = 1) AS friends
+        (SELECT User.username, User.profile_img
+        FROM Friend
+        JOIN User ON (Friend.friend_req = User.username OR Friend.friend_res = User.username)
+        WHERE (Friend.friend_req = #{userName} OR Friend.friend_res = #{userName})
+        AND Friend.friend_status = 1
+        <if test="keyword != null and keyword != ''">
+            AND (User.username LIKE CONCAT('%', #{keyword}, '%') OR User.profile_img LIKE CONCAT('%', #{keyword}, '%'))
+        </if>) AS friends
         WHERE friends.username != #{userName}
         LIMIT #{search.startRowNum}, #{search.listSize};
-
     </select>
 
 

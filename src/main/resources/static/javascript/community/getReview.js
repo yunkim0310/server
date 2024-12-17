@@ -1,6 +1,6 @@
 $(function() {
 
-    alert("getReview.js");
+//    alert("getReview.js");
 
     // 댓글 수정
     $("button.btn-primary.edit").on("click", function() {
@@ -133,7 +133,7 @@ $(function() {
    // 댓글 추가 버튼
    $("button[name='addCommentBtn']").on("click", function() {
 
-        alert("addComment Clicked");
+//        alert("addComment Clicked");
 
         addComment();
    });
