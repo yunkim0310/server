@@ -458,7 +458,7 @@ function goodBye() {
 
         if (status === "SUCCESS") {
 
-          // 일반회원
+          // 일반회원일 때 컨펌창
           if(role === "ROLE_USER") {
 
 
@@ -468,7 +468,7 @@ function goodBye() {
                       `);
 
 
-
+          // 점주 회원일 때 컨펌창
           } else {
 
             secondYn = confirm(`
@@ -479,7 +479,8 @@ function goodBye() {
                         `);
 
           }
-
+          
+          // 확인 누른다면
           if ( secondYn ) {
 
             console.log("secondYn :: " + secondYn);
@@ -495,31 +496,24 @@ function goodBye() {
                 console.log('data :: ',data);
 
                 if (data === "SUCCESS") {
-                  // alert("환불처리 될 예약 건수 :: "  );
                   alert("탈퇴 되었습니다.");
                   location.href='/';
                 } else {
-                  alert("실패!");
+                  alert("탈퇴 도중 문제가 발생하였습니다.");
                 }
               },
               error: function(xhr, status, error) {
                 console.error('Error:', error);
-                alert("안되지롱");
               }
             }); // end of ajax2
 
+          } else {
+            alert('취소되었습니다.');
+            return;
           }
-
-          alert("탈퇴 되었습니다.");
-          location.href='/';
-        } else {
-          alert("실패!");
         }
+
       },
-      error: function(xhr, status, error) {
-        console.error('Error:', error);
-        alert("안되지롱");
-      }
     }); // end of ajax2
 
     // cnt 받은 다음 시작

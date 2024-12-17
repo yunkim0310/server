@@ -217,6 +217,8 @@ public class UserRestController {
         int reviewResult = 0;
         int storeId = 0;
 
+        boolean refundResult = false;
+
 
         // 일반회원
         if (user.getRole() == "ROLE_USER" || user.getRole().equals("ROLE_USER")) {
@@ -231,8 +233,22 @@ public class UserRestController {
             log.info("reviewResult :: " + reviewResult);
 
             // 예약 환불 요청
-            reservationService.getRemoveUserRefundPayment(username);
+            refundResult = reservationService.getRemoveUserRefundPayment(username);
 
+            if ( refundResult ) {
+
+                log.info("goodBye User SUCCESS ! ");
+                // 회원 상태값 변경
+                userService.updateUserStatus(user);
+
+                // 세션 삭제
+                session.invalidate();
+                return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            } else {
+
+                log.info("goodBye User FAIL ! ");
+                return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+            }
 
             // 점주 회원
         } else {
@@ -242,14 +258,25 @@ public class UserRestController {
 
             // 가게 상태값 변경 0 -> 1
             storeService.removeStore(storeId);
+
+            refundResult = reservationService.getRemoveStoreRefundPayment(storeId);
+
+            if ( refundResult ) {
+
+                log.info("goodBye User SUCCESS ! ");
+                // 회원 상태값 변경
+                userService.updateUserStatus(user);
+
+                // 세션 삭제
+                session.invalidate();
+                return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+            } else {
+
+                log.info("goodBye User FAIL ! ");
+                return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
+            }
         }
 
-        // 최종 회원 상태 변경 ACTIVE -> DELETED
-        userService.updateUserStatus(user);
-        // 세션 삭제
-        session.invalidate();
-
-        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
     }
 
 }
