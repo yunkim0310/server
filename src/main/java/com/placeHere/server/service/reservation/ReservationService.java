@@ -59,13 +59,13 @@ public interface ReservationService {
     List<Integer> getRemoveUserRsrvNos(String userName) throws Exception;
 
     // 탈퇴 예정인 일반 회원의 일괄 환불
-    public void getRemoveUserRefundPayment(String userName) throws Exception;
+    public boolean getRemoveUserRefundPayment(String userName) throws Exception;
 
     // 탈퇴 예정인 점주 회원의 예약 번호 리스트
     List<Integer> getRemoveStoreRsrvNos(int storeId) throws Exception;
 
     // 탈퇴 예정인 점주 회원의 일괄 환불
-    public void getRemoveStoreRefundPayment(int storeId) throws Exception;
+    public boolean getRemoveStoreRefundPayment(int storeId) throws Exception;
 
     // 예약 확정이면서 예약 일시가 지나간 예약 번호 리스트
     List<Integer> getPastRsrvNos() throws Exception;

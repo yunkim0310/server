@@ -359,7 +359,11 @@ public class ReservationController {
 
         User user = (User) session.getAttribute("user");
 
+        System.out.println(storeId);
+
         Store stores = storeService.getStore(storeId);
+
+        System.out.println(stores);
 
         String storeName = stores.getUserName();
 
