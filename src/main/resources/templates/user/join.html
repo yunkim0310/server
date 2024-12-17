@@ -10,13 +10,14 @@
 
 
     <link rel="stylesheet" th:href="@{/css/user/join.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascript/user/user.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -38,7 +39,7 @@
                         <span th:if="${role == 'ROLE_USER' }">
                             <input type="hidden" name="role" value="ROLE_USER">
                         </span>
-                        <span th:unless="${role == 'ROLE_STORE'}">
+                        <span th:unless="${role == 'ROLE_USER'}">
                             <input type="hidden" id="role" name="role" value="ROLE_STORE">
                         </span>
 
@@ -219,7 +220,7 @@
                                                name="recommendedId"
                                                oninput="recomandValidation()"
                                                type="text"
-                                               class="css-1bkd15f e1uzxhvi2"> <!-- required 삭제 -->
+                                               class="css-1bkd15f e1uzxhvi2">
                                     </div>
                                     <!-- TODO 김윤지 -->
                                     <p class="font-12 mt-10" id="invalid-feedback-recommendedId"></p>
@@ -231,7 +232,7 @@
                     <div class="subbmit">
                         <button class="btn btn btn-primary btn-sm"
                                 id="submit-button"
-                                th:onclick="validateAll()"
+                                onclick="validateAll()"
                                 name="submit-button"
                                 width="240"
                                 height="56"
