@@ -24,12 +24,18 @@
 <body>
 
 <!--<div th:include="~{community/getCommunityAside}"></div>-->
-<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
+<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
 
 <header id="header"></header> <!-- 페이지 헤더 -->
 
 GetReviewList임 - getReviewList.html
 <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+        <div class="side" style="margin-top: 80px;">
+            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;리뷰 목록</div>
+            <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
+        </div>
+    </div>
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
         <main id="main">
             <section class="section mb-50">

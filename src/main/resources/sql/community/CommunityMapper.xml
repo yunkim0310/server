@@ -59,7 +59,7 @@
         #{reviewImg3},
         #{reviewContent},
         CURRENT_DATE,
-        CURRENT_DATE,
+        NULL,
         #{userName})
     </insert>
 
