@@ -22,7 +22,7 @@ function validateAll() {
       role: $('[name="role"]').val(),
       gender: $('[name="gender"]:checked').val()
     };
-    
+
     console.log('회원가입 객체 :: ', user);
 
     $.ajax({
@@ -83,7 +83,7 @@ function pwdValidation() {
     messageElement.css({'color': 'green', 'display': 'block'});
     return true;
   }
-  
+
 
 }
 
@@ -118,10 +118,10 @@ function emailValidation() {
 
   const messageElement = $("#invalid-feedback-email");
 
-    // 이메일 형식 확인
-    const emailChk = emailCheck(email);
+  // 이메일 형식 확인
+  const emailChk = emailCheck(email);
 
-    if( !emailChk ) { // true
+  if( !emailChk ) { // true
     messageElement.text('이메일 형식이 아닙니다.');
     messageElement.css({'color': 'red', 'display': 'block'});
     return;
@@ -271,7 +271,7 @@ function usernameValidation() {
         messageElement.text('이미 사용 중인 아이디입니다.');
         messageElement.css({'color': 'red', 'display': 'block'});
         return false;
-      // 사용가능
+        // 사용가능
       } else {
         messageElement.text('사용 가능한 아이디입니다.');
         messageElement.css({'color': 'green', 'display': 'block'});
@@ -313,7 +313,7 @@ function emailCheck(email){
 
 // 프로필 사진 업로드
 function photoEdit() {
-  
+
   // 파일보기 버튼 사용 안하려고 사용
   $('#profileImg').click();
 
@@ -335,44 +335,44 @@ function photoEdit() {
     // }
 
     uploadFile(file, "user/")
-      .then(result => {
-        console.log(result);
-        // console.log("uuid file name :: " , result.url)
-        console.log("uuid file path :: " , result.filePath)
-        // https://placehere.s3.ap-northeast-2.amazonaws.com/user/20241216d64806bc.jpg
+        .then(result => {
+          console.log(result);
+          // console.log("uuid file name :: " , result.url)
+          console.log("uuid file path :: " , result.filePath)
+          // https://placehere.s3.ap-northeast-2.amazonaws.com/user/20241216d64806bc.jpg
 
-        // const resultUrl = result.url;
-        const resultUrl = result.filePath;
-        const cvrtStr = "user/";
-        const replaceFileName = resultUrl.replace(cvrtStr, '');
-        
-        // uuid 로 변환된 파일명만 추출
-        console.log('after :: ', replaceFileName);
+          // const resultUrl = result.url;
+          const resultUrl = result.filePath;
+          const cvrtStr = "user/";
+          const replaceFileName = resultUrl.replace(cvrtStr, '');
 
-        // $('#profileImgView').attr("src",result.url);
-        $('#profileImgView').attr("src",replaceFileName);
+          // uuid 로 변환된 파일명만 추출
+          console.log('after :: ', replaceFileName);
 
-        const user = {
-          username : username,
-          profileImg : replaceFileName
-        }
+          // $('#profileImgView').attr("src",result.url);
+          $('#profileImgView').attr("src",replaceFileName);
 
-        return $.ajax({
-          url: "/api-user/updateProfile",
-          method: "POST",
-          data: JSON.stringify(user),
-          contentType: "application/json"
+          const user = {
+            username : username,
+            profileImg : replaceFileName
+          }
+
+          return $.ajax({
+            url: "/api-user/updateProfile",
+            method: "POST",
+            data: JSON.stringify(user),
+            contentType: "application/json"
+          });
+
+        })
+        .then(response => {
+          // $.ajax 요청이 성공적으로 완료된 후
+          console.log("Profile updated:", response);
+        })
+        .catch(error => {
+          // 에러 처리
+          console.error("Error:", error);
         });
-
-      })
-      .then(response => {
-        // $.ajax 요청이 성공적으로 완료된 후
-        console.log("Profile updated:", response);
-      })
-      .catch(error => {
-        // 에러 처리
-        console.error("Error:", error);
-      });
 
   });
 } // end of photoEdit
@@ -416,8 +416,9 @@ function resetPwd() {
 
   });
 
-  
+
 }
+
 
 // 회원탈퇴 함수
 function goodBye() {
@@ -439,7 +440,7 @@ function goodBye() {
 
   // true면 실행
   if( result ) {
-    
+
 
     // cnt 받은 다음 시작
     $.ajax({
@@ -466,5 +467,107 @@ function goodBye() {
     }); // end of ajax2
 
   }
-  
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+function confirmGoodbye() {
+  const username = $(".username").text(); // 사용자명
+  const role = $(".role").val(); // 역할 (ROLE_USER 또는 ROLE_STORE)
+
+  console.log("username :: ", username);
+  console.log("role :: ", role);
+
+  // 1단계: 첫 번째 confirm 알림창 (탈퇴 의사 확인)
+  const firstConfirm = confirm("탈퇴하시겠습니까?");
+  if (!firstConfirm) {
+    return; // 취소 버튼 누르면 함수 종료
+  }
+
+  // 2단계: 예약 건수 확인 AJAX 요청
+  const payload = {
+    userName: username,
+    role: role,
+  };
+
+  $.ajax({
+    url: "/api-reservation/countReservations", // 예약 건수 확인 API
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(payload),
+    success: function (response) {
+      console.log("예약 건수 확인 결과 :: ", response);
+
+      let message = "";
+
+      if (response.error) {
+        alert("오류 발생: " + response.error);
+        return;
+      }
+
+      if (role === "ROLE_USER") {
+        // ROLE_USER의 예약 건수 확인
+        const reservationCount = response.reservationCount || 0;
+        message = reservationCount > 0
+            ? `현재 예약 건수는 ${reservationCount}건입니다. 탈퇴 시 예약은 모두 취소됩니다. 계속 진행하시겠습니까?`
+            : "예약 건수가 없습니다. 탈퇴를 진행하시겠습니까?";
+      } else if (role === "ROLE_STORE") {
+        // ROLE_STORE의 예약 건수 및 전화 예약 건수 확인
+        const reservationCount = response.reservationCount || 0;
+        const phoneReservationCount = response.phoneReservationCount || 0;
+
+        message = `현재 예약 건수는 ${reservationCount}건, 전화 예약 건수는 ${phoneReservationCount}건입니다. 탈퇴 시 모든 예약이 취소됩니다. 계속 진행하시겠습니까?`;
+      } else {
+        alert("유효하지 않은 사용자 역할입니다.");
+        return;
+      }
+
+      // 3단계: 예약 건수 확인 후 최종 confirm 창
+      const finalConfirm = confirm(message);
+      if (finalConfirm) {
+        proceedGoodbye(username, role); // 탈퇴 처리 함수 호출
+      }
+    },
+    error: function () {
+      alert("예약 건수 확인 중 오류가 발생했습니다.");
+    },
+  });
+}
+
+function proceedGoodbye(username, role) {
+  const user = {
+    username: username,
+    role: role,
+  };
+
+  // 탈퇴 처리 AJAX 요청
+  $.ajax({
+    url: "/api-user/goodBye", // 실제 탈퇴 처리 API
+    type: "POST",
+    contentType: "application/json",
+    data: JSON.stringify(user),
+    success: function (data) {
+      if (data === "SUCCESS") {
+        alert("탈퇴가 완료되었습니다.");
+        location.href = "/"; // 메인 화면으로 이동
+      } else {
+        alert("탈퇴에 실패했습니다. 다시 시도해 주세요.");
+      }
+    },
+    error: function (xhr, status, error) {
+      console.error("Error:", error);
+      alert("탈퇴 처리 중 오류가 발생했습니다.");
+    },
+  });
 }
