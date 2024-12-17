@@ -58,6 +58,42 @@ public class UserRestController {
         }
     }
 
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody User user, HttpSession session) throws Exception {
+
+        log.info("/api-user/login - POST Controller ");
+
+
+        User dbUser = userService.getUser(user.getUsername());
+
+        String activeStatus;
+
+        if ( dbUser != null && user.getPassword().equals(dbUser.getPassword()) ) {
+            activeStatus = dbUser.getActiveStatus();
+            log.info("activeStatus :: " + activeStatus);
+
+
+            if (activeStatus.equals("ACTIVE")) {
+                log.info(" ACTIVE USER ");
+                session.setAttribute("user", dbUser);
+
+                // 휴면계정이라면
+            } else if (activeStatus.equals("INACTIVE")) {
+                log.info(" INACTIVE USER ");
+                return new ResponseEntity<>("INACTIVE", HttpStatus.OK);
+                // 탈퇴계정이라면
+            } else if (activeStatus.equals("DELETED")) {
+                log.info(" DELETED USER ");
+                return new ResponseEntity<>("DELETED", HttpStatus.OK);
+            }
+        } else { // 로그인 정보 없음
+            return new ResponseEntity<>("FAIL", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+    }
+
+
+
     @GetMapping("/chkDuplication")
     public ResponseEntity<?> chkDuplication(@RequestParam(value = "username") String username) throws Exception {
 

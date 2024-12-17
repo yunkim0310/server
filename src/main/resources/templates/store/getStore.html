@@ -39,7 +39,7 @@
     <body>
         <div id="root">
 
-            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 150px;position: sticky">
+            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 5%;position: sticky">
                 <div class="side">
                     <div class="css-1v4whg ecbxmj3">가게 정보</div>
                     <div th:replace="~{store/getStoreAside :: getStoreAside}"></div>
@@ -56,7 +56,7 @@
                                 <div class="img-container" style="position: relative;">
                                     <div class="img swiper-lazy swiper-lazy-loaded">
                                         <img class="guide-img" style="width: 100%; max-height:500px; display: block;"
-                                             th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}">
+                                             th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}">
                                     </div>
                                 </div>
                             </div>
@@ -183,7 +183,8 @@
                                                             <div class="__desc" th:each="news : ${store.storeNewsList}">
                                                                 <div class="news-item">
                                                                     <p th:text="${news.regDt.split(' ')[0]}" style="font-weight: bold;font-size: 15px;"></p>
-                                                                    <img th:src="'/images/store/'+${news.newsImg}" width="200" height="200" style="padding: 5px;align-items: self-end;">
+                                                                    <img width="200" height="200" style="padding: 5px;align-items: self-end;background-color: #FFFFFF;"
+                                                                         th:src="${(news.newsImg == null || news.newsImg.isEmpty())? '/images/store/icon_no_image.png' : ((news.newsImg.indexOf('_') == -1)? '/images/store/news/' + news.newsImg : url + news.newsImg)}">
                                                                     <p th:text="${news.newsContents}">매장 소식</p>
                                                                 </div>
                                                             </div>
@@ -268,22 +269,25 @@
                                         <div class="__menupan-item" th:each="menu : ${store.menuList}">
 
                                             <table>
-                                                <tbody style="text-align: left">
+                                                <tbody style="text-align: left;">
                                                     <tr>
-                                                        <td style="width: 30%;">
-                                                            <h3 th:text="${menu.menuName}">메뉴 이름</h3>
-                                                            &ensp;
+                                                        <td style="width: 25%; padding: 15px;">
+                                                            <span style="display: inline-flex">
+                                                                <h3 th:text="${menu.menuName}" style="font-weight: bold;">메뉴 이름</h3>
+                                                            </span>
+                                                            <br/>
                                                             <a class="menuImgLink" th:if="${menu.menuImg != null && !menu.menuImg.isEmpty()}"
-                                                               th:data-url="${(menu.menuImg.indexOf('_') != -1)? '/images/store/menu/'+menu.menuImg : url + 'store/menu/' + menu.menuImg}">
+                                                               th:data-url="${(menu.menuImg.indexOf('_') != -1)? '/images/store/menu/'+menu.menuImg : url + menu.menuImg}"
+                                                               th:data-title="${store.storeName + '&ensp;-&ensp;' + menu.menuName}">
                                                                 [ 메뉴 사진 ]
                                                             </a>
                                                         </td>
-                                                        <td style="width: 60%;">
+                                                        <td style="width: 65%; padding: 15px;">
                                                             <div th:text="${menu.menuInfo}">
                                                                 메뉴 설명
                                                             </div>
                                                         </td>
-                                                        <td style="width: 10%;">
+                                                        <td style="width: 10%; padding: 15px;">
                                                             <div th:text="|${(menu.menuPrice != 0)? menu.menuPrice : '시가'}|">
                                                                 메뉴 가격
                                                             </div>
@@ -291,46 +295,6 @@
                                                     </tr>
                                                 </tbody>
                                             </table>
-
-<!--                                            <table>-->
-<!--                                                <tbody>-->
-<!--                                                <tr>-->
-<!--                                                    <td>-->
-<!--                                                        <div class="__name">-->
-<!--                                                            <h4 th:text="${menu.menuName}">메뉴 이름</h4>-->
-<!--                                                            &ensp;-->
-<!--                                                            <a class="menuImgLink" th:if="${menu.menuImg != null && !menu.menuImg.isEmpty()}"-->
-<!--                                                               th:data-url="${(menu.menuImg.indexOf('_') != -1)? '/images/store/menu/'+menu.menuImg : url + 'store/menu/' + menu.menuImg}">-->
-<!--                                                                [ 메뉴 사진 ]-->
-<!--                                                            </a>-->
-<!--                                                        </div>-->
-<!--                                                    </td>-->
-<!--                                                    <td>-->
-<!--                                                        <div class="__name">-->
-<!--                                                            <div class="__info" th:text="${menu.menuInfo}">-->
-<!--                                                                메뉴 설명-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </td>-->
-<!--                                                    <td>-->
-<!--                                                        <div class="__name">-->
-<!--                                                            <div class="__price" th:text="|${(menu.menuPrice != 0)? menu.menuPrice : '시가'}|">-->
-<!--                                                                메뉴 가격-->
-<!--                                                            </div>-->
-<!--                                                        </div>-->
-<!--                                                    </td>-->
-<!--                                                </tr>-->
-<!--                                                </tbody>-->
-<!--                                            </table>-->
-
-<!--                                            <div class="__name">-->
-<!--                                                <h4 th:text="${menu.menuName}">메뉴 이름</h4>-->
-<!--                                                &ensp;-->
-<!--                                                <a class="menuImgLink" th:if="${menu.menuImg != null && !menu.menuImg.isEmpty()}"-->
-<!--                                                   th:data-url="${(menu.menuImg.indexOf('_') != -1)? '/images/store/menu/'+menu.menuImg : url + 'store/menu/' + menu.menuImg}">[ 메뉴 사진 ]</a>-->
-<!--                                                <div class="__info" th:text="${menu.menuInfo}">메뉴 설명</div>-->
-<!--                                                <div class="__price" th:text="|${(menu.menuPrice != 0)? menu.menuPrice : '시가'}|">메뉴 가격</div>-->
-<!--                                            </div>-->
 
                                         </div>
                                     </div>

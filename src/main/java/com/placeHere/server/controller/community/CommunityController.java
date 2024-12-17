@@ -560,7 +560,8 @@ public class CommunityController {
 
     // 친구 목록 조회
     @GetMapping("/getFriendList")
-    public String getFriendList(@SessionAttribute("user") User user, Search search,
+    public String getFriendList(@SessionAttribute("user") User user,
+                                @ModelAttribute Search search,
                                 @RequestParam(value = "keyword", required = false) String keyword, Model model) {
 
         System.out.println("/review/getFriendList : GET");
@@ -569,10 +570,21 @@ public class CommunityController {
             String username = user.getUsername();
             System.out.println("username : "+username);
 
+            // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
+            search.setPageSize(pageSize);
+            search.setListSize(5);
+
             // 친구 목록 가져오기
-            List<Friend> friends = friendService.getFriendList(username, new Search(pageSize, 10), keyword);
+            List<Friend> friends = friendService.getFriendList(username, search, keyword);
+
+            System.out.println(friends);
+
+            int totalCnt = (friends.isEmpty())? 0: friends.get(0).getFriendTotalCnt();
+            Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+            model.addAttribute("paging", paging);
 
             model.addAttribute("friends", friends);
+            model.addAttribute("paging", paging);
             model.addAttribute("keyword", keyword);
 
             return "test/community/getFriendList";

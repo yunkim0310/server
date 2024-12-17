@@ -16,6 +16,7 @@
         <result property="friendStatus" column="friend_status" jdbcType="BOOLEAN"/>
         <result property="profileImg" column="profile_img" jdbcType="VARCHAR"/>
         <result property="username" column="username" jdbcType="VARCHAR"/>
+        <result property="friendTotalCnt" column="friend_total_cnt" jdbcType="INTEGER" javaType="int"/>
     </resultMap>
 
 
@@ -73,7 +74,7 @@
 
     <!--    친구 목록을 조회하다 -->
     <select id="getFriendList" parameterType="map" resultMap="friendMap">
-        SELECT *
+        SELECT *, COUNT(*) OVER() AS friend_total_cnt
         FROM
         (SELECT User.username, User.profile_img
         FROM Friend

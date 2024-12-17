@@ -434,6 +434,7 @@ public class ReservationController {
             HttpSession session,
             @RequestParam("storeId") int storeId,
             @ModelAttribute("reservation") Reservation reservation,
+            RedirectAttributes redirectAttributes,
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : POST");
@@ -468,12 +469,12 @@ public class ReservationController {
         int rsrvNo = reservation.getRsrvNo(); // MyBatis나 JPA가 예약 번호를 설정했다고 가정
 
         // 예약 번호를 pay 페이지로 전달
-        model.addAttribute("rsrvNo", rsrvNo);
+        redirectAttributes.addAttribute("rsrvNo", rsrvNo);
 
-        return "reservation/chkRsrv";
+        return "redirect:/reservation/chkRsrv";
     }
 
-    @RequestMapping(value = "chkRsrv", method = RequestMethod.POST)
+    @RequestMapping(value = "chkRsrv", method = RequestMethod.GET)
     public String chkRsrv(@RequestParam("rsrvNo") int rsrvNo,
                           HttpSession session,
                           Model model) throws Exception {
@@ -494,7 +495,7 @@ public class ReservationController {
 
         model.addAttribute("reservation", reservation);
 
-        return "reservation/sendRsrv";
+        return "reservation/chkRsrv";
     }
 
 
@@ -667,15 +668,6 @@ public class ReservationController {
 //    }
 
 
-    @RequestMapping( value="testRsrv", method=RequestMethod.GET )
-    public String testRsrv(HttpSession session,
-                           Model model) throws Exception {
-
-        User user = (User) session.getAttribute("user");
-
-
-        return "reservation/testRsrv";
-    }
 
 
 }

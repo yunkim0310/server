@@ -3,6 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <title>친구 목록</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
+    <script src="/javascript/community/getFriendList.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -118,5 +123,14 @@
            th:text="${friend.username} + '님의 프로필 바로가기'">N님 프로필 바로가기</a>
     </li>
 </ul>
+
+<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+<form name="pagingForm">
+    <input type="hidden" name="page">
+    <input type="hidden" placeholder="검색어 입력" name="keyword" th:value="${keyword}">
+    <input type="hidden" name="type" value="friend">
+</form>
+
 </body>
 </html>
