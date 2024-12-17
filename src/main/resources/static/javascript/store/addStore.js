@@ -307,7 +307,7 @@ $(function() {
                 '</tr>' +
                 '<tr>' +
                     '<td>' +
-                        `<div id="menuImg${menuCnt+1}" style="display: none;">` +
+                        `<div id="menuImg${menuCnt+1}" style="display: none;padding-bottom: 10px;">` +
                             `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
                         '</div>' +
                     '</td>' +

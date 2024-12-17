@@ -756,9 +756,9 @@
         )
         AND store_status = 0
         ORDER BY FIELD(store_id,
-        <foreach collection="storeIdList" item="storeId" separator=",">
-            #{storeId}
-        </foreach>
+            <foreach collection="storeIdList" item="storeId" separator=",">
+                #{storeId}
+            </foreach>
         )
 
     </select>

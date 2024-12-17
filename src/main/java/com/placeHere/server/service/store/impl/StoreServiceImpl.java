@@ -55,22 +55,6 @@ public class StoreServiceImpl implements StoreService {
 
         System.out.println("\nStoreDao.addStore()");
 
-        // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
-        List<String> storeImgList = store.getStoreImgList();
-
-        if (storeImgList.size() < 5) {
-
-            for (int i = 0; i < 5-storeImgList.size(); i++) {
-
-                storeImgList.add(null);
-
-            }
-
-        }
-
-        System.out.println("storeImgList= "+storeImgList);
-        store.setStoreImgList(storeImgList);
-
         // INSERT 되는 TABLE : store, amenities, menu
         storeDao.addStore(store);
         int storeId = storeDao.getStoreId(store.getUserName());
@@ -92,13 +76,21 @@ public class StoreServiceImpl implements StoreService {
         Store store = storeDao.getStore(storeId);
 
         if (store != null) {
+
             StoreOperation storeOperation = storeDao.getOperationByDt(storeId, effectDt);
             List<String> closedayList = storeDao.getClosedayList(storeId);
 
-            List<String> regularClosedayList = new ArrayList<String>();
-            regularClosedayList.add(storeOperation.getRegularCloseday1());
-            regularClosedayList.add(storeOperation.getRegularCloseday2());
-            regularClosedayList.add(storeOperation.getRegularCloseday3());
+            if (storeOperation != null) {
+
+                List<String> regularClosedayList = new ArrayList<String>();
+                regularClosedayList.add(storeOperation.getRegularCloseday1());
+                regularClosedayList.add(storeOperation.getRegularCloseday2());
+                regularClosedayList.add(storeOperation.getRegularCloseday3());
+
+                storeOperation.setRegularClosedayList(regularClosedayList);
+                storeOperation.setClosedayList(closedayList);
+
+            }
 
             List<String> storeImgList = new ArrayList<String>();
             storeImgList.add(store.getStoreImg1());
@@ -107,8 +99,6 @@ public class StoreServiceImpl implements StoreService {
             storeImgList.add(store.getStoreImg4());
             storeImgList.add(store.getStoreImg5());
 
-            storeOperation.setRegularClosedayList(regularClosedayList);
-            storeOperation.setClosedayList(closedayList);
             store.setStoreOperation(storeOperation);
             store.setStoreImgList(storeImgList);
             store.setStoreNewsList(storeDao.getStoreNewsList(storeId, new Search(pageSize, listSize)));
@@ -190,19 +180,6 @@ public class StoreServiceImpl implements StoreService {
 
         System.out.println("amenitiesEquals= "+amenitiesEquals);
         System.out.println("menuEquals= "+menuEquals);
-
-        // 매장 사진이 5개가 안되면 남는 부분 null 로 넣기
-        List<String> storeImgList = store.getStoreImgList();
-
-        if (storeImgList.size() < 5) {
-
-            for (int i = 0; i < 5-storeImgList.size(); i++) {
-
-                storeImgList.add(null);
-
-            }
-
-        }
 
         // UPDATE 되는 TABLE : store, amenities, menu
         storeDao.updateStore(store);
