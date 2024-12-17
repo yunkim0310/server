@@ -15,6 +15,7 @@
         <result property="pointDt" column="point_dt" jdbcType="DATE"/>
         <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
         <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
+        <result property="pointTotalCnt" column="point_total_cnt" jdbcType="INTEGER"/>
         <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
     </resultMap>
 
@@ -40,7 +41,7 @@
             (#{username}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
     </insert>
 
-    <select id="getPointHistoryList" parameterType="String" resultMap="pointSelectMap">
+    <select id="getPointHistoryList" resultMap="pointSelectMap">
         SELECT
             tran_no,
             username,
@@ -48,10 +49,23 @@
             tran_point,
             point_dt,
             curr_point,
-            rel_no
+            rel_no,
+            COUNT(*) OVER() AS point_total_cnt
         FROM point_transaction
-        WHERE username = #{username}
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <if test="searchKeyword == '차감'">
+                    dep_type LIKE '상품 구매'
+                </if>
+                <if test="searchKeyword == '적립">
+                    dep_type NOT LIKE '상품 구매'
+                </if>
+            </if>
+            AND username = #{username}
+        </where>
+#         WHERE
         ORDER BY tran_no DESC
+        LIMIT #{startRowNum}, #{listSize}
     </select>
 
 </mapper>

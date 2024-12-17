@@ -46,8 +46,10 @@ public interface PurchaseDao {
     //    // 찜 목록 항목 삭제
 //    public void removeWish(int wishCartNo) throws Exception;
 
-//    public int isProductInWishList(@Param("prodNo") int prodNo, @Param("buyer") String username);
-public int isProductInWishList(Purchase purchase) throws Exception;
+    //    public int isProductInWishList(@Param("prodNo") int prodNo, @Param("buyer") String username);
+    public int isProductInWishList(Purchase purchase) throws Exception;
+
+    public int isProductInCartList(Purchase purchase) throws Exception;
 
     public int getWishListCount(String username);
 
@@ -59,4 +61,6 @@ public int isProductInWishList(Purchase purchase) throws Exception;
 
     // 장바구니 비우기
     public void clearWishCartByUsername(String username) throws Exception;
+
+    public void clearWishByUsername(String username) throws Exception;
 }

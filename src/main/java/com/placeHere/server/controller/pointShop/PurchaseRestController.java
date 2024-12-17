@@ -27,8 +27,22 @@ public class PurchaseRestController {
             String username = buyer.getUsername();
             System.out.println("username : " + username);
             purchase.setBuyer(buyer);
-            purchaseService.addCart(purchase);
-            return "장바구니에 상품이 추가되었습니다.";
+            System.out.println("Buyer : " + buyer);
+//            int prodNo = purchase.getProdNo();
+            System.out.println("prodNo : "+ purchase.getProdNo());
+            int isCartExist = purchaseService.isProductInCartList(purchase);
+
+            if (isCartExist != 0) {
+                return "이미 추가된 상품입니다.";
+            }
+
+            int wishCartCount = purchaseService.getCartListCount(username);
+            if(5 <= wishCartCount){
+                return "장바구니가 꽉찼습니다.";
+            }else {
+                purchaseService.addCart(purchase);
+                return "장바구니에 상품이 추가되었습니다.";
+            }
         } catch (Exception e) {
             e.printStackTrace();
             return "장바구니 추가 실패: " + e.getMessage();
@@ -124,6 +138,28 @@ public class PurchaseRestController {
             purchase.setBuyer(buyer);
             System.out.println("Buyer : " + buyer);
             purchaseService.clearWishCartByUsername(username);
+            model.addAttribute("username", username);
+
+//            purchaseService.removeWishCart(wishCartNo);
+            return "상품이 삭제되었습니다.";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "장바구니 삭제 실패: " + e.getMessage();
+        }
+    }
+
+    @DeleteMapping("/clearWish")
+    public String clearWish(@ModelAttribute("purchase") Purchase purchase,
+                            @SessionAttribute("user") User buyer, Model model) {
+
+        System.out.println("clearWish");
+
+        try {
+            String username = buyer.getUsername();
+            System.out.println("username : " + username);
+            purchase.setBuyer(buyer);
+            System.out.println("Buyer : " + buyer);
+            purchaseService.clearWishByUsername(username);
             model.addAttribute("username", username);
 
 //            purchaseService.removeWishCart(wishCartNo);

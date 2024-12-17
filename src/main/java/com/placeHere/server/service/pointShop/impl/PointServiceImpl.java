@@ -3,6 +3,7 @@ package com.placeHere.server.service.pointShop.impl;
 import com.placeHere.server.dao.pointShop.PointDao;
 import com.placeHere.server.domain.Point;
 import com.placeHere.server.domain.Purchase;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.pointShop.PointService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +49,15 @@ public class PointServiceImpl implements PointService {
     }
 
     // 포인트 내역 조회
-    @Override
-    public List<Point> getPointHistoryList(@Param("username") String username) {
+//    @Override
+//    public List<Point> getPointHistoryList(@Param("username") String username) {
+//
+//        return pointDao.getPointHistoryList(username);
+//    }
 
-        return pointDao.getPointHistoryList(username);
+    public List<Point> getPointHistoryList(Search search) {
+
+        return pointDao.getPointHistoryList(search);
+
     }
 }

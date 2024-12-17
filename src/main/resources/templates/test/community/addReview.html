@@ -101,7 +101,7 @@
 <div class="container">
     <h1>리뷰 작성</h1>
 
-    <form th:action="@{/review/addReview}" method="post" onsubmit="return confirm('리뷰 작성 하시겠습니까');">
+    <form th:action="@{/review/addReview}" method="post" onsubmit="return validateForm();">
         <label for="reservation">예약 내역 선택:</label>
         <select id="reservation" name="rsrvNo" required>
             <option value="" disabled selected>예약 내역을 선택하세요</option>
@@ -178,6 +178,14 @@
                 star.classList.remove('filled'); // 별 비우기
             }
         });
+    }
+
+    function validateForm() {
+        if (!reviewScoreInput.value) {
+            alert('리뷰 점수는 필수입니다.'); // 리뷰 점수가 비었을 때 경고 메시지
+            return false; // 폼 제출 방지
+        }
+        return true; // 폼 제출
     }
 </script>
 

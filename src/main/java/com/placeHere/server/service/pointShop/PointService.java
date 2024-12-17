@@ -1,6 +1,7 @@
 package com.placeHere.server.service.pointShop;
 
 import com.placeHere.server.domain.Point;
+import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
@@ -21,5 +22,7 @@ public interface PointService {
     public int getCurrentPoint(@Param("username") String username);
 
     // 포인트 내역 조회
-    public List<Point> getPointHistoryList(@Param("username") String username);
+//    public List<Point> getPointHistoryList(@Param("username") String username);
+    public List<Point> getPointHistoryList(Search search);
+
 }

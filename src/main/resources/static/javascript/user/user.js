@@ -543,3 +543,66 @@ function goodBye() {
   }
   
 }
+
+// 로그인
+function login() {
+
+  event.preventDefault();
+
+  const username = $("#username").val();
+  const password = $("#password").val();
+
+  console.log('username :: ', username);
+  console.log('password :: ', password);
+
+  const user = {
+    username : username,
+    password : password
+  }
+
+  $.ajax({
+      url: '/api-user/login',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(user),
+      success: function(data) {
+
+        console.log('data :: ',data);
+
+        if (data === "SUCCESS") {
+          alert("로그인 완료");
+          location.href='/';
+        } else if(data === "INACTIVE") {
+          alert("휴면계정 입니다.");
+          const result = confirm("전환하시겠습니까?");
+
+          if (result) {
+            console.log('YEEEEEEEEEES');
+            location.href='/user/resetPwdValidation';
+
+          } else {
+            console.log('NOOOOOOOOOOO');
+            location.href='/';
+          }
+
+
+          location.href='/';
+        } else if(data === "DELETED") {
+          alert("탈퇴 회원입니다.");
+          location.href='/';
+        } else {
+          alert("계정 정보가 존재하지 않습니다.");
+          location.href='/user/login';
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+        alert("문제가 발생하였습니다.");
+      }
+    });
+
+
+
+
+
+}

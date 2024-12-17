@@ -126,7 +126,7 @@
                     <div class="css-jmalg e1uzxhvi6">
                       <div class="css-176lya2 e1uzxhvi3 password-block">
                                                 <textarea id="prodDetail" name="prodDetail" th:value="${product.prodDetail}" th:text="${product.prodDetail}"
-                                                          class="css-1bkd15f e1uzxhvi2" placeholder="상품 설명을 입력하세요. 100자 이내 (공백 포함)"
+                                                          class="css-1bkd15f e1uzxhvi2" placeholder="상품 설명을 입력하세요. 200자 이내 (공백 포함)"
                                                           rows="20" style="resize: none; height: 100px"></textarea>
                       </div>
                     </div>
@@ -157,19 +157,17 @@
                       <p class="font-12 color-gray mt-10">1장 필수</p></label>
                   </div><br/><br/>
                     <div class="css-jmalg e1uzxhvi6">
-                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                            <input type="file" accept="image/*" class="prodImg1" th:src="${url + product.prodImg1}">
-                            <input type="hidden" name="prodImg1">
+                        <div class="css-176lya2 e1uzxhvi3 under-name-block"  th:if="${product.prodImg1 != null && !product.prodImg1.isEmpty()}">
+                            <input type="file" accept="image/*" class="prodImg1" >
+                            <input type="hidden" name="prodImg1" th:value="${product.prodImg1}">
                             <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
+                            <img th:src="${url + product.prodImg1}" style="width:100px;height: 100px;">
                             <div id="prodImg1" style="display: none;">
                                 <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
                             </div>
-                            <!--                                            <input id="prodImg1" name="prodImg1"-->
-                            <!--                                                   placeholder="상품 대표 이미지" type="text"-->
-                            <!--                                                   class="css-1bkd15f e1uzxhvi2">-->
                         </div>
                     </div><br/>
-                </div><br/><br/>
+                </div><br/><br/><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
                   <div class="css-1y8737n e744wfw5">
@@ -182,15 +180,15 @@
 <!--                      <input type="file" accept="image/*" name="prodImg2" th:value="${product.prodImg2}">-->
                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                             <input type="file" accept="image/*" class="prodImg2">
-                            <input type="hidden" name="prodImg2">
+                            <input type="hidden" name="prodImg2" th:value="${product.prodImg2}">
                         </div>
                         <div id="prodImg2" style="display: none;">
                             <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100">
                         </div>
-                    </div>
+                    </div><br/><br/><br/><br/>
                       <div class="css-176lya2 e1uzxhvi3 under-name-block">
                           <input type="file" accept="image/*" class="prodImg3">
-                          <input type="hidden" name="prodImg3">
+                          <input type="hidden" name="prodImg3" th:value="${product.prodImg3}">
                       </div>
                       <div id="prodImg3" style="display: none;">
                           <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100">

@@ -35,8 +35,7 @@ public class Friend {
     // 윤지 수정
     private String username;
 
-    private int startRowNum;
-    private int listSize;
+    private int friendTotalCnt;
 
 
     // Constructor

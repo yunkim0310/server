@@ -1,6 +1,7 @@
 package com.placeHere.server.dao.pointShop;
 
 import com.placeHere.server.domain.Point;
+import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -23,6 +24,8 @@ public interface PointDao {
     public int getCurrentPoint(@Param("username") String username);
 
     // 포인트 내역 조회
-    public List<Point> getPointHistoryList(@Param("username") String username);
+//    public List<Point> getPointHistoryList(@Param("username") String username);
+
+    public List<Point> getPointHistoryList(Search search);
 
 }

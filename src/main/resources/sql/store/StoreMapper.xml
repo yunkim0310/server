@@ -84,10 +84,10 @@
     <!-- 사업자 번호 중복 확인 -->
     <select id="chkDuplicateBusinessNo" parameterType="String" resultType="int">
 
-        SELECT COUNT(business_no)
+        SELECT COUNT(*)
         FROM store
         WHERE store_status = 0
-          AND business_no = #{businessNo}
+        AND business_no = #{businessNo}
 
     </select>
 
@@ -381,11 +381,11 @@
                 </choose>,
             food_category_id=#{foodCategoryId}, special_menu_no=#{specialMenuNo},
 
-            <if test="storeImgList[0] != null and storeImgList[0] != ''">store_img1=#{storeImgList[0]},</if>
-            <if test="storeImgList[1] != null and storeImgList[1] != ''">store_img1=#{storeImgList[1]},</if>
-            <if test="storeImgList[2] != null and storeImgList[2] != ''">store_img1=#{storeImgList[2]},</if>
-            <if test="storeImgList[3] != null and storeImgList[3] != ''">store_img1=#{storeImgList[3]},</if>
-            <if test="storeImgList[4] != null and storeImgList[4] != ''">store_img1=#{storeImgList[4]},</if>
+            <if test="storeImg1 != null and storeImg1 != ''">store_img1=#{storeImg1},</if>
+            <if test="storeImg2 != null and storeImg2 != ''">store_img1=#{storeImg2},</if>
+            <if test="storeImg3 != null and storeImg3 != ''">store_img1=#{storeImg3},</if>
+            <if test="storeImg4 != null and storeImg4 != ''">store_img1=#{storeImg4},</if>
+            <if test="storeImg5 != null and storeImg5 != ''">store_img1=#{storeImg5},</if>
 
             hashtag=
                 <choose>
@@ -753,6 +753,12 @@
             <foreach collection="storeIdList" item="storeId" separator=",">
                 #{storeId}
             </foreach>
+        )
+        AND store_status = 0
+        ORDER BY FIELD(store_id,
+        <foreach collection="storeIdList" item="storeId" separator=",">
+            #{storeId}
+        </foreach>
         )
 
     </select>
