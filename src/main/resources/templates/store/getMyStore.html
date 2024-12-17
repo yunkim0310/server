@@ -105,7 +105,7 @@
                                 <th:block th:if="${mode == 'closeday'}" th:insert="~{store/getClosedayList}"></th:block>
 
                                 <!-- 리뷰 보기 -->
-                                <th:block th:if="${mode == 'review'}">
+                                <th:block th:if="${mode == 'review'}" th:insert="~{test/community/getReviewList :: reviewListFragment}">
 
                                 <dl class="__block">
                                     <dt>평균 별점</dt>

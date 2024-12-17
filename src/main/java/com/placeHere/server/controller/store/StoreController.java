@@ -566,8 +566,11 @@ public class StoreController {
                     List<Review> reviewList = communityService.getReviewList(storeId, search);
                     int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
 
+                    Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+
                     model.addAttribute("reviewList", reviewList);
                     model.addAttribute("totalCnt", totalCnt);
+                    model.addAttribute("paging", paging);
 
                     break;
 

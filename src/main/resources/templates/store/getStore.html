@@ -148,8 +148,7 @@
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
-<!--                        <div th:insert="~{}"></div>-->
-                        <div th:insert="~{test/store/getStoreReviewListTest}"></div>
+                        <div th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'info'}">
