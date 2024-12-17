@@ -572,8 +572,8 @@
                             </div>
                         </div><br/><br/>
                         <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
-                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${tranPoint}+P">0</span></h3>
-                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${currPoint}+P">0</span></h3>
+                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${#numbers.formatInteger(tranPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
+                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
                         </div>
                     </div>
 
@@ -621,7 +621,7 @@
                                     <div class="product-info">
                                         <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
                                         <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
-                                        <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                        <p style="color: #FB5555; font-weight: bold;" th:text="${#numbers.formatInteger(purchase.purchaseProd.prodPrice, 3, 'COMMA')+ 'P'}">상품 가격</p>
                                         <p th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}"
                                            th:style="${purchase.purchaseProd.prodStatus == true ? 'color: green; text-align: left;' : 'color: red; text-align: left;'}">
                                             <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>

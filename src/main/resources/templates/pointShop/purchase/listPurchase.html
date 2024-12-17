@@ -518,7 +518,7 @@
                                 </div>
                                 <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
                                 <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
-                                <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                <p style="color: #FB5555; font-weight: bold;" th:text="${#numbers.formatInteger(purchase.purchaseProd.prodPrice, 3, 'COMMA')+ 'P'}">상품 가격</p>
                             </div>
                         </div>
                         <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">
