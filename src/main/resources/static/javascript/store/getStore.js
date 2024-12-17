@@ -458,6 +458,40 @@ $(function () {
 
     }
 
+    // 메뉴 사진 이벤트 처리
+    $(".menuImgLink").on("click", function () {
+
+        const url = $(this).data("url");
+
+        openImagePopup(url);
+    })
+
 });
+
+// 메뉴 사진 팝업 메서드
+function openImagePopup(imageUrl) {
+    const popupOptions = 'width=300,height=300,resizable=no,scrollbars=no';
+    const popup = window.open('', '_blank', popupOptions);
+
+    // 팝업창 내용 작성
+    if (popup) {
+        popup.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>Image Popup</title>
+                <style>
+                    body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #000; }
+                    img { max-width: 100%; max-height: 100%; }
+                </style>
+            </head>
+            <body>
+                <img src="${imageUrl}" alt="Popup Image">
+            </body>
+            </html>
+        `);
+        popup.document.close();
+    }
+}
 
 

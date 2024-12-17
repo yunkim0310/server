@@ -143,8 +143,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUserStatus(String username) throws Exception {
-
+    public int updateUserStatus(User user) throws Exception {
+        int result = 0;
+        result = userDao.updateUserStatus(user);
+        return result;
     }
 
     public int updateLoginDt (String username) throws Exception {
@@ -154,11 +156,6 @@ public class UserServiceImpl implements UserService {
         return result;
     }
 
-//    public void updateUserStatus (String username) throws Exception {
-//
-//        System.out.println("updateUserStatus");
-//
-//    }
 
     public List<User> getUserList() throws Exception {
 

@@ -85,11 +85,9 @@ public class FriendServiceImpl implements FriendService {
 
     // 친구 목록 조회
     @Override
-    public List<Friend> getFriendList(String userName, Search search) throws Exception {
-
+    public List<Friend> getFriendList(String userName, Search search, String keyword) throws Exception {
         System.out.println("getFriendList 친구 목록 조회");
-
-        return friendDao.getFriendList(userName, search);
+        return friendDao.getFriendList(userName, search, keyword);
     }
 
 

@@ -20,7 +20,6 @@ body {
 
 .__name .__info {
     position: absolute;
-    left: 400px;  /* 메뉴 설명을 왼쪽에서 20px 띄우기 */
 }
 
 .__desc {

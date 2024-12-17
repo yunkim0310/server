@@ -29,20 +29,20 @@ $(function() {
             },
             success: function(result) {
 
-                alert(result);
+//                alert(result);
 
                 // 좋아요 취소
-                if (result === "-1") {
+//                if (result === "-1") {
 
-                    alert("좋아요 취소 성공");
+//                    alert("좋아요 취소 성공");
 
-                } else if (result === "1") {
+//                } else if (result === "1") {
 
-                    alert("좋아요 등록 성공");
+//                    alert("좋아요 등록 성공");
 
-                } else {
-                    alert("오류");
-                }
+//                } else {
+//                    alert("오류");
+//                }
 
                 location.reload();
 

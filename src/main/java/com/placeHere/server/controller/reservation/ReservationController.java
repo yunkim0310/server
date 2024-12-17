@@ -359,7 +359,11 @@ public class ReservationController {
 
         User user = (User) session.getAttribute("user");
 
+        System.out.println(storeId);
+
         Store stores = storeService.getStore(storeId);
+
+        System.out.println(stores);
 
         String storeName = stores.getUserName();
 
@@ -663,6 +667,15 @@ public class ReservationController {
 //    }
 
 
+    @RequestMapping( value="testRsrv", method=RequestMethod.GET )
+    public String testRsrv(HttpSession session,
+                           Model model) throws Exception {
+
+        User user = (User) session.getAttribute("user");
+
+
+        return "reservation/testRsrv";
+    }
 
 
 }

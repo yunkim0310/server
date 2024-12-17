@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Test Count Reservations API</title>
+  <script>
+    async function testCountReservations() {
+      // 사용자 입력 가져오기
+      const role = document.getElementById("role").value;
+      const userName = document.getElementById("userName").value;
+
+      // 요청 payload 생성
+      const payload = {
+        role: role,
+        userName: userName
+      };
+
+      try {
+        // API 호출
+        const response = await fetch('/api-reservation/countReservations', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          throw new Error(`API 호출 실패: ${response.statusText}`);
+        }
+
+        // 결과 처리
+        const result = await response.json();
+        document.getElementById("result").innerHTML = `
+                    <h3>결과</h3>
+                    <pre>${JSON.stringify(result, null, 2)}</pre>
+                `;
+      } catch (error) {
+        // 에러 처리
+        document.getElementById("result").innerHTML = `
+                    <p style="color: red;">에러 발생: ${error.message}</p>
+                `;
+      }
+    }
+  </script>
+</head>
+<body>
+<div style="text-align: center; margin-top: 50px;">
+  <h1>Test Count Reservations API</h1>
+  <div style="margin-bottom: 20px;">
+    <label for="role">Role:</label>
+    <select id="role">
+      <option value="ROLE_USER">ROLE_USER</option>
+      <option value="ROLE_STORE">ROLE_STORE</option>
+    </select>
+  </div>
+  <div style="margin-bottom: 20px;">
+    <label for="userName">User Name:</label>
+    <input type="text" id="userName" placeholder="Enter User Name" required>
+  </div>
+  <button onclick="testCountReservations()" style="padding: 10px 20px; font-size: 16px;">테스트</button>
+  <div id="result" style="margin-top: 30px; font-size: 16px;"></div>
+</div>
+</body>
+</html>

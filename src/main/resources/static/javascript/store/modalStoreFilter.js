@@ -446,6 +446,7 @@ $(function() {
     $("button[name='searchStoreFilter']").on("click", function () {
 
         $("#filterModal").show();
+        $("header.header-wrap").hide();
     });
 
 
@@ -469,7 +470,8 @@ $(function() {
             updateAmenitiesText();
         }
 
-        $("#filterModal").hide();  // 모달을 닫음
+        $("#filterModal").hide();
+        $("header.header-wrap").show();
     });
 
 

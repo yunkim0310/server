@@ -101,13 +101,13 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 예약 목록 조회 일반 회원
-    public List<Reservation> getRsrvUserList(String userName, Search search) throws Exception {
+    public List<Reservation> getRsrvUserList(@Param("userName") String userName, @Param("search") Search search) throws Exception {
         return reservationDao.getRsrvUserList(userName, search);
     }
 
 
     // 예약 목록 조회 점주
-    public List<Reservation> getRsrvStoreList(int storeId, Search search) throws Exception {
+    public List<Reservation> getRsrvStoreList(@Param("storeId") int storeId, @Param("search") Search search) throws Exception {
         return reservationDao.getRsrvStoreList(storeId, search);
     }
 
@@ -248,24 +248,43 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 탈퇴 예정인 일반 회원의 일괄 환불
-    public void getRemoveUserRefundPayment(String userName) throws Exception {
-        // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
-        List<Integer> removeUserRsrvNos = reservationDao.getRemoveUserRsrvNos(userName);
+    public boolean getRemoveUserRefundPayment(String userName) throws Exception {
+        try {
+            // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
+            List<Integer> removeUserRsrvNos = reservationDao.getRemoveUserRsrvNos(userName);
 
-        if (removeUserRsrvNos != null && !removeUserRsrvNos.isEmpty()) {
-            for (int rsrvNo : removeUserRsrvNos) {
+            if (removeUserRsrvNos != null && !removeUserRsrvNos.isEmpty()) {
+                for (int rsrvNo : removeUserRsrvNos) {
+                    // 예약 상태를 "예약 취소"로 업데이트
+                    reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
 
-                reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
+                    reservationDao.updateRsrvReason(rsrvNo, "회원 탈퇴로 인한 환불");
 
-                Reservation reservation = reservationDao.getRsrv(rsrvNo);
+                    // 예약 정보 가져오기
+                    Reservation reservation = reservationDao.getRsrv(rsrvNo);
 
-                System.out.println(reservation.getAmount());
+                    // 예약 금액 출력 (디버깅용)
+                    System.out.println("환불 금액: " + reservation.getAmount());
 
-                paymentService.refundPayment(reservation.getPaymentId(), "회원 탈퇴로 인한 환불" , reservation.getRsrvDt(), reservation.getAmount());
+                    // 환불 처리
+                    paymentService.refundPayment(
+                            reservation.getPaymentId(),
+                            "회원 탈퇴로 인한 환불",
+                            reservation.getRsrvDt(),
+                            reservation.getAmount()
+                    );
+                }
+                System.out.println("예약 번호에서 환불할 내역: " + removeUserRsrvNos);
+                return true; // 정상 실행
+            } else {
+                System.out.println("예약 번호에서 환불할 내역이 없습니다.");
+                return true; // 내역이 없지만 에러는 아니므로 true 반환
             }
-            System.out.println("예약 번호에서 환불할 내역: " + removeUserRsrvNos);
-        } else {
-            System.out.println("예약 번호에서 환불할 내역이 없습니다.");
+        } catch (Exception e) {
+            // 에러 발생 시 로그 출력
+            System.err.println("회원 일괄 환불 처리 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return false; // 에러 발생 시 false 반환
         }
     }
 
@@ -277,22 +296,40 @@ public class ReservationServiceImpl implements ReservationService{
 
 
     // 탈퇴 예정인 점주 회원의 일괄 환불
-    public void getRemoveStoreRefundPayment(int storeId) throws Exception {
-        // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
-        List<Integer> removeStoreRsrvNos = reservationDao.getRemoveStoreRsrvNos(storeId);
+    public boolean getRemoveStoreRefundPayment(int storeId) throws Exception {
+        try {
+            // 예약 번호 리스트 가져오기
+            List<Integer> removeStoreRsrvNos = reservationDao.getRemoveStoreRsrvNos(storeId);
 
-        if (removeStoreRsrvNos != null && !removeStoreRsrvNos.isEmpty()) {
-            for (int rsrvNo : removeStoreRsrvNos) {
+            if (removeStoreRsrvNos != null && !removeStoreRsrvNos.isEmpty()) {
+                for (int rsrvNo : removeStoreRsrvNos) {
+                    // 예약 상태를 "예약 취소"로 업데이트
+                    reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
 
-                reservationDao.updateRsrvStatus(rsrvNo, "예약 취소");
+                    reservationDao.updateRsrvReason(rsrvNo, "가게 탈퇴로 인한 환불");
 
-                Reservation reservation = reservationDao.getRsrv(rsrvNo);
+                    // 예약 정보 가져오기
+                    Reservation reservation = reservationDao.getRsrv(rsrvNo);
 
-                paymentService.refundPayment(reservation.getPaymentId(), "가게 탈퇴로 인한 환불", null, reservation.getAmount());
+                    // 환불 처리
+                    paymentService.refundPayment(
+                            reservation.getPaymentId(),
+                            "가게 탈퇴로 인한 환불",
+                            null,
+                            reservation.getAmount()
+                    );
+                }
+                System.out.println("예약 번호에서 환불할 내역: " + removeStoreRsrvNos);
+                return true; // 정상 실행
+            } else {
+                System.out.println("예약 번호에서 환불할 내역이 없습니다.");
+                return true; // 내역이 없어도 에러는 아님
             }
-            System.out.println("예약 번호에서 환불할 내역: " + removeStoreRsrvNos);
-        } else {
-            System.out.println("예약 번호에서 환불할 내역이 없습니다.");
+        } catch (Exception e) {
+            // 에러 발생 시 로그 출력
+            System.err.println("점주 회원 일괄 환불 중 오류 발생: " + e.getMessage());
+            e.printStackTrace();
+            return false; // 에러 발생 시 false 반환
         }
     }
 

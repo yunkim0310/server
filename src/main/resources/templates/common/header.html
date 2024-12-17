@@ -45,15 +45,38 @@
     <div class="header">
         <div class="headerMain">
             <div class="logo">
-                <a id="home" href="/"><img class="logoImg" src="/images/common/logo.png"/></a>
+                <a id="home" href="/">
+                    <img class="logoImg" src="/images/common/logo.png"/>
+                </a>
             </div>
-
 
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
-                    <li class="non-side-bar"><span style="font-weight: bold;" id="username" class="text-white me-2">[[ ${session.user.username} ]]</span></li>
-                    <li id="/user/setting" class="non-side-bar"><a href="/user/setting"><img class="logout" src="/images/common/settings.png" /></a></li>
-                    <li id="logout"><a href="/user/logout"><img style="margin-left:5px; margin-top:5px;" class="logout" src="/images/common/logout.png" /></a></li>
+                    <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
+                        <a href="#">
+                            <img src="/images/store/icon_chat.png"/>
+                        </a>
+                    </li>
+                    <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
+                        <a href="/getStoreLikeList">
+                            <img src="/images/store/icon_heart_red.png"/>
+                        </a>
+                    </li>
+                    <li class="non-side-bar">
+                        <span style="font-weight: bold;" id="username" class="text-white me-2">
+                            [[ ${session.user.username} ]]
+                        </span>
+                    </li>
+                    <li id="/user/setting" class="non-side-bar">
+                        <a href="/user/setting">
+                            <img class="logout" src="/images/common/settings.png" />
+                        </a>
+                    </li>
+                    <li id="logout">
+                        <a href="/user/logout">
+                            <img style="margin-left:5px;" class="logout" src="/images/common/logout.png" />
+                        </a>
+                    </li>
                 </ul>
             </div>
 

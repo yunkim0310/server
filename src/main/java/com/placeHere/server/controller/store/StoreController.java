@@ -382,12 +382,27 @@ public class StoreController {
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 
+        List<String> popularKeywordList = searchService.getPopularKeyword();
+
+        System.out.println(popularKeywordList.size());
+
+        if (popularKeywordList.size() < 10) {
+
+            int popularKeywordCnt = popularKeywordList.size();
+
+            for (int i = 0; i < 10 - popularKeywordCnt; i++) {
+                popularKeywordList.add("");
+            }
+        }
+
+        System.out.println(popularKeywordList);
+
         model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
         model.addAttribute("foodCategory", new FoodCategory());
         model.addAttribute("amenitiesNameList", amenitiesNameList);
         model.addAttribute("search", new Search());
-        model.addAttribute("popularKeywordList", searchService.getPopularKeyword());
+        model.addAttribute("popularKeywordList", popularKeywordList);
 
         return "store/searchStore";
     }
@@ -464,6 +479,9 @@ public class StoreController {
         // 구글 맵
         model.addAttribute("googleApi", googleApi);
 
+        // 버킷 url
+        model.addAttribute("url", bucketUrl);
+
         return "store/getStoreList";
     }
 
@@ -482,6 +500,7 @@ public class StoreController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
+        model.addAttribute("url", bucketUrl);
 
         Store store = storeService.getStore(storeId, Date.valueOf(LocalDate.now()));
         search.setPageSize(pageSize);
@@ -566,7 +585,7 @@ public class StoreController {
     // 가게 좋아요 목록 조회
     @GetMapping("/getStoreLikeList")
     public String getLikeStoreList(HttpSession session,
-                                   @RequestParam("page") int page,
+                                   @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                    Model model) throws Exception {
 
         System.out.println("/store/getLikeStoreList : GET");

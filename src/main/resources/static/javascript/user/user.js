@@ -375,12 +375,171 @@ function photoEdit() {
       });
 
   });
-
-}
+} // end of photoEdit
 
 // 비밀번호 재설정
 function resetPwd() {
+
+  event.preventDefault();
+
+  const username = $('#username').val();
+  const password = $('#password').val();
+
+  console.log('username :: ' + username);
+  console.log('password :: ' + password);
+
+  const user = {
+    username : username,
+    password : password
+  }
+
+  $.ajax({
+    url: '/api-user/resetPwd',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(user),
+    success: function(data) {
+
+      console.log('data :: ',data);
+
+      if (data === "SUCCESS") {
+        alert("비밀번호가 변경되었습니다! 재로그인 해주세요.");
+        location.href='/';
+      } else {
+        alert("실패!");
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+      alert("비밀번호 변경 중 오류가 발생했습니다.");
+    }
+
+  });
+
   
-  
+}
+
+// 회원탈퇴 함수
+function goodBye() {
+
+  // username 가져오기
+  const username = $(".username").text();
+  const role = $(".role").val();
+
+  console.log("username :: ", username);
+  console.log("role :: ", role);
+
+  const firstYn = confirm("탈퇴하시겠습니까?");
+  console.log('result :: ', firstYn);
+
+  const user = {
+    username : username,
+    role : role
+  }
+
+  // true면 실행
+  if( firstYn ) {
+
+    $.ajax({
+      url: '/api-user/goodByeRsrvCnt',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(user),
+      success: function(data) {
+
+        console.log('data :: ',data);
+
+        const status = data.status;
+        const rsrvCnt = data.rsrvCnt;
+        const phoneRsrvCnt = data.phoneRsrvCnt;
+        const role = data.role;
+
+        let secondYn;
+
+        if (status === "SUCCESS") {
+
+          // 일반회원일 때 컨펌창
+          if(role === "ROLE_USER") {
+
+
+            secondYn = confirm(`
+                          환불처리 될 예약 건수 :: ${rsrvCnt} 입니다.
+                          진행하시겠습니까?
+                      `);
+
+
+          // 점주 회원일 때 컨펌창
+          } else {
+
+            secondYn = confirm(`
+                              환불처리 될 예약 건수
+                              - 전화예약 : ${phoneRsrvCnt} ,
+                              - 일반예약 :  ${rsrvCnt} 입니다.
+                              진행하시겠습니까?"
+                        `);
+
+          }
+          
+          // 확인 누른다면
+          if ( secondYn ) {
+
+            console.log("secondYn :: " + secondYn);
+
+            // cnt 받은 다음 시작
+            $.ajax({
+              url: '/api-user/goodBye',
+              type: 'POST',
+              contentType: 'application/json',
+              data: JSON.stringify(user),
+              success: function(data) {
+
+                console.log('data :: ',data);
+
+                if (data === "SUCCESS") {
+                  alert("탈퇴 되었습니다.");
+                  location.href='/';
+                } else {
+                  alert("탈퇴 도중 문제가 발생하였습니다.");
+                }
+              },
+              error: function(xhr, status, error) {
+                console.error('Error:', error);
+              }
+            }); // end of ajax2
+
+          } else {
+            alert('취소되었습니다.');
+            return;
+          }
+        }
+
+      },
+    }); // end of ajax2
+
+    // cnt 받은 다음 시작
+    // $.ajax({
+    //   url: '/api-user/goodBye',
+    //   type: 'POST',
+    //   contentType: 'application/json',
+    //   data: JSON.stringify(user),
+    //   success: function(data) {
+    //
+    //     console.log('data :: ',data);
+    //
+    //     if (data === "SUCCESS") {
+    //       // alert("환불처리 될 예약 건수 :: "  );
+    //       alert("탈퇴 되었습니다.");
+    //       location.href='/';
+    //     } else {
+    //       alert("실패!");
+    //     }
+    //   },
+    //   error: function(xhr, status, error) {
+    //     console.error('Error:', error);
+    //     alert("안되지롱");
+    //   }
+    // }); // end of ajax2
+
+  }
   
 }
