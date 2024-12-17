@@ -696,10 +696,15 @@
                             <span style="padding-left: 30px; font-size: 15px;"
                                   th:text="${product.prodCateName}"></span>
                         </div>
+<!--                        <p class="slogan" style="line-height: 1.5; font-size: 25px;"-->
+<!--                           th:text="'&ensp;'+${product.prodPrice}+P">-->
+<!--                            상품 가격-->
+<!--&lt;!&ndash;                            th:src="/file/pointShop/nimbus_money.png"&ndash;&gt;-->
+<!--                        </p>-->
                         <p class="slogan" style="line-height: 1.5; font-size: 25px;"
-                           th:text="'&ensp;'+${product.prodPrice}+P">
+                           th:text="'&ensp;'+${#numbers.formatInteger(product.prodPrice, 3, 'COMMA')+ 'P'}">
                             상품 가격
-<!--                            th:src="/file/pointShop/nimbus_money.png"-->
+                            <!--                            th:src="/file/pointShop/nimbus_money.png"-->
                         </p>
                         <div>
                             <p class="slogan" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}"
@@ -766,7 +771,7 @@
 <!--                                </dl>-->
 <!--                            </div><br/><br/>-->
                             <div class="expandable-section">
-                                <button class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
+                                <button th:if="${product.prodImg2 != null and product.prodImg2 != '' || product.prodImg3 != null and product.prodImg3 != ''}" class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
                                 <div class="content" style="display: none;">
                                 <dl>
 <!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
@@ -865,7 +870,7 @@
                                                         <img th:src="${url + products.prodImg1}" width="300" height="300" style="padding: 5px;align-items: self-end;">
                                                         <p th:text="${products.prodCateName}" style="font-size: 15px;">상품 카테고리</p>
                                                         <p th:text="${products.prodName}" style="font-weight: bold; font-size: 22px;">상품명</p>
-                                                        <p th:text="${products.prodPrice}+P" style="font-size: 17px; color: #FB5555;">상품 가격</p>
+                                                        <p th:text="${#numbers.formatInteger(products.prodPrice, 3, 'COMMA')+ 'P'}" style="font-size: 17px; color: #FB5555;">상품 가격</p>
                                                         <p th:class="${products.prodStatus == true ? 'available'  : 'unavailable'}"
                                                            th:style="${products.prodStatus == true ? 'color: green; font-weight: bold;' : 'color: red; font-weight: bold;'}"
                                                                 th:text="${products.prodStatus == true ? '구매 가능' : '판매 중지'}" style="font-size: 17px;">상품 가격</p>

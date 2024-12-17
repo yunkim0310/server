@@ -95,36 +95,41 @@ public class PurchaseController {
             return "redirect:/";
 
         }else if (user.getRole().equals("ROLE_USER")) {
-            String username = user.getUsername();
-            purchase.setBuyer(user);
-            purchase.setUsername(username);
-            System.out.println("addPurchase's username: " + username);
-
-            System.out.println("/purchase/addPurchase : GET");
-
-            int currPoint = pointService.getCurrentPoint(username);
 
             Product product = productService.getProduct(prodNo);
+            if(!product.isProdStatus()){
+                return "redirect:/";
+            }else {
 
-            int tranPoint = product.getProdPrice() * product.getCntProd();
-            purchase.setProdNo(prodNo);
-            purchase.setTranPoint(-tranPoint);
-            purchase.setDepType("상품 구매");
-            purchase.setRelNo(prodNo);
+                String username = user.getUsername();
+                purchase.setBuyer(user);
+                purchase.setUsername(username);
+                System.out.println("addPurchase's username: " + username);
 
-            System.out.println("product.getCntProd() = " + product.getCntProd());
-            System.out.println("tranPoint : " + tranPoint);
-            System.out.println("currPoint : " + currPoint);
-            System.out.println("product.getProdPrice() : " + product.getProdPrice());
+                System.out.println("/purchase/addPurchase : GET");
+
+                int currPoint = pointService.getCurrentPoint(username);
+
+                int tranPoint = product.getProdPrice() * product.getCntProd();
+                purchase.setProdNo(prodNo);
+                purchase.setTranPoint(-tranPoint);
+                purchase.setDepType("상품 구매");
+                purchase.setRelNo(prodNo);
+
+                System.out.println("product.getCntProd() = " + product.getCntProd());
+                System.out.println("tranPoint : " + tranPoint);
+                System.out.println("currPoint : " + currPoint);
+                System.out.println("product.getProdPrice() : " + product.getProdPrice());
 //
-            model.addAttribute("url", bucketUrl);
-            model.addAttribute("currPoint", currPoint);
-            model.addAttribute("username", username);
-            model.addAttribute("tranPoint", tranPoint);
-            model.addAttribute("product", product);
-            model.addAttribute("purchase", purchase);
+                model.addAttribute("url", bucketUrl);
+                model.addAttribute("currPoint", currPoint);
+                model.addAttribute("username", username);
+                model.addAttribute("tranPoint", tranPoint);
+                model.addAttribute("product", product);
+                model.addAttribute("purchase", purchase);
 
-            return "pointShop/purchase/addPurchase";
+                return "pointShop/purchase/addPurchase";
+            }
         }else{
             return "redirect:/";
         }
@@ -399,6 +404,10 @@ public class PurchaseController {
             for (Purchase cartItem : cartList) {
                 Product product = productService.getProduct(cartItem.getProdNo());
                 Point point = new Point();
+                if(!product.isProdStatus()){
+                    purchaseService.removeCart(cartItem);
+                    System.out.println("판매 중지 상품 삭제 완료!");
+                }
                 int plusPoint = product.getProdPrice();
                 cartItem.setProdNo(cartItem.getProdNo());
                 cartItem.setTranPoint(-plusPoint);  // 포인트 차감

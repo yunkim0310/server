@@ -586,7 +586,7 @@
                                 </tr>
                                 <tr>
                                     <th style="width: 30%;">거래 포인트</th>
-                                    <td th:text="${purchase.tranPoint}+P" style="width: 80%; color: #FB5555; font-weight: bold;"></td>
+                                    <td th:text="${#numbers.formatInteger(purchase.tranPoint, 3, 'COMMA')+ 'P'}" style="width: 80%; color: #FB5555; font-weight: bold;"></td>
                                 </tr>
                                 <tr>
                                     <th style="width: 30%;">거래일자</th>
@@ -672,7 +672,8 @@
                             <!--                                </dl>-->
                             <!--                            </div><br/><br/>-->
                             <div class="expandable-section">
-                                <button class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
+                                <button th:if="${purchase.purchaseProd.prodImg2 != null and purchase.purchaseProd.prodImg2 != '' || purchase.purchaseProd.prodImg3 != null and purchase.purchaseProd.prodImg3 != ''}"
+                                        class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
                                 <div class="content" style="display: none;">
                                 <dl>
 <!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->

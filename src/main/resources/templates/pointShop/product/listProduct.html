@@ -582,7 +582,8 @@
                             <div class="product-info">
                                 <p th:text="${product.prodCateName}">상품 카테고리</p>
                                 <h3 th:text="${product.prodName}">상품명</h3>
-                                <p style="color: #FB5555; font-weight: bold;" th:text="${product.prodPrice} + 'P'">상품 가격</p>
+                                <p style="color: #FB5555; font-weight: bold;" th:text="${#numbers.formatInteger(product.prodPrice, 3, 'COMMA')+ 'P'}">상품 가격</p>
+<!--                                <p th:text="${#numbers.formatInteger(product.prodPrice, 3, 'COMMA')+ 'P'}">가격</p>-->
                             </div>
                             <div class="product-status" th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
                                 <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
