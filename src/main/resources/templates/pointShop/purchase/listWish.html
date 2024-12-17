@@ -56,6 +56,22 @@
                 });
             });
 
+            $("button.btn-clear-wish").on("click", function () {
+                var userName = $(this).data("user-name");
+                $.ajax({
+                    type: "DELETE",
+                    url: "/api-purchase/clearWish",
+                    data: { userName: userName },
+                    success: function(response) {
+                        alert("찜 목록에서 전체 상품이 삭제되었습니다.");
+                        location.reload();
+                    },
+                    error: function(xhr, status, error) {
+                        alert("찜 목록 삭제 실패함: " + error);
+                    }
+                });
+            });
+
         });
 
         // function removeWish(){
@@ -595,6 +611,11 @@
 
         <div class="row" style="margin-top: 100px; z-index:0; width: 800px; margin-right: 470px; margin-left: auto;">
             <div class="col-md-9 text-right">
+                <div th:if="${wishList.size() != 0}">
+                    <div class="button-container">
+                        <button class="btn-clear-wish" style="margin-left:730px; margin-bottom: 20px;" th:data-user-name="${username}">전체 삭제</button>
+                    </div>
+                </div>
                 <table>
                     <div th:if="${wishList.size() != 0}">
                         <div class="product-list">

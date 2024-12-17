@@ -333,8 +333,7 @@ public class PurchaseController {
     }
 
     @GetMapping("/listCart")
-    public String getCartList(
-                                @SessionAttribute("user") User buyer,
+    public String getCartList(@SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
@@ -385,8 +384,7 @@ public class PurchaseController {
     }
 
     @PostMapping("/addPurchaseCart")
-    public String addPurchaseCartResult(
-                                        @RequestParam("file") MultipartFile file,
+    public String addPurchaseCartResult(@RequestParam("file") MultipartFile file,
                                         @RequestParam("tranPoint") int tranPoint,
                             //            @RequestParam("cartList")  List<Purchase> purchaseList,  // List<Purchase>를 받을 수 있도록 설정
                                         @SessionAttribute("user") User buyer,
@@ -434,15 +432,17 @@ public class PurchaseController {
             }
 
             String barcodeNumber = generateBarcodeNumber();
+            System.out.println("barcodeNumber : "+barcodeNumber);
             String barcodeFileName = barcodeNumber + ".png";
             String barcodeFilePath = uploadPath + "/" + barcodeFileName;
 
             // 바코드 이미지 생성
-            generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);
+            String fileNam = generateBarcode(barcodeNumber, barcodeFilePath, 200, 100);
+            System.out.println("fileNam : "+fileNam);
 
             int buyPoint = product.getProdPrice();
             // 바코드 파일명 저장
-            purchase.setBarcodeName(barcodeFileName);
+            purchase.setBarcodeName(fileNam);
             purchase.setBarcodeNo(barcodeNumber);  // 바코드 번호 저장
             purchase.setDepType("상품 구매");
             purchase.setTranPoint(buyPoint);
@@ -462,6 +462,7 @@ public class PurchaseController {
         purchaseService.purchaseProducts(username);
 
         // 최종 결제 포인트 차감
+        model.addAttribute("url", bucketUrl);
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("tranPoint", tranPoint);
         model.addAttribute("purchase", purchaseList);
@@ -497,6 +498,7 @@ public class PurchaseController {
 
     @RequestMapping("listPointHistory")
     public String getPointHistoryList(@SessionAttribute("user") User buyer,
+                                      @ModelAttribute("search") Search search ,
                                       Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
@@ -505,12 +507,34 @@ public class PurchaseController {
         point.setBuyer(buyer);
         String username = buyer.getUsername();
         point.setUsername(username);
+        search.setUsername(username);
+        search.setPageSize(pageSize);
+//        search.setListSize(30);
+        search.setListSize(15);
+
+        if(search.getPage() == 0) {
+            search.setPage(1);
+        }
+
+        if("차감".equals(search.getSearchKeyword())){
+            search.setSearchKeyword("차감");
+        } else if ("적립".equals(search.getSearchKeyword())) {
+            search.setSearchKeyword("적립");
+        }
+
+        System.out.println("keyword : "+search.getSearchKeyword());
 
         System.out.println("username: " + username);
 
         int currPoint = pointService.getCurrentPoint(username);
 
-        List<Point> pointHistoryList = pointService.getPointHistoryList(username);
+        List<Point> pointHistoryList = pointService.getPointHistoryList(search);
+        int prodTotalCnt = (pointHistoryList.isEmpty())? 0 : pointHistoryList.get(0).getPointTotalCnt();
+
+        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+        model.addAttribute("paging", paging);
+        model.addAttribute("search" , search);
+        model.addAttribute("prodTotalCnt", prodTotalCnt);
 
         model.addAttribute("currPoint", currPoint);
         model.addAttribute("pointHistoryList", pointHistoryList);

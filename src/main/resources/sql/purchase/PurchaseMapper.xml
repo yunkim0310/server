@@ -176,6 +176,12 @@
         WHERE prod_no = #{prodNo} AND username = #{username} AND cnt_prod = 0
     </select>
 
+    <select id="isProductInCartList" parameterType="com.placeHere.server.domain.Purchase" resultType="int">
+        SELECT COUNT(*)
+        FROM WishCart
+        WHERE prod_no = #{prodNo} AND username = #{username} AND cnt_prod != 0
+    </select>
+
     <select id="getWishListCount" resultType="int">
         SELECT COUNT(*)
         FROM wishcart
@@ -191,5 +197,11 @@
     <delete id="clearWishCartByUsername">
         DELETE FROM wishCart WHERE username = #{username} AND cnt_prod != 0
     </delete>
+
+    <delete id="clearWishByUsername">
+        DELETE FROM wishCart WHERE username = #{username} AND cnt_prod = 0
+    </delete>
+
+
 
 </mapper>
