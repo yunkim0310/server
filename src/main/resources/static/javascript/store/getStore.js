@@ -475,7 +475,7 @@ $(function () {
         const url = $(this).data("url");
         const title = $(this).data("title");
 
-        openImagePopup(url);
+        openImagePopup(url, title);
     })
 
 });

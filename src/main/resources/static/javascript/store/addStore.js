@@ -260,7 +260,7 @@ $(function() {
     });
 
     $(document).on('click', "button[name='removeHashtagInput']", function() {
-        $(this).closest('.addedHashtagInput').remove();  // 해당 div 삭제
+        $(this).closest('.addedHashtagInput').remove();
         hashtagCnt--;
 
         if (hashtagCnt < 5) {
@@ -307,7 +307,7 @@ $(function() {
                 '</tr>' +
                 '<tr>' +
                     '<td>' +
-                        `<div id="menuImg${menuCnt+1}" style="display: none;">` +
+                        `<div id="menuImg${menuCnt+1}" style="display: none;padding-bottom: 10px;">` +
                             `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
                         '</div>' +
                     '</td>' +
@@ -385,9 +385,10 @@ $(function() {
     });
 
 
+    // TODO 기존 선택한 대표메뉴 삭제시 #defaultMenu로 체크되게 변경
     $(document).on('click', "button[name='removeMenuInput']", function() {
 
-        $(this).closest('.addedMenuInput').remove();  // 해당 div 삭제
+        $(this).closest('.addedMenuInput').remove();
         menuCnt--;
 
         if (menuCnt < 20) {
@@ -434,48 +435,7 @@ $(function() {
     });
 
 
-    // 이미지 입력에 대한 이벤트처리
-    // $("input[class^='storeImg']:file").on("change", function() {
-    //
-    //     const $this = $(this);
-    //     var className = $this.attr('class');
-    //
-    //     console.log(className)
-    //
-    //     const file = $this[0].files[0];
-    //
-    //     var $storeImg = $(`input[name='${className}']:hidden`);
-    //
-    //     console.log($storeImg.val() === "");
-    //
-    //     if ($storeImg.val() == null || $storeImg.val() === "") {
-    //
-    //         console.log("uploadFile");
-    //         console.log($storeImg.val());
-    //
-    //         uploadFile(file, "store/store/").then(result => {
-    //
-    //             console.log(result);
-    //             $storeImg.val(result.filePath);
-    //             $(`img.${className}`).attr("src", result.url)
-    //             $(`#${className}`).css("display", "flex");
-    //         });
-    //
-    //     } else {
-    //
-    //         console.log("updateFile");
-    //         console.log($storeImg.val());
-    //
-    //         updateFile($storeImg.val(), file, "store/store/").then(result => {
-    //
-    //             console.log(result);
-    //             $storeImg.val(result.filePath);
-    //             $(`img.${className}`).attr("src", result.url)
-    //         });
-    //     }
-    //
-    // })
-
+    // 파일 업로드 모듈
     fileUploadEvent("storeImg", "store/store/");
     fileUploadEvent("menuImg", "store/menu/");
 

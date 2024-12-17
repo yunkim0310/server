@@ -95,7 +95,9 @@ public class StoreServiceTest {
 //        System.out.println(likeList.size());
 //        System.out.println(likeList);
 
-        List<Like> storeLikeList = likeService.getStoreLikeList("user01");
+        Search search = new Search(pageSize,listSize);
+
+        List<Like> storeLikeList = likeService.getStoreLikeList("user01", search);
 
         System.out.println(storeLikeList.size());
         System.out.println(storeLikeList);

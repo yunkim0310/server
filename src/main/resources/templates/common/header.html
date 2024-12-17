@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/templates/header.css">
     <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
     <script defer src="/javascript/templates/header.js"></script>
+    <script src="/javascript/common/headerEvent.js"></script>
 
     <style>
         .header-wrap{
@@ -58,7 +59,7 @@
                         </a>
                     </li>
                     <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
-                        <a href="/getStoreLikeList">
+                        <a class="getStoreLikeList" style="cursor: pointer;">
                             <img src="/images/store/icon_heart_red.png"/>
                         </a>
                     </li>

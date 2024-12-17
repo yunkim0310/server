@@ -2,6 +2,7 @@ package com.placeHere.server.service.like.impl;
 
 import com.placeHere.server.dao.like.LikeDao;
 import com.placeHere.server.domain.Like;
+import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.like.LikeService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,8 +49,8 @@ public class LikeServiceImpl implements LikeService {
     
     // 가게 좋아요 목록 조회
     @Override
-    public List<Like> getStoreLikeList(String UserName) throws Exception {
-        return likeDao.getStoreLikeList(UserName);
+    public List<Like> getStoreLikeList(String UserName, Search search) throws Exception {
+        return likeDao.getStoreLikeList(UserName, search);
     }
 
 

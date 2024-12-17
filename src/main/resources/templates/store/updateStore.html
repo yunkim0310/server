@@ -17,6 +17,7 @@
         <!-- 카카오 맵 주소 검색 -->
         <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
+        <script src="/javascript/store/fileUploadEvent.js"></script>
         <script type="module" src="/javascript/store/updateStore.js"></script>
 
     </head>
@@ -158,8 +159,13 @@
                                     </div>
                                     <div class="css-jmalg e1uzxhvi6">
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <input type="file" accept="image/*" name="storeImgFiles">
+                                            <input type="file" accept="image/*" class="storeImg1">
+                                            <input type="hidden" class="storeImg1" name="storeImg1" th:value="${store.storeImg1}">
                                             <span class="font-12 color-gray mt-10">매장을 대표하는 사진을 골라주세요.</span>
+                                        </div>
+                                        <div id="storeImg1" th:attr="style='display: '+${(store.storeImg1 == null || store.storeImg1 == '')? 'none;': 'flex;'}">
+                                            <img class="storeImg1" alt="매장 대표사진" width="100" height="100"
+                                                 th:src="${(store.storeImg1 != null && store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}">
                                         </div>
                                     </div>
                                 </div>
@@ -173,18 +179,47 @@
                                         </label>
                                     </div>
                                     <div class="css-jmalg e1uzxhvi6">
+
+                                        <!-- 매장 사진 1 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <input type="file" accept="image/*" name="storeImgFiles">
+                                            <input type="file" accept="image/*" class="storeImg2" th:value="${store.storeImg2}">
+                                            <input type="hidden" class="storeImg2" name="storeImg2" th:value="${store.storeImg2}">
                                         </div>
+                                        <div id="storeImg2" th:attr="style='display: '+${(store.storeImg2 == null || store.storeImg2 == '')? 'none;': 'flex;'}">
+                                            <img class="storeImg2" alt="매장 사진 1" width="100" height="100"
+                                                 th:src="${(store.storeImg2 != null && store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}">
+                                        </div>
+
+                                        <!-- 매장 사진 2 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <input type="file" accept="image/*" name="storeImgFiles">
+                                            <input type="file" accept="image/*" class="storeImg3">
+                                            <input type="hidden" class="storeImg3" name="storeImg3" th:value="${store.storeImg3}">
                                         </div>
+                                        <div id="storeImg3" th:attr="style='display: '+${(store.storeImg3 == null || store.storeImg3 == '')? 'none;': 'flex;'}">
+                                            <img class="storeImg3" alt="매장 사진 2" width="100" height="100"
+                                                 th:src="${(store.storeImg3 != null && store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}">
+                                        </div>
+
+                                        <!-- 매장 사진 3 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <input type="file" accept="image/*" name="storeImgFiles">
+                                            <input type="file" accept="image/*" class="storeImg4">
+                                            <input type="hidden" class="storeImg4" name="storeImg4" th:value="${store.storeImg4}">
                                         </div>
+                                        <div id="storeImg4" th:attr="style='display: '+${(store.storeImg4 == null || store.storeImg4 == '')? 'none;': 'flex;'}">
+                                            <img class="storeImg4" alt="매장 사진 3" width="100" height="100"
+                                                 th:src="${(store.storeImg4 != null && store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4 : url + store.storeImg4}">
+                                        </div>
+
+                                        <!-- 매장 사진 4 -->
                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <input type="file" accept="image/*" name="storeImgFiles">
+                                            <input type="file" accept="image/*" class="storeImg5">
+                                            <input type="hidden" class="storeImg5" name="storeImg5" th:value="${store.storeImg5}">
                                         </div>
+                                        <div id="storeImg5" th:attr="style='display: '+${(store.storeImg5 == null || store.storeImg5 == '')? 'none;': 'flex;'}">
+                                            <img class="storeImg5" alt="매장 사진 3" width="100" height="100"
+                                                 th:src="${(store.storeImg5 != null && store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5 : url + store.storeImg5}">
+                                        </div>
+
                                     </div>
                                 </div>
 
@@ -381,17 +416,27 @@
                                                 <table id="menuInputs">
                                                     <tbody th:each="menu, iterStat : ${store.menuList}" th:if="${iterStat.index == 0}">
                                                         <tr>
-                                                            <td rowspan="6">
-                                                                <input type="radio" name="specialMenuNo" value="1" th:attr="checked=${store.specialMenuNo == 1 ? 'checked' : null}">
+                                                            <td rowspan="7">
+                                                                <input type="radio" name="specialMenuNo" value="1" th:attr="checked=${store.specialMenuNo == 1 ? 'checked' : null}" id="defaultMenu">
                                                                 <input type="hidden" name="menuList[0].menuNo" value="1">
                                                             </td>
                                                             <!-- TODO 사진 변경 버튼 생성 -->
                                                             <td>
                                                                 <div class="css-1pjgd36 e744wfw6">
                                                                     <div class="css-82a6rk e744wfw3">
-                                                                        <input type="file" accept="image/*" name="menuList[0].menuImgFile">
+                                                                        <input type="file" accept="image/*" class="menuImg1">
+                                                                        <input type="hidden" class="menuImg1" name="menuList[0].menuImg" th:value="${menu.menuImg}">
                                                                         <span class="font-12 color-gray mt-10">메뉴 사진을 골라주세요.</span>
                                                                     </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                        <tr>
+                                                            <td>
+                                                                <div id="menuImg1" th:attr="style='padding-bottom: 10px;display: '+${(menu.menuImg == null || menu.menuImg == '')? 'none;': 'flex;'}">
+                                                                    <img class="menuImg1" alt="메뉴 사진" width="100" height="100"
+                                                                         th:src="${(menu.menuImg != null && menu.menuImg.indexOf('_') != -1)? '/images/store/menu/' + menu.menuImg : url + menu.menuImg}">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -477,20 +522,31 @@
                                                             <td>&nbsp;</td>
                                                         </tr>
                                                         <tr>
-                                                            <td rowspan="6">
+                                                            <td rowspan="7">
                                                                 <input type="radio" name="specialMenuNo" th:value="${iterStat.index + 1}" th:attr="checked=${store.specialMenuNo == iterStat.count ? 'checked' : null}">
                                                                 <input type="hidden" th:name="'menuList['+${iterStat.index}+'].menuNo'" th:value="${iterStat.count}">
                                                             </td>
                                                             <td>
                                                                 <div class="css-1pjgd36 e744wfw6">
-                                                                    <div class="css-82a6rk e744wfw3">
-                                                                        <input type="file" accept="image/*" th:name="'menuList['+${iterStat.index}+'].menuImgFile'">
+                                                                    <div class="css-82a6rk e744wfw3" style="display: inline-flex">
+                                                                        <input type="file" accept="image/*" th:class="'menuImg' + ${iterStat.index + 1}">
+                                                                        <input type="hidden" th:class="'menuImg' + ${iterStat.index + 1}" th:name="'menuList['+${iterStat.index}+'].menuImg'" th:value="${menu.menuImg}">
                                                                     </div>
-                                                                    <div class="css-1w0ksfz e744wfw2">
-                                                                        <button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">
-                                                                            <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
-                                                                        </button>
+                                                                    <div style="display: flex; justify-content: flex-end;padding-left: 34%;">
+                                                                        <div class="css-1w0ksfz e744wfw2">
+                                                                            <button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">
+                                                                                <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>
+                                                                <div th:id="'menuImg'+${iterStat.index + 1}" th:attr="style='padding-bottom: 10px;display: '+${(menu.menuImg == null || menu.menuImg == '')? 'none;': 'flex;'}">
+                                                                    <img th:class="'menuImg' + ${iterStat.index + 1}" alt="메뉴 사진" width="100" height="100"
+                                                                         th:src="${(menu.menuImg != null && menu.menuImg.indexOf('_') != -1)? '/images/store/menu/' + menu.menuImg : url + menu.menuImg}">
                                                                 </div>
                                                             </td>
                                                         </tr>

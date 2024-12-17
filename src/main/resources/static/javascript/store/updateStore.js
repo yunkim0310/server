@@ -179,23 +179,23 @@ $(function() {
         // 컨테이너 생성
         const container = $(
             '<div class="css-1pjgd36 e744wfw6 addedHashtagInput">' +
-            '<div class="css-1y8737n e744wfw5">' +
-            '<label class="css-1obgjqh e744wfw4">&nbsp;</label>' +
-            '</div>' +
-            '<div class="css-82a6rk e744wfw3">' +
-            '<div class="css-jmalg e1uzxhvi6">' +
-            '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-            '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
-            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '<div class="css-1w0ksfz e744wfw2">' +
-            '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeHashtagInput" type="button">' +
-            '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
-            '</button>' +
-            '</div>' +
-            '<br/>' +
+                '<div class="css-1y8737n e744wfw5">' +
+                    '<label class="css-1obgjqh e744wfw4">&nbsp;</label>' +
+                '</div>' +
+                '<div class="css-82a6rk e744wfw3">' +
+                    '<div class="css-jmalg e1uzxhvi6">' +
+                        '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
+                            '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
+                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
+                        '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="css-1w0ksfz e744wfw2">' +
+                    '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeHashtagInput" type="button">' +
+                        '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
+                    '</button>' +
+                '</div>' +
+                '<br/>' +
             '</div>');
 
         // hashtagInputs에 컨테이너 추가
@@ -227,7 +227,6 @@ $(function() {
 
     $('button[name="addMenuInput"]').on('click', function () {
 
-        // 컨테이너 생성
         const container = $(
             '<tbody class="addedMenuInput">' +
             '<tr>' +
@@ -237,20 +236,30 @@ $(function() {
             '<td>&nbsp;</td>' +
             '</tr>' +
             '<tr>' +
-            '<td rowspan="6">' +
+            '<td rowspan="7">' +
             `<input type="radio" name="specialMenuNo" value="${menuCnt + 1}">` +
             `<input type="hidden" name="menuList[${menuCnt}].menuNo" value="${menuCnt+1}">` +
             '</td>' +
             '<td>' +
             '<div class="css-1pjgd36 e744wfw6">' +
-            '<div class="css-82a6rk e744wfw3">' +
-            `<input type="file" accept="image/*" name="menuList[${menuCnt}].menuImgFile">` +
+            '<div class="css-82a6rk e744wfw3" style="display: inline-flex">' +
+            `<input type="file" accept="image/*" class="menuImg${menuCnt+1}">` +
+            `<input type="hidden" class="menuImg${menuCnt+1}" name="menuList[${menuCnt}].menuImg"` +
             '</div>' +
+            '<div style="display: flex; justify-content: flex-end;padding-left: 34%;">' +
             '<div class="css-1w0ksfz e744wfw2">' +
             '<button class="css-ufulao e4nu7ef3 checkBtn" name="removeMenuInput" type="button">' +
             '<span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>' +
             '</button>' +
             '</div>' +
+            '</div>' +
+            '</div>' +
+            '</td>' +
+            '</tr>' +
+            '<tr>' +
+            '<td>' +
+            `<div id="menuImg${menuCnt+1}" style="display: none;padding-bottom: 10px;">` +
+            `<img class="menuImg${menuCnt+1}" alt="메뉴 사진" width="100" height="100">` +
             '</div>' +
             '</td>' +
             '</tr>' +
@@ -327,6 +336,7 @@ $(function() {
     });
 
 
+    // TODO 기존 선택한 대표메뉴 삭제시 #defaultMenu로 체크되게 변경
     $(document).on('click', "button[name='removeMenuInput']", function() {
 
         $(this).closest('.addedMenuInput').remove();  // 해당 div 삭제
@@ -339,6 +349,9 @@ $(function() {
         }
     });
 
-
+    
+    // 파일 업로드 모듈
+    fileUploadEvent("storeImg", "store/store/");
+    fileUploadEvent("menuImg", "store/menu/");
 
 });
