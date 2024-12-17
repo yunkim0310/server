@@ -15,6 +15,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -82,39 +83,51 @@ public class PurchaseController {
 
     @GetMapping("/addPurchase")
     public String addPurchase(@RequestParam("prodNo") int prodNo,
-                                @SessionAttribute("user") User buyer,
+//                                @SessionAttribute("user") User buyer,
+                              HttpSession session,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception{
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        String username = buyer.getUsername();
-        purchase.setBuyer(buyer);
-        purchase.setUsername(username);
-        System.out.println("addPurchase's username: " + username);
+        if (user == null) {
 
-        System.out.println("/purchase/addPurchase : GET");
+            return "redirect:/";
 
-        int currPoint = pointService.getCurrentPoint(username);
+        }else if (user.getRole().equals("ROLE_USER")) {
+            String username = user.getUsername();
+            purchase.setBuyer(user);
+            purchase.setUsername(username);
+            System.out.println("addPurchase's username: " + username);
 
-        Product product = productService.getProduct(prodNo);
+            System.out.println("/purchase/addPurchase : GET");
 
-        int tranPoint = product.getProdPrice()* product.getCntProd();
-        purchase.setProdNo(prodNo);
-        purchase.setTranPoint(-tranPoint);
-        purchase.setDepType("상품 구매");
-        purchase.setRelNo(prodNo);
+            int currPoint = pointService.getCurrentPoint(username);
 
-        System.out.println("product.getCntProd() = " + product.getCntProd());
-        System.out.println("tranPoint : " + tranPoint);
-        System.out.println("currPoint : " + currPoint);
-        System.out.println("product.getProdPrice() : " + product.getProdPrice());
+            Product product = productService.getProduct(prodNo);
+
+            int tranPoint = product.getProdPrice() * product.getCntProd();
+            purchase.setProdNo(prodNo);
+            purchase.setTranPoint(-tranPoint);
+            purchase.setDepType("상품 구매");
+            purchase.setRelNo(prodNo);
+
+            System.out.println("product.getCntProd() = " + product.getCntProd());
+            System.out.println("tranPoint : " + tranPoint);
+            System.out.println("currPoint : " + currPoint);
+            System.out.println("product.getProdPrice() : " + product.getProdPrice());
 //
-        model.addAttribute("currPoint", currPoint);
-        model.addAttribute("username", username);
-        model.addAttribute("tranPoint", tranPoint);
-        model.addAttribute("product", product);
-        model.addAttribute("purchase", purchase);
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("currPoint", currPoint);
+            model.addAttribute("username", username);
+            model.addAttribute("tranPoint", tranPoint);
+            model.addAttribute("product", product);
+            model.addAttribute("purchase", purchase);
 
-        return "pointShop/purchase/addPurchase";
+            return "pointShop/purchase/addPurchase";
+        }else{
+            return "redirect:/";
+        }
     }
 
     private String generateBarcodeNumber() {
@@ -273,114 +286,146 @@ public class PurchaseController {
     }
 
     @RequestMapping( value="listPurchase")
-    public String listPurchase(@SessionAttribute("user") User buyer,
+    public String listPurchase(HttpSession session,
+//            @SessionAttribute("user") User buyer,
                                @RequestParam(value = "order", required = false) String order,
                                @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        if (user == null) {
 
-        String username = buyer.getUsername();
+            return "redirect:/";
 
-        System.out.println("username's listPurchase : " + username);
+        }else if (user.getRole().equals("ROLE_USER")) {
+            String username = user.getUsername();
 
-        search.setUsername(username);
-        search.setOrder(order);
-        search.setPageSize(pageSize);
+            System.out.println("username's listPurchase : " + username);
+
+            search.setUsername(username);
+            search.setOrder(order);
+            search.setPageSize(pageSize);
 //        search.setListSize(30);
-        search.setListSize(5);
-        System.out.println("order: " + order);
+            search.setListSize(5);
+            System.out.println("order: " + order);
 
-        if(search.getPage() == 0) {
-            search.setPage(1);
+            if (search.getPage() == 0) {
+                search.setPage(1);
+            }
+
+            List<Purchase> purchaseList = purchaseService.getPurchaseList(search);
+            int prodTotalCnt = (purchaseList.isEmpty()) ? 0 : purchaseList.get(0).getPurchaseTotalCnt();
+
+            Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("paging", paging);
+            model.addAttribute("search", search);
+            model.addAttribute("prodTotalCnt", prodTotalCnt);
+
+            model.addAttribute("purchaseList", purchaseList);
+            model.addAttribute("username", username);
+
+            return "/pointShop/purchase/listPurchase";
+        }else{
+            return "redirect:/";
         }
-
-        List<Purchase> purchaseList = purchaseService.getPurchaseList(search);
-        int prodTotalCnt = (purchaseList.isEmpty())? 0 : purchaseList.get(0).getPurchaseTotalCnt();
-
-        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
-        model.addAttribute("paging", paging);
-        model.addAttribute("search" , search);
-        model.addAttribute("prodTotalCnt", prodTotalCnt);
-
-        model.addAttribute("purchaseList", purchaseList);
-        model.addAttribute("username", username);
-
-        return "/pointShop/purchase/listPurchase";
     }
 
     @GetMapping("/getPurchase")
-    public String getPurchase(
+    public String getPurchase(HttpSession session,
 //                                @SessionAttribute("user") User buyer,
                                 @RequestParam("tranNo") int tranNo , Model model) throws Exception {
 
         System.out.println("/product/getPurchase : GET");
-
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 //        String username = buyer.getUsername();
+        if (user == null) {
 
-        Purchase purchase = new Purchase();
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
+            Purchase purchase = new Purchase();
 //        System.out.println("Buyer: " + purchase.getBuyer());
 //        System.out.println("Username: " + purchase.getBuyer().getUsername());
 
-        purchase = purchaseService.getPurchase(tranNo);
+            purchase = purchaseService.getPurchase(tranNo);
 
 //        model.addAttribute("username" , username);
-        model.addAttribute("url", bucketUrl);
-        model.addAttribute("purchase" , purchase);
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("purchase", purchase);
 
-        return "/pointShop/purchase/getPurchase";
+            return "/pointShop/purchase/getPurchase";
+        }else{
+            return "redirect:/";
+        }
 
     }
 
     @GetMapping("/listCart")
-    public String getCartList(@SessionAttribute("user") User buyer,
+    public String getCartList(HttpSession session,
+//            @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
                               Model model) throws Exception {
 
-        String username = buyer.getUsername();
-        purchase.setBuyer(buyer);
-        purchase.setUsername(username);
-        System.out.println("user's carlist : "+username);
-        // 장바구니 목록을 서비스에서 받아옴
-        List<Purchase> cartList = purchaseService.getCartList(username);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        int tranPoint = 0;
-        int numItems = cartList.size();
-        int currPoint = pointService.getCurrentPoint(username);
-        model.addAttribute("currPoint", currPoint);
-        System.out.println("보유 포인트 : "+currPoint);
+        if (user == null) {
 
-        // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
-        Purchase firstItem = cartList.isEmpty() ? null : cartList.get(0);
-        String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+            return "redirect:/";
 
-        // 각 상품에 대해 결제 포인트 계산
-        for (Purchase cartItem : cartList) {
-            Product product = productService.getProduct(cartItem.getProdNo());
-            Point point = new Point();
-            int plusPoint = product.getProdPrice();
-            cartItem.setProdNo(cartItem.getProdNo());
-            cartItem.setTranPoint(-plusPoint);  // 포인트 차감
+        }else if (user.getRole().equals("ROLE_USER")) {
+            String username = user.getUsername();
+            purchase.setBuyer(user);
+            purchase.setUsername(username);
+            System.out.println("user's carlist : " + username);
+            // 장바구니 목록을 서비스에서 받아옴
+            List<Purchase> cartList = purchaseService.getCartList(username);
+
+            int tranPoint = 0;
+            int numItems = cartList.size();
+            int currPoint = pointService.getCurrentPoint(username);
+            model.addAttribute("currPoint", currPoint);
+            System.out.println("보유 포인트 : " + currPoint);
+
+            // 첫 번째 상품만 따로 추출하고 나머지 상품은 '외 N개'로 표현
+            Purchase firstItem = cartList.isEmpty() ? null : cartList.get(0);
+            String additionalItemsText = (numItems > 1) ? "외 " + (numItems - 1) + "개" : "";
+
+            // 각 상품에 대해 결제 포인트 계산
+            for (Purchase cartItem : cartList) {
+                Product product = productService.getProduct(cartItem.getProdNo());
+                Point point = new Point();
+                int plusPoint = product.getProdPrice();
+                cartItem.setProdNo(cartItem.getProdNo());
+                cartItem.setTranPoint(-plusPoint);  // 포인트 차감
 //            cartItem.setDepType("상품 구매");
-            cartItem.setRelNo(cartItem.getProdNo());
-            tranPoint += plusPoint;
+                cartItem.setRelNo(cartItem.getProdNo());
+                tranPoint += plusPoint;
 //            purchaseService.addPurchase(purchase);
-        }
-        purchase.setTranPoint(tranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
-        model.addAttribute("purchase", purchase);
-        model.addAttribute("tranPoint", tranPoint);
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("firstItem", firstItem);
-        model.addAttribute("additionalItemsText", additionalItemsText);
+            }
+            purchase.setTranPoint(tranPoint);  // 전체 총 결제 금액에 대한 포인트 차감
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("purchase", purchase);
+            model.addAttribute("tranPoint", tranPoint);
+            model.addAttribute("cartList", cartList);
+            model.addAttribute("firstItem", firstItem);
+            model.addAttribute("additionalItemsText", additionalItemsText);
 
 //        purchaseService.purchaseProducts(username);
 
-        // 모델에 장바구니 목록을 추가하여 뷰로 전달
-        model.addAttribute("cartList", cartList);
-        model.addAttribute("username" , username);
+            // 모델에 장바구니 목록을 추가하여 뷰로 전달
+            model.addAttribute("cartList", cartList);
+            model.addAttribute("username", username);
 
-        // Thymeleaf 템플릿 이름을 반환
-        return "pointShop/purchase/listCart"; // 템플릿 경로
+            // Thymeleaf 템플릿 이름을 반환
+            return "pointShop/purchase/listCart"; // 템플릿 경로
+        }else{
+            return "redirect:/";
+        }
     }
 
     @PostMapping("/addPurchaseCart")
@@ -479,68 +524,92 @@ public class PurchaseController {
 
     // 찜 목록 조회
     @GetMapping("/listWish")
-    public String getWishList(
-                            @SessionAttribute("user") User buyer,
+    public String getWishList(HttpSession session,
+//                            @SessionAttribute("user") User buyer,
                             @ModelAttribute("purchase") Purchase purchase,
                             Model model) throws Exception {
 
-            String username = buyer.getUsername();
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
+            String username = user.getUsername();
             // 찜 목록을 서비스에서 받아옴
-        List<Purchase> wishList = purchaseService.getWishList(username);
+            List<Purchase> wishList = purchaseService.getWishList(username);
 
-        // 모델에 찜 목록을 추가하여 뷰로 전달
-        model.addAttribute("wishList", wishList);
-        model.addAttribute("username" , username);
+            // 모델에 찜 목록을 추가하여 뷰로 전달
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("wishList", wishList);
+            model.addAttribute("username", username);
 
-        // Thymeleaf 템플릿 이름을 반환
-        return "pointShop/purchase/listWish"; // 템플릿 경로
+            // Thymeleaf 템플릿 이름을 반환
+            return "pointShop/purchase/listWish"; // 템플릿 경로
+        }else{
+            return "redirect:/";
+        }
     }
 
     @RequestMapping("listPointHistory")
-    public String getPointHistoryList(@SessionAttribute("user") User buyer,
+    public String getPointHistoryList(HttpSession session,
+//            @SessionAttribute("user") User buyer,
                                       @ModelAttribute("search") Search search ,
                                       Model model) throws Exception {
 
         System.out.println("/purchase/listPurchase : GET / POST");
 
-        Point point = new Point();
-        point.setBuyer(buyer);
-        String username = buyer.getUsername();
-        point.setUsername(username);
-        search.setUsername(username);
-        search.setPageSize(pageSize);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
+            Point point = new Point();
+            point.setBuyer(user);
+            String username = user.getUsername();
+            point.setUsername(username);
+            search.setUsername(username);
+            search.setPageSize(pageSize);
 //        search.setListSize(30);
-        search.setListSize(15);
+            search.setListSize(15);
 
-        if(search.getPage() == 0) {
-            search.setPage(1);
+            if (search.getPage() == 0) {
+                search.setPage(1);
+            }
+
+            if ("차감".equals(search.getSearchKeyword())) {
+                search.setSearchKeyword("차감");
+            } else if ("적립".equals(search.getSearchKeyword())) {
+                search.setSearchKeyword("적립");
+            }
+
+            System.out.println("keyword : " + search.getSearchKeyword());
+
+            System.out.println("username: " + username);
+
+            int currPoint = pointService.getCurrentPoint(username);
+
+            List<Point> pointHistoryList = pointService.getPointHistoryList(search);
+            int prodTotalCnt = (pointHistoryList.isEmpty()) ? 0 : pointHistoryList.get(0).getPointTotalCnt();
+
+            Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+            model.addAttribute("paging", paging);
+            model.addAttribute("search", search);
+            model.addAttribute("prodTotalCnt", prodTotalCnt);
+
+            model.addAttribute("currPoint", currPoint);
+            model.addAttribute("pointHistoryList", pointHistoryList);
+            model.addAttribute("username", username);
+
+            return "pointShop/purchase/listPointHistory";
+        }else{
+            return "redirect:/";
         }
-
-        if("차감".equals(search.getSearchKeyword())){
-            search.setSearchKeyword("차감");
-        } else if ("적립".equals(search.getSearchKeyword())) {
-            search.setSearchKeyword("적립");
-        }
-
-        System.out.println("keyword : "+search.getSearchKeyword());
-
-        System.out.println("username: " + username);
-
-        int currPoint = pointService.getCurrentPoint(username);
-
-        List<Point> pointHistoryList = pointService.getPointHistoryList(search);
-        int prodTotalCnt = (pointHistoryList.isEmpty())? 0 : pointHistoryList.get(0).getPointTotalCnt();
-
-        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
-        model.addAttribute("paging", paging);
-        model.addAttribute("search" , search);
-        model.addAttribute("prodTotalCnt", prodTotalCnt);
-
-        model.addAttribute("currPoint", currPoint);
-        model.addAttribute("pointHistoryList", pointHistoryList);
-        model.addAttribute("username", username);
-
-        return "pointShop/purchase/listPointHistory";
     }
 
     // 선택된 상품들의 총 가격 계산

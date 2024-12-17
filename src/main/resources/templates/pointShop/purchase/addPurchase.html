@@ -40,9 +40,14 @@
         function fncAddPurchase() {
             var tranPoint = Number($("input[name='tranPoint']").val());
             var currPoint = Number($("input[name='currPoint']").val());
+            var prodStatus = $("input[name='prodStatus']").val();
+            console.log(prodStatus);
 
             if (tranPoint > currPoint) {
                 alert("보유하신 포인트가 부족합니다.");
+                return;
+            }else if(!prodStatus){
+                alert("판매 중지된 상품입니다.");
                 return;
             }else{
                 alert("구매가 완료되었습니다.");
@@ -603,8 +608,8 @@
                     <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
                         <div class="img-container" style="position: relative;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                                <img class="guide-img" style="width: 100%; max-height:1000px; display: block;"
-                                     th:src="@{/file/pointShop/baemin.jpg}">
+                                <img class="guide-img" style="width: 50%; max-height:500px; display: block;"
+                                     th:src="${url + product.prodImg1}">
                             </div>
                         </div>
                     </div>
@@ -624,10 +629,11 @@
                                 <th style="width: 30%;">상품명</th>
                                 <td th:text="${product.prodName}" style="width: 80%;"></td>
                             </tr>
-<!--                                <tr>-->
-<!--                                    <th style="width: 30%;">상품명</th>-->
-<!--                                    <td th:text="${product.prodCateName}" style="width: 80%;"></td>-->
-<!--                                </tr>-->
+                                <tr>
+                                    <th style="width: 30%;">상품명</th>
+                                    <td th:class="${product.prodStatus == true ? 'available' : 'unavailable'}">
+                                        <span th:text="${product.prodStatus == true ? '구매 가능' : '판매 중지'}"></span></td>
+                                </tr>
 <!--                                <tr>-->
 <!--                                    <th style="width: 30%;">상품 가격</th>-->
 <!--                                    <td th:text="${product.prodPrice}+P" style="width: 80%;"></td>-->
@@ -657,6 +663,7 @@
         <input type="hidden" name="username" th:value="${username}">
         <input type="hidden" name="cntProd" th:value="${product.cntProd}">
         <input type="hidden" name="prodNo" th:value="${product.prodNo}">
+        <input type="hidden" name="prodStatus" th:value="${product.prodStatus}">
         <input type="hidden" name="tranPoint" th:value="${tranPoint}">
         <input type="hidden" name="currPoint" th:value="${currPoint}">
         <input type="file" name="file" id="file" style="display:none;">

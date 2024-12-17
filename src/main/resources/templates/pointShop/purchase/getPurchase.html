@@ -42,11 +42,69 @@
             });
         });
 
+        function toggleContent() {
+            var content = event.target.nextElementSibling; // 클릭된 버튼 바로 다음의 div.content를 찾음
+            var button = event.target;
+            var arrow = button.querySelector('.arrow');
+
+            if (content.style.display === "none" || content.style.display === "") {
+                content.style.display = "block"; // 내용 펼침
+                button.innerText = "설명 숨기기 ^"; // 버튼 텍스트 변경
+            } else {
+                content.style.display = "none"; // 내용 접기
+                button.innerText = "자세히 보기 v"; // 버튼 텍스트 변경
+            }
+
+            // 화살표 회전 효과
+            button.closest('.expandable-section').classList.toggle('open');
+        }
+
 
     </script>
 
     <style>
+        .expandable-section {
+            margin-bottom: 20px;
+        }
 
+        .expand-btn {
+            background-color: #fff;
+            color: black;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center; /* 텍스트와 화살표를 세로로 정렬 */
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-left: 310px;
+        }
+
+        /*.expand-btn:hover {*/
+        /*    background-color: #0056b3; !* 마우스 오버 시 색상 변경 *!*/
+        /*}*/
+
+        /*.arrow {*/
+        /*    margin-left: 10px; !* 화살표와 텍스트 간격 *!*/
+        /*    transition: transform 0.3s ease; !* 애니메이션 효과 *!*/
+        /*    color:black;*/
+        /*}*/
+
+        /*!* 펼친 상태에서 화살표 회전 *!*/
+        /*.expandable-section.open .arrow {*/
+        /*    transform: rotate(180deg);*/
+        /*}*/
+
+        .content {
+            margin-top: 10px;
+            padding: 15px;
+            /*border: 1px solid #ddd;*/
+            /*border-radius: 5px;*/
+            /*background-color: #f9f9f9;*/
+        }
 
         .available {
             color: green;
@@ -453,7 +511,7 @@
                     <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
                         <div class="img-container" style="position: relative;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
-                                <img class="guide-img" style="width: 100%; max-height:1000px; display: block;"
+                                <img class="guide-img" style="width: 50%; max-height:500px; display: block;"
                                      th:src="${url + purchase.purchaseProd.prodImg1}">
                             </div>
                         </div>
@@ -613,16 +671,19 @@
                             <!--                                    </dd>-->
                             <!--                                </dl>-->
                             <!--                            </div><br/><br/>-->
-                            <div class="desc-block">
+                            <div class="expandable-section">
+                                <button class="expand-btn" onclick="toggleContent()">자세히 보기 v</button>
+                                <div class="content" style="display: none;">
                                 <dl>
-                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>
+<!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
                                     <div style="text-align: center;">
                                         <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                        <img th:if="${purchase.purchaseProd.prodImg2 != null and purchase.purchaseProd.prodImg2 != ''}" th:src="${url + purchase.purchaseProd.prodImg2}" alt="상품 상세 이미지">
+                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg2 != null and purchase.purchaseProd.prodImg2 != ''}" th:src="${url + purchase.purchaseProd.prodImg2}" alt="상품 상세 이미지">
                                         <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                        <img th:if="${purchase.purchaseProd.prodImg3 != null and purchase.purchaseProd.prodImg3 != ''}" th:src="${url + purchase.purchaseProd.prodImg3}" alt="상품 상세 이미지">
+                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg3 != null and purchase.purchaseProd.prodImg3 != ''}" th:src="${url + purchase.purchaseProd.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
+                                </div>
                             </div>
                             <div class="desc-block">
                                 <div class="footer">
