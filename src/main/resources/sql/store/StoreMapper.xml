@@ -206,11 +206,14 @@
     <select id="getStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="StoreResultMap">
 
         SELECT *, COUNT(*) OVER() AS total_cnt
-        FROM
-        (SELECT *
-        FROM
-        (SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
+        FROM (
+        SELECT *
+        FROM (
+        SELECT s.*,
+        COALESCE(reviews.cnt_review, 0) AS review_cnt,
+        COALESCE(reviews.review_score_avg, 0) AS review_score_avg
         FROM store s
+        LEFT JOIN operation o ON s.store_id = o.store_id
         LEFT JOIN (
         SELECT reservation.store_id,
         COUNT(review.review_no) AS cnt_review,
@@ -218,13 +221,14 @@
         FROM review
         JOIN reservation ON review.rsrv_no = reservation.rsrv_no
         GROUP BY reservation.store_id
-        ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
+        ) AS reviews ON s.store_id = reviews.store_id
+        WHERE o.store_id IS NOT NULL -- operation이 있는 경우만 포함
+        ) AS store_review_score
         <if test="searchKeyword != null and searchKeyword != ''">
             <where>
                 <foreach collection="searchKeywordArray" item="searchKeyword" separator=" AND ">
                     (store_name LIKE CONCAT('%',#{searchKeyword},'%')
                     OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-                    OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
                     OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
                     OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
                     OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%')))
@@ -235,22 +239,19 @@
         <where>
             store_status = 0
             <if test="regionList != null and !regionList.isEmpty()">
-                AND (<foreach collection="regionList" separator="OR" item="region">
-                store_addr Like CONCAT('%',#{region},'%')
+                AND (<foreach collection="regionList" separator=" OR " item="region">
+                store_addr LIKE CONCAT('%',#{region},'%')
             </foreach>)
             </if>
-
             <if test='foodCategoryId != null and !foodCategoryId.equals("")'>
                 AND food_category_id LIKE CONCAT('%',#{foodCategoryId},'%')
             </if>
-
             <if test="hashtagList != null and !hashtagList.isEmpty()">
                 AND (
-                <foreach collection="hashtagList" separator="OR" item="hashtag">
+                <foreach collection="hashtagList" separator=" OR " item="hashtag">
                     <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
                 </foreach>)
             </if>
-
             <choose>
                 <when test="priceMax&lt;100000">
                     AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
@@ -259,7 +260,6 @@
                     AND store_id IN (SELECT store_id FROM menu WHERE menu_price >= #{priceMin})
                 </otherwise>
             </choose>
-
             <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">
                 AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN
                 <foreach collection="amenitiesNoList" item="amenitiesNo" open="(" close=")" separator=",">
@@ -279,11 +279,14 @@
     <select id="getStoreLocationList" parameterType="com.placeHere.server.domain.Search">
 
         SELECT CAST(store_id AS CHAR) AS storeId, store_name AS storeName, store_location AS storeLocation
-        FROM
-        (SELECT *
-        FROM
-        (SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
+        FROM (
+        SELECT *
+        FROM (
+        SELECT s.*,
+        COALESCE(reviews.cnt_review, 0) AS review_cnt,
+        COALESCE(reviews.review_score_avg, 0) AS review_score_avg
         FROM store s
+        LEFT JOIN operation o ON s.store_id = o.store_id
         LEFT JOIN (
         SELECT reservation.store_id,
         COUNT(review.review_no) AS cnt_review,
@@ -291,13 +294,14 @@
         FROM review
         JOIN reservation ON review.rsrv_no = reservation.rsrv_no
         GROUP BY reservation.store_id
-        ) AS reviews ON s.store_id = reviews.store_id) AS store_review_score
+        ) AS reviews ON s.store_id = reviews.store_id
+        WHERE o.store_id IS NOT NULL -- operation이 있는 경우만 포함
+        ) AS store_review_score
         <if test="searchKeyword != null and searchKeyword != ''">
             <where>
                 <foreach collection="searchKeywordArray" item="searchKeyword" separator=" AND ">
                     (store_name LIKE CONCAT('%',#{searchKeyword},'%')
                     OR store_addr LIKE CONCAT('%',#{searchKeyword},'%')
-                    OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
                     OR food_category_id LIKE CONCAT('%',#{searchKeyword},'%')
                     OR hashtag LIKE CONCAT('%',#{searchKeyword},'%')
                     OR store_id IN (SELECT store_id FROM menu WHERE menu_name LIKE CONCAT('%',#{searchKeyword},'%')))
@@ -308,22 +312,19 @@
         <where>
             store_status = 0
             <if test="regionList != null and !regionList.isEmpty()">
-                AND (<foreach collection="regionList" separator="OR" item="region">
-                store_addr Like CONCAT('%',#{region},'%')
+                AND (<foreach collection="regionList" separator=" OR " item="region">
+                store_addr LIKE CONCAT('%',#{region},'%')
             </foreach>)
             </if>
-
             <if test='foodCategoryId != null and !foodCategoryId.equals("")'>
                 AND food_category_id LIKE CONCAT('%',#{foodCategoryId},'%')
             </if>
-
             <if test="hashtagList != null and !hashtagList.isEmpty()">
                 AND (
-                <foreach collection="hashtagList" separator="OR" item="hashtag">
+                <foreach collection="hashtagList" separator=" OR " item="hashtag">
                     <if test="hashtag != ''"> hashtag LIKE CONCAT('%',#{hashtag},'%') </if>
                 </foreach>)
             </if>
-
             <choose>
                 <when test="priceMax&lt;100000">
                     AND store_id IN (SELECT store_id FROM menu WHERE menu_price BETWEEN #{priceMin} AND #{priceMax})
@@ -332,7 +333,6 @@
                     AND store_id IN (SELECT store_id FROM menu WHERE menu_price >= #{priceMin})
                 </otherwise>
             </choose>
-
             <if test="amenitiesNoList != null and !amenitiesNoList.isEmpty()">
                 AND store_id IN (SELECT store_id FROM amenities WHERE amenities_no IN
                 <foreach collection="amenitiesNoList" item="amenitiesNo" open="(" close=")" separator=",">
