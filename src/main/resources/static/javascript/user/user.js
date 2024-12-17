@@ -22,9 +22,27 @@ function validateAll() {
   const emailValid = emailMsgElement.css('color') === 'rgb(0, 128, 0)' ? true : false;
   console.log('emailValid :: ', emailValid);
 
-
+  // role
   const role = $('[name="role"]').val();
   console.log('role :: ', role);
+
+  // gender
+  const gender = $("input[name='gender']:checked").val();
+  console.log('gender :: ' , gender);
+
+  // birth
+  const yyyy = document.getElementById('birthY').value;
+  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
+  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
+
+  let birth='';
+
+  if (yyyy.length === 4 && mm.length === 2 && dd.length === 2) {
+    birth = `${yyyy}-${mm}-${dd}`; // "YYYY-MM-DD" 형태로 합침
+    console.log("생년월일:", birth);
+    // return birth;
+  }
+
 
   // 모든 유효성 검사 통과 시 회원가입 요청
   if ( usernameValid && pwdValid && isPwdMatch && emailValid ) {
@@ -35,7 +53,8 @@ function validateAll() {
       password: $('#password').val(),
       recommendedId: $('#recommendedId').val(),
       role: $('[name="role"]').val(),
-      gender: $('[name="gender"]:checked').val()
+      gender: gender,
+      birth: birth
     };
     
     console.log('회원가입 객체 :: ', user);
@@ -66,7 +85,20 @@ function validateAll() {
 
 } // end of validationAll
 
+function combineBirthDate() {
+  const yyyy = document.getElementById('birthY').value;
+  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
+  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
 
+  if (yyyy.length === 4 && mm.length === 2 && dd.length === 2) {
+    const birthDate = `${yyyy}-${mm}-${dd}`; // "YYYY-MM-DD" 형태로 합침
+    console.log("생년월일:", birth);
+    return birth;
+  } else {
+    alert("생년월일을 정확히 입력해주세요.");
+    return null;
+  }
+}
 
 // 8글자이상 20이하 영어, 숫자, 특수문자 모두 사용
 function pwdValidation() {
