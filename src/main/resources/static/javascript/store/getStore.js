@@ -11,6 +11,20 @@ $(function () {
     let googleApiKey = getApiKey().then(apiKey => {
         googleApiKey = apiKey.google;
     });
+
+    $("button[name='operationToggle']").on("click", function () {
+
+        var $operationMore = $("#operationMore");
+
+        if ($operationMore.css("display") === "none") {
+            $operationMore.css("display", "block");
+            $(this).text("∧")
+        } else {
+            $operationMore.css("display", "none");
+            $(this).text("∨");
+        }
+
+    });
     
     // 좋아요 추가, 취소
     $("a#like").on("click", function () {
@@ -67,27 +81,12 @@ $(function () {
 
 
     // TODO 채팅 버튼 처리 추가 필요
-    $("a#chat").on("click", function () {
-
-    });
+    // $("a#chat").on("click", function () {
+    //
+    // });
 
 
     if (mode === "info") {
-
-        $("button[name='operationToggle']").on("click", function () {
-
-            var $operationMore = $("#operationMore");
-
-            if ($operationMore.css("display") === "none") {
-                $operationMore.css("display", "block");
-                $(this).text("∧")
-            } else {
-                $operationMore.css("display", "none");
-                $(this).text("∨");
-            }
-
-        });
-
 
         // 지도 초기화 함수
         function initMap() {
