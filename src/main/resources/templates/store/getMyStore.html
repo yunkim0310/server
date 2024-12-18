@@ -7,27 +7,24 @@
         <title>PlaceHere</title>
 
         <th:block th:if="${mode == 'review'}">
-            <link rel="stylesheet" href="/css/templates/mypage.css">
             <link rel="stylesheet" href="/css/templates/collection_detail.css">
             <link rel="stylesheet" href="/css/templates/style.css">
-            <script type="text/javascript" src="/javascript/templates/script.js"></script>
-
-            <script src="/javascript/community/like.js"></script>
-            <link rel="stylesheet" href="/css/community/getReviewList.css">
         </th:block>
 
         <link href="/css/templates/mypage.css" rel="stylesheet">
-        <link href="/css/templates/collection_detail.css" rel="stylesheet">
-        <link href="/css/templates/style.css" rel="stylesheet">
 
         <link th:insert="~{common/import :: importFragment}">
 
 <!--        <script src="/javascript/templates/profileFollow.js"></script>-->
-        <script src="/javascript/templates/script.js" type="text/javascript"></script>
+<!--        <script src="/javascript/templates/script.js" type="text/javascript"></script>-->
+
+        <!-- 리뷰 관련 스크립트 -->
+        <script src="/javascript/community/like.js"></script>
+        <script src="/javascript/store/getStoreReviewList.js"></script>
 
         <link rel="stylesheet" href="/css/store/getMyStore.css">
         <script src="/javascript/store/fileUploadEvent.js"></script>
-        <script type="text/javascript" src="/javascript/store/getMyStore.js"></script>
+        <script src="/javascript/store/getMyStore.js"></script>
 
     </head>
 
@@ -57,7 +54,6 @@
                                 <div class="mypage-profile">
                                     <div class="profile-pic">
 
-                                        <!-- TODO 매장 대표 사진 나오게 수정 필요 -->
                                         <div class="img"
                                              th:style="'margin-top: 20px;background-image: url('+${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}+');'">
                                         </div>
@@ -65,9 +61,12 @@
                                     </div>
                                     <div class="mypage-profile-meta">
                                         <div>
-                                            <h4 class="name username"><span class="txt" id="followingNick"
-                                                                            style="max-width: none;"
-                                                                            th:text="${store.storeName}">매장명</span>
+                                            <h4 class="name username">
+                                                <span class="txt" id="followingNick"
+                                                      style="max-width: none;"
+                                                      th:text="${store.storeName}">
+                                                    매장명
+                                                </span>
                                             </h4>
 
                                             <br/>
@@ -116,36 +115,38 @@
                                 <th:block th:if="${mode == 'closeday'}" th:insert="~{store/getClosedayList}"></th:block>
 
                                 <!-- 리뷰 보기 -->
-                                <th:block th:if="${mode == 'review'}" th:insert="~{test/community/getReviewList :: reviewListFragment}">
+                                <th:block th:if="${mode == 'review'}">
 
-                                <dl class="__block">
-                                    <dt>평균 별점</dt>
-                                    <dd>
-                                        <div class="__avr-rate"><strong th:text="${store.reviewScoreAvg}">5</strong>
-                                            <div class="stars">
-                                                        <span class="star full"
-                                                              style="width: 20px; height: 20px; margin-right: 8px;"></span>
-                                                <span class="star full"
-                                                      style="width: 20px; height: 20px; margin-right: 8px;"></span>
-                                                <span class="star full"
-                                                      style="width: 20px; height: 20px; margin-right: 8px;"></span>
-                                                <span class="star full"
-                                                      style="width: 20px; height: 20px; margin-right: 8px;"></span>
-                                                <span class="star half"
-                                                      style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                    <dl class="__block">
+                                        <dt>평균 별점</dt>
+                                        <dd>
+                                            <div class="__avr-rate"><strong th:text="${store.reviewScoreAvg}">5</strong>
+                                                <div class="stars">
+                                                    <span th:class="${(store.reviewScoreAvg >= 1)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 2)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 3)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 4)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg == 5)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                </div>
                                             </div>
-                                        </div>
-                                    </dd>
-                                </dl>
-                                <dl class="__block">
-                                    <dt>활동 지역</dt>
-                                    <dd>
-                                        <div class="color-gray"
-                                             th:text="${store.storeAddr} == null ? '아직 활동지역이 없습니다.': ${store.storeAddr}">
-                                            서울
-                                        </div>
-                                    </dd>
-                                </dl>
+                                        </dd>
+                                    </dl>
+                                    <dl class="__block">
+                                        <dt>활동 지역</dt>
+                                        <dd>
+                                            <div class="color-gray"
+                                                 th:text="${store.storeAddr} == null ? '아직 활동지역이 없습니다.': ${store.storeAddr}">
+                                                서울
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+                                    <div class="reviewList" th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
 
                                 </th:block>
 

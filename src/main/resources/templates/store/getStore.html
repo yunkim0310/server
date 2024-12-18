@@ -11,14 +11,11 @@
         <link rel="stylesheet" href="/css/templates/style.css">
 
         <th:block th:if="${mode == 'review'}">
-            <link rel="stylesheet" href="/css/templates/mypage.css">
             <link rel="stylesheet" href="/css/templates/collection_detail.css">
             <link rel="stylesheet" href="/css/templates/style.css">
-            <script type="text/javascript" src="/javascript/templates/script.js"></script>
-
-            <script src="/javascript/community/like.js"></script>
-            <link rel="stylesheet" href="/css/community/getReviewList.css">
         </th:block>
+
+        <link rel="stylesheet" href="/css/templates/mypage.css">
 
         <div id="ch-plugin" class="notranslate">
             <div id="ch-plugin-core"></div>
@@ -30,14 +27,16 @@
 
         <link th:insert="~{common/import :: importFragment}">
 
-        <link href="/css/templates/mypage.css" rel="stylesheet">
-
         <!-- 구글 맵 -->
         <script defer th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&callback=initMap'"></script>
 
         <!-- ChartJs -->
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+
+        <!-- 리뷰 관련 스크립트 -->
+        <script src="/javascript/community/like.js"></script>
+        <script src="/javascript/store/getStoreReviewList.js"></script>
 
         <script type="module" src="/javascript/store/getStore.js"></script>
 
@@ -73,7 +72,7 @@
                             <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
                                 <a style="cursor: pointer;" id="chat" class="btn-chat"
                                    th:href="${(session.user != null) ? 'https://placehere.store/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
-                                <a style="cursor: pointer" id="like"
+                                <a style="cursor: pointer" id="likeStore"
                                    th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
                                    th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>
                             </th:block>
@@ -149,6 +148,7 @@
 
                     <hr class="separator">
 
+                    <!-- 주변시설 추천 -->
                     <th:block th:if="${mode == 'nearby'}">
                         <th:block th:if="${session.user != null && session.user.role == 'ROLE_USER'}">
                             <div th:insert="~{store/getNearbyPlace :: nearbyFragment}"></div>
@@ -160,6 +160,7 @@
                         </th:block>
                     </th:block>
 
+                    <!-- 예약 통계 -->
                     <th:block th:if="${mode == 'statistics'}">
                         <th:block th:if="${session.user != null}">
                             <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
@@ -171,9 +172,10 @@
                         </th:block>
                     </th:block>
 
+                    <!-- 리뷰 -->
                     <th:block th:if="${mode == 'review'}">
                         <th:block th:if="${session.user != null}">
-                            <div th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
+                            <div class="reviewList" th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
                         </th:block>
                         <th:block th:unless="${session.user != null}">
                             <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
