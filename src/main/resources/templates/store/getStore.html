@@ -10,6 +10,16 @@
 
         <link rel="stylesheet" href="/css/templates/style.css">
 
+        <th:block th:if="${mode == 'review'}">
+            <link rel="stylesheet" href="/css/templates/mypage.css">
+            <link rel="stylesheet" href="/css/templates/collection_detail.css">
+            <link rel="stylesheet" href="/css/templates/style.css">
+            <script type="text/javascript" src="/javascript/templates/script.js"></script>
+
+            <script src="/javascript/community/like.js"></script>
+            <link rel="stylesheet" href="/css/community/getReviewList.css">
+        </th:block>
+
         <div id="ch-plugin" class="notranslate">
             <div id="ch-plugin-core"></div>
             <div id="ch-plugin-script" style="display:none" class="ch-messenger-hidden">
@@ -62,7 +72,7 @@
                             </div>
                             <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
                                 <a style="cursor: pointer;" id="chat" class="btn-chat"
-                                   th:href="${(session.user != null) ? 'https://plafehere:3000/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
+                                   th:href="${(session.user != null) ? 'https://placehere/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
                                 <a style="cursor: pointer" id="like"
                                    th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
                                    th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>
@@ -173,7 +183,7 @@
                                                                 <div class="news-item">
                                                                     <p th:text="${news.regDt.split(' ')[0]}" style="font-weight: bold;font-size: 15px;"></p>
                                                                     <img width="200" height="200" style="padding: 5px;align-items: self-end;background-color: #FFFFFF;"
-                                                                         th:src="${(news.newsImg == null || news.newsImg.isEmpty())? '/images/store/icon_no_image.png' : ((news.newsImg.indexOf('_') == -1)? '/images/store/news/' + news.newsImg : url + news.newsImg)}">
+                                                                         th:src="${(news.newsImg == null || news.newsImg.isEmpty())? '/images/store/icon_no_image.png' : ((news.newsImg.indexOf('_') != -1)? '/images/store/news/' + news.newsImg : url + news.newsImg)}">
                                                                     <p th:text="${news.newsContents}">매장 소식</p>
                                                                 </div>
                                                             </div>
