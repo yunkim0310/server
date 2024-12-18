@@ -2,7 +2,7 @@ body {
             font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
             background-color: #FFF; /* 배경색 */
             color: #333; /* 기본 텍스트 색 */
-            margin: 0; /* 기본 마진 제거 */
+            margin: 17; /* 기본 마진 제거 */
             padding: 0; /* 기본 패딩 제거 */
         }
 

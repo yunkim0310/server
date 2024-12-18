@@ -29,10 +29,11 @@
     </div>
 </div>
 
-
+<p style="margin-top:37px;">
 <th:block th:if="${review.currReviewUpdate != null}">
     <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd')}"></span> (수정됨)</p>
 </th:block>
+</p>
 
 <div class="review-container">
     <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
@@ -53,9 +54,9 @@
         </div>
     </div>
 </div>
-<img src="/file/community/star_icon1.png" style="margin-left: 503px;" th:text="${review.reviewScore}">
+<img src="/file/community/star_icon1.png" style="margin-left: 400px;" th:text="${review.reviewScore}">
 
-<div class="comment-content" style="margin-left:510px">
+<div class="comment-content" style="margin-left:400px">
 <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
 </div>
 
@@ -77,8 +78,9 @@
         <input id="userName" name="userName" type="hidden" th:value="${user.username}"/>
         <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
         <!--        <button type="submit">댓글 추가</button>-->
-        <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
-        <button type="button" name="addCommentBtn">댓글 추가</button>
+        <span class="comment-count" style="margin-left:90px" th:text="${#lists.size(review.commentList)}"></span></p>
+        <div style="margin-top:20px;">
+        <button type="button" name="addCommentBtn" style="margin-top:-2px">댓글 추가</button>
 
         <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
             <a style="cursor: pointer" id="like"
@@ -88,6 +90,7 @@
                 <span class="like-count" style="margin-left: 37px;" th:text="${review.reviewLikeCnt}"></span>
             </a>
         </th:block>
+        </div>
 
 
 
