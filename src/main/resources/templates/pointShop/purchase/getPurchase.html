@@ -545,7 +545,7 @@
                                 <!--        <span class="value" th:text="${purchase.barcodeName}">상품 바코드</span>-->
                                 <!--        <img th:src="@{${pageContext.request.contextPath}/static/file/pointShop/${purchase.barcodeName}}" alt="Barcode Image" />-->
 <!--                                <img th:src="@{/file/pointShop/7334558099814.png}" alt="상품 대표 이미지"><br/>-->
-                                <img th:src="${url +'point/barcode/'+ purchase.barcodeName}">
+                                <img th:src="${url + purchase.barcodeName}">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             </div>
