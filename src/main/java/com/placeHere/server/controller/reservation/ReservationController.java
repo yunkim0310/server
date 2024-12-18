@@ -50,6 +50,9 @@ public class ReservationController {
     @Value("${list_size}")
     private int listSize;
 
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
+
 
     public ReservationController(){
         System.out.println("ReservationController Start");
@@ -667,7 +670,7 @@ public class ReservationController {
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
             }
         }
-        return "redirect:/reservation/getRsrvUserList";
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 
@@ -698,6 +701,24 @@ public class ReservationController {
 //    }
 
 
+    @RequestMapping( value="testRsrv", method=RequestMethod.GET )
+    public String testRsrv(@RequestParam("storeId") int storeId,
+                          Model model) throws Exception {
+
+
+
+
+
+        Store store = storeService.getStore(storeId);
+
+
+        System.out.println("/reservation/testRsrv : GET");
+
+        model.addAttribute("store", store);
+        model.addAttribute("url", bucketUrl);
+
+        return "reservation/test";
+    }
 
 
 }
