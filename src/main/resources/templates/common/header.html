@@ -5,6 +5,7 @@
     <link rel="stylesheet" href="/css/templates/header.css">
     <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
     <script defer src="/javascript/templates/header.js"></script>
+    <script src="/javascript/common/headerEvent.js"></script>
 
     <style>
         .header-wrap{
@@ -53,12 +54,12 @@
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
                     <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
-                        <a href="#">
+                        <a th:href="${(session.user != null) ? 'https://placehere/react/chat?name='+session.user.username+'&role='+session.user.role : '/user/login'}">
                             <img src="/images/store/icon_chat.png"/>
                         </a>
                     </li>
                     <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
-                        <a href="/getStoreLikeList">
+                        <a class="getStoreLikeList" style="cursor: pointer;">
                             <img src="/images/store/icon_heart_red.png"/>
                         </a>
                     </li>

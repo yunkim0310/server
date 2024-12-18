@@ -5,7 +5,9 @@ $(function () {
     $("#breakTimeToggle").on("change", function () {
 
         let isEnabled = this.checked;
-        $("#breakStart, #breakEnd").prop("disabled", !isEnabled);
+
+        console.log(isEnabled);
+        $("#breakTimeStart, #breakTimeEnd").prop("disabled", !isEnabled);
 
     });
 

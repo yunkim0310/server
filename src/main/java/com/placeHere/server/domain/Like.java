@@ -26,6 +26,8 @@ public class Like {
     private Date likeDt;
     // 매장명
     private String storeName;
+    // 총 개수
+    private int likeTotalCnt;
 
 
 
