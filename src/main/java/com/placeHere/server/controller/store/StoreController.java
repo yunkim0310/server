@@ -643,6 +643,7 @@ public class StoreController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
+        model.addAttribute("url", bucketUrl);
 
         if (user == null) {
 

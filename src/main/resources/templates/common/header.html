@@ -54,7 +54,7 @@
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
                     <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
-                        <a href="#">
+                        <a th:href="${(session.user != null) ? 'https://placehere/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">
                             <img src="/images/store/icon_chat.png"/>
                         </a>
                     </li>

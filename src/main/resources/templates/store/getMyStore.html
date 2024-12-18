@@ -6,6 +6,16 @@
         <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
         <title>PlaceHere</title>
 
+        <th:block th:if="${mode == 'review'}">
+            <link rel="stylesheet" href="/css/templates/mypage.css">
+            <link rel="stylesheet" href="/css/templates/collection_detail.css">
+            <link rel="stylesheet" href="/css/templates/style.css">
+            <script type="text/javascript" src="/javascript/templates/script.js"></script>
+
+            <script src="/javascript/community/like.js"></script>
+            <link rel="stylesheet" href="/css/community/getReviewList.css">
+        </th:block>
+
         <link href="/css/templates/mypage.css" rel="stylesheet">
         <link href="/css/templates/collection_detail.css" rel="stylesheet">
         <link href="/css/templates/style.css" rel="stylesheet">
@@ -16,6 +26,7 @@
         <script src="/javascript/templates/script.js" type="text/javascript"></script>
 
         <link rel="stylesheet" href="/css/store/getMyStore.css">
+        <script src="/javascript/store/fileUploadEvent.js"></script>
         <script type="text/javascript" src="/javascript/store/getMyStore.js"></script>
 
     </head>
@@ -48,7 +59,7 @@
 
                                         <!-- TODO 매장 대표 사진 나오게 수정 필요 -->
                                         <div class="img"
-                                             style="margin-top: 20px;background-image: url(&quot;https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/noimg/profile_default_v2.png&quot;);">
+                                             th:style="'margin-top: 20px;background-image: url('+${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}+');'">
                                         </div>
 
                                     </div>
