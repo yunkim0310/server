@@ -105,8 +105,6 @@ public class UserController {
 
         log.info("resetPwdValidation - get 요청");
 
-
-
         return "user/resetPwdValidation";
     }
 
@@ -115,6 +113,12 @@ public class UserController {
 
         log.info("resetPassword - post 요청");
         log.info(">>> INPUT USER CHECK :: " + user);
+
+        if ( user.getUsername() != null ) {
+
+            String username = user.getUsername();
+            log.info("username :: " + username);
+        }
 
         user = userService.getUser(user.getUsername());
 

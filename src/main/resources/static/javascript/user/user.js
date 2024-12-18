@@ -98,20 +98,6 @@ function validateAll() {
 
 } // end of validationAll
 
-function combineBirthDate() {
-  const yyyy = document.getElementById('birthY').value;
-  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
-  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
-
-  if (yyyy.length === 4 && mm.length === 2 && dd.length === 2) {
-    const birthDate = `${yyyy}-${mm}-${dd}`; // "YYYY-MM-DD" 형태로 합침
-    console.log("생년월일:", birth);
-    return birth;
-  } else {
-    alert("생년월일을 정확히 입력해주세요.");
-    return null;
-  }
-}
 
 // 8글자이상 20이하 영어, 숫자, 특수문자 모두 사용
 function pwdValidation() {
@@ -411,9 +397,7 @@ function validationPwdRule(pwd) {
 
 // 이메일 형식 확인
 function emailCheck(email){
-
   return  /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email);
-
 }
 
 // 프로필 사진 업로드
@@ -479,46 +463,46 @@ function photoEdit() {
 } // end of photoEdit
 
 // 비밀번호 재설정
-function resetPwd() {
-
-  event.preventDefault();
-
-  const username = $('#username').val();
-  const password = $('#password').val();
-
-  console.log('username :: ' + username);
-  console.log('password :: ' + password);
-
-  const user = {
-    username : username,
-    password : password
-  }
-
-  $.ajax({
-    url: '/api-user/resetPwd',
-    type: 'POST',
-    contentType: 'application/json',
-    data: JSON.stringify(user),
-    success: function(data) {
-
-      console.log('data :: ',data);
-
-      if (data === "SUCCESS") {
-        alert("비밀번호가 변경되었습니다! 재로그인 해주세요.");
-        location.href='/';
-      } else {
-        alert("실패!");
-      }
-    },
-    error: function(xhr, status, error) {
-      console.error('Error:', error);
-      alert("비밀번호 변경 중 오류가 발생했습니다.");
-    }
-
-  });
-
-  
-}
+// function resetPwd() {
+//
+//   event.preventDefault();
+//
+//   const username = $('#username').val();
+//   const password = $('#password').val();
+//
+//   console.log('username :: ' + username);
+//   console.log('password :: ' + password);
+//
+//   const user = {
+//     username : username,
+//     password : password
+//   }
+//
+//   $.ajax({
+//     url: '/api-user/resetPwd',
+//     type: 'POST',
+//     contentType: 'application/json',
+//     data: JSON.stringify(user),
+//     success: function(data) {
+//
+//       console.log('data :: ',data);
+//
+//       if (data === "SUCCESS") {
+//         alert("비밀번호가 변경되었습니다! 재로그인 해주세요.");
+//         location.href='/';
+//       } else {
+//         alert("실패!");
+//       }
+//     },
+//     error: function(xhr, status, error) {
+//       console.error('Error:', error);
+//       alert("비밀번호 변경 중 오류가 발생했습니다.");
+//     }
+//
+//   });
+//
+//
+// }
 
 // 회원탈퇴 함수
 function goodBye() {
@@ -702,8 +686,133 @@ function login() {
       }
     });
 
+}
+
+// 비밀번호 재설정
+// 이메일과 아이디를 입력하면 확인되었습니다 얼럿 띄우기
+function resetPwdValidation() {
+
+  event.preventDefault();
+
+  const email = $("#email").val();
+  const username = $("#username").val();
+  const messageElement = $("#invalid-feedback-email");
+  // console.log(email);
+  // console.log(username);
+
+  const emailChk = emailCheck(email);
+
+  if( emailChk ) { // false
+
+    messageElement.text('');
+    messageElement.css({'color': '', 'display': 'block'});
+    return
+  } else {
+    messageElement.text('이메일 형식이 아닙니다.');
+    messageElement.css({'color': 'red', 'display': 'block'});
+  }
+
+}
+
+function resetPwdValidationSend() {
+
+  event.preventDefault();
+
+  const email = $("#email").val();
+  const username = $("#username").val();
+
+  console.log(email);
+  console.log(username);
+
+  const user = {
+    username : username,
+    email: email
+  }
+
+  $.ajax({
+    url: '/api-user/resetPwdValidation',
+    type: 'POST',
+    contentType: 'application/json',
+    data: JSON.stringify(user),
+    success: function(data) {
+
+      console.log('data :: ',data);
+
+      if (data === "SUCCESS") {
+        alert("인증 되었습니다.");
+
+        console.log("Before redirect");
+        location.href = '/user/resetPwd';
+        console.log("After redirect");
+      } else {
+        alert("없는 정보 입니다.");
+      }
+    },
+    error: function(xhr, status, error) {
+      console.error('Error:', error);
+    }
+  }); // end of ajax2
 
 
+}
 
+function resetPwd() {
+
+
+  event.preventDefault();
+
+  const password = $("#password").val();
+  const passwordConfirm = $("#passwordConfirm").val();
+  const username = $("#username").val();
+  const messageElement = $("#invalid-feedback-pwdConfirm").val();
+
+  console.log(password);
+  console.log(passwordConfirm);
+  console.log(username);
+
+  const user = {
+    username: username,
+    password: password
+  }
+
+  const pwdChk = validationPwdRule(password);
+
+  if (password !== passwordConfirm) {
+    alert('비밀번호가 일치하지 않습니다.');
+    return;
+  } else{
+    if(pwdChk) {
+
+      console.log('11');
+
+      $.ajax({
+        url: '/api-user/resetPwd',
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(user),
+        success: function(data) {
+
+          console.log('data :: ',data);
+
+          if (data === "SUCCESS") {
+            alert("변경 되었습니다.");
+
+            console.log("Before redirect");
+            location.href = '/';
+            console.log("After redirect");
+          } else {
+            alert("에러가 발생했습니다.");
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Error:', error);
+        }
+      }); // end of ajax2
+
+    } else{
+      alert('비밀번호 형식에 맞지 않습니다.');
+    }
+
+  }
 
 }
