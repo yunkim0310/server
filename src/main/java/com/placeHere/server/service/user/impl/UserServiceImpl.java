@@ -95,12 +95,17 @@ public class UserServiceImpl implements UserService {
         Point point = new Point();
 
         String chkRec = user.getRecommendedId();
-        log.info("chkRec : " + chkRec);
+        int leng =0;
 
-        int leng = chkRec.length();
-        log.info("leng : " + leng);
+        if ( chkRec != null ) {
+            log.info("chkRec : " + chkRec);
+            leng = chkRec.length();
+            log.info("leng : " + leng);
 
-        if ( leng != 0) {
+        }
+
+
+        if ( leng != 0 && chkRec != null) {
 
             log.info("plz......" + leng);
 

@@ -30,10 +30,22 @@ function validateAll() {
   const gender = $("input[name='gender']:checked").val();
   console.log('gender :: ' , gender);
 
+  let yyyy = '';
+  let mm = '';
+  let dd = '';
+
+  let rec = $('#recommendedId').val();
+
   // birth
-  const yyyy = document.getElementById('birthY').value;
-  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
-  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
+  if (role === 'ROLE_USER') {
+
+    console.log('ROLE_USER :: ');
+    yyyy = document.getElementById('birthY').value;
+    mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
+    dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
+  } else {
+      rec = '';
+  }
 
   let birth='';
 
@@ -44,10 +56,6 @@ function validateAll() {
   }
 
 
-  const rec = $('#recommendedId').val();
-  if (  rec.length === 0) {
-    console.log('rec 11 :: ', rec);
-  }
 
   // 모든 유효성 검사 통과 시 회원가입 요청
   if ( usernameValid && pwdValid && isPwdMatch && emailValid ) {
