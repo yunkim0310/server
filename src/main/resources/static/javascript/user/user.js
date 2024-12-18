@@ -1,18 +1,56 @@
 // 모든 유효성 검사 통과
 function validateAll() {
 
-  const isUsernameValid = usernameValidation();
-  const isPwdValid = pwdValidation();
-  const isPwdMatch = isMatch();
-  const isEmailValid = emailValidation();
+  event.preventDefault();
 
-  console.log('isUsernameValid :: ' , isUsernameValid);
-  console.log('isPwdValid :: ', isPwdValid);
-  console.log('isPwdMatch :: ', isPwdMatch);
-  console.log('isEmailValid :: ', isEmailValid);
+  // username
+  const usernameMsgElement = $("#invalid-feedback-username");
+  const usernameValid = usernameMsgElement.css('color') === 'rgb(0, 128, 0)' ? true : false;
+  console.log('usernameValid ::: ', usernameValid);
+
+  // pwd
+  const pwdMsgElement = $("#invalid-feedback-pwd");
+  const pwdValid = pwdMsgElement.css('color') === 'rgb(0, 128, 0)' ? true : false;
+  console.log('pwdValid :: ', pwdValid);
+
+  // pwd match
+  const isPwdMatch = isMatch();
+  console.log('isPwdMatch ::: ', isPwdMatch);
+
+  // email
+  const emailMsgElement = $("#invalid-feedback-email");
+  const emailValid = emailMsgElement.css('color') === 'rgb(0, 128, 0)' ? true : false;
+  console.log('emailValid :: ', emailValid);
+
+  // role
+  const role = $('[name="role"]').val();
+  console.log('role :: ', role);
+
+  // gender
+  const gender = $("input[name='gender']:checked").val();
+  console.log('gender :: ' , gender);
+
+  // birth
+  const yyyy = document.getElementById('birthY').value;
+  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
+  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
+
+  let birth='';
+
+  if (yyyy.length === 4 && mm.length === 2 && dd.length === 2) {
+    birth = `${yyyy}-${mm}-${dd}`; // "YYYY-MM-DD" 형태로 합침
+    console.log("생년월일:", birth);
+    // return birth;
+  }
+
+
+  const rec = $('#recommendedId').val();
+  if (  rec.length === 0) {
+    console.log('rec 11 :: ', rec);
+  }
 
   // 모든 유효성 검사 통과 시 회원가입 요청
-  if ( isUsernameValid && isPwdValid && isPwdMatch && isEmailValid ) {
+  if ( usernameValid && pwdValid && isPwdMatch && emailValid ) {
     // 유효성 검사 통과 후, 실제 가입 요청
     const user = {
       username: $('#username').val(),
@@ -20,7 +58,8 @@ function validateAll() {
       password: $('#password').val(),
       recommendedId: $('#recommendedId').val(),
       role: $('[name="role"]').val(),
-      gender: $('[name="gender"]:checked').val()
+      gender: gender,
+      birth: birth
     };
     
     console.log('회원가입 객체 :: ', user);
@@ -32,9 +71,9 @@ function validateAll() {
       contentType: 'application/json',
       data: JSON.stringify(user),
       success: function(data) {
-        if (data.success) {
+        if (data === "SUCCESS") {
           alert("회원가입 성공!");
-          location.href='/loginView';
+          location.href='/user/login';
         } else {
           alert("회원가입 실패!");
         }
@@ -51,7 +90,20 @@ function validateAll() {
 
 } // end of validationAll
 
+function combineBirthDate() {
+  const yyyy = document.getElementById('birthY').value;
+  const mm = document.getElementById('birthM').value.padStart(2, '0'); // 2자리 보장
+  const dd = document.getElementById('birthD').value.padStart(2, '0');   // 2자리 보장
 
+  if (yyyy.length === 4 && mm.length === 2 && dd.length === 2) {
+    const birthDate = `${yyyy}-${mm}-${dd}`; // "YYYY-MM-DD" 형태로 합침
+    console.log("생년월일:", birth);
+    return birth;
+  } else {
+    alert("생년월일을 정확히 입력해주세요.");
+    return null;
+  }
+}
 
 // 8글자이상 20이하 영어, 숫자, 특수문자 모두 사용
 function pwdValidation() {
@@ -83,7 +135,6 @@ function pwdValidation() {
     messageElement.css({'color': 'green', 'display': 'block'});
     return true;
   }
-  
 
 }
 
@@ -110,7 +161,6 @@ function isMatch () {
 }
 
 
-
 // email 유효성 검사
 function emailValidation() {
 
@@ -122,31 +172,27 @@ function emailValidation() {
     const emailChk = emailCheck(email);
 
     if( !emailChk ) { // true
-    messageElement.text('이메일 형식이 아닙니다.');
-    messageElement.css({'color': 'red', 'display': 'block'});
-    return;
-  } else if ( emailChk ){
-    messageElement.text('');
-    messageElement.css({'color': '', 'display': ''});
-    return true;
-  }
+      messageElement.text('이메일 형식이 아닙니다.');
+      messageElement.css({'color': 'red', 'display': 'block'});
+      return;
+    }
 
   $.ajax({
     url: '/api-user/chkEmail',
-    type: 'GET', // HTTP 메서드
+    type: 'POST', // HTTP 메서드
     data: { email: email },
 
 
-    success: function (isDuplicate) {
+    success: function (result) {
+
 
       // 사용불가
-      if (isDuplicate) {
+      if (result === true) {
         console.log('이게 또 안돼?')
         messageElement.text('존재하는 이메일 입니다..');
         messageElement.css({'color': 'red', 'display': 'block'});
-        return false;
 
-      }  else if ( !isDuplicate ){
+      }  else {
         messageElement.text('사용 가능한 이메일 입니다.');
         messageElement.css({'color': 'green', 'display': 'block'});
         return true;
@@ -202,90 +248,147 @@ function recomandValidation () {
 }
 
 
-// username 유효성 검사
-function usernameValidation() {
+// // username 유효성 검사
+// function usernameValidation() {
+//
+//   // username 초기화
+//   const username = $('#username').val();
+//
+//   // 보여줄 메시지 초기화
+//   // const messageElement = $(".invalid-feedback-username");
+//   const messageElement = $("#invalid-feedback-username");
+//
+//   // username 길이 체크
+//   const usernameChk = validationUsernameRule(username);
+//
+//
+//   if (username == '') {
+//     messageElement.text('아이디를 입력해주세요.');
+//     messageElement.css({'color': 'red', 'display': 'block'});
+//     return false;
+//   }
+//
+//   if( !usernameChk ) { // true
+//     messageElement.text('아이디를 확인해주세요.');
+//     messageElement.css({'color': 'red', 'display': 'block'});
+//     // return false;
+//   } else {
+//
+//     ajaxValidationUsername(username, messageElement, function (isValid) {
+//       if (isValid) {
+//         console.log('사용 가능한 아이디입니다.');
+//       } else {
+//         console.log('이미 사용 중인 아이디입니다.');
+//       }
+//     });
+//   }
+//
+// } // end of validation
+//
+// function ajaxValidationUsername(username, messageElement, callback) {
+//   $.ajax({
+//     url: '/api-user/chkDuplication',
+//     type: 'GET', // HTTP 메서드
+//     data: { username: username },
+//
+//     success: function (isDuplicate) {
+//
+//       // 사용불가
+//       if (isDuplicate) {
+//         messageElement.text('이미 사용 중인 아이디입니다.');
+//         messageElement.css({'color': 'red', 'display': 'block'});
+//         // return false;
+//         callback(false);
+//         // 사용가능
+//       } else {
+//         messageElement.text('사용 가능한 아이디입니다.');
+//         messageElement.css({'color': 'green', 'display': 'block'});
+//         // return true;
+//         callback(true);
+//       }
+//     }, // end of success
+//     error: function () {
+//       messageElement.text('아이디 확인 중 오류가 발생했습니다.');
+//       messageElement.css({'color': 'red', 'display': 'block'});
+//       // return false;
+//       callback(false);
+//     } // end of error
+//   }); // end of ajax
+//
+// }
 
-  // username 초기화
-  const username = $('#username').val();
 
-  // 보여줄 메시지 초기화
-  // const messageElement = $(".invalid-feedback-username");
-  const messageElement = $("#invalid-feedback-username");
+function ajaxValidationUsername(username, messageElement) {
+  return new Promise((resolve, reject) => {
+    $.ajax({
+      url: '/api-user/chkDuplication',
+      type: 'GET',
+      data: { username: username },
 
-  // username 길이 체크
-  const usernameChk = validationUsernameRule(username);
-
-  if( !usernameChk ) { // true
-    messageElement.text('아이디를 확인해주세요.');
-    messageElement.css({'color': 'red', 'display': 'block'});
-    return;
-  } else if ( usernameChk ){
-    messageElement.text('사용 가능한 아이디 입니다.');
-    messageElement.css({'color': 'green', 'display': 'block'});
-    return true;
-  }
-
-  $.ajax({
-    url: '/api-user/chkDuplication',
-    type: 'GET', // HTTP 메서드
-    data: { username: username },
-
-    success: function (isDuplicate) {
-
-      // 사용불가
-      if (isDuplicate) {
-        messageElement.text('이미 사용 중인 아이디입니다.');
+      success: function (isDuplicate) {
+        if (isDuplicate) {
+          messageElement.text('이미 사용 중인 아이디입니다.');
+          messageElement.css({'color': 'red', 'display': 'block'});
+          resolve(false);
+        } else {
+          messageElement.text('사용 가능한 아이디입니다.');
+          messageElement.css({'color': 'green', 'display': 'block'});
+          resolve(true);
+        }
+      },
+      error: function () {
+        messageElement.text('아이디 확인 중 오류가 발생했습니다.');
         messageElement.css({'color': 'red', 'display': 'block'});
-        return false;
-        // 사용가능
-      } else {
-        messageElement.text('사용 가능한 아이디입니다.');
-        messageElement.css({'color': 'green', 'display': 'block'});
-        return true;
+        reject(false);
       }
-    }, // end of success
-    error: function () {
-      messageElement.text('아이디 확인 중 오류가 발생했습니다.');
-      messageElement.css({'color': 'red', 'display': 'block'});
-      return false;
-    } // end of error
+    });
   });
+}
 
+function usernameValidation() {
+  const username = $('#username').val();
+  const messageElement = $("#invalid-feedback-username");
 
   if (username == '') {
     messageElement.text('아이디를 입력해주세요.');
     messageElement.css({'color': 'red', 'display': 'block'});
-    return false;
+    return;
   }
 
+  const usernameChk = validationUsernameRule(username);
+  if (!usernameChk) {
+    messageElement.text('아이디를 확인해주세요.');
+    messageElement.css({'color': 'red', 'display': 'block'});
+    return;
+  }
 
-  $.ajax({
-    url: '/api-user/chkDuplication',
-    type: 'GET', // HTTP 메서드
-    data: { username: username },
-
-    success: function (isDuplicate) {
-
-      // 사용불가
-      if (isDuplicate) {
-        messageElement.text('이미 사용 중인 아이디입니다.');
-        messageElement.css({'color': 'red', 'display': 'block'});
-        return false;
-      // 사용가능
-      } else {
-        messageElement.text('사용 가능한 아이디입니다.');
-        messageElement.css({'color': 'green', 'display': 'block'});
+  return ajaxValidationUsername(username, messageElement)
+    .then((isValid) => {
+      if (isValid) {
+        console.log('사용 가능한 아이디입니다.');
+        console.log(isValid);
         return true;
+      } else {
+        console.log('이미 사용 중인 아이디입니다.');
+        return false;
       }
-    }, // end of success
-    error: function () {
-      messageElement.text('아이디 확인 중 오류가 발생했습니다.');
-      messageElement.css({'color': 'red', 'display': 'block'});
+    })
+    .catch((error) => {
+      console.error('오류 발생:', error);
       return false;
-    } // end of error
-  }); // end of ajax
+    });
+}
 
-} // end of validation
+// 이후 usernameValidation 호출 후 처리
+usernameValidation().then((result) => {
+  if (result) {
+    console.log('최종 확인: 아이디 사용 가능');
+    return true;
+  } else {
+    console.log('최종 확인: 아이디 사용 불가');
+    return false;
+  }
+});
 
 // 4~12 글자 영어나 숫자 조합
 // 특수문자 포함 안됨
@@ -302,12 +405,6 @@ function validationPwdRule(pwd) {
 function emailCheck(email){
 
   return  /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/i.test(email);
-
-  // if( !regex.test(email) ){
-  //   return false;
-  // } else {
-  //   return true;
-  // }
 
 }
 
@@ -542,4 +639,67 @@ function goodBye() {
 
   }
   
+}
+
+// 로그인
+function login() {
+
+  event.preventDefault();
+
+  const username = $("#username").val();
+  const password = $("#password").val();
+
+  console.log('username :: ', username);
+  console.log('password :: ', password);
+
+  const user = {
+    username : username,
+    password : password
+  }
+
+  $.ajax({
+      url: '/api-user/login',
+      type: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify(user),
+      success: function(data) {
+
+        console.log('data :: ',data);
+
+        if (data === "SUCCESS") {
+          alert("로그인 완료");
+          location.href='/';
+        } else if(data === "INACTIVE") {
+          alert("휴면계정 입니다.");
+          const result = confirm("전환하시겠습니까?");
+
+          if (result) {
+            console.log('YEEEEEEEEEES');
+            location.href='/user/resetPwdValidation';
+
+          } else {
+            console.log('NOOOOOOOOOOO');
+            location.href='/';
+          }
+
+
+          location.href='/';
+        } else if(data === "DELETED") {
+          alert("탈퇴  회원입니다.");
+          location.href='/';
+        } else {
+          alert("계정 정보가 존재하지 않습니다.");
+          location.href='/user/login';
+        }
+      },
+      error: function(xhr, status, error) {
+        console.error('Error:', error);
+        alert("문제가 발생하였습니다.");
+      }
+    });
+
+
+
+
+
 }

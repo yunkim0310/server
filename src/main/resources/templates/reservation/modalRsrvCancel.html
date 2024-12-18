@@ -69,6 +69,9 @@
     const confirmBtn = document.querySelector(".confirm-btn");
 
     reasonTextarea.addEventListener("input", function () {
+
+      this.value = this.value.replace(/\n/g, "");
+
       const currentLength = reasonTextarea.value.length;
       const remaining = 50 - currentLength;
 

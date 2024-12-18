@@ -409,17 +409,28 @@ $(function () {
 
                         if (place) {
 
-                            $(`#${category}Img`).attr("src", `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=${googleApiKey}`)
-                                .attr("alt", place.displayName);
+                            console.log(place.photos);
+
+                            if (place.photos.length > 0) {
+
+                                $(`#${category}Img`).attr("src", `https://places.googleapis.com/v1/${place.photos[0].name}/media?maxHeightPx=400&maxWidthPx=400&key=${googleApiKey}`)
+                                    .attr("alt", place.displayName);
+                            } else {
+
+                                $(`#${category}Img`).attr("src", "/images/store/icon_no_image.png")
+                                    .attr("style", "background-color: #FFFFFF;")
+                                    .attr("alt", place.displayName);
+                            }
 
                             $(`#${category}Name`).attr("style","font-size: 25px;").text(`${place.displayName}`);
                             $(`#${category}Addr`).attr("style","font-size: 20px;").text(`${place.formattedAddress}`);
-                            $(`#${category}Rating`).attr("style","font-size: 20px;").text(`★ ${place.rating}`);
-                            $(`#${category}Phone`).attr("style","font-size: 20px;").text(`${place.nationalPhoneNumber}`);
+                            $(`#${category}Rating`).attr("style","font-size: 20px;").text(`${(place.rating == null)? '등록된 평점이 없습니다' : '★ ' + place.rating}`);
+                            $(`#${category}Phone`).attr("style","font-size: 20px;").text(`${(place.nationalPhoneNumber == null)? '등록된 전화번호가 없습니다' : place.nationalPhoneNumber}`);
 
                         } else {
 
-                            $(`#${category}Info`).attr("style","font-size: 20px;").text("주변에 해당 시설이 없습니다.");
+                            $(`#${category}InfoNone`).attr("style","display: block;").text("주변에 해당 시설이 없습니다.");
+                            $(`#${category}Info table`).css("display", "none");
 
                         }
 
@@ -462,14 +473,15 @@ $(function () {
     $(".menuImgLink").on("click", function () {
 
         const url = $(this).data("url");
+        const title = $(this).data("title");
 
-        openImagePopup(url);
+        openImagePopup(url, title);
     })
 
 });
 
 // 메뉴 사진 팝업 메서드
-function openImagePopup(imageUrl) {
+function openImagePopup(imageUrl, title) {
     const popupOptions = 'width=300,height=300,resizable=no,scrollbars=no';
     const popup = window.open('', '_blank', popupOptions);
 
@@ -479,7 +491,7 @@ function openImagePopup(imageUrl) {
             <!DOCTYPE html>
             <html>
             <head>
-                <title>Image Popup</title>
+                <title>${title}</title>
                 <style>
                     body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #000; }
                     img { max-width: 100%; max-height: 100%; }

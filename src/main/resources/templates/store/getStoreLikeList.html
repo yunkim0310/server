@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>PlaceHere</title>
+
+        <link rel="shortcut icon" href="/images/common/smallLogo.png">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- 구글 jQuery -->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- 템플릿 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Roboto|Noto+Sans+KR:300,400,500,700&amp;display=block&amp;subset=korean"
+              as="style" crossorigin="anonymous">
+        <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
+
+        <!-- 공통 제작 css 적용 -->
+        <link rel="stylesheet" href="/css/common/common.css">
+
+        <!-- pageNavigator -->
+        <script src="/javascript/common/pageNavigator.js"></script>
+        <link rel="stylesheet" href="/css/common/paging.css">
+
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+        <link rel="stylesheet" href="/css/store/getClosedayList.css">
+        <script src="/javascript/store/getStoreLikeList.js"></script>
+
+        <style>
+            .paging {
+                padding: 10px;
+            }
+        </style>
+
+    </head>
+
+    <body style="padding-top: 0">
+
+        <div style="text-align: center;padding: 20px;font-weight: bold;font-size: large;">
+            <h2>
+                가게 좋아요 목록
+            </h2>
+        </div>
+
+        <table border="1">
+
+            <tbody>
+                <th:block th:if="${!storeLikeList.isEmpty()}">
+                    <tr th:each="like, iterStat : ${storeLikeList}">
+                        <td>
+                            <a href="javascript:void(0);"
+                               th:attr="onclick=|window.opener.location.href='/getStore?storeId=${like.relationNo}'; window.close();|"
+                               th:text="${like.storeName}">매장명</a>
+                        </td>
+                        <td>
+                            <img id="like" width="24" height="24" style="cursor: pointer;"
+                                 src="/images/store/icon_heart_red.png"
+                                 th:data-likeid="${like.likeId}"/>
+                        </td>
+                    </tr>
+                </th:block>
+                <th:block th:unless="${!storeLikeList.isEmpty()}">
+                    <tr>
+                        <td colspan="2">
+                            좋아요 누른 가게가 없습니다.
+                        </td>
+                    </tr>
+                </th:block>
+            </tbody>
+        </table>
+
+        <th:block  th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+        <form>
+            <input type="hidden" name="page" value="1"/>
+        </form>
+
+    </body>
+
+</html>

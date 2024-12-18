@@ -57,21 +57,13 @@ public class MainController {
         List<Store> storeList = new ArrayList<Store>();
 
         if (!storeIdList.isEmpty()) {
-
             storeList = storeService.getStoreList(storeIdList);
-
-        }
-
-        // TODO 이후 삭제 필요
-        else {
-            Search search = new Search();
-            search.setPageSize(5);
-            search.setListSize(5);
-            storeList = storeService.getStoreList(search);
         }
 
         System.out.println(storeIdList);
         System.out.println(storeList);
+
+        System.out.println(storeList.isEmpty());
 
         // 지역 필터 이미지 TODO 수정 필요
         List<String> regionImgList = new ArrayList<String>(

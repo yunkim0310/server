@@ -141,25 +141,32 @@ public class ProductController {
 //    @RequestMapping( value="getProduct", method=RequestMethod.GET)
     @GetMapping("/getProduct")
     public String getProduct(@RequestParam("prodNo") int prodNo ,
-                             @SessionAttribute("user") User buyer,
+//                             @SessionAttribute("user") User buyer,
+                             HttpSession session,
                              @RequestParam(value = "wishCartNo", required = false) Integer wishCartNo,
                              @ModelAttribute("search") Search search ,
                              HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
         System.out.println("/product/getProduct : GET");
 
-        Product product = productService.getProduct(prodNo);
 
-        String username = buyer.getUsername();
-        model.addAttribute("username", username);
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
 //        Purchase purchase = new Purchase();
 
         System.out.println("prodNo : " + prodNo);
-        System.out.println("Buyer: " + buyer.getUsername());
-        System.out.println("Username: " + username);
 
+        if (user == null) {
 
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_POINT") || user.getRole().equals("ROLE_USER")) {
+
+        Product product = productService.getProduct(prodNo);
+
+        String username = user.getUsername();
+        model.addAttribute("username", username);
         Purchase purchase = new Purchase();
         purchase.setProdNo(prodNo);
         purchase.setUsername(username);
@@ -217,20 +224,35 @@ public class ProductController {
         }
 
         return "/pointShop/product/getProduct";
+        }else{
+
+            return "redirect:/";
+
+        }
 
     }
 
 //    @RequestMapping( value="updateProduct", method=RequestMethod.GET)
     @GetMapping("/updateProduct")
-    public String updateProduct( @RequestParam("prodNo") int prodNo , Model model) throws Exception {
+    public String updateProduct( HttpSession session, @RequestParam("prodNo") int prodNo , Model model) throws Exception {
 
         System.out.println("/product/updateProduct : GET");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        Product product = productService.getProduct(prodNo);
-        model.addAttribute("url", bucketUrl);
-        model.addAttribute("product" , product);
+        if (user == null) {
 
-        return "/pointShop/product/updateProduct";
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_POINT")) {
+            Product product = productService.getProduct(prodNo);
+            model.addAttribute("url", bucketUrl);
+            model.addAttribute("product", product);
+
+            return "/pointShop/product/updateProduct";
+        }else{
+            return "redirect:/";
+        }
     }
 
 //    @RequestMapping( value="updateProductResult", method=RequestMethod.POST)
@@ -274,76 +296,55 @@ public class ProductController {
 
     // @RequestParam("menu") String menu,
     @RequestMapping( value="listProduct")
-    public String listProduct(@RequestParam(value = "order", required = false) String order,
+    public String listProduct(HttpSession session, @RequestParam(value = "order", required = false) String order,
                               @ModelAttribute("search") Search search ,
                               Model model) throws Exception {
 
         System.out.println("/product/listProduct : GET / POST");
 
-        System.out.println("priceMin : " + search.getPriceMin());
-        System.out.println("priceMax : " + search.getPriceMax());
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
-        search.setOrder(order);
-        search.setPageSize(pageSize);
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_POINT") || user.getRole().equals("ROLE_USER")) {
+            System.out.println("priceMin : " + search.getPriceMin());
+            System.out.println("priceMax : " + search.getPriceMax());
+
+            search.setOrder(order);
+            search.setPageSize(pageSize);
 //        search.setListSize(30);
-        search.setListSize(15);
-        System.out.println("order: " + order);
+            search.setListSize(15);
+            System.out.println("order: " + order);
 
-        if(search.getPage() == 0) {
-            search.setPage(1);
-        }
+            if (search.getPage() == 0) {
+                search.setPage(1);
+            }
 //        search.setPageSize(pageSize);
 
-        List<Product> productList = productService.getProductList(search);
-        int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
+            List<Product> productList = productService.getProductList(search);
+            int prodTotalCnt = (productList.isEmpty()) ? 0 : productList.get(0).getProdTotalCnt();
 
-        System.out.println(productList);
+            System.out.println(productList);
 
-        Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
-        model.addAttribute("paging", paging);
-        model.addAttribute("prodTotalCnt", prodTotalCnt);
+            Paging paging = new Paging(prodTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+            model.addAttribute("paging", paging);
+            model.addAttribute("prodTotalCnt", prodTotalCnt);
 
 //        Search resultPage = new Search( search.getPage(), ((Integer)map.get("totalCount")).intValue(), pageUnit , pageSize);
 //        System.out.println(resultPage);
-        model.addAttribute("url", bucketUrl);
+            model.addAttribute("url", bucketUrl);
 //        model.addAttribute("menu", menu);
-        model.addAttribute("productList", productList);
+            model.addAttribute("productList", productList);
 //        model.addAttribute("resultPage" , resultPage);
-        model.addAttribute("search" , search);
+            model.addAttribute("search", search);
 
-        return "/pointShop/product/listProduct";
+            return "/pointShop/product/listProduct";
+        }else{
+            return "redirect:/";
+        }
     }
-
-//    @RequestMapping( value="listProduct")
-//    public String listProduct(
-////            @RequestParam("prodNo") int prodNo,
-//                              @RequestParam(value = "order", required = false) String order,
-//                              @RequestParam(value = "searchKeyword", required = false) String searchKeyword,
-//                              Model model) throws Exception {
-//
-//        System.out.println("/product/listProduct : GET / POST");
-//
-//        Search search = new Search();
-//
-//        if (searchKeyword != null) {
-//            search.setSearchKeyword(searchKeyword);
-//        }
-//        if (order != null) {
-//            search.setOrder(order);
-//        }
-//
-//        if(search.getPage() == 0) {
-//            search.setPage(1);
-//        }
-//
-//        List<Product> productList = productService.getProductList(search);
-//
-//        model.addAttribute("productList" , productList);
-//
-//        return "/pointShop/product/listProduct";
-//    }
-
-
-
 
 }

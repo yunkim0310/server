@@ -614,7 +614,7 @@
 </script>
 
 </head>
-<body><br/><br/>
+<body>
 <div class="container">
     <div class="css-luwwab eug5r8l1">
         <div class="css-833hqy ecbxmj4">
@@ -648,10 +648,11 @@
 <!--                    </div>-->
                 </form>
             </div>
+            <h3 style="font-size: 30px; font-weight: bold;">포인트 내역</h3><br/><br/><br/><br/>
             <div class="col-md-9 text-right">
                 <div class="current-point">
-                    <h3 style="font-weight: bold; font-size:25px;"><span style="color:#4880FF;" th:text="${search.username}"></span>
-                        님의 포인트 <br/><br/><span style="font-size:35px;" th:text="${currPoint} + 'P'"></span></h3>
+                    <h3 style="font-weight: bold; font-size:20px;"><span style="color:#4880FF;" th:text="${search.username}"></span>
+                        님의 포인트 <br/><br/><span style="font-size:30px;" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}"></span></h3>
                 </div><br/><br/>
                 <hr class="separator"><br/><br/><br/><br/>
                 <table>
@@ -660,7 +661,7 @@
                             <div th:each="point : ${pointHistoryList}" class="product-card">
                                 <div class="product-info">
                                     <div class="transaction-point">
-                                        <p th:text="${point.depType == '상품 구매' ? '-' + point.tranPoint + 'P' : '+' + point.tranPoint + 'P'}"
+                                        <p th:text="${point.depType == '상품 구매' ? '-' + #numbers.formatInteger(point.tranPoint, 3, 'COMMA')+ 'P' : '+' + #numbers.formatInteger(point.tranPoint, 3, 'COMMA')+ 'P'}"
                                            th:class="${point.depType == '상품 구매' ? 'red' : 'blue'}">거래 포인트</p>
                                     </div>
                                     <div class="transaction-type">
@@ -670,7 +671,7 @@
                                         <p th:text="${point.pointDt}">거래일</p>
                                     </div>
                                     <div class="current-point">
-                                        <p th:text="${point.currPoint}+P">보유 포인트</p>
+                                        <p th:text="${#numbers.formatInteger(point.currPoint, 3, 'COMMA')+ 'P'}">보유 포인트</p>
                                     </div>
                                 </div>
                             </div>

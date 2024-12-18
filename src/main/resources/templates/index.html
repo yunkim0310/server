@@ -280,38 +280,27 @@
                         <div class="container gutter-sm">
                             <div class="section-header section-header-v">
                                 <h3 class="section-title ebold">
-                                    <span th:text="|${month}월 ${week}주차|"></span>&nbsp;인기 레스토랑</h3>
+                                    <span th:text="|${month}월 ${week}주차|"></span>
+                                    &nbsp;인기 레스토랑
+                                </h3>
                                 <p style="color: rgb(98, 98, 98);">가장 주목 받는 맛집을 모아봤어요</p>
+                                <div th:if="${storeList == null || storeList.isEmpty()}" style="padding-top: 20px;">
+                                    <div>인기 가게 집계 중입니다.</div>
+                                </div>
                             </div>
                             <div class="section-body">
                                 <div id="publicPopularShop_15" class="v-scroll">
                                     <div class="v-scroll-inner">
                                         <div id="publicPopularShop_23" class="restaurant-list restaurant-list-sm items2"
                                              style="display: flex; flex-wrap: nowrap;">
-                                            <div th:each="store : ${storeList}" class="restaurant-list-item item">
+                                            <div th:if="${storeList != null && !storeList.isEmpty()}" th:each="store : ${storeList}" class="restaurant-list-item item">
                                                 <div class="img">
                                                     <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
-                                                        <!-- 가게 이미지 TODO 수정 필요 -->
-                                                        <th:block th:if="${store.storeImgList== null}">
-                                                            <div class="img">
-                                                                <img th:src="${url + store.storeImg1}"
-                                                                     th:alt="${store.storeImg1}">
-                                                            </div>
-                                                        </th:block>
-                                                        <th:block th:if="${store.storeImgList != null && url == null}">
-                                                            <div class="imageContainer"
-                                                                 th:if="${store.storeImg1 != null}">
-                                                                <img class="guide-img"
-                                                                     style="width: 100%; max-height:500px; display: block;"
-                                                                     th:src="${url+store.storeImg1}">
-                                                            </div>
-                                                            <div class="imageContainer"
-                                                                 th:unless="${store.storeImg1 != null}">
-                                                                <img class="guide-img"
-                                                                     style="width: 100%; max-height:500px; display: block;"
-                                                                     th:src="${url+store.storeImg2}">
-                                                            </div>
-                                                        </th:block>
+                                                        <div class="img">
+                                                            <img width="200" height="200"
+                                                                 th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}"
+                                                                 th:alt="${store.storeImg1}">
+                                                        </div>
                                                     </a>
                                                 </div>
                                                 <div class="detail">

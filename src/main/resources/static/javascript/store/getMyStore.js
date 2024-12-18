@@ -23,6 +23,8 @@ $(function() {
         }
 
         pageNavigator(getNews);
+
+        fileUploadEvent("newsImg", "store/news/");
         
         // 소식 등록
         $("#addStoreNews").on("click", function () {
@@ -111,7 +113,7 @@ $(function() {
 
             var newsId = $(this).data("newsid");
 
-            alert(newsId);
+            console.log(newsId);
 
             $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
             $("input[name='fnc']:hidden").val("update");
@@ -127,7 +129,7 @@ $(function() {
 
             var newsId = $(this).data("newsid");
 
-            alert(newsId);
+            console.log(newsId);
 
             $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
             $("input[name='fnc']:hidden").val("remove");
