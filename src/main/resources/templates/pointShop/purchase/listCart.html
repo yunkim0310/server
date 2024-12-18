@@ -556,7 +556,7 @@
             <div class="css-833hqy ecbxmj4">
                 <div class="side" style="margin-top:50px;position:fixed; margin-left: 138px;">
                     <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
-        padding: 5px 0px 35px 1px;">🛒&nbsp;장바구니</div>
+        padding: 5px 0px 35px 1px;">&nbsp;장바구니</div>
                     <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
                 </div>
             </div>
@@ -572,8 +572,8 @@
                             </div>
                         </div><br/><br/>
                         <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
-                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${tranPoint}+P">0</span></h3>
-                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${currPoint}+P">0</span></h3>
+                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${#numbers.formatInteger(tranPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
+                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
                         </div>
                     </div>
 
@@ -602,6 +602,7 @@
             </div>
 
             <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 470px; margin-left: auto;">
+                <h3 style="font-size: 30px; font-weight: bold;">🛒&nbsp;장바구니</h3>
                 <div class="col-md-9 text-right">
 
 
@@ -614,13 +615,13 @@
                         <div th:if="${tranPoint != 0}">
                             <div class="product-list">
                                 <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
-                                    <div class="product-img">
-                                        <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                                    <div class="product-img" style="width:25%; max-height:500px; display: block;">
+                                        <img th:src="${url + purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
                                     </div>
                                     <div class="product-info">
                                         <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
                                         <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
-                                        <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                        <p style="color: #FB5555; font-weight: bold;" th:text="${#numbers.formatInteger(purchase.purchaseProd.prodPrice, 3, 'COMMA')+ 'P'}">상품 가격</p>
                                         <p th:class="${purchase.purchaseProd.prodStatus == true ? 'available' : 'unavailable'}"
                                            th:style="${purchase.purchaseProd.prodStatus == true ? 'color: green; text-align: left;' : 'color: red; text-align: left;'}">
                                             <span th:text="${purchase.purchaseProd.prodStatus == true ? '구매 가능' : '판매 중지'}"></span>
@@ -632,7 +633,7 @@
                                         <input type="hidden" name="purchases[__${purchaseStat.index}__].prodNo" th:value="${purchase.purchaseProd.prodNo}">
                                         <input type="hidden" name="purchases[__${purchaseStat.index}__].cntProd" th:value="${purchase.purchaseProd.cntProd}">
                                         <!-- X 버튼을 위한 스타일 추가 -->
-                                        <button class="btn-remove-cart" style="margin-right:30px;" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">x</button>
+                                        <button class="btn-remove-cart" style="margin-left:75px;" th:data-user-name="${username}" th:data-prod-no="${purchase.prodNo}">x</button>
                                     </div>
                                 </div>
                             </div>

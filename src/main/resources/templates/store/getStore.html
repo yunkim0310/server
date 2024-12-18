@@ -62,7 +62,7 @@
                             </div>
                             <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
                                 <a style="cursor: pointer;" id="chat" class="btn-chat"
-                                   th:href="${(session.user != null) ? 'http://192.168.0.8:3000/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
+                                   th:href="${(session.user != null) ? 'https://plafehere:3000/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
                                 <a style="cursor: pointer" id="like"
                                    th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
                                    th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>
@@ -137,16 +137,6 @@
                     <input type="hidden" name="mode" th:value="${mode}">
                     <input type="hidden" name="storeId" th:value="${store.storeId}">
 
-<!--                    <hr class="separator">-->
-<!--                    <section class="section pb-30" style="padding-top: 30px;">-->
-<!--                        <div class="container gutter-sm" style="margin: 0">-->
-<!--                            <div class="section-body">-->
-<!--                                <div class="btn-centered"><a-->
-<!--                                        th:href="'/reservation/addRsrv?storeId='+${store.storeId}"-->
-<!--                                        class="btn btn-rounded btn-outline-red"><span-->
-<!--                                        class="label arrow">예약가능 날짜 찾기</span></a></div>-->
-<!--                    </section>-->
-
                     <hr class="separator">
 
                     <th:block th:if="${mode == 'nearby'}">
@@ -158,8 +148,7 @@
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
-<!--                        <div th:insert="~{}"></div>-->
-                        <div th:insert="~{test/store/getStoreReviewListTest}"></div>
+                        <div th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
                     </th:block>
 
                     <th:block th:if="${mode == 'info'}">

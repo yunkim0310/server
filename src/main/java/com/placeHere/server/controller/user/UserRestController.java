@@ -107,7 +107,7 @@ public class UserRestController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/chkEmail")
+    @PostMapping("/chkEmail")
     public ResponseEntity<?> chkEmail(@RequestParam(value = "email") String email) throws Exception {
 
         log.info("email :: " + email);

@@ -489,8 +489,8 @@
                         <!--                        <button type="submit" class="btn-primary confirm">초기화</button>-->
                     </div>
                 </form>
-            </div>
-
+            </div><br/><br/><br/>
+            <h3 style="font-size: 30px; font-weight: bold;">구매 목록</h3>
             <div class="col-md-9 text-right">
                 <table>
                     <div th:if="${prodTotalCnt != 0}">
@@ -505,20 +505,20 @@
                     </div>
                     <div class="product-list" >
                         <div th:each="purchase : ${purchaseList}" class="product-card" th:data-tran-no="${purchase.tranNo}">
-                            <div class="product-img">
+                            <div class="product-img" style="width:25%; max-height:500px; display: block;">
                                 <!--                                <img th:src="${product.prodImg1}" alt="상품 대표 이미지">-->
                                 <!--                                <img th:src="@{${product.prodImg1}}" alt="상품 대표 이미지">-->
-                                <img th:src="@{/file/pointShop/delivery.png}" alt="상품 대표 이미지">
+                                <img th:src="${url + purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
                                 <!--                                <img th:src="/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop/0.png">-->
                             </div>
                             <div class="product-info">
+                                <span style="font-size: 12px; margin-left: 490px;" th:text="'구매번호&nbsp;&nbsp;'+${purchase.tranNo}"></span>
                                 <div class="product-header">
                                     <h1 class="name" th:text="${purchase.pointDt}+'&nbsp;&nbsp;구매'" style="font-size: 15px;">상품명</h1>
-                                    <span style="font-size: 12px; margin-left: 250px;" th:text="'구매번호&nbsp;&nbsp;'+${purchase.tranNo}"></span>
                                 </div>
                                 <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
                                 <h3 th:text="${purchase.purchaseProd.prodName}">상품명</h3>
-                                <p style="color: #FB5555; font-weight: bold;" th:text="${purchase.purchaseProd.prodPrice} + 'P'">상품 가격</p>
+                                <p style="color: #FB5555; font-weight: bold;" th:text="${#numbers.formatInteger(purchase.purchaseProd.prodPrice, 3, 'COMMA')+ 'P'}">상품 가격</p>
                             </div>
                         </div>
                         <div th:if="${prodTotalCnt == 0}" style="margin-top:150px; text-align: center">

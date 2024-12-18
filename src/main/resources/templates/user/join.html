@@ -10,13 +10,14 @@
 
 
     <link rel="stylesheet" th:href="@{/css/user/join.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/javascript/user/user.js"></script>
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 
 <body>
@@ -38,7 +39,7 @@
                         <span th:if="${role == 'ROLE_USER' }">
                             <input type="hidden" name="role" value="ROLE_USER">
                         </span>
-                        <span th:unless="${role == 'ROLE_STORE'}">
+                        <span th:unless="${role == 'ROLE_USER'}">
                             <input type="hidden" id="role" name="role" value="ROLE_STORE">
                         </span>
 
@@ -151,20 +152,20 @@
                             <div class="css-82a6rk e744wfw3">
                                 <div class="css-14wodj6 es1pbny0">
                                     <label class="css-z9g6s0 et8nqc33" for="gender-man">
-                                        <input data-testid="radio-MALE" id="gender-man" name="gender" type="radio"
+                                        <input id="gender-man" name="gender" type="radio"
                                                class="css-1pes2r6 et8nqc32" value="M">
                                         <span aria-labelledby="gender-man" class="css-mgd87h et8nqc31">남자</span>
                                     </label>
 
                                     <label class="css-z9g6s0 et8nqc33" for="gender-woman">
-                                        <input data-testid="radio-FEMALE" id="gender-woman" name="gender" type="radio"
+                                        <input id="gender-woman" name="gender" type="radio"
                                                class="css-1pes2r6 et8nqc32" value="F">
                                         <span aria-labelledby="gender-woman" class="css-mgd87h et8nqc31">여자</span>
                                     </label>
 
                                     <label class="css-z9g6s0 et8nqc33" for="gender-none">
-                                        <input data-testid="radio-NONE" id="gender-none" name="gender" type="radio"
-                                               class="css-1pes2r6 et8nqc32" checked>
+                                        <input id="gender-none" name="gender" type="radio"
+                                               class="css-1pes2r6 et8nqc32" value="F" checked>
                                         <span aria-labelledby="gender-none" class="css-mgd87h et8nqc31">선택안함</span>
                                     </label>
                                 </div>
@@ -219,7 +220,7 @@
                                                name="recommendedId"
                                                oninput="recomandValidation()"
                                                type="text"
-                                               class="css-1bkd15f e1uzxhvi2"> <!-- required 삭제 -->
+                                               class="css-1bkd15f e1uzxhvi2">
                                     </div>
                                     <!-- TODO 김윤지 -->
                                     <p class="font-12 mt-10" id="invalid-feedback-recommendedId"></p>
@@ -231,7 +232,7 @@
                     <div class="subbmit">
                         <button class="btn btn btn-primary btn-sm"
                                 id="submit-button"
-                                th:onclick="validateAll()"
+                                onclick="validateAll()"
                                 name="submit-button"
                                 width="240"
                                 height="56"

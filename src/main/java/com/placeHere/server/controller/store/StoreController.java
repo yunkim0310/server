@@ -219,6 +219,7 @@ public class StoreController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
+        model.addAttribute("url", bucketUrl);
 
         // 로그인 안 한 경우
         if (user == null) {
@@ -565,8 +566,11 @@ public class StoreController {
                     List<Review> reviewList = communityService.getReviewList(storeId, search);
                     int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
 
+                    Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+
                     model.addAttribute("reviewList", reviewList);
                     model.addAttribute("totalCnt", totalCnt);
+                    model.addAttribute("paging", paging);
 
                     break;
 
@@ -593,20 +597,23 @@ public class StoreController {
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
 
+        Search search = new Search(pageSize, listSize);
+        search.setPage(page);
+
         if (user != null) {
 
             if (user.getRole().equals("ROLE_USER")) {
 
-                List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername());
-                int totalCnt = storeLikeList.size();
+                List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername(), search);
+                int totalCnt = (storeLikeList.isEmpty())? 0 : storeLikeList.get(0).getLikeTotalCnt();
 
                 // 페이징
-                Paging paging = new Paging(totalCnt, page, pageSize, listSize);
-                model.addAttribute("paging", paging);
+                Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
+                model.addAttribute("paging", paging);
                 model.addAttribute("storeLikeList", storeLikeList);
 
-                return "test/store/getStoreLikeListTest";
+                return "store/getStoreLikeList";
 
             }
 
@@ -843,35 +850,6 @@ public class StoreController {
         }
 
         return "redirect:/store/getMyStore?mode=" + mode;
-    }
-
-
-    // 파일업로드 테스트
-    @RequestMapping("/store/file")
-    public String fileUploadTest(@RequestParam(value = "file", required = false) MultipartFile[] files, Model model) throws Exception {
-
-        System.out.println("/store/file : GET");
-
-        List<String> filePathList = new ArrayList<String>();
-
-        if (files != null && files.length > 0) {
-
-            for (MultipartFile file : files) {
-
-                if (file != null && !file.isEmpty()) {
-
-                    Map<String, String> fileMap = awsS3Service.uploadFile(file, "store/");
-                    filePathList.add(fileMap.get("filePath"));
-                }
-            }
-
-            model.addAttribute("url", bucketUrl);
-            model.addAttribute("filePathList", filePathList);
-
-            System.out.println(filePathList);
-        }
-
-        return "test/store/fileUploadTest";
     }
 
 }
