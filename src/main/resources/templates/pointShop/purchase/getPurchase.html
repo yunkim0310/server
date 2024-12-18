@@ -514,7 +514,7 @@
                         <div class="img-container" style="position: relative;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                                 <img class="guide-img" style="width: 50%; max-height:500px; display: block;"
-                                     th:src="${url + purchase.purchaseProd.prodImg1}">
+                                     th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg1}">
                             </div>
                         </div>
                     </div>
@@ -545,7 +545,7 @@
                                 <!--        <span class="value" th:text="${purchase.barcodeName}">상품 바코드</span>-->
                                 <!--        <img th:src="@{${pageContext.request.contextPath}/static/file/pointShop/${purchase.barcodeName}}" alt="Barcode Image" />-->
 <!--                                <img th:src="@{/file/pointShop/7334558099814.png}" alt="상품 대표 이미지"><br/>-->
-                                <img th:src="${url + purchase.barcodeName}">
+                                <img th:src="${url +'point/barcode/'+ purchase.barcodeName}">
                                 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 
                             </div>
@@ -681,9 +681,9 @@
 <!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
                                     <div style="text-align: center;">
                                         <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg2 != null and purchase.purchaseProd.prodImg2 != ''}" th:src="${url + purchase.purchaseProd.prodImg2}" alt="상품 상세 이미지">
+                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg2 != null and purchase.purchaseProd.prodImg2 != ''}" th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg2}" alt="상품 상세 이미지">
                                         <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg3 != null and purchase.purchaseProd.prodImg3 != ''}" th:src="${url + purchase.purchaseProd.prodImg3}" alt="상품 상세 이미지">
+                                        <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${purchase.purchaseProd.prodImg3 != null and purchase.purchaseProd.prodImg3 != ''}" th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
                                 </div>

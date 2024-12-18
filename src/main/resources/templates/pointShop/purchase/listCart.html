@@ -616,7 +616,7 @@
                             <div class="product-list">
                                 <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
                                     <div class="product-img" style="width:25%; max-height:500px; display: block;">
-                                        <img th:src="${url + purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
+                                        <img th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
                                     </div>
                                     <div class="product-info">
                                         <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>

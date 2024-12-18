@@ -672,7 +672,7 @@
                         <div class="img-container" style="position: relative; object-fit: contain;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                                 <img class="guide-img" style="width: 50%; max-height:500px; display: block; "
-                                     th:src="${url + product.prodImg1}">
+                                     th:src="${url +'point/product/'+ product.prodImg1}">
                                 <img th:if="${product.prodStatus == false}" style="display: flex; justify-content: center; align-items: center; padding-top: 100px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 15%;"
                                      src="/file/pointShop/icon_X_circle.png">
                             </div>
@@ -778,9 +778,9 @@
 <!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
                                     <div style="text-align: center;">
                                     <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url + product.prodImg2}" alt="상품 상세 이미지"><br/><br/>
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url +'point/product/'+ product.prodImg2}" alt="상품 상세 이미지"><br/><br/>
                                     <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url + product.prodImg3}" alt="상품 상세 이미지">
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
                                 </div>
@@ -868,7 +868,7 @@
 <!--                                                    </div>-->
                                                 <div class="__desc" th:each="products : ${productList}"  th:if="${products.prodStatus == true and products.prodNo != product.prodNo}" th:data-prod-no="${products.prodNo}">
                                                     <div class="news-item">
-                                                        <img th:src="${url + products.prodImg1}" width="300" height="300" style="padding: 5px;align-items: self-end;">
+                                                        <img th:src="${url +'point/product/'+ products.prodImg1}" width="300" height="300" style="padding: 5px;align-items: self-end;">
                                                         <p th:text="${products.prodCateName}" style="font-size: 15px;">상품 카테고리</p>
                                                         <p th:text="${products.prodName}" style="font-weight: bold; font-size: 22px;">상품명</p>
                                                         <p th:text="${#numbers.formatInteger(products.prodPrice, 3, 'COMMA')+ 'P'}" style="font-size: 17px; color: #FB5555;">상품 가격</p>
