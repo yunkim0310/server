@@ -94,7 +94,15 @@ public class UserServiceImpl implements UserService {
         pointService.addPointTransaction(username, 0, "회원 가입", 0, 0);
         Point point = new Point();
 
-        if (user.getRecommendedId() != null ) {
+        String chkRec = user.getRecommendedId();
+        log.info("chkRec : " + chkRec);
+
+        int leng = chkRec.length();
+        log.info("leng : " + leng);
+
+        if ( leng != 0) {
+
+            log.info("plz......" + leng);
 
             point.setUsername(user.getUsername());
             int tranPoint = 500;

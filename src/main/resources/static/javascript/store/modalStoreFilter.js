@@ -142,6 +142,8 @@ $(function() {
             $("#foodCategory").text(categoryText);
         }
 
+        chkFilter();
+
     }
 
 
@@ -252,6 +254,8 @@ $(function() {
 
         // 업데이트된 텍스트를 #foodCategory에 반영
         $("#foodCategory").text(categoryText);
+
+        chkFilter();
     }
 
 
@@ -336,6 +340,8 @@ $(function() {
         } else {
             $('#region').text('미선택');
         }
+
+        chkFilter();
     }
 
 
@@ -355,6 +361,8 @@ $(function() {
         $("input[name='priceMax']").attr("min", priceMin);
 
         $("#price").text(priceMin.toLocaleString() + ' ~ ' + priceMax.toLocaleString());
+
+        chkFilter();
     }
 
 
@@ -392,6 +400,7 @@ $(function() {
             $("#hashtag").text("미선택");
         }
 
+        chkFilter();
     }
 
 
@@ -425,6 +434,8 @@ $(function() {
         } else {
             $('#amenities').text('미선택');
         }
+
+        chkFilter();
     }
 
 
@@ -576,6 +587,34 @@ $(function() {
 
 });
 
+function filterLightOn() {
+
+    $("#filterBtn").css("background-color", "#4880FF");
+    $("#filterText").css("color", "#FFFFFF");
+}
+
+function filterLightOff() {
+
+    $("#filterBtn").css("background-color", "#FFFFFF");
+    $("#filterText").css("color", "#4880FF");
+}
+
+function chkFilter() {
+
+    const region = $("#region").text();
+    const foodCategory = $("#foodCategory").text();
+    const price = $("#price").text();
+    const hashtag = $("#hashtag").text();
+    const amenities = $("#amenities").text();
+    const emptyFilter = "미선택";
+
+    if (region === emptyFilter && foodCategory === emptyFilter && price === "0 ~ 100,000" && hashtag === emptyFilter && amenities === emptyFilter) {
+        filterLightOff();
+    } else {
+        filterLightOn();
+    }
+}
+
 // 필터 리셋 함수
 function resetFilter() {
 
@@ -622,5 +661,7 @@ function resetFilter() {
     $('#amenities').text('미선택');
     $("#amenitiesFilter").css("display", "none");
     $("button[name='amenitiesFilter']").data("switchs", "off");
+
+    filterLightOff();
 
 }
