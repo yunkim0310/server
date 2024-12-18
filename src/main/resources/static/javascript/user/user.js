@@ -434,17 +434,13 @@ function photoEdit() {
     console.log('username :: ', username);
     console.log('fileName :: ', fileName);
 
-    // const user = {
-    //   username : username,
-    //   profileImg : fileName
-    // }
-
     uploadFile(file, "user/")
       .then(result => {
         console.log(result);
-        // console.log("uuid file name :: " , result.url)
-        console.log("uuid file path :: " , result.filePath)
-        // https://placehere.s3.ap-northeast-2.amazonaws.com/user/20241216d64806bc.jpg
+        console.log("uuid file name :: " , result.url);
+        // 결과
+        // https://placehere-bucket.s3.ap-northeast-2.amazonaws.com/user/202412183ef50d9b.jpg
+        // console.log("uuid file path :: " , result.filePath);
 
         // const resultUrl = result.url;
         const resultUrl = result.filePath;
@@ -454,8 +450,8 @@ function photoEdit() {
         // uuid 로 변환된 파일명만 추출
         console.log('after :: ', replaceFileName);
 
-        // $('#profileImgView').attr("src",result.url);
-        $('#profileImgView').attr("src",replaceFileName);
+        $('#profileImgView').attr("src",result.url);
+        // $('#profileImgView').attr("src",replaceFileName);
 
         const user = {
           username : username,
