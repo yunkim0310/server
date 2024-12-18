@@ -95,7 +95,7 @@ public class ProductController {
             Product product = new Product();
             model.addAttribute("product", product);
 
-            return "/pointShop/product/addProduct";
+            return "pointShop/product/addProduct";
         }else{
 
             return "redirect:/";
@@ -241,7 +241,7 @@ public class ProductController {
             model.addAttribute("wishCartNo", wishCartNo);
         }
 
-        return "/pointShop/product/getProduct";
+        return "pointShop/product/getProduct";
         }else{
 
             return "redirect:/";
@@ -267,7 +267,7 @@ public class ProductController {
             model.addAttribute("url", bucketUrl);
             model.addAttribute("product", product);
 
-            return "/pointShop/product/updateProduct";
+            return "pointShop/product/updateProduct";
         }else{
             return "redirect:/";
         }
@@ -377,7 +377,7 @@ public class ProductController {
 //        model.addAttribute("resultPage" , resultPage);
             model.addAttribute("search", search);
 
-            return "/pointShop/product/listProduct";
+            return "pointShop/product/listProduct";
         }else{
             return "redirect:/";
         }
