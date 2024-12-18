@@ -44,6 +44,11 @@ function validateAll() {
   }
 
 
+  const rec = $('#recommendedId').val();
+  if (  rec.length === 0) {
+    console.log('rec 11 :: ', rec);
+  }
+
   // 모든 유효성 검사 통과 시 회원가입 요청
   if ( usernameValid && pwdValid && isPwdMatch && emailValid ) {
     // 유효성 검사 통과 후, 실제 가입 요청
