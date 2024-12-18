@@ -2,10 +2,13 @@ import { getLocation, getApiKey } from "./geoLocation.mjs";
 
 $(function() {
 
+    // form 속성 설정
     $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
+    // 중복체크, 사업자번호 확인 결과 텍스트
     let duplicateResult = "";
 
+    // API KEY
     let businessNoApiKey = ""
     let googleApiKey = ""
 
@@ -14,6 +17,8 @@ $(function() {
         googleApiKey = apiKey.google;
     });
 
+
+    // 사업자 번호 확인 API (공공 API)
     function checkDuplicateBusinessNo(businessNo) {
         var bNo = {"b_no": [businessNo]};
 
@@ -67,10 +72,15 @@ $(function() {
 
     }
 
+
     // 사업자 정보 중복확인 및 상태 확인 메서드
     $("input[name='businessNo']").on('input', function () {
 
-        let businessNo = $("input[name='businessNo']").val();
+        // let businessNo = $("input[name='businessNo']").val();
+
+        // 숫자만 입력하도록 필터링 (숫자가 아닌 값 제거후 업데이트)
+        let businessNo = $(this).val().replace(/[^0-9]/g, '');
+        $(this).val(businessNo);
 
         if (businessNo.length === 10) {
 
@@ -102,7 +112,6 @@ $(function() {
             duplicateResult = "사업자 번호는 하이픈(-) 제외 10글자 숫자입니다.";
             $("#duplicateResult").text(duplicateResult);
         }
-
 
     });
 
@@ -234,7 +243,7 @@ $(function() {
                     '<div class="css-jmalg e1uzxhvi6">' +
                         '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
                             '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
-                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
+                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList" maxlength="10">' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -323,7 +332,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName">` +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName" minlength="1" maxlength="30" required>` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -343,7 +352,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice">` +
+                                    `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice" min="0" required>` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -362,7 +371,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo">` +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo" maxlength="100">` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -438,5 +447,11 @@ $(function() {
     // 파일 업로드 모듈
     fileUploadEvent("storeImg", "store/store/");
     fileUploadEvent("menuImg", "store/menu/");
+
+
+    // 유효성 검사
+    function chkValidation () {
+
+    }
 
 });

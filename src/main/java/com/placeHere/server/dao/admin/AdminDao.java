@@ -35,4 +35,6 @@ public interface AdminDao {
     public int updateServiceComplete() throws Exception;
 
     public int insertBatchlog(Batch batch) throws Exception;
+
+    public List<Batch> getBatchList() throws Exception;
 }

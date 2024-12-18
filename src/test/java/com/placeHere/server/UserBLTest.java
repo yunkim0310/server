@@ -32,10 +32,10 @@ public class UserBLTest {
 //        System.out.println("1234");
 //    }
 
-    @Test
-    public void schedule() throws Exception{
-        adminService.printDate();
-    }
+//    @Test
+//    public void schedule() throws Exception{
+//        adminService.printDate();
+//    }
 
     @Test
     public void updatePwd() throws Exception {

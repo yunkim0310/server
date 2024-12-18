@@ -7,7 +7,7 @@
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 75px;
             background-color: #f4f4f4;
             text-align: center; /* 가운데 정렬 */
         }
@@ -77,13 +77,17 @@
             color: red;
             margin-bottom: 20px;
         }
+
+        .allPage {
+            margin-bottom:30px;
+        }
     </style>
 </head>
 <body>
 <div th:include="~{common/header}"></div>
-<!--<div th:include="~{community/getCommunityAside}"></div>-->
-<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
+<div th:include="~{community/menuBar}"></div>
 
+<div style="allPage">
 <h1>친구 요청 목록</h1>
 
 <div th:if="${message}" class="message">
@@ -153,6 +157,6 @@
     </tr>
     </tbody>
 </table>
-
+</div>
 </body>
 </html>

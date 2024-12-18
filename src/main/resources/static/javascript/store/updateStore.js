@@ -17,8 +17,6 @@ $(function() {
     // submit 함수
     $("button#submit").on("click", function () {
 
-        alert("submit");
-
         // 음식 카테고리 합치기
         var category1 = $("input[name='foodCategory1']:checked").val();
         var category2 = $("input[name='foodCategory2']:checked").val();
