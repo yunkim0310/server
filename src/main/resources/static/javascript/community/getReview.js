@@ -46,6 +46,11 @@ $(function() {
         const reviewNo = document.getElementById('reviewNo').value;
         const commentsContent = document.getElementById('commentsContent').value;
 
+        // 댓글 길이 체크
+        if (commentsContent.trim().length < 1 || commentsContent.length > 100) {
+            alert("댓글은 최소 1자, 최대 100자까지 입력 가능합니다.");
+            return;
+        }
 
         console.log("reviewNo chk :: ", reviewNo);
         console.log("commentsContent chk :: ", commentsContent);
@@ -76,9 +81,10 @@ $(function() {
             const commentList = document.querySelector('.comment-list');
             const newComment = document.createElement('li');
             newComment.textContent = data.commentsContent; // 서버에서 응답받은 댓글 내용
-
             commentList.appendChild(newComment);
+
             location.reload();
+
             document.getElementById('commentsContent').value = ''; // 입력란 초기화
 
             const commentCountElement = document.querySelector('.review-container .comment-count');
@@ -89,7 +95,7 @@ $(function() {
             document.querySelector('.error-message').textContent = error.message;
         });
 
-        location.reload();
+
     }
 
 

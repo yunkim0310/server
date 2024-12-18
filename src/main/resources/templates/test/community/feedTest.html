@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -100,7 +100,12 @@
             font-weight: bold; /* 숫자 굵게 표시 */
         }
 
-        /* 추가적인 스타일 및 반응형 디자인 추가 가능 */
+        .no-reviews p {
+    font-size: 1.5em; /* 글씨 크기 */
+    font-family: 'Helvetica Neue', Arial, sans-serif; /* 폰트 스타일 */
+    color: #2c3e50; /* 글씨 색상 */
+    margin: 10px 0; /* 여백 조정 */
+    }
     </style>
 
     <script type="text/javascript">
@@ -177,7 +182,7 @@
 <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
 
     <!-- 친구 신청, 삭제 버튼 -->
-    <div class="fixed-button" style="margin-right: 340px; text-align:right; z-index: 1000;">
+    <div class="fixed-button" style="margin-right: 20%; text-align:right; z-index: 1000;">
     <!-- 친구 삭제 버튼 -->
         <div th:if="${friendStatus == true}">
             <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
@@ -207,6 +212,18 @@
                 <div class="container gutter-sm">
                     <div class="section-body">
                         <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
+
+                            <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+                                <img th:src="@{/file/community/friendReivewIsnotReivew_icon.png}" alt="리뷰 목록 없을때" style="width: 50px; height: 50px; margin-bottom: 10px;"> <!-- 아이콘 크기 조정 -->
+                                <p class="no-reviews-message" th:text="${friendUsername} + ' 님의 등록된 리뷰가 없습니다.'"></p> <!-- 이모티콘 추가 -->
+
+                                <!-- 친구 목록 바로 가기 링크 -->
+                                <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'" style="display: inline-block; margin-top: 10px; text-decoration: none; color: #007BFF;">
+                                    친구 목록 바로 가기
+                                    <span class="css-e41glx e1x0rfoo0"></span>
+                                </a>
+                            </div>
+
                             <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
                                 <div id="shopReviewListScroll_0"> <!-- 특정 스크롤 섹션 -->
                                     <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->

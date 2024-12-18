@@ -32,6 +32,7 @@ body {
 
         .__photos {
                     width: 100%;
+                    margin-left: 0%;
                     height: 100%;
                     object-fit: cover;
         }
@@ -48,9 +49,9 @@ body {
            }
 
         .comment-section, .like-section {
-            margin-top: 20px;
-            padding: 15px;
-            border-top: 1px solid #eee;
+            margin-top: -28%;
+            padding: 28%;
+            border-top: 1px solid #ffffff;
         }
 
         .error-message {
@@ -83,16 +84,15 @@ body {
         }
 
         .comment-list {
-            list-style-type: none;
-            padding: 0;
+          margin-top: -65%;
         }
 
         .comment-list li {
-            background-color: #f1f1f1; /* 댓글 배경 색 */
-            margin: 10px 0;
-            padding: 10px;
+            background-color: #ffffff; /* 댓글 배경 색 */
+            margin: 2% 0;
+            padding: 0px;
             border-radius: 5px;
-            border: 1px solid #ddd; /* 댓글 테두리 */
+            border: 1px solid #ffffff; /* 댓글 테두리 */
         }
 
         .comment-list p {
