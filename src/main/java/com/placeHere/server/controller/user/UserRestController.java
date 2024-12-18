@@ -129,8 +129,6 @@ public class UserRestController {
         log.info("join Controller - post 호출");
         log.info("회원가입 User 객체 :: " + user);
 
-        // todo, 성별, 생년월일 누락
-
         int result = userService.join(user);
 
         log.info("회워가입 result :: " + result);
@@ -162,6 +160,27 @@ public class UserRestController {
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping("/resetPwdValidation")
+    public ResponseEntity<?> resetPwdValidation(@RequestBody User user, HttpSession session) throws Exception {
+        log.info("resetPwdValidation - POST ");
+        log.info(" >> input user :: " + user);
+
+        boolean result = userService.resetPwdValidation(user);
+
+        if ( result ) {
+            log.info("11");
+            User dbUser = userService.getUser(user.getUsername());
+            session.setAttribute("user", dbUser);
+            return new ResponseEntity<>("SUCCESS", HttpStatus.OK);
+        } else {
+            log.info("22");
+            return new ResponseEntity<>("FAIL", HttpStatus.OK);
+        }
+    }
+
+
+
 
     @PostMapping("/resetPwd")
     public ResponseEntity<?> resetPwd(@RequestBody User user, HttpSession session) throws Exception {
