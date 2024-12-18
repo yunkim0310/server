@@ -234,7 +234,9 @@
                                         <div class="css-jmalg e1uzxhvi6">
                                             <div class="css-176lya2 e1uzxhvi3 password-block">
                                                 <textarea id="storeInfo" name="storeInfo" class="css-1bkd15f e1uzxhvi2" placeholder="매장 소개를 입력해주세요. * 최대 200글자"
-                                                          rows="20" style="resize: none; height: 100px"></textarea>
+                                                          rows="20" style="resize: none; height: 100px"
+                                                          maxlength="200">
+                                                </textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -252,7 +254,8 @@
                                             <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                                 <input type="text"
                                                        class="css-1bkd15f e1uzxhvi2"
-                                                       placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">
+                                                       placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList"
+                                                       maxlength="10">
                                             </div>
                                         </div>
                                     </div>
@@ -348,7 +351,7 @@
                                                             <td colspan="3">
                                                                 <div id="foodCategory4" style="display: none" >
                                                                     <p>상세 분류</p>
-                                                                    <input type="text" name="foodCategory4" class="css-1bkd15f e1uzxhvi2" placeholder="상세 분류를 입력해주세요.">
+                                                                    <input type="text" name="foodCategory4" class="css-1bkd15f e1uzxhvi2" placeholder="상세 분류를 입력해주세요." maxlength="20">
                                                                 </div>
                                                             </td>
                                                         </tr>
@@ -423,7 +426,8 @@
                                                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                                                             <input type="text"
                                                                                    class="css-1bkd15f e1uzxhvi2"
-                                                                                   placeholder="메뉴 이름을 입력해주세요." name="menuList[0].menuName">
+                                                                                   placeholder="메뉴 이름을 입력해주세요." name="menuList[0].menuName"
+                                                                                   minlength="1" maxlength="30" required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -447,7 +451,8 @@
                                                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                                                             <input type="number"
                                                                                    class="css-1bkd15f e1uzxhvi2"
-                                                                                   placeholder="메뉴 가격을 입력해주세요." name="menuList[0].menuPrice">
+                                                                                   placeholder="메뉴 가격을 입력해주세요." name="menuList[0].menuPrice"
+                                                                                   min="0" required>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -470,7 +475,8 @@
                                                                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                                                             <input type="text"
                                                                                    class="css-1bkd15f e1uzxhvi2"
-                                                                                   placeholder="메뉴 설명을 입력해주세요." name="menuList[0].menuInfo">
+                                                                                   placeholder="메뉴 설명을 입력해주세요." name="menuList[0].menuInfo"
+                                                                                   maxlength="100">
                                                                         </div>
                                                                     </div>
                                                                 </div>

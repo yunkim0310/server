@@ -243,7 +243,7 @@ $(function() {
                     '<div class="css-jmalg e1uzxhvi6">' +
                         '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
                             '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
-                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
+                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList" maxlength="10">' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -332,7 +332,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName">` +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName" minlength="1" maxlength="30" required>` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -352,7 +352,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice">` +
+                                    `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice" min="0" required>` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -371,7 +371,7 @@ $(function() {
                         '<div class="css-82a6rk e744wfw3">' +
                             '<div class="css-jmalg e1uzxhvi6">' +
                                 '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo">` +
+                                    `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo" maxlength="100">` +
                                 '</div>' +
                             '</div>' +
                         '</div>' +
@@ -447,5 +447,11 @@ $(function() {
     // 파일 업로드 모듈
     fileUploadEvent("storeImg", "store/store/");
     fileUploadEvent("menuImg", "store/menu/");
+
+
+    // 유효성 검사
+    function chkValidation () {
+
+    }
 
 });
