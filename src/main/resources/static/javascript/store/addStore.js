@@ -2,10 +2,13 @@ import { getLocation, getApiKey } from "./geoLocation.mjs";
 
 $(function() {
 
+    // form 속성 설정
     $("form").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
+    // 중복체크, 사업자번호 확인 결과 텍스트
     let duplicateResult = "";
 
+    // API KEY
     let businessNoApiKey = ""
     let googleApiKey = ""
 
@@ -14,6 +17,8 @@ $(function() {
         googleApiKey = apiKey.google;
     });
 
+
+    // 사업자 번호 확인 API (공공 API)
     function checkDuplicateBusinessNo(businessNo) {
         var bNo = {"b_no": [businessNo]};
 
@@ -67,10 +72,15 @@ $(function() {
 
     }
 
+
     // 사업자 정보 중복확인 및 상태 확인 메서드
     $("input[name='businessNo']").on('input', function () {
 
-        let businessNo = $("input[name='businessNo']").val();
+        // let businessNo = $("input[name='businessNo']").val();
+
+        // 숫자만 입력하도록 필터링 (숫자가 아닌 값 제거후 업데이트)
+        let businessNo = $(this).val().replace(/[^0-9]/g, '');
+        $(this).val(businessNo);
 
         if (businessNo.length === 10) {
 
@@ -102,7 +112,6 @@ $(function() {
             duplicateResult = "사업자 번호는 하이픈(-) 제외 10글자 숫자입니다.";
             $("#duplicateResult").text(duplicateResult);
         }
-
 
     });
 
