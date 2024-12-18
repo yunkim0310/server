@@ -134,7 +134,20 @@ public class ReservationController {
         // 초기 Search 객체 설정 (기본값)
         System.out.println("/reservation/getRsrvStoreList : GET");
 
+
         User user = (User) session.getAttribute("user");
+
+        // 로그인 안 한 경우
+        if (user == null) {
+
+            return "redirect:/user/login";
+
+        }
+
+
+        int storeId = storeService.getStoreId(user.getUsername());
+
+        String storeName = storeService.getStore(storeId).getUserName();
 
         search.setPageSize(pageSize);
         search.setListSize(30);
@@ -144,14 +157,11 @@ public class ReservationController {
             return "reservation/sendRsrvHome";
         }
 
-        // 로그인 안 한 경우
-        if (user == null) {
-
-            return "redirect:/user/login";
-
+        if(!storeName.equals(user.getUsername())){
+            return "reservation/sendRsrvHome";
         }
 
-        int storeId = storeService.getStoreId(user.getUsername());
+
         if (searchStatuses == null) {
             search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약")); // 모든 상태 포함
         }
@@ -194,15 +204,6 @@ public class ReservationController {
 
         User user = (User) session.getAttribute("user");
 
-        if(!"ROLE_STORE".equals(user.getRole())){
-            return "reservation/sendRsrvHome";
-        }
-
-        search.setPageSize(pageSize);
-        search.setListSize(30);
-
-        System.out.println(user);
-
         // 로그인 안 한 경우
         if (user == null) {
 
@@ -211,6 +212,24 @@ public class ReservationController {
         }
 
         int storeId = storeService.getStoreId(user.getUsername());
+        String storeName = storeService.getStore(storeId).getUserName();
+
+
+        if(!"ROLE_STORE".equals(user.getRole())){
+            return "reservation/sendRsrvHome";
+        }
+
+        if(!storeName.equals(user.getUsername())){
+            return "reservation/sendRsrvHome";
+        }
+
+
+        search.setPageSize(pageSize);
+        search.setListSize(30);
+
+        System.out.println(user);
+
+
 
 
 
@@ -492,6 +511,17 @@ public class ReservationController {
 
         // 1. 예약 정보 조회
         Reservation reservation = reservationService.getRsrv(rsrvNo);
+
+        String username = reservation.getUserName();
+
+
+        if(!username.equals(presenceuser.getUsername())){
+            return "reservation/sendRsrvHome";
+        }
+
+
+
+
 
         model.addAttribute("reservation", reservation);
 
