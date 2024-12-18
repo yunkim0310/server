@@ -100,6 +100,6 @@ public interface StoreDao {
     public List<Map<String, Integer>> calcRsrvPercent(int storeId);
 
     // 가게 목록 조회 (인기 가게)
-    public List<Store> getStoreListById(List<Integer> storeIdList);
+    public List<Store> getStoreListById(@Param("storeIdList") List<Integer> storeIdList);
 
 }
