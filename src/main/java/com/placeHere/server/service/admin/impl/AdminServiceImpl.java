@@ -163,5 +163,9 @@ public class AdminServiceImpl implements AdminService {
 
     }
 
+    public List<Batch> getBatchList() throws Exception{
+        return adminDao.getBatchList();
+    }
+
 
 }

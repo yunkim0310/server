@@ -154,5 +154,15 @@
         VALUES ( #{batchName}, #{status}, #{exec_dt} )
     </insert>
 
+    <select id="getBatchList">
+
+        SELECT
+                batch_no    as id,
+                batch_name  as batchName,
+                status      as status,
+                exec_dt     as exec_dt
+        FROM batch
+    </select>
+
 
 </mapper>
