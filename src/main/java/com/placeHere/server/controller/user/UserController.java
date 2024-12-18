@@ -177,10 +177,14 @@ public class UserController {
     }
 
     @GetMapping("/setting")
-    public String setting(HttpSession session, Model model) {
+    public String setting(HttpSession session, Model model) throws Exception{
 
         log.info("setting - get 요청");
-        User user = (User) session.getAttribute("user");
+        User Sessionuser = (User) session.getAttribute("user");
+
+        String username = Sessionuser.getUsername();
+        log.info("username :: " + username);
+        User user = userService.getUser(username);
 
         log.info("user :: " + user);
 
