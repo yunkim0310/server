@@ -230,7 +230,7 @@
                                         <div class="__header" style="padding-left: 0;">
                                             <div class="__user-info" style="justify-content: space-between;">
                                                 <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
-                                                    <img th:src="@{/file/community/2222.png}" alt="프로필이미지">
+                                                    <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진">
                                                     <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
                                                         <span th:text="${review.userName}"
                                                               style="font-size: 1.5em; font-weight: bold; color: #2c3e50;

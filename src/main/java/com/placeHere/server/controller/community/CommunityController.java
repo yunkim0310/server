@@ -224,11 +224,17 @@ public class CommunityController {
         System.out.println("/review/getReviewList : GET");
 
         try {
+
+            String currentUser ="";
+            if(user != null) {
+
+                currentUser = user.getUsername();
+                System.out.println("currentUser : " + currentUser);
+            }
+
             System.out.println("요청된 페이지: " + search.getPage());
             System.out.println("친구 사용자 이름: " + friendUsername);
             System.out.println("요청 타입: " + type);
-
-            // TODO Search 에 page 가 바인딩 되어오지 않으면 추가 코드 필요
 
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
@@ -237,13 +243,6 @@ public class CommunityController {
             // 리뷰 리스트 초기화
             List<Review> reviewList = new ArrayList<Review>();
 
-
-            String currentUser ="";
-            if(user != null) {
-
-                currentUser = user.getUsername();
-                System.out.println("currentUser : " + currentUser);
-            }
             String result = "";
             Paging paging = new Paging();
             int totalCnt = 0;
@@ -270,6 +269,7 @@ public class CommunityController {
                             friend.setFriendRes(friendUsername);
                             System.out.println("friendUsername : " + friendUsername);
 
+                            model.addAttribute("url", bucketUrl);
 
                             // 친구 여부 확인
                             Friend friendCheck = friendService.chkFriend(friend);
@@ -287,6 +287,7 @@ public class CommunityController {
 
                             model.addAttribute("isFriend", isFriend);
                             model.addAttribute("friendStatus", friendStatus);
+                            model.addAttribute("user", user);
 
                             // 친구가 아닐 경우 메시지 처리
                             if (isFriend) {
@@ -305,6 +306,8 @@ public class CommunityController {
                             //친구 신청 시 res 값 넣어줌
                             model.addAttribute("friendUsername", friendUsername);
                             model.addAttribute("paging", paging);
+                            model.addAttribute("user", user);
+
 
 
                             if (friendUsername.equals(currentUser)) {
@@ -393,6 +396,7 @@ public class CommunityController {
             model.addAttribute("url", bucketUrl);
             model.addAttribute("reviewList", reviewList);
             model.addAttribute("paging", paging);
+            model.addAttribute("user", user);
 
             return result;
 
@@ -481,6 +485,8 @@ public class CommunityController {
         search.setListSize(10);
         search.setStartRowNum(0);
 
+        model.addAttribute("url", bucketUrl);
+
         try {
 
             System.out.println("친구 요청 목록을 가져옴. 사용자: " + userName);
@@ -492,6 +498,7 @@ public class CommunityController {
 
             model.addAttribute("friendRequests", friendRequests);
             model.addAttribute("receivedRequests", receivedRequests);
+            model.addAttribute("user", user);
 
         } catch (Exception e) {
 
@@ -571,6 +578,8 @@ public class CommunityController {
 
         System.out.println("/review/getFriendList : GET");
 
+        model.addAttribute("url", bucketUrl);
+
         try {
             String username = user.getUsername();
             System.out.println("username : " + username);
@@ -591,6 +600,7 @@ public class CommunityController {
             model.addAttribute("friends", friends);
             model.addAttribute("paging", paging);
             model.addAttribute("keyword", keyword);
+            model.addAttribute("user", user);
 
             return "test/community/getFriendList";
 

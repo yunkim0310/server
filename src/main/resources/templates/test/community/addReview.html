@@ -188,6 +188,7 @@
     const stars = document.querySelectorAll('.star');
     const reviewScoreInput = document.getElementById('reviewScore');
 
+    // 별 클릭 이벤트 핸들러 설정
     stars.forEach(star => {
         star.addEventListener('click', () => {
             const rating = star.getAttribute('data-value');
@@ -196,6 +197,7 @@
         });
     });
 
+    // 별 색상을 업데이트하는 함수
     function updateStars(rating) {
         stars.forEach(star => {
             if (star.getAttribute('data-value') <= rating) {
@@ -205,6 +207,19 @@
             }
         });
     }
+
+    // 리뷰 작성 확인 및 포인트 지급 알림 함수
+    function showAlertAndConfirm() {
+        if (confirm('리뷰 작성 하시겠습니까?')) {
+            alert('100P 지급되었습니다!'); // 사용자에게 포인트 지급 알림
+            return true; // 폼 제출 계속 진행
+        }
+        return false; // 폼 제출 취소
+    }
+
+    // 폼 제출 시 showAlertAndConfirm 호출
+    const form = document.querySelector('form'); // 폼 선택
+    form.onsubmit = showAlertAndConfirm; // 폼 제출 시 함수 연결
 </script>
 
 </body>

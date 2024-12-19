@@ -115,7 +115,7 @@
 <ul>
     <li th:each="friend : ${friends}">
         <div class="friend-info">
-            <img th:src="@{/file/community/2222.png}" alt="test">
+            <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">
             <p>친구 이름: <span th:text="${friend.username}"></span></p>
             <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>
         </div>
