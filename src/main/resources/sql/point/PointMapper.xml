@@ -68,4 +68,10 @@
         LIMIT #{startRowNum}, #{listSize}
     </select>
 
+    <select id="isTransactionExist" resultType="int">
+        SELECT COUNT(*)
+        FROM point_transaction
+        WHERE dep_type = '예약 이용 완료' AND rel_no = #{relNo}
+    </select>
+
 </mapper>

@@ -139,6 +139,7 @@
             store_addr  as storeAddr,
             rsrv_number as rsrvNumber
         FROM reservation
+        WHERE rsrv_status = '이용 완료'
         ORDER BY    rsrv_no DESC
     </select>
 

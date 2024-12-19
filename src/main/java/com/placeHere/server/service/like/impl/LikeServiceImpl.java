@@ -2,6 +2,7 @@ package com.placeHere.server.service.like.impl;
 
 import com.placeHere.server.dao.like.LikeDao;
 import com.placeHere.server.domain.Like;
+import com.placeHere.server.domain.Review;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.like.LikeService;
 import lombok.Setter;
@@ -51,6 +52,30 @@ public class LikeServiceImpl implements LikeService {
     @Override
     public List<Like> getStoreLikeList(String UserName, Search search) throws Exception {
         return likeDao.getStoreLikeList(UserName, search);
+    }
+
+
+    // 리뷰 좋아요 확인
+    @Override
+    public List<Review> chkReviewLike(String userName, List<Review> reviewList) throws Exception {
+
+        for (int i = 0; i < reviewList.size(); i++) {
+
+            Review review = reviewList.get(i);
+
+            Like chkLike = new Like();
+            chkLike.setRelationNo(review.getReviewNo());
+            chkLike.setTarget("review");
+            chkLike.setUserName(userName);
+
+            Like chkedLike = chkLike(chkLike);
+
+            review.setLike(chkedLike);
+
+            reviewList.set(i, review);
+        }
+
+        return reviewList;
     }
 
 

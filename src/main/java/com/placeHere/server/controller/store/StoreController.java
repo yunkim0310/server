@@ -566,6 +566,13 @@ public class StoreController {
                     List<Review> reviewList = communityService.getReviewList(storeId, search);
                     int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
 
+                    System.out.println(reviewList);
+
+                    if (user != null) {
+
+                        reviewList = likeService.chkReviewLike(user.getUsername(), reviewList);
+                    }
+
                     Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
                     model.addAttribute("reviewList", reviewList);
@@ -636,7 +643,7 @@ public class StoreController {
                              @ModelAttribute("search") Search search,
                              @ModelAttribute("message") String message,
                              HttpSession session,
-                             Model model) {
+                             Model model) throws Exception {
 
         System.out.println("/store/getMyStore : GET");
         System.out.println("mode: " + mode);
@@ -685,6 +692,7 @@ public class StoreController {
 
                             List<Review> reviewList = communityService.getReviewList(storeId, search);
                             int reviewTotalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
+                            reviewList = likeService.chkReviewLike(user.getUsername(), reviewList);
 
                             model.addAttribute("reviewList", reviewList);
                             model.addAttribute("totalCnt", reviewTotalCnt);
