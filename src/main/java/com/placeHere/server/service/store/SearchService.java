@@ -6,7 +6,7 @@ public interface SearchService {
 
     // Method
     // 검색어 등록
-    public void addSearch(String searchKeyword);
+    public boolean addSearch(String searchKeyword);
 
     // 인기 검색어 조회
     public List<String> getPopularKeyword();

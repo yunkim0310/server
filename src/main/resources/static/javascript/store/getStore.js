@@ -27,7 +27,7 @@ $(function () {
     });
     
     // 좋아요 추가, 취소
-    $("a#likeStore").on("click", function () {
+    $("#likeStore a").on("click", function () {
 
         const storeId = $("input[name='storeId']:hidden").val();
         const likeId = $(this).data("likeid");
@@ -78,12 +78,6 @@ $(function () {
         }
 
     });
-
-
-    // TODO 채팅 버튼 처리 추가 필요
-    // $("a#chat").on("click", function () {
-    //
-    // });
 
 
     if (mode === "info") {
