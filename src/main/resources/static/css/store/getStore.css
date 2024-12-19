@@ -95,7 +95,7 @@ body {
 }
 
 /* 좋아요 */
-.restaurant-detail-header .btn-like-active{
+.restaurant-detail-header #likeStore .btn-like-active{
     border-radius: 50%;
     background: #fff url('/images/store/icon_heart_red.png') 50% 50% no-repeat;
     display: block;
@@ -111,7 +111,7 @@ body {
     z-index: 10;
 }
 
-.restaurant-detail-header .btn-like-inactive{
+.restaurant-detail-header #likeStore .btn-like-inactive{
     border-radius: 50%;
     background: #fff url('/images/store/icon_heart_white.png') 50% 50% no-repeat;
     display: block;
@@ -149,4 +149,25 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+#main-info {
+    display: inline-block;
+}
+
+#main-info .rating {
+    display: flex;
+    align-items: center;
+}
+
+#main-info .star {
+    color: black;
+}
+
+#main-info .count {
+    margin-left: 5px;
+}
+
+.carousel-item img {
+    background-color: #FFFFFF;
 }

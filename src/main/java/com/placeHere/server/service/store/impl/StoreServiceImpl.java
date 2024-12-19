@@ -115,6 +115,7 @@ public class StoreServiceImpl implements StoreService {
         Store store = storeDao.getStore(storeId);
 
         if (store != null) {
+
             StoreOperation storeOperation = storeDao.getCurrOperation(storeId);
             List<String> closedayList = storeDao.getClosedayList(storeId);
 
@@ -340,9 +341,12 @@ public class StoreServiceImpl implements StoreService {
 
             storeDao.removeCloseday(closedayId);
             return true;
+
         } catch (Exception e) {
+
             e.printStackTrace();
             return false;
+
         }
 
     }

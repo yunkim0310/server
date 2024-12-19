@@ -3,6 +3,7 @@ package com.placeHere.server.controller.store;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.like.LikeService;
+import com.placeHere.server.service.store.SearchService;
 import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class StoreRestController {
 
     @Autowired
     private AwsS3Service awsS3Service;
+
+    @Autowired
+    private SearchService searchService;
 
     @Value("${page_size}")
     private int pageSize;
@@ -231,6 +235,7 @@ public class StoreRestController {
         return ResponseEntity.ok(closedayList);
     }
 
+
     // 휴무일 삭제
     @PostMapping("/removeCloseday")
     public ResponseEntity<Void> removeCloseday(@RequestParam int closedayId) {
@@ -238,6 +243,27 @@ public class StoreRestController {
         System.out.println("/api-store/removeCloseday : POST");
 
         boolean result = storeService.removeCloseday(closedayId);
+
+        if (result) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+
+    // 검색어 등록
+    @PostMapping("/addSearchKeyword")
+    public ResponseEntity<Void> addSearchKeyword(@ModelAttribute Search search) {
+
+        System.out.println("/api-store/addSearchKeyword : POST");
+
+        boolean result = false;
+
+        // 검색어가 있을 경우 검색 기록 등록
+        if (search.getSearchKeyword() != null && !search.getSearchKeyword().trim().isEmpty()) {
+            result = searchService.addSearch(search.getSearchKeyword());
+        }
 
         if (result) {
             return ResponseEntity.ok().build();
