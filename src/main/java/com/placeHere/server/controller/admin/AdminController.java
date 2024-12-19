@@ -115,17 +115,12 @@ public class AdminController {
         HttpHeaders headers = new HttpHeaders();
 
         if (list != null) {
-
             headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-            String contentRange = "getUserList 0-" + (list.size() - 1) + "/" + list.size();
-
+            String contentRange = "getStoreList 0-" + (list.size() - 1) + "/" + list.size();
             headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
-
             log.info("Content-Range: " + contentRange);
-
             return new ResponseEntity<>(map, headers, HttpStatus.OK);
         } else {
-
             return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
         }
 
@@ -191,36 +186,57 @@ public class AdminController {
     }
 
     @GetMapping("/getBatchList")
-    public ResponseEntity<?> getBatchList() throws Exception {
+    public ResponseEntity<?> getBatchList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
 
         log.info("http://localhost:8080/api-admin/getBatchList - GET Controller ");
 
         List<Batch> list = new ArrayList<>();
+        // 응답 데이터
         Map<String, Object> map = new HashMap<String, Object>();
 
         // 배치 리스트
         list = adminService.getBatchList();
 
+        log.info(">> input page :: " + page);
+        log.info(">> input perPage :: " + perPage);
+
         // 개수
         int total = list.size();
+        int start = (page-1) * perPage;
+        int end = Math.min(start + perPage, total);
 
-        map.put("data", list);
+        log.info("page : "+ page);
+        log.info("perPage : "+ perPage);
+        log.info("start : "+ start);
+        log.info("end : "+ end);
+
+        // 페이징된 리스트
+        List<Batch> pagedList = list.subList(start, end);
+
+        for(Batch batch : pagedList) {
+            log.info("batchId :: " + batch.getId().toString());
+            log.info("batchName :: " + batch.getBatchName());
+
+        }
+//        map.put("data", list);
+        map.put("data", pagedList);
         map.put("total", total);
 
         HttpHeaders headers = new HttpHeaders();
 
         if (list != null) {
 
-            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
+//            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
+//            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
+//            log.info("Content-Range: " + contentRange);
+            headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + total);
+            headers.add("Access-Control-Expose-Headers", "Content-Range");
 
             headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
-
-            log.info("Content-Range: " + contentRange);
+            log.info("Content-Range: " + "items " + start + "-" + (end - 1) + "/" + total);
 
             return new ResponseEntity<>(map, headers, HttpStatus.OK);
         } else {
-
             return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
         }
 
