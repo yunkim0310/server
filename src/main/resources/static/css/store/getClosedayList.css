@@ -104,3 +104,8 @@
         font-size: 1.2rem;
     }
 }
+
+/* 휴무일 달력 */
+#closedayCalendar {
+    padding: 20px;
+}

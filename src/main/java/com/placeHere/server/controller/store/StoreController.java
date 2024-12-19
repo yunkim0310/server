@@ -717,16 +717,8 @@ public class StoreController {
                             // 휴무일 목록 조회
                             System.out.println("내 가게 휴무일 목록 조회");
 
-                            List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
-                            int closedayTotalCnt = (closedayList.isEmpty()) ? 0 : closedayList.get(0).getTotalCnt();
-
-                            model.addAttribute("totalCnt", closedayTotalCnt);
-                            model.addAttribute("closedayList", closedayList);
                             model.addAttribute("today", LocalDate.now());
                             model.addAttribute("message", message);
-
-                            // 페이징
-                            paging = new Paging(closedayTotalCnt, search.getPage(), pageSize, listSize);
 
                             break;
 
@@ -801,52 +793,23 @@ public class StoreController {
 
             case "closeday":
 
-                if (fnc.equals("get")) {
-                    System.out.println(search);
-                } else {
-                    System.out.println(closeday);
-                }
+                System.out.println(closeday);
 
-                // 휴무일 등록, 검색, 삭제
-                switch (fnc) {
+                // 휴무일 등록
+                if (fnc.equals("add")) {// 휴무일 등록
+                    System.out.println("addCloseday");
 
-                    case "add":
-                        // 휴무일 등록
-                        System.out.println("addCloseday");
+                    // TODO 예약이 있는지 확인은 Rest로? 변경 생각해보기
+                    int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
 
-                        // TODO 예약이 있는지 확인은 Rest로? 변경 생각해보기
-                        int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
+                    System.out.println(rsrvCnt);
 
-                        System.out.println(rsrvCnt);
-
-                        // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
-                        if (rsrvCnt == 0) {
-                            storeService.addCloseday(closeday);
-                        } else {
-                            redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
-                        }
-
-                        break;
-
-                    case "get":
-                        // 휴무일 목록 조회
-                        System.out.println("getClosedayList");
-
-                        search.setPageSize(pageSize);
-                        search.setListSize(listSize);
-
-                        redirectAttributes.addFlashAttribute("search", search);
-
-                        break;
-
-                    case "remove":
-                        // 휴무일 삭제
-                        System.out.println("removeCloseday");
-                        System.out.println(closeday.getClosedayId());
-
-                        storeService.removeCloseday(closeday.getClosedayId());
-
-                        break;
+                    // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
+                    if (rsrvCnt == 0) {
+                        storeService.addCloseday(closeday);
+                    } else {
+                        redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
+                    }
                 }
 
                 break;

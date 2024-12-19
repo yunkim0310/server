@@ -49,7 +49,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 등록 (return 되는 값은 store_id 의 값) TEST
+    // 가게 등록 (return 되는 값은 store_id 의 값)
     @Override
     public int addStore(Store store) {
 
@@ -172,7 +172,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 수정 TEST
+    // 가게 수정
     @Override
     public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals) {
 
@@ -204,7 +204,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경) TEST
+    // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
     @Override
     public void removeStore(int storeId) {
 
@@ -218,7 +218,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 가게 운영 등록 TEST
+    // 가게 운영 등록
     @Override
     public void addOperation(StoreOperation storeOperation) {
 
@@ -227,7 +227,7 @@ public class StoreServiceImpl implements StoreService {
 
     }
 
-    // 가게 운영 수정 (현재날짜+14일후 적용) TEST
+    // 가게 운영 수정 (현재날짜+14일후 적용)
     @Override
     public void updateOperation(StoreOperation storeOperation) {
 
@@ -277,7 +277,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 등록 TEST
+    // 매장 소식 등록
     @Override
     public void addStoreNews(StoreNews storeNews) {
 
@@ -286,7 +286,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 목록 조회 TEST
+    // 매장 소식 목록 조회
     @Override
     public List<StoreNews> getStoreNewsList(int storeId, Search search) {
 
@@ -296,7 +296,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 매장 소식 수정 TEST
+    // 매장 소식 수정
     @Override
     public void updateStoreNews(StoreNews storeNews) {
 
@@ -306,7 +306,7 @@ public class StoreServiceImpl implements StoreService {
 
 
 
-    // 매장 소식 삭제 (DELETE) TEST
+    // 매장 소식 삭제 (DELETE)
     @Override
     public void removeStoreNews(int newsId) {
 
@@ -315,7 +315,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 등록 TEST
+    // 휴무일 등록
     @Override
     public void addCloseday(Closeday closeday) {
 
@@ -324,7 +324,7 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 목록 조회 TEST
+    // 휴무일 목록 조회
     @Override
     public List<Closeday> getClosedayList(int storeId, Search search) {
 
@@ -332,11 +332,18 @@ public class StoreServiceImpl implements StoreService {
     }
 
 
-    // 휴무일 삭제 (DELETE) TEST
+    // 휴무일 삭제 (DELETE)
     @Override
-    public void removeCloseday(int closedayId) {
+    public boolean removeCloseday(int closedayId) {
 
-        storeDao.removeCloseday(closedayId);
+        try {
+
+            storeDao.removeCloseday(closedayId);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
 
     }
 

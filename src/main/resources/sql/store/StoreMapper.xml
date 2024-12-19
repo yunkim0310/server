@@ -600,12 +600,11 @@
     <!-- 휴무일 목록 조회 -->
     <select id="getClosedayListBySearch" parameterType="map" resultMap="ClosedayResultMap">
 
-        SELECT *, COUNT(*) OVER() AS total_cnt
+        SELECT *
         FROM closeday
         WHERE store_id = #{storeId}
           AND closeday BETWEEN #{search.startDate} AND #{search.endDate}
         ORDER BY closeday
-        LIMIT #{search.startRowNum}, #{search.listSize}
 
     </select>
     

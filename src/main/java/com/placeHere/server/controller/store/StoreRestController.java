@@ -7,6 +7,7 @@ import com.placeHere.server.service.store.StoreService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -208,12 +209,41 @@ public class StoreRestController {
     }
 
 
-    // 사진 삭제 테스트
+    // 사진 삭제
     @GetMapping("/removeFile")
     public void removeFile(@RequestParam("filePath") String filePath) {
 
         awsS3Service.deleteFile(filePath);
 
+    }
+
+
+    // 월별 휴무일 전달
+    @GetMapping("/getClosedayByMonth")
+    public ResponseEntity<List<Closeday>> getClosedayByMonth(@ModelAttribute Search search,
+                                                           @RequestParam int storeId) {
+
+        System.out.println("/api-store/getClosedayByMonth : GET");
+
+        List<Closeday> closedayList = storeService.getClosedayList(storeId, search);
+        System.out.println(closedayList);
+
+        return ResponseEntity.ok(closedayList);
+    }
+
+    // 휴무일 삭제
+    @PostMapping("/removeCloseday")
+    public ResponseEntity<Void> removeCloseday(@RequestParam int closedayId) {
+
+        System.out.println("/api-store/removeCloseday : POST");
+
+        boolean result = storeService.removeCloseday(closedayId);
+
+        if (result) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }
