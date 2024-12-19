@@ -68,7 +68,6 @@
         <result property="specialMenuNo" column="special_menu_no" jdbcType="INTEGER"/>
         <result property="portOneStoreId" column="portone_store_id" jdbcType="VARCHAR"/>
         <result property="foodCategoryId" column="food_category_id" jdbcType="VARCHAR"/>
-<!--        <result property="foodCategory" column="food_category" jdbcType="VARCHAR"/>-->
         <result property="storeStatus" column="store_status" jdbcType="INTEGER"/>
         <result property="reviewCnt" column="review_cnt" jdbcType="INTEGER"/>
         <result property="reviewScoreAvg" column="review_score_avg"/>
@@ -186,7 +185,9 @@
     <!-- 가게 정보 조회 -->
     <select id="getStore" resultMap="StoreResultMap">
 
-        SELECT s.*, COALESCE(reviews.cnt_review, 0) AS review_cnt, COALESCE(reviews.review_score_avg,0) AS review_score_avg
+        SELECT s.*,
+               COALESCE(reviews.cnt_review, 0) AS review_cnt,
+               COALESCE(reviews.review_score_avg,0) AS review_score_avg
         FROM store s
             LEFT JOIN (
                 SELECT reservation.store_id,
