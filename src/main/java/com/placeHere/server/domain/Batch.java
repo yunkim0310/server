@@ -12,5 +12,5 @@ public class Batch implements Serializable {
     private String batchName;
     // SUCCESS, FAIL
     private String status;
-    private Date exec_dt;
+    private Date execDt;
 }

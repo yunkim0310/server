@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
 
         Batch batch = new Batch();
         batch.setBatchName("예약상태변경");
-        batch.setExec_dt(new Date());
+        batch.setExecDt(new Date());
 
 //        Set<Integer> processedRsrvNos = new HashSet<>();
         
@@ -136,7 +136,7 @@ public class AdminServiceImpl implements AdminService {
 
         Batch batch = new Batch();
         batch.setBatchName("휴면계정전환");
-        batch.setExec_dt(new Date());
+        batch.setExecDt(new Date());
 
         // 1. 상태값 update ACTIVE -> INACTIVE
         int result = 0;
