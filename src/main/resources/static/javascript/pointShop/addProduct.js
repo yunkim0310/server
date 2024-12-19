@@ -17,7 +17,7 @@
     var prodName = $("input[name='prodName']").val();
     var prodDetail = $("textarea[name='prodDetail']").val();
     var prodImg1 = $("input[name='prodImg1']").val();
-    var prodPrice = $("input[name='prodPrice']").val();
+    var prodPrice = Number($("input[name='prodPrice']").val());
     var prodCateNo = $("select[name='prodCateNo']").val();
 
     if (prodName == null || prodName.length < 1) {
@@ -49,7 +49,11 @@
         event.preventDefault();
     return;
     // history.go();
-}else if (prodCateNo == null || prodCateNo.length < 1) {
+}else if(isNaN(prodPrice)) {
+        alert("가격은 숫자만 입력하셔야 합니다.");
+        event.preventDefault();
+        return;
+    }else if (prodCateNo == null || prodCateNo.length < 1) {
     alert("상품 카테고리 번호는 반드시 선택하셔야 합니다.");
         event.preventDefault();
     return;

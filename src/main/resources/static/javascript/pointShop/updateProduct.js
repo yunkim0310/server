@@ -16,7 +16,7 @@ function fncUpdateProduct() {
     var prodName = $("input[name='prodName']").val();
     var prodDetail = $("textarea[name='prodDetail']").val();
     var prodImg1 = $("input[name='prodImg1']").val();
-    var prodPrice = $("input[name='prodPrice']").val();
+    var prodPrice = Number($("input[name='prodPrice']").val());
     var prodCateNo = $("select[name='prodCateNo']").val();
 
     if (prodName == null || prodName.length < 1) {
@@ -41,6 +41,10 @@ function fncUpdateProduct() {
         return;
     }else if (prodPrice == null || prodPrice.length < 1) {
         alert("가격은 반드시 입력하셔야 합니다.");
+        event.preventDefault();
+        return;
+    }else if(isNaN(prodPrice)) {
+        alert("가격은 숫자만 입력하셔야 합니다.");
         event.preventDefault();
         return;
     }else if (prodCateNo == null || prodCateNo.length < 1) {

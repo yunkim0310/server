@@ -60,4 +60,10 @@ public class PointServiceImpl implements PointService {
         return pointDao.getPointHistoryList(search);
 
     }
+
+    public int isTransactionExist(int relNo) throws Exception {
+        int count = pointDao.isTransactionExist(relNo);
+        return count;
+    }
+
 }
