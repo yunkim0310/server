@@ -545,7 +545,7 @@
             <br><br>
 
             <div th:if="${session.user.getRole() == 'ROLE_USER'}" id="amount-box" class="amount-box"
-                 th:text="${store.getStoreOperation().getSecurity()} + ' 원'">0 원</div><br><br>
+                 th:text="${#numbers.formatInteger(store.getStoreOperation().getSecurity(), 3, 'COMMA')} + ' 원'">0 원</div><br><br>
 
             <button type="submit" id="payButton">결제</button>
 
