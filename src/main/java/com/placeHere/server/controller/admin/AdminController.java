@@ -93,7 +93,7 @@ public class AdminController {
     }
 
     @GetMapping("/getStoreList")
-    public ResponseEntity<?> getStoreList() throws Exception {
+    public ResponseEntity<?> getStoreList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
 
         log.info("/api-admin/getStoreList - GET Controller ");
         List<User> list = new ArrayList<>();
@@ -104,21 +104,37 @@ public class AdminController {
 
         // 점주회원 개수
         int total = list.size();
+        int start = (page-1) * perPage;
+        int end = Math.min(start + perPage, total);
 
-//        for(User user : list) {
-//            System.out.println(user);
-//        }
+        log.info("page : "+ page);
+        log.info("perPage : "+ perPage);
+        log.info("start : "+ start);
+        log.info("end : "+ end);
 
-        map.put("data", list);
+        // 페이징된 리스트
+        List<User> pagedList = list.subList(start, end);
+
+        for(User user : list) {
+            System.out.println(user);
+        }
+
+        map.put("data", pagedList);
         map.put("total", total);
 
         HttpHeaders headers = new HttpHeaders();
 
         if (list != null) {
-            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-            String contentRange = "getStoreList 0-" + (list.size() - 1) + "/" + list.size();
-            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
-            log.info("Content-Range: " + contentRange);
+//            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
+//            String contentRange = "getStoreList 0-" + (list.size() - 1) + "/" + list.size();
+//            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
+//            log.info("Content-Range: " + contentRange);
+
+            headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + total);
+            headers.add("Access-Control-Expose-Headers", "Content-Range");
+
+            log.info("Content-Range: " + "items " + start + "-" + (end - 1) + "/" + total);
+
             return new ResponseEntity<>(map, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
@@ -129,7 +145,7 @@ public class AdminController {
 
     // 예약 리스트
     @GetMapping("/getRsrvList")
-    public ResponseEntity<?> getRsrvList() throws Exception {
+    public ResponseEntity<?> getRsrvList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
 
         log.info("/api-admin/getRsrvList - GET Controller ");
         List<Reservation> list = new ArrayList<>();
@@ -140,26 +156,38 @@ public class AdminController {
 
         // 점주회원 개수
         int total = list.size();
+        int start = (page-1) * perPage;
+//        int start = page * perPage;
+        int end = Math.min(start + perPage, total);
 
-//        for(Reservation rsrv : list) {
-//            System.out.println(rsrv);
-//        }
+        log.info("page : "+ page);
+        log.info("perPage : "+ perPage);
+        log.info("start : "+ start);
+        log.info("end : "+ end);
 
-        map.put("data", list);
+        List<Reservation> pagedList = list.subList(start, end);
+
+        for(Reservation rsrv : pagedList) {
+            System.out.println(rsrv);
+        }
+
+        map.put("data", pagedList);
         map.put("total", total);
 
         HttpHeaders headers = new HttpHeaders();
 
-
         if (list != null) {
 
-            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
+//            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
+//            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
+//            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
 
-            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
+            headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + total);
+            // CORS 관련 헤더 노출
+            headers.add("Access-Control-Expose-Headers", "Content-Range");
 
-            log.info("Content-Range: " + contentRange);
-
+            log.info("Content-Range: " + "items " + start + "-" + (end - 1) + "/" + total);
+//            Content-Range: items 0-9/1750
             return new ResponseEntity<>(map, headers, HttpStatus.OK);
         } else {
 
@@ -230,9 +258,9 @@ public class AdminController {
 //            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
 //            log.info("Content-Range: " + contentRange);
             headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + total);
+            // CORS 관련 헤더 노출
             headers.add("Access-Control-Expose-Headers", "Content-Range");
 
-            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
             log.info("Content-Range: " + "items " + start + "-" + (end - 1) + "/" + total);
 
             return new ResponseEntity<>(map, headers, HttpStatus.OK);

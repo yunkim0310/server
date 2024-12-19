@@ -78,6 +78,7 @@
         where role = 'ROLE_STORE'
     </select>
 
+<!--    ORDER BY    rsrv_no DESC-->
     <select id="getRsrvList" resultType="com.placeHere.server.domain.Reservation">
         SELECT
             rsrv_no     as rsrvNo       ,
@@ -92,9 +93,9 @@
             rsrv_create_time as rsrvCreateTime,
             store_name  as storeName,
             store_addr  as storeAddr,
-            rsrv_number as rsrvNumber
+            rsrv_number as rsrvNumber,
+            store_id    as storeId
         FROM reservation
-        ORDER BY    rsrv_no DESC
     </select>
 
     <select id="getRsrv" parameterType="int" resultType="com.placeHere.server.domain.Reservation">
@@ -161,8 +162,9 @@
                 batch_no    as id,
                 batch_name  as batchName,
                 status      as status,
-                exec_dt     as exec_dt
+                exec_dt     as execDt
         FROM batch
+        ORDER BY batch_no DESC
     </select>
 
 
