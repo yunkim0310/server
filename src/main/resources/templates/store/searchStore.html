@@ -18,6 +18,8 @@
         <script src="/javascript/store/modalStoreFilter.js"></script>
         <script type="module" src="/javascript/store/searchStore.js"></script>
 
+        <!-- 추천 레스토랑, 인기 검색어 -->
+        <link rel="stylesheet" href="/css/store/searchStore.css">
 
     </head>
     <body>
@@ -48,32 +50,142 @@
 
                 </div>
 
-                <div class="containerList">
-                    <div class="popularSearchKeyword" style="display: flex;justify-content: space-between;">
+                    <div class="recommendList">
 
-                        <table border="1" class="listTable">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">
-                                        인기 검색어
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th>순위</th>
-                                    <th>검색어</th>
-                                </tr>
-                            </thead>
+                        <div class="recommendStore" style="width: 65%">
 
-                            <tbody th:each="keyword, iterStat : ${popularKeywordList}">
-                                <tr class="keywordList">
-                                    <td th:text="${iterStat.count}">검색 순위</td>
-                                    <td th:text="${keyword}" class="popularKeyword">검색어</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                            <!-- 인기 가게 -->
+                            <section class="section pb-45">
+                                <div class="container gutter-sm">
+                                    <div class="section-header section-header-v">
+                                        <h3 class="section-title ebold">
+                                            추천 레스토랑
+                                        </h3>
+                                        <p style="color: rgb(98, 98, 98);">
+                                            인기 있는 맛집을 추첩합니다
+                                        </p>
+                                    </div>
+                                    <div class="section-body">
+                                        <div id="publicPopularShop_15" class="v-scroll">
+                                            <div class="v-scroll-inner">
+                                                <div id="publicPopularShop_23" class="restaurant-list restaurant-list-sm items2"
+                                                     style="display: flex; flex-wrap: nowrap;">
+                                                    <div th:if="${storeList1 != null && !storeList1.isEmpty()}" th:each="store : ${storeList1}" class="restaurant-list-item item">
+
+                                                        <div class="img">
+                                                            <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
+                                                                <div class="img">
+                                                                    <img width="200" height="200"
+                                                                         th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}"
+                                                                         th:alt="${store.storeImg1}">
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div class="detail">
+                                                            <a th:href="'/getStore?storeId='+${store.storeId}">
+                                                                <h3 th:text="${store.storeName}" class="name">매장명</h3>
+                                                                <div class="meta">
+                                                            <span class="tags" th:text=" ${(store.storeAddr.split(' ')[1])+ '&ensp;|&ensp;' + (store.foodCategoryId.split('/')[0]+'&ensp;'+((store.foodCategoryId.split('/').length>3) ? store.foodCategoryId.split('/')[3] : ''))}">
+                                                                주소(구) | 음식 카테고리
+                                                            </span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+                            <section class="section pb-45">
+                                <div class="container gutter-sm">
+                                    <div class="section-body">
+                                        <div class="v-scroll">
+                                            <div class="v-scroll-inner">
+                                                <div class="restaurant-list restaurant-list-sm items2"
+                                                     style="display: flex; flex-wrap: nowrap;">
+                                                    <div th:if="${storeList2 != null && !storeList2.isEmpty()}" th:each="store : ${storeList2}" class="restaurant-list-item item">
+
+                                                        <div class="img">
+                                                            <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
+                                                                <div class="img">
+                                                                    <img width="200" height="200"
+                                                                         th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}"
+                                                                         th:alt="${store.storeImg1}">
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                        <div class="detail">
+                                                            <a th:href="'/getStore?storeId='+${store.storeId}">
+                                                                <h3 th:text="${store.storeName}" class="name">매장명</h3>
+                                                                <div class="meta">
+                                                        <span class="tags" th:text=" ${(store.storeAddr.split(' ')[1])+ '&ensp;|&ensp;' + (store.foodCategoryId.split('/')[0]+'&ensp;'+((store.foodCategoryId.split('/').length>3) ? store.foodCategoryId.split('/')[3] : ''))}">
+                                                            주소(구) | 음식 카테고리
+                                                        </span>
+                                                                </div>
+                                                            </a>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </section>
+
+                        </div>
+
+                        <div class="recommendKeyword" style="width: 35%">
+
+                            <section class="section pb-45">
+                                <div class="container gutter-sm">
+                                    <div class="section-header section-header-v">
+                                        <h3 class="section-title ebold">
+                                            인기 검색어
+                                        </h3>
+                                        <p style="color: rgb(98, 98, 98);">
+                                            1시간이내의 인기있는 검색어를 모아봤어요
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- 인기 검색어 -->
+                                <div class="containerList">
+                                    <div class="popularSearchKeyword" style="display: flex;justify-content: space-between;">
+
+                                        <table class="listTable">
+
+                                            <colgroup>
+                                                <col style="width: 30%;">
+                                                <col style="width: 70%;">
+                                            </colgroup>
+
+                                            <thead>
+                                                <tr>
+                                                    <th>순위</th>
+                                                    <th>검색어</th>
+                                                </tr>
+                                            </thead>
+
+                                            <tbody th:each="keyword, iterStat : ${popularKeywordList}">
+                                                <tr class="keywordList">
+                                                    <td th:text="${iterStat.count}">검색 순위</td>
+                                                    <td th:text="${keyword}" class="popularKeyword">검색어</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </section>
+
+                        </div>
 
                     </div>
-                </div>
 
             </div>
 

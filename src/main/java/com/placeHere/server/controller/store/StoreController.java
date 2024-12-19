@@ -376,27 +376,19 @@ public class StoreController {
 
     // 가게 검색
     @GetMapping("/searchStore")
-    public String searchStore(HttpSession session, Model model) {
+    public String searchStore(Model model) throws Exception {
 
         System.out.println("/searchStore : GET");
 
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
-
+        // 인기 검색어
         List<String> popularKeywordList = searchService.getPopularKeyword();
-
-        System.out.println(popularKeywordList.size());
-
-        if (popularKeywordList.size() < 10) {
-
-            int popularKeywordCnt = popularKeywordList.size();
-
-            for (int i = 0; i < 10 - popularKeywordCnt; i++) {
-                popularKeywordList.add("");
-            }
-        }
-
         System.out.println(popularKeywordList);
+
+        // 인기 가게
+//        List<Integer> storeIdList = likeService.likeList("store");
+        List<Store> storeList = storeService.getStoreList(new Search(pageSize, 6));
+        List<Store> storeList1 = storeList.subList(0, 3);
+        List<Store> storeList2 = storeList.subList(3, 6);
 
         model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
@@ -404,6 +396,8 @@ public class StoreController {
         model.addAttribute("amenitiesNameList", amenitiesNameList);
         model.addAttribute("search", new Search());
         model.addAttribute("popularKeywordList", popularKeywordList);
+        model.addAttribute("storeList1", storeList1);
+        model.addAttribute("storeList2", storeList2);
 
         return "store/searchStore";
     }
