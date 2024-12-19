@@ -255,7 +255,8 @@
                                             <div class="__restaurant-notice-v2"
                                                  style="display: flex; flex-wrap: nowrap;">
                                                 <div class="swiper-slide" style=" margin-right: 10px;">
-                                                    <article class="__restaurant-notice-v2-item" style="overflow-x  : scroll; white-space: nowrap; width: 50%; display: flex; flex-wrap: nowrap;" >
+                                                    <article class="__restaurant-notice-v2-item"
+                                                             th:style="${(store.storeNewsList != null && !store.storeNewsList.isEmpty()) ? 'overflow-x: scroll; white-space: nowrap; width: 50%; display: flex; flex-wrap: nowrap;' : ''}">
                                                         <div class="__notice-content">
                                                             <div class="__pic">
                                                                 <div class="img"></div>
