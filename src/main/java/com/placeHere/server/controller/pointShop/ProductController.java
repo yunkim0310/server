@@ -203,7 +203,8 @@ public class ProductController {
         search.setPageSize(pageSize);
 //        search.setStartRowNum(1);
 //        search.setListSize(30);
-        search.setListSize(15);
+        search.setListSize(4);
+//        search.setListSize(15);
         List<Product> productList = productService.getProductList(search);
         int prodTotalCnt = (productList.isEmpty())? 0 : productList.get(0).getProdTotalCnt();
 

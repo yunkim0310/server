@@ -95,7 +95,7 @@
             ORDER BY p.prod_price DESC
         </if>
         <if test="order == 'default'">
-            ORDER BY pt.point_dt DESC
+            ORDER BY pt.tran_no DESC
         </if>
         <if test="order == null">
             ORDER BY pt.tran_no DESC
