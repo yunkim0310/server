@@ -236,7 +236,7 @@
       <div class="reservation-list">
         <table>
           <tbody>
-            <div class="reservation-item" th:each="reservation : ${reservations}" style="cursor: pointer;"><!-- 헤더 -->
+            <div class="reservation-item" th:each="reservation : ${reservations}" style="cursor: pointer;">
               <div class="reservation-header">
                 <span class="reservation-date" th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}"/>
               </div>
@@ -252,8 +252,8 @@
                   <p><strong>예약 번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span class="reservation-number" th:text="${reservation.rsrvNo}"/></p>
                 </div>
                 <div>
-                <img class="img"
-                     th:src="${(store.getStore(reservation.rsrvNo).storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.getStore(reservation.rsrvNo).storeImg1 : url + store.getStore(reservation.rsrvNo).storeImg1}"/>
+                  <img class="img"
+                       th:src="${(reservation.store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+reservation.store.storeImg1 : url + reservation.store.storeImg1}"/>
                 </div>
               </div>
                 <!-- 상태 -->

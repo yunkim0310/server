@@ -6,9 +6,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-
         <link th:insert="~{common/import :: importFragment}">
+
+        <!-- 부트스트랩 CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" href="/css/templates/collection_detail.css">
         <link rel="stylesheet" href="/css/templates/slider.css">
@@ -30,13 +32,21 @@
         <script src="/javascript/templates/brand.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/js/swiper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--        <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/614007/sliiide.min.js"></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenMax.min.js"></script>
 
+        <link rel="stylesheet" href="/css/templates/header.css">
+
         <style>
-            .swiper-slide {
-                height: 80%;
+
+            .main-carousel {
+                width: 60%;
+                text-align: center;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0 auto; /* 가로 중앙 정렬 */
+                left: 50%; /* 가로 중앙 정렬 */
             }
+
         </style>
 
     </head>
@@ -47,6 +57,37 @@
 
             <div class="wrapper" style="max-width: 1100px;">
                 <main id="dock">
+
+                    <div class="main-carousel">
+
+                        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active" data-bs-interval="3000">
+                                    <img src="/images/store/store/store_store01_storeImg1.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item" data-bs-interval="3000">
+                                    <img src="/images/store/store/store_store01_storeImg2.jpg" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item" data-bs-interval="3000">
+                                    <img src="/images/store/store/store_store01_storeImg3.jpg" class="d-block w-100" alt="...">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                    </div>
                     <!-- 추천 카테고리 TODO 수정 필요 -->
 <!--                    <div class="__shortcut-list-wrap">-->
 <!--                        <div class="__shortcut-list">-->

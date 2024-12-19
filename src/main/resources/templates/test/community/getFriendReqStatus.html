@@ -109,7 +109,7 @@
     <tr th:each="request : ${friendRequests}">
         <td>
             <div class="friend-info">
-                <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">
+                <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
             </div>
         </td>
         <td th:text="${request.friendRes}"></td>

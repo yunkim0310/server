@@ -87,7 +87,7 @@ public class CommunityController {
         // B/L
         communityService.addReview(review);
 
-        reservationService.updateRsrvStatus(rsrvNo, "리뷰 작성");
+        reservationService.updateRsrvStatus(rsrvNo, "리뷰 완료");
 
         return "redirect:/review/getReviewList?type=myFeed";
     }

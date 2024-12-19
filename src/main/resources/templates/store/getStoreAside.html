@@ -21,12 +21,14 @@
         </a>
     </li>
 
-    <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='nearby')? 'bold;': 'normal'}">
-        <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=nearby&storeId='+${store.storeId}">
-            주변시설 추천
-            <span class="css-e41glx e1x0rfoo0"></span>
-        </a>
-    </li>
+    <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
+        <li class="css-0 ecbxmj1" th:attr="style='font-weight: '+${(mode=='nearby')? 'bold;': 'normal'}">
+            <a class="css-pi3u6r ecbxmj0" th:href="'/getStore?mode=nearby&storeId='+${store.storeId}">
+                주변시설 추천
+                <span class="css-e41glx e1x0rfoo0"></span>
+            </a>
+        </li>
+    </th:block>
 
     <th:block th:if="${!(session.user !=null && session.user.role == 'ROLE_STORE')}">
         <li class="css-0 ecbxmj1">

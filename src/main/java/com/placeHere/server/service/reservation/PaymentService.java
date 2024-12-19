@@ -26,9 +26,10 @@ public class PaymentService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("Authorization", "Basic dGVzdF9za182YkpYbWdvMjhlTnliYnFKQWxtWTNMQW5HS1d4Og==");
 
-        int refundAmount = amount; // 기본 값: 전액 환불
+        // 기본 값: 전액 환불
+        int refundAmount = amount;
 
-        if (rsrvDt != null) { // 예약 날짜가 제공된 경우
+        if (rsrvDt != null) {
             // rsrvDt에서 날짜만 추출
             LocalDate reservationDate = rsrvDt.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             LocalDate today = LocalDate.now();
@@ -38,9 +39,9 @@ public class PaymentService {
 
             // 남은 날짜에 따른 환불 정책 적용
             if (daysUntilReservation >= 7) {
-                refundAmount = amount; // 전액 환불
+                refundAmount = amount;
             } else if (daysUntilReservation >= 4 && daysUntilReservation <= 6) {
-                refundAmount = amount / 2; // 50% 환불
+                refundAmount = amount / 2;
             } else if (daysUntilReservation >= 0 && daysUntilReservation <= 3) {
                 // Toss Payments API 호출을 건너뜀
                 System.out.println("0일 ~ 3일 사이에는 환불이 불가능합니다. Toss Payments API 호출을 생략합니다.");
@@ -71,7 +72,7 @@ public class PaymentService {
             );
 
             if (response.getStatusCode() == HttpStatus.OK) {
-                return response.getBody(); // 성공 시 응답 반환
+                return response.getBody();
             } else {
                 throw new RuntimeException("Refund failed: " + response.getBody());
             }
@@ -90,7 +91,7 @@ public class PaymentService {
         // 요청 헤더
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-        headers.set("Authorization", "Basic dGVzdF9za182YkpYbWdvMjhlTnliYnFKQWxtWTNMQW5HS1d4Og=="); // Base64 인코딩된 시크릿 키
+        headers.set("Authorization", "Basic dGVzdF9za182YkpYbWdvMjhlTnliYnFKQWxtWTNMQW5HS1d4Og==");
 
         // 요청 바디
         Map<String, Object> body = new HashMap<>();
@@ -105,7 +106,7 @@ public class PaymentService {
 
         // JSON 파싱
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.readValue(response.getBody(), Map.class); // Map으로 변환
+        return objectMapper.readValue(response.getBody(), Map.class);
     }
 
 
