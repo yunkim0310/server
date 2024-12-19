@@ -32,7 +32,7 @@
         font-weight: bold; /* 글자 굵기 설정 (옵션) */
         text-align: center; /* 텍스트 중앙 정렬 */
         padding: 10px; /* 안쪽 여백 설정 */
-        height: 60px; /* 셀렉트 박스 높이 조정 */
+        height: 80px; /* 셀렉트 박스 높이 조정 */
         border: none; /* 테두리 제거 */
         border-radius: 5px; /* 둥근 테두리 설정 */
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 (옵션) */
@@ -85,10 +85,28 @@
         text-align: right;
       }
 
+      .reservation-body {
+        display: flex;
+        justify-content: flex-start; /* 텍스트와 이미지를 나란히 배치 */
+        align-items: flex-start; /* 상단 정렬 */
+      }
+
+      .reservation-details {
+        flex: 1; /* 텍스트 부분이 충분한 공간을 차지하도록 설정 */
+      }
+
       .reservation-body p {
         margin: 10px 0;
         font-size: 16px;
         color: #555;
+        flex: 1; /* 텍스트가 공간을 충분히 차지하도록 설정 */
+      }
+
+      .reservation-body img {
+        margin-left: 20px; /* 텍스트와 이미지 간 간격 */
+        height: 180px;
+        width: 150px;
+        align-self: flex-start; /* 이미지가 텍스트의 상단에 맞춰 정렬되도록 설정 */
       }
 
       .reservation-status {
@@ -133,12 +151,17 @@
         padding: 15px; /* 폼 내부 여백 */
         border-radius: 10px; /* 테두리 둥글게 설정 */
       }
+
     </style>
 
 
     <script>
       document.addEventListener("DOMContentLoaded", function () {
         const reservationItems = document.querySelectorAll(".reservation-item");
+        const reservationListCount = document.querySelectorAll(".reservation-item").length;
+
+        // <div> 요소 가져오기
+        const pagingContainer = document.querySelector(".paging-container");
 
         reservationItems.forEach(item => {
           item.addEventListener("click", function (event) {
@@ -156,6 +179,24 @@
             window.location.href = destination; // 해당 링크로 네비게이션
           });
         });
+
+        if (pagingContainer) {
+          // 기본 <br> 개수 설정 (5개)
+          let brCount = 1;
+
+          // 예약 리스트가 있을 경우, 리스트 개수 * 5
+          if (reservationListCount > 0) {
+            brCount = reservationListCount * 13;
+          }
+
+          // <br> 태그 추가
+          for (let i = 0; i < brCount; i++) {
+            const br = document.createElement("br");
+            pagingContainer.insertAdjacentElement("beforebegin", br); // <div> 바로 위에 삽입
+          }
+        }
+
+
       });
 
       document.addEventListener("DOMContentLoaded", function () {
@@ -198,15 +239,22 @@
             <div class="reservation-item" th:each="reservation : ${reservations}" style="cursor: pointer;"><!-- 헤더 -->
               <div class="reservation-header">
                 <span class="reservation-date" th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}"/>
-                <span class="reservation-number" th:text="${reservation.rsrvNo}"/>
               </div>
-
                 <!-- 본문 -->
               <div class="reservation-body">
-                <p><strong>예약 시간&nbsp;&nbsp;&nbsp;</strong> <span th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}"/></p>
-                <p><strong>매 &nbsp;장&nbsp; 명&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.storeName}"/></p>
-                <p><strong>전화 번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvNumber}" data-phone/></p>
-                <p><strong>예약 인수&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvPerson}"/>명</p>
+                <div class="reservation-details">
+                  <br/>
+                  <br/>
+                  <p><strong>예약 시간&nbsp;&nbsp;&nbsp;</strong> <span th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}"/></p>
+                  <p><strong>매 &nbsp;장&nbsp; 명&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.storeName}"/></p>
+                  <p><strong>전화 번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvNumber}" data-phone/></p>
+                  <p><strong>예약 인수&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span th:text="${reservation.rsrvPerson}"/>명</p>
+                  <p><strong>예약 번호&nbsp;&nbsp;&nbsp;&nbsp;</strong> <span class="reservation-number" th:text="${reservation.rsrvNo}"/></p>
+                </div>
+                <div>
+                <img class="img"
+                     th:src="${(store.getStore(reservation.rsrvNo).storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.getStore(reservation.rsrvNo).storeImg1 : url + store.getStore(reservation.rsrvNo).storeImg1}"/>
+                </div>
               </div>
                 <!-- 상태 -->
               <div class="reservation-status">
@@ -250,14 +298,9 @@
       </form>
 
 
-
-
-
-
-
-
     </div>
-    <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+    <div class="paging-container">
     <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+    </div>
   </body>
 </html>

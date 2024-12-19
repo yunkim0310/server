@@ -500,6 +500,9 @@
 <br/><br/><br/>
 
 <div class="container">
+    <div th:if="${session.user.getRole() == 'ROLE_STORE'}" style="text-align: center; font-weight: bold; font-size: 25px;">
+        점주용
+    </div>
     <h1 th:text="${store.storeName}"></h1>
     <form action="/reservation/addRsrv" method="post">
         <div id="calendar" style="width: 700px;"></div>
@@ -541,7 +544,7 @@
             <p id="charCount" style="font-size: 14px; color: gray;">0 / 100</p>
             <br><br>
 
-            <div id="amount-box" class="amount-box"
+            <div th:if="${session.user.getRole() == 'ROLE_USER'}" id="amount-box" class="amount-box"
                  th:text="${store.getStoreOperation().getSecurity()} + ' 원'">0 원</div><br><br>
 
             <button type="submit" id="payButton">결제</button>

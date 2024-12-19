@@ -309,6 +309,10 @@ public class ReservationController {
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+
+
+        StoreService store = storeService;
+
         int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
 
         Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
@@ -319,6 +323,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("store", store);
 
         // 뷰 반환
         return "reservation/getRsrvUserList";
@@ -361,10 +366,13 @@ public class ReservationController {
         Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
         model.addAttribute("paging", paging);
 
+        StoreService store = storeService;
+
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("store", store);
 
         return "reservation/getRsrvUserList";
     }
@@ -701,24 +709,6 @@ public class ReservationController {
 //    }
 
 
-    @RequestMapping( value="testRsrv", method=RequestMethod.GET )
-    public String testRsrv(@RequestParam("storeId") int storeId,
-                          Model model) throws Exception {
-
-
-
-
-
-        Store store = storeService.getStore(storeId);
-
-
-        System.out.println("/reservation/testRsrv : GET");
-
-        model.addAttribute("store", store);
-        model.addAttribute("url", bucketUrl);
-
-        return "reservation/test";
-    }
 
 
 }
