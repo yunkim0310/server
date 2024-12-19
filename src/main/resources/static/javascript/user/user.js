@@ -675,6 +675,9 @@ function login() {
         } else if(data === "DELETED") {
           alert("탈퇴  회원입니다.");
           location.href='/';
+        } else if(data === "ADMIN_SUCCESS") {
+          alert("관리자 로그인 성공");
+          location.href='http://localhost:3000/react/getUserList';
         } else {
           alert("계정 정보가 존재하지 않습니다.");
           location.href='/user/login';
