@@ -52,6 +52,57 @@
 
                     <div class="recommendList">
 
+                        <!-- 인기 검색어 -->
+                        <div class="recommendKeyword" style="width: 35%">
+
+                            <section class="section pb-45">
+                                <div class="container gutter-sm">
+                                    <div class="section-header section-header-v">
+                                        <h3 class="section-title ebold">
+                                            인기 검색어
+                                        </h3>
+                                        <p style="color: rgb(98, 98, 98);">
+                                            1시간이내의 인기있는 검색어를 모아봤어요
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="containerList">
+                                    <div class="popularSearchKeyword" style="display: flex;justify-content: space-between;">
+
+                                        <table class="listTable">
+
+                                            <colgroup>
+                                                <col style="width: 30%;">
+                                                <col style="width: 70%;">
+                                            </colgroup>
+
+                                            <thead>
+                                            <tr>
+                                                <th>순위</th>
+                                                <th>검색어</th>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody th:each="keyword, iterStat : ${popularKeywordList}">
+                                            <tr class="keywordList">
+                                                <td th:text="${iterStat.count}">검색 순위</td>
+                                                <td class="popularKeyword">
+                                                    <a th:href="'/getStoreList?searchKeyword='+${keyword}" th:text="${keyword}">
+                                                        인기 검색어
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+                                </div>
+
+                            </section>
+
+                        </div>
+
                         <div class="recommendStore" style="width: 65%">
 
                             <!-- 인기 가게 -->
@@ -134,53 +185,6 @@
                                         </div>
                                     </div>
                                 </div>
-                            </section>
-
-                        </div>
-
-                        <div class="recommendKeyword" style="width: 35%">
-
-                            <section class="section pb-45">
-                                <div class="container gutter-sm">
-                                    <div class="section-header section-header-v">
-                                        <h3 class="section-title ebold">
-                                            인기 검색어
-                                        </h3>
-                                        <p style="color: rgb(98, 98, 98);">
-                                            1시간이내의 인기있는 검색어를 모아봤어요
-                                        </p>
-                                    </div>
-                                </div>
-
-                                <!-- 인기 검색어 -->
-                                <div class="containerList">
-                                    <div class="popularSearchKeyword" style="display: flex;justify-content: space-between;">
-
-                                        <table class="listTable">
-
-                                            <colgroup>
-                                                <col style="width: 30%;">
-                                                <col style="width: 70%;">
-                                            </colgroup>
-
-                                            <thead>
-                                                <tr>
-                                                    <th>순위</th>
-                                                    <th>검색어</th>
-                                                </tr>
-                                            </thead>
-
-                                            <tbody th:each="keyword, iterStat : ${popularKeywordList}">
-                                                <tr class="keywordList">
-                                                    <td th:text="${iterStat.count}">검색 순위</td>
-                                                    <td th:text="${keyword}" class="popularKeyword">검색어</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-
-                                    </div>
-                                </div>
-
                             </section>
 
                         </div>

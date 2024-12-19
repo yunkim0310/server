@@ -85,16 +85,4 @@ $(function () {
     // 페이징
     pageNavigator(search);
 
-    $(".popularKeyword").on("click", function () {
-
-        const keyword = $(this).text();
-
-        if (keyword !== "") {
-            resetFilter();
-            $("input[name='searchKeyword']:text").val(keyword);
-            search(1);
-        }
-
-    })
-
 });
