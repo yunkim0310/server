@@ -36,7 +36,7 @@ public class PointServiceImpl implements PointService {
     public void updatePoint(Point point) {
 
         point.setTranPoint(Integer.parseInt(String.valueOf(point.getTranPoint())));
-        System.out.println("tranPoint : "+point.getTranPoint());
+//        System.out.println("tranPoint : "+point.getTranPoint());
 
         pointDao.updatePoint(point);
     }

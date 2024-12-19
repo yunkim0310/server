@@ -34,7 +34,6 @@ public class AdminServiceImpl implements AdminService {
     @Qualifier("pointServiceImpl")
     PointService pointService;
 
-    private Set<Integer> processedRsrvNos = new HashSet<>();
 
     @Override
     public User getUser(long id) throws Exception {
@@ -71,8 +70,8 @@ public class AdminServiceImpl implements AdminService {
      * 예약 확정 -> 이용 완료
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 0 * * ?")
-//    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
+//    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     public void updateServiceComplete() throws Exception {
 
         // 1. 예약상태 update 예약 확정 -> 이용 완료
@@ -103,27 +102,22 @@ public class AdminServiceImpl implements AdminService {
                     Point point = new Point();
                     int rsrvNo = rsrv.getRsrvNo();
 
-                    // rsrvNo가 이미 처리된 경우, skip
-                    if (processedRsrvNos.contains(rsrvNo)) {
-//                        log.info("이미 처리된 예약입니다. rsrvNo: " + rsrvNo);
-                        continue; // 중복된 예약은 건너뜁니다.
+                    if(pointService.isTransactionExist(rsrvNo) == 0) {
+                        String username = rsrv.getUserName();
+                        int tranPoint = 600;
+                        String depType = "예약 이용 완료";
+                        int currPoint = pointService.getCurrentPoint(username);
+                        point.setCurrPoint(currPoint);
+                        point.setTranPoint(tranPoint);
+                        point.setDepType(depType);
+                        point.setUsername(username);
+                        point.setRelNo(rsrvNo);
+
+                        pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo);
+
+                        pointService.updatePoint(point);
+
                     }
-
-                    String username = rsrv.getUserName();
-                    int tranPoint = 600;
-                    String depType = "예약 이용 완료";
-                    int currPoint = pointService.getCurrentPoint(username);
-                    point.setCurrPoint(currPoint);
-                    point.setTranPoint(tranPoint);
-                    point.setDepType(depType);
-                    point.setUsername(username);
-                    point.setRelNo(rsrvNo);
-    
-                    pointService.addPointTransaction(username, tranPoint, depType, currPoint, rsrvNo );
-    
-                    pointService.updatePoint(point);
-
-                    processedRsrvNos.add(rsrvNo);
     
                 }
             } // end of if
