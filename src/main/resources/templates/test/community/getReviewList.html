@@ -85,14 +85,14 @@ GetReviewList임 - getReviewList.html
                                             <div class="timeline-post-content">
                                                 <div class="__post-meta" style="display: flex; justify-content: space-between;"> <!-- 리뷰 메타 정보 (평점, 좋아요, 댓글) -->
                                                     <img src="/file/community/star_icon1.png" style="margin-left: 5%;" th:text="${review.reviewScore}"> <!-- 리뷰 평점 -->
-                                                    <th:block th:if="${session.user != null}">
+<!--                                                    <th:block th:if="${session.user != null}">-->
                                                         <a style="cursor: pointer" id="like"
                                                            th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
                                                            th:data-review-no="${review.reviewNo}"
                                                            th:data-username="${session.user != null ? session.user.username : ''}">
                                                             <span class="like-count" style="margin-left: -25px;" th:text="${review.reviewLikeCnt}"></span>
                                                         </a>
-                                                    </th:block>
+<!--                                                    </th:block>-->
 
                                                     <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" style="cursor: pointer;" id="comment" class="btn-comment">
                                                         <img src="/file/community/comment_icon.png" alt="댓글" style="width: 24px; height: 24px; margin-left: -730px;"/>
