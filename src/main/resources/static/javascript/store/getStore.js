@@ -28,8 +28,6 @@ $(function () {
     
     // 좋아요 추가, 취소
     $("#likeStore a").on("click", function () {
-        
-        alert("좋아요 클릭");
 
         const storeId = $("input[name='storeId']:hidden").val();
         const likeId = $(this).data("likeid");

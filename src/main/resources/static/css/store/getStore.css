@@ -150,3 +150,24 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
+#main-info {
+    display: inline-block;
+}
+
+#main-info .rating {
+    display: flex;
+    align-items: center;
+}
+
+#main-info .star {
+    color: black;
+}
+
+#main-info .count {
+    margin-left: 5px;
+}
+
+.carousel-item img {
+    background-color: #FFFFFF;
+}

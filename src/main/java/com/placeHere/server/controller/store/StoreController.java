@@ -493,13 +493,21 @@ public class StoreController {
         search.setPageSize(pageSize);
         search.setListSize(listSize);
 
-        System.out.println(store);
-
         if (store == null || store.getStoreOperation() == null) {
             return "redirect:/";
         }
 
         else {
+
+            // 입력값없는 이미지 리스트 제거
+            List<String> storeImgList = store.getStoreImgList();
+
+            if (storeImgList != null && !storeImgList.isEmpty()) {
+                storeImgList.removeIf(storeImg -> storeImg == null || storeImg.isEmpty());
+                store.setStoreImgList(storeImgList);
+            }
+
+            System.out.println(store);
 
             // 회원의 좋아요 여부
             if (user != null && user.getRole().equals("ROLE_USER")) {
