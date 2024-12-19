@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -220,12 +221,16 @@ public class ReservationServiceImpl implements ReservationService{
         storeReservation.setReservationTimeStatusList(reservationTimeStatusList);
 
 
-        if (reservationTimeStatusList != null && LocalDate.now().toString().equals(effectDt)) {
+        ZoneId koreaZoneId = ZoneId.of("Asia/Seoul");
+        LocalDate koreaDate = LocalDate.now(koreaZoneId);
+        LocalTime koreaTime = LocalTime.now(koreaZoneId);
+
+
+        if (reservationTimeStatusList != null && koreaDate.toString().equals(effectDt)) {
             // 08:00부터 현재 시간까지 30분 단위로 반복해서 추가
             LocalTime startTime = LocalTime.of(8, 0); // 시작 시간: 08:00
-            LocalTime currentTime = LocalTime.now(); // 현재 시간
 
-            while (!startTime.isAfter(currentTime)) {
+            while (!startTime.isAfter(koreaTime)) {
                 // 새로운 ReservationTimeStatus 객체 생성
                 ReservationTimeStatus status = new ReservationTimeStatus();
                 status.setRsrvDt(effectDt + " " + startTime.toString()); // 예약 시간 (effectDt 날짜 + 시간)

@@ -53,8 +53,8 @@
 
             <div th:if="${session.user != null}" class="login">
                 <ul class="loginMenu">
-                    <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
-                        <a th:href="${(session.user != null) ? 'https://placehere/react/chat?name='+session.user.username+'&role='+session.user.role : '/user/login'}">
+                    <li class="non-side-bar">
+                        <a th:href="${(session.user != null) ? 'https://placehere.store/react/chat?name='+session.user.username+'&role='+session.user.role : '/user/login'}">
                             <img src="/images/store/icon_chat.png"/>
                         </a>
                     </li>
@@ -76,6 +76,7 @@
                     <li id="logout">
                         <a href="/user/logout">
                             <img style="margin-left:5px;" class="logout" src="/images/common/logout.png" />
+<!--                            로그아웃-->
                         </a>
                     </li>
                 </ul>
@@ -83,7 +84,10 @@
 
             <div th:if="${session.user == null}" class="login">
                 <ul class="loginMenu">
-                    <li id="login" class="non-side-bar"><a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></a></li>
+                    <li id="login" class="non-side-bar">
+<!--                        <a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" />로그인</a>-->
+                        <a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></a>
+                    </li>
                 </ul>
             </div>
         </div>

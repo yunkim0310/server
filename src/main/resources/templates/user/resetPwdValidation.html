@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Place Here</title>
     <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
-    <script src="/js/user.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/user/user.js"></script>
+    <link rel="shortcut icon" href="/images/common/smallLogo.png">
 
 </head>
 <body>
@@ -19,17 +21,20 @@
                     <img class="logoImg" src="/images/common/logo.png"/></a>
             </div>
 
-            <form th:action="@{/user/resetPwdValidation}" method="post">
+<!--            <form th:action="@{/user/resetPwdValidation}" method="post">-->
+            <form>
                 <div class="input-group">
                     <label for="email">이메일</label>
-                    <input type="text" id="email" name="email" placeholder="이메일을 입력하세요" required>
+                    <input type="text" id="email" name="email" oninput="resetPwdValidation()" placeholder="이메일을 입력하세요" required>
+                    <p class="font-10 mt-10" id="invalid-feedback-email"></p>
                 </div>
                 <div class="input-group">
                     <label for="username">아이디</label>
                     <input type="text" id="username" name="username" placeholder="아이디를 입력하세요" required>
+                    <p class="font-10 mt-5" id="invalid-feedback-username"></p>
                 </div>
 
-                <button type="submit">확 인</button>
+                <button onclick="resetPwdValidationSend()">확 인</button>
             </form>
 
 

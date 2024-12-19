@@ -72,7 +72,7 @@
                             </div>
                             <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
                                 <a style="cursor: pointer;" id="chat" class="btn-chat"
-                                   th:href="${(session.user != null) ? 'https://placehere/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
+                                   th:href="${(session.user != null) ? 'https://placehere.store/react/chat?name='+store.userName+'&role='+session.user.role : '/user/login'}">채팅</a>
                                 <a style="cursor: pointer" id="like"
                                    th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
                                    th:data-likeid="${(like != null)? like.likeId : null}">좋아요</a>
@@ -150,15 +150,36 @@
                     <hr class="separator">
 
                     <th:block th:if="${mode == 'nearby'}">
-                        <div th:insert="~{store/getNearbyPlace :: nearbyFragment}"></div>
+                        <th:block th:if="${session.user != null && session.user.role == 'ROLE_USER'}">
+                            <div th:insert="~{store/getNearbyPlace :: nearbyFragment}"></div>
+                        </th:block>
+                        <th:block th:unless="${session.user != null && session.user.role == 'ROLE_USER'}">
+                            <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                일반회원만 이용할 수 있는 기능입니다.
+                            </div>
+                        </th:block>
                     </th:block>
 
                     <th:block th:if="${mode == 'statistics'}">
-                        <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
+                        <th:block th:if="${session.user != null}">
+                            <div th:insert="~{store/getStoreStatistics :: statisticsFragment}"></div>
+                        </th:block>
+                        <th:block th:unless="${session.user != null}">
+                            <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                로그인한 회원만 이용할 수 있는 기능입니다.
+                            </div>
+                        </th:block>
                     </th:block>
 
                     <th:block th:if="${mode == 'review'}">
-                        <div th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
+                        <th:block th:if="${session.user != null}">
+                            <div th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
+                        </th:block>
+                        <th:block th:unless="${session.user != null}">
+                            <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                로그인한 회원만 이용할 수 있는 기능입니다.
+                            </div>
+                        </th:block>
                     </th:block>
 
                     <th:block th:if="${mode == 'info'}">
