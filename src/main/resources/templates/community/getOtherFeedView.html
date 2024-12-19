@@ -166,12 +166,14 @@
         });
     </script>
 <body>
-
+2
 <!--<div th:include="~{community/getCommunityAside}"></div>-->
 <!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
 <div class="css-833hqy ecbxmj4" style="padding-right: 61%;margin-top: -15px;position: sticky">
     <div class="side" style="margin-top: 100px; margin-left:190px;">
-        <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;친구 목록</div>
+        <div class="css-1v4whg ecbxmj3">
+            <span th:text="${friendUsername} + '님의 Feed'"></span>
+        </div>
         <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
     </div>
 </div>
@@ -184,7 +186,7 @@
     <!-- 친구 신청, 삭제 버튼 -->
     <div class="fixed-button" style="margin-right: 20%; text-align:right; z-index: 1000;">
     <!-- 친구 삭제 버튼 -->
-        <div th:if="${friendStatus == true}">
+        <div th:if="${friendStatus == true && session.user.role == 'ROLE_USER'}">
             <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
                 <input type="hidden" name="friendNo" th:value="${friendNo}" /> <!-- 친구 번호 -->
                 <button type="submit" class="btn-primary del" style="border: none; background: none; cursor: pointer;">
@@ -195,7 +197,7 @@
         </div>
 
         <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
-        <div th:if="${friendStatus == false}">
+        <div th:if="${friendStatus == false && session.user.role == 'ROLE_USER'}">
             <form th:action="@{/review/sendFriendReq}" method="post">
                 <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
                 <button type="submit" class="btn-primary" style="border: none; background: none; cursor: pointer;">
@@ -262,14 +264,15 @@
                                             <div class="timeline-post-content">
                                                 <div class="__post-meta" style="display: flex; justify-content: space-between;"> <!-- 리뷰 메타 정보 (평점, 좋아요, 댓글) -->
                                                     <img src="/file/community/star_icon1.png" style="margin-left: 70px;" th:text="${review.reviewScore}"> <!-- 리뷰 평점 -->
-                                                    <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
+
+<!--                                                    <th:block th:if="${(session.user != null) && (session.user.role == 'ROLE_USER' || session.user.role == 'ROLE_STORE')}">-->
                                                         <a style="cursor: pointer" id="like"
                                                            th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
                                                            th:data-review-no="${review.reviewNo}"
                                                            th:data-username="${session.user != null ? session.user.username : ''}">
                                                             <span class="like-count" style="margin-left: -25px;" th:text="${review.reviewLikeCnt}"></span>
                                                         </a>
-                                                    </th:block>
+<!--                                                    </th:block>-->
 
                                                     <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" style="cursor: pointer;" id="comment" class="btn-comment">
                                                         <img src="/file/community/comment_icon.png" alt="댓글" style="width: 24px; height: 24px; margin-left: -730px;"/>

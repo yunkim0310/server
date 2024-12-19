@@ -222,7 +222,7 @@
                                                     </div>
                                                     <div class="date" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + '(수정됨)'}">최근 방문일<br></div>
                                                 </a>
-                                                <a th:href="'reveiw/getReview?userName='+${review.userName}"
+                                                <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}"
                                                    class="best-review-item-body">
                                                     <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                         <div class="img">
