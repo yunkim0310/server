@@ -4,7 +4,7 @@
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>즐거운 미식 생활의 시작, 캐치테이블</title>
+    <title>PlaceHere</title>
 
     <link th:insert="~{common/import :: importFragment}">
 
@@ -176,7 +176,7 @@
                                     <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
                                         <div class="__header" style="display: flex; justify-content: space-between; padding-left: 0;">
                                             <div class="__user-info" style="display: flex; align-items: center;"> <!-- 리뷰 작성자를 표시하는 영역 -->
-                                                <img th:src="@{/file/community/2222.png}" alt="프로필이미지" style="margin-right: 10px;"> <!-- 프로필 이미지 -->
+                                                <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진" style="margin-right: 10px;"><!-- 프로필 이미지 -->
                                                 <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
 <span th:text="${review.userName}"
       style="font-size: 1.5em; font-weight: bold; color: #2c3e50;

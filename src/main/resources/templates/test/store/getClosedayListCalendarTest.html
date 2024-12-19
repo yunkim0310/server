@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.na/thymeleaf/layout"
+      layout:decorate="~{layouts/default}" xmlns="http://www.w3.org/1999/html">
+
+    <head>
+
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <title>PlaceHere</title>
+
+        <!-- 기존 -->
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/regist_hp.css">
+
+        <link rel="stylesheet" href="/css/store/getClosedayList.css">
+
+        <!-- 신규 -->
+        <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+
+        <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+
+                const calendarEl = document.getElementById('closedayCalendar');
+
+                const calendar = new FullCalendar.Calendar(calendarEl, {
+                    initialView: 'dayGridMonth',
+                    locale: 'ko',
+                    events: function (info, successCallback, failureCallback) {
+                        $.ajax({
+                            url: '/api-store/getClosedayByMonth',
+                            type: 'GET',
+                            data: {
+                                storeId: 1, // 적절한 매장 ID로 변경
+                                startDate: info.startStr,
+                                endDate: info.endStr
+                            },
+                            success: function (data) {
+                                const events = data.map(closeday => ({
+                                    title: '휴무일',
+                                    start: closeday.closeday,
+                                    allDay: true,
+                                    id: closeday.closedayId,
+                                    backgroundColor: '#4880FF'
+                                }));
+                                successCallback(events);
+                            },
+                            error: function (xhr, status, error) {
+                                console.error('휴무일 데이터를 가져오는 중 오류 발생:', error);
+                                failureCallback(error);
+                            }
+                        });
+                    },
+                    eventContent: function (arg) {
+
+                        const deleteButton = document.createElement('span');
+
+                        deleteButton.classList.add('delete-btn');
+                        deleteButton.textContent = 'x';
+                        deleteButton.style.marginLeft = '10px';
+                        deleteButton.style.color = '#ff6868';
+                        deleteButton.style.cursor = 'pointer';
+
+                        // 삭제 버튼 클릭 이벤트 추가
+                        deleteButton.addEventListener('click', function (event) {
+
+                            event.stopPropagation(); // FullCalendar 이벤트 클릭 방지
+                            const closedayId = arg.event.id;
+                            const closeday = arg.event.start;
+
+                            // AJAX 요청으로 삭제
+                            if (confirm(`휴무일 ${closeday} 를 삭제하시겠습니까?`)) {
+                                $.ajax({
+                                    url: '/api-store/removeCloseday',
+                                    type: 'POST',
+                                    data: {closedayId: closedayId},
+                                    success: function () {
+
+                                        alert('휴무일이 삭제되었습니다.');
+                                        calendar.refetchEvents(); // 달력 다시 로드
+                                    },
+                                    error: function (xhr, status, error) {
+
+                                        console.error('휴무일 삭제 중 오류 발생:', error);
+                                        alert('휴무일 삭제에 실패했습니다.');
+                                    }
+                                });
+                            }
+
+                        });
+
+                        const customEventContent = document.createElement('div');
+
+                        customEventContent.textContent = arg.event.title;
+                        customEventContent.appendChild(deleteButton);
+
+
+                        customEventContent.style.padding = '10px';
+                        customEventContent.style.borderRadius = '10px';
+                        customEventContent.style.textAlign = 'center';
+
+                        return { domNodes: [customEventContent] };
+                    }
+                });
+
+                calendar.render();
+            });
+
+        </script>
+
+    </head>
+
+    <body>
+
+        <div id="root">
+
+            <!-- 휴무일 등록에 대한 메세지 -->
+            <input type="hidden" name="message" th:value="${message}">
+
+            <!-- 휴무일 등록 -->
+            <form name="addCloseday">
+
+                <input type="hidden" name="userName" th:value="${store.userName}">
+                <input type="hidden" name="storeId" th:value="${store.storeId}">
+                <input type="hidden" name="mode" value="closeday">
+                <input type="hidden" name="fnc" value="add">
+
+                <div class="css-y8aj3r eo6ykj40">
+
+                    <div class="css-1pjgd36 e744wfw6">
+                        <div class="css-82a6rk e744wfw3">
+                            <h2>
+                                <label class="css-1obgjqh e744wfw4" style="font-size: 20px;" for="closeday">
+                                    휴무일 등록
+                                    <p class="font-12 color-gray mt-10">예약이 있는 날짜는 등록이 불가능합니다.</p>
+                                </label>
+                            </h2>
+                        </div>
+                        <div class="css-82a6rk e744wfw3">
+                            <div class="css-jmalg e1uzxhvi6">
+                                <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                    <input class="css-1bkd15f e1uzxhvi2" id="closeday"
+                                           name="closeday" type="date"
+                                           th:min="${today}"
+                                           th:value="${today}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="css-1w0ksfz e744wfw2">
+                            <button class="css-ufulao e4nu7ef3 checkBtn" name="addCloseday" type="button">
+                                <span class="css-ymwvow e4nu7ef1 checked_nick_btn">등록</span>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+            </form>
+
+            <br/><br/><br/><br/>
+
+            <!-- 휴무일 목록 -->
+            <form name="getAndRemoveCloseday">
+
+                <input type="hidden" name="userName" th:value="${store.userName}">
+                <input type="hidden" name="storeId" th:value="${store.storeId}">
+                <input type="hidden" name="mode" value="closeday">
+                <input type="hidden" name="fnc">
+                <input type="hidden" name="closedayId" disabled>
+                <input type="hidden" name="page">
+
+                <div class="css-y8aj3r eo6ykj40">
+
+                    <div class="css-1pjgd36 e744wfw6">
+                        <div class="css-82a6rk e744wfw3">
+                            <h2>
+                                <label class="css-1obgjqh e744wfw4" style="font-size: 20px;">
+                                    휴무일 목록
+                                </label>
+                            </h2>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- 휴무일 달력 -->
+                <div id="closedayCalendar"></div>
+
+            </form>
+
+        </div>
+
+    </body>
+
+</html>

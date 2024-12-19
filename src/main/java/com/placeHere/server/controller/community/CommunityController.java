@@ -87,7 +87,7 @@ public class CommunityController {
         // B/L
         communityService.addReview(review);
 
-        reservationService.updateRsrvStatus(rsrvNo,"리뷰 작성");
+        reservationService.updateRsrvStatus(rsrvNo, "리뷰 작성");
 
         return "redirect:/review/getReviewList?type=myFeed";
     }
@@ -110,7 +110,7 @@ public class CommunityController {
         if (review == null) {
             throw new Exception("리뷰를 찾을 수 없습니다. reviewNo: " + reviewNo);
         } else {
-            
+
             // 좋아요 판별
             Like chkLike = new Like();
             chkLike.setRelationNo(review.getReviewNo());
@@ -134,7 +134,7 @@ public class CommunityController {
         model.addAttribute("commentList", commentList);
         model.addAttribute("user", user);
 
-        System.out.println("getReview컨트롤러 user == "+ user);
+        System.out.println("getReview컨트롤러 user == " + user);
         System.out.println("cont" + review);
 
         return "community/getReview";
@@ -216,7 +216,7 @@ public class CommunityController {
             @ModelAttribute Search search,
             //friendUsername = friendReq + friendRes / 즉 나와 친구인 username
             @RequestParam(value = "friendUsername", required = false) String friendUsername,
-            @SessionAttribute("user") User user,
+            @SessionAttribute(value="user", required = false)  User user,
             //type의 따라 조회하는 데이터 형태를 결정 ex) type=my : 나 / type=friend : 친구
             @RequestParam(value = "type", required = false, defaultValue = "") String type,
             Model model) {
@@ -224,11 +224,17 @@ public class CommunityController {
         System.out.println("/review/getReviewList : GET");
 
         try {
+
+            String currentUser ="";
+            if(user != null) {
+
+                currentUser = user.getUsername();
+                System.out.println("currentUser : " + currentUser);
+            }
+
             System.out.println("요청된 페이지: " + search.getPage());
             System.out.println("친구 사용자 이름: " + friendUsername);
             System.out.println("요청 타입: " + type);
-
-            // TODO Search 에 page 가 바인딩 되어오지 않으면 추가 코드 필요
 
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             search.setListSize(listSize); // 리스트 사이즈 설정
@@ -236,9 +242,6 @@ public class CommunityController {
 
             // 리뷰 리스트 초기화
             List<Review> reviewList = new ArrayList<Review>();
-
-            String currentUser = user.getUsername();
-            System.out.println("currentUser : "+currentUser);
 
             String result = "";
             Paging paging = new Paging();
@@ -251,7 +254,7 @@ public class CommunityController {
                     reviewList = communityService.getReviewList(search);
 
                     //페이징을 위한거
-                    totalCnt = (reviewList.isEmpty())? 0 : reviewList.get(0).getReviewTotalCnt() ;
+                    totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
                     paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
                     result = "test/community/getReviewList";
@@ -259,90 +262,95 @@ public class CommunityController {
                     break;
 
                 case "friendList":
-                    if (friendUsername != null && !friendUsername.isEmpty()) {
-                        Friend friend = new Friend();
-                        friend.setFriendReq(currentUser);
-                        friend.setFriendRes(friendUsername);
-                        System.out.println("friendUsername : "+friendUsername);
+                    if(user != null) {
+                        if (friendUsername != null && !friendUsername.isEmpty()) {
+                            Friend friend = new Friend();
+                            friend.setFriendReq(currentUser);
+                            friend.setFriendRes(friendUsername);
+                            System.out.println("friendUsername : " + friendUsername);
+
+                            model.addAttribute("url", bucketUrl);
+
+                            // 친구 여부 확인
+                            Friend friendCheck = friendService.chkFriend(friend);
+
+                            // friendCheck가 null이 아닐 경우 친구
+                            boolean isFriend = (friendCheck != null && friendCheck.isFriendStatus());
+
+                            boolean friendStatus;
+                            if (isFriend) {
+                                friendStatus = true;
+                                model.addAttribute("friendNo", friendCheck.getFriendNo()); // 친구 번호 추가
+                            } else {
+                                friendStatus = false;
+                            }
+
+                            model.addAttribute("isFriend", isFriend);
+                            model.addAttribute("friendStatus", friendStatus);
+                            model.addAttribute("user", user);
+
+                            // 친구가 아닐 경우 메시지 처리
+                            if (isFriend) {
+                                // 친구의 리뷰 리스트 가져오기
+                                reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                            } else {
+                                reviewList = communityService.getReviewList(List.of(friendUsername), search);
+                                model.addAttribute("message", "친구가 아닙니다.");
+                                System.out.println("friendNo" + friend.getFriendNo());
+                            }
+
+                            //페이징을 위한거
+                            totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
+                            paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+
+                            //친구 신청 시 res 값 넣어줌
+                            model.addAttribute("friendUsername", friendUsername);
+                            model.addAttribute("paging", paging);
+                            model.addAttribute("user", user);
 
 
-                        // 친구 여부 확인
-                        Friend friendCheck = friendService.chkFriend(friend);
 
-                        // friendCheck가 null이 아닐 경우 친구
-                        boolean isFriend = (friendCheck != null && friendCheck.isFriendStatus());
-
-                        boolean friendStatus;
-                        if (isFriend) {
-                            friendStatus = true;
-                            model.addAttribute("friendNo", friendCheck.getFriendNo()); // 친구 번호 추가
-                        } else {
-                            friendStatus = false;
+                            if (friendUsername.equals(currentUser)) {
+                                result = "test/community/getMyReviewList"; // 사용자의 리뷰 리스트로 이동
+                            } else {
+                                result = "test/community/feedTest"; // 친구의 피드로 이동
+                            }
                         }
-
-                        model.addAttribute("isFriend", isFriend);
-                        model.addAttribute("friendStatus", friendStatus);
-
-                        // 친구가 아닐 경우 메시지 처리
-                        if (isFriend) {
-                            // 친구의 리뷰 리스트 가져오기
-                            reviewList = communityService.getReviewList(List.of(friendUsername), search);
-                        } else {
-                            reviewList = communityService.getReviewList(List.of(friendUsername), search);
-                            model.addAttribute("message", "친구가 아닙니다.");
-                            System.out.println("friendNo" + friend.getFriendNo());
-                        }
-
-                        //페이징을 위한거
-                        totalCnt = (reviewList.isEmpty())? 0 : reviewList.get(0).getReviewTotalCnt() ;
-                        paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
-
-                        //친구 신청 시 res 값 넣어줌
-                        model.addAttribute("friendUsername", friendUsername);
-                        model.addAttribute("paging", paging);
-
-
-                        if (friendUsername.equals(currentUser)) {
-                            result = "test/community/getMyReviewList"; // 사용자의 리뷰 리스트로 이동
-                        } else {
-                            result = "test/community/feedTest"; // 친구의 피드로 이동
-                        }
+                        break;
                     }
-                    break;
-
                 case "myFeed":
+                    if(user != null) {
+                        search.setSearchKeyword("이용 완료");
+                        search.setOrder("desc");
 
-                    search.setSearchKeyword("이용 완료");
-                    search.setOrder("desc");
+                        System.out.println("test1111 " + currentUser);
 
-                    System.out.println("test1111 " + currentUser);
+                        String userName = currentUser;
 
-                    String userName = currentUser;
+                        // 나의 리뷰 리스트 가져오기
+                        reviewList = communityService.getReviewList(List.of(currentUser), search);
 
-                    // 나의 리뷰 리스트 가져오기
-                    reviewList = communityService.getReviewList(List.of(currentUser), search);
-
-                    //리뷰 작성 할 수 있는 예약 정보
-                    List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
-                    for (Reservation reservation :reservations){
-                        int rsrvNo = reservation.getRsrvNo();
-                        System.out.println(rsrvNo);
-                    }
+                        //리뷰 작성 할 수 있는 예약 정보
+                        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+                        for (Reservation reservation : reservations) {
+                            int rsrvNo = reservation.getRsrvNo();
+                            System.out.println(rsrvNo);
+                        }
 
 //                    model.addAttribute("reviewList", reviewList);
-                    model.addAttribute("reservations", reservations);
+                        model.addAttribute("reservations", reservations);
 
-                    //페이징을 위한 totalCnt
-                    totalCnt = (reviewList.isEmpty())? 0 : reviewList.get(0).getReviewTotalCnt() ;
+                        //페이징을 위한 totalCnt
+                        totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
 
-                    //Constroller에서 Paging을 Model로 보내야한다
-                    paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
+                        //Constroller에서 Paging을 Model로 보내야한다
+                        paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
 //                    return "test/community/getMyReviewList";
-                    result =  "test/community/getMyReviewList";
+                        result = "test/community/getMyReviewList";
 
-                    break;
-
+                        break;
+                    }
                 case "otherFeed":
                     // 다른 사람 리뷰 리스트 가져오기
                     if (friendUsername != null && !friendUsername.isEmpty()) {
@@ -359,7 +367,7 @@ public class CommunityController {
 //                    model.addAttribute("reviewList", reviewList);
 //                    return "test/community/testGetReviewList";
 
-                    totalCnt = (reviewList.isEmpty())? 0 : reviewList.get(0).getReviewTotalCnt() ;
+                    totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
                     paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
                     result = "test/community/getReviewList";
@@ -368,16 +376,17 @@ public class CommunityController {
             for (int i = 0; i < reviewList.size(); i++) {
 
                 Review review = reviewList.get(i);
+                if(user != null) {
+                    Like chkLike = new Like();
+                    chkLike.setRelationNo(review.getReviewNo());
+                    chkLike.setTarget("review");
+                    chkLike.setUserName(user.getUsername());
 
-                Like chkLike = new Like();
-                chkLike.setRelationNo(review.getReviewNo());
-                chkLike.setTarget("review");
-                chkLike.setUserName(user.getUsername());
+                    Like chkedLike = likeService.chkLike(chkLike);
 
-                Like chkedLike = likeService.chkLike(chkLike);
+                    review.setLike(chkedLike);
 
-                review.setLike(chkedLike);
-
+                }
                 reviewList.set(i, review);
 
             }
@@ -387,6 +396,7 @@ public class CommunityController {
             model.addAttribute("url", bucketUrl);
             model.addAttribute("reviewList", reviewList);
             model.addAttribute("paging", paging);
+            model.addAttribute("user", user);
 
             return result;
 
@@ -418,7 +428,7 @@ public class CommunityController {
     // 친구신청
     @PostMapping("/sendFriendReq")
     public String sendFriendReq(@RequestParam(value = "friendRes") String friendRes,
-                                @SessionAttribute("user") User user) throws  Exception {
+                                @SessionAttribute("user") User user) throws Exception {
 
         System.out.println("/review/sendFriendReq : POST 친구 신청");
         System.out.println("friendRes : " + friendRes);
@@ -439,7 +449,6 @@ public class CommunityController {
 
         return "redirect:/review/getFriendReqStatus";
     }
-
 
 
     //친구삭제
@@ -465,16 +474,18 @@ public class CommunityController {
 
     //친구 요청 목록을 확인하다 (getFriendReq 합침)
     @GetMapping(value = "/getFriendReqStatus")
-    public String getFriendReqList( @SessionAttribute("user") User user, Model model) throws Exception {
+    public String getFriendReqList(@SessionAttribute("user") User user, Model model) throws Exception {
 
         System.out.println("/review/getFriendReqStatus : GET");
 
         String userName = user.getUsername();
-        System.out.println("userName : "+userName);
+        System.out.println("userName : " + userName);
 
         Search search = new Search();
         search.setListSize(10);
         search.setStartRowNum(0);
+
+        model.addAttribute("url", bucketUrl);
 
         try {
 
@@ -487,6 +498,7 @@ public class CommunityController {
 
             model.addAttribute("friendRequests", friendRequests);
             model.addAttribute("receivedRequests", receivedRequests);
+            model.addAttribute("user", user);
 
         } catch (Exception e) {
 
@@ -566,9 +578,11 @@ public class CommunityController {
 
         System.out.println("/review/getFriendList : GET");
 
+        model.addAttribute("url", bucketUrl);
+
         try {
             String username = user.getUsername();
-            System.out.println("username : "+username);
+            System.out.println("username : " + username);
 
             // Search 객체를 생성하고 페이지 번호 및 리스트 사이즈를 설정
             search.setPageSize(pageSize);
@@ -579,13 +593,14 @@ public class CommunityController {
 
             System.out.println(friends);
 
-            int totalCnt = (friends.isEmpty())? 0: friends.get(0).getFriendTotalCnt();
+            int totalCnt = (friends.isEmpty()) ? 0 : friends.get(0).getFriendTotalCnt();
             Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
             model.addAttribute("paging", paging);
 
             model.addAttribute("friends", friends);
             model.addAttribute("paging", paging);
             model.addAttribute("keyword", keyword);
+            model.addAttribute("user", user);
 
             return "test/community/getFriendList";
 
@@ -602,10 +617,9 @@ public class CommunityController {
     public String test() {
         return "test/community/aaa";
     }
+
+
 }
-
-
-
 
 
 

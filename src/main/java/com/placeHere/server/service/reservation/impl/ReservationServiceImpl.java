@@ -228,7 +228,7 @@ public class ReservationServiceImpl implements ReservationService{
 
         if (reservationTimeStatusList != null && koreaDate.toString().equals(effectDt)) {
             // 08:00부터 현재 시간까지 30분 단위로 반복해서 추가
-            LocalTime startTime = LocalTime.of(8, 0); // 시작 시간: 08:00
+            LocalTime startTime = LocalTime.of(4, 0); // 시작 시간: 04:00
 
             while (!startTime.isAfter(koreaTime)) {
                 // 새로운 ReservationTimeStatus 객체 생성

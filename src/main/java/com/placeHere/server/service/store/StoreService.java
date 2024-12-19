@@ -73,7 +73,7 @@ public interface StoreService {
     public List<Closeday> getClosedayList(int storeId, Search search);
 
     // 휴무일 삭제 (DELETE)
-    public void removeCloseday(int closedayId);
+    public boolean removeCloseday(int closedayId);
 
     // 가게 주변 시설 추천 (구글 API)
     public Map<String, Place> getNearbyPlaces(String storeAddr);

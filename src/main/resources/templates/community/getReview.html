@@ -20,7 +20,7 @@
 <!--<div th:include="~{community/menuBar}"></div>-->
 <div class="__user-info" style="justify-content: space-between;">
     <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
-        <img th:src="@{/file/community/2222.png}" alt="프로필이미지">
+        <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
         <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
                                                         <span th:text="${review.userName}"
                                                               style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
@@ -54,14 +54,19 @@
         </div>
     </div>
 </div>
-<img src="/file/community/star_icon1.png" style="margin-left: 400px;" th:text="${review.reviewScore}">
 
-<div class="comment-content" style="margin-left:400px">
-<p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+
+<div>
+    <img src="/file/community/star_icon1.png" style="margin-left: 23%;" th:text="${review.reviewScore}"><p>
+    <div class="comment-content" style="margin-left:23%">
+        <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+    </div>
 </div>
 
 
-<div class="restaurant-info" style="width: 1130px; margin: 0 auto; padding: 0px;"> <!-- 식당 정보 영역 -->
+
+
+<div class="restaurant-info" style="width: 54%; margin: 0 auto; padding: 0px;"> <!-- 식당 정보 영역 -->
     <div class="__info" style="font-size: 1.5em; margin-top:-98; margin-left:-132">
         <a th:href="'/getStore?mode=info&storeId='+${review.storeId}"> <!-- 식당 상세 페이지 링크 -->
             <h4 class="__name">
@@ -71,6 +76,8 @@
     </div>
 </div>
 
+<a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+
 <div class="comment-section">
     <h2>댓글 작성하기</h2>
     <form>
@@ -78,16 +85,19 @@
         <input id="userName" name="userName" type="hidden" th:value="${user.username}"/>
         <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
         <!--        <button type="submit">댓글 추가</button>-->
-        <span class="comment-count" style="margin-left:90px" th:text="${#lists.size(review.commentList)}"></span></p>
-        <div style="margin-top:20px;">
-        <button type="button" name="addCommentBtn" style="margin-top:-2px">댓글 추가</button>
+
+        <button type="button" name="addCommentBtn" style="margin-bottom:0%">댓글 추가</button>
+        <div style="margin-left:6%; margin-top:-4%">
+        <span class="comment-count" style="margin-left:4.5%" th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>
+<!--            <span th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>-->
+
 
         <th:block th:if="${!(session.user != null && session.user.role == 'ROLE_STORE')}">
             <a style="cursor: pointer" id="like"
                th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
                th:data-review-no="${review.reviewNo}"
                th:data-username="${session.user != null ? session.user.username : ''}">
-                <span class="like-count" style="margin-left: 37px;" th:text="${review.reviewLikeCnt}"></span>
+                <span class="like-count" style="margin-left: 98%;" th:text="${review.reviewLikeCnt}"></span>
             </a>
         </th:block>
         </div>
@@ -100,7 +110,6 @@
 </div>
 
 <div class="comment-section">
-    <h2>댓글 목록</h2>
     <ul class="comment-list" id="commentList">
         <li th:each="comment : ${commentList}">
             <p><strong th:text="${comment.userName}"></strong></p>
@@ -124,12 +133,10 @@
     </ul>
 </div>
 
-<form name="pagingForm">
+<form name="pagingForm" style="margin-top:-30%">
     <input type="hidden" name="page">
     <input type="hidden" name="reviewNo" th:value="${review.reviewNo}">
 </form>
-
-<a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
 
 <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
 

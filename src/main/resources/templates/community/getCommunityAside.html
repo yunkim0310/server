@@ -1,12 +1,13 @@
 <ul class="css-1x9bshx ecbxmj2" th:fragment="getCommunityAside" xmlns:th="http://www.w3.org/1999/xhtml">
-    <div th:if="${session.user.role == 'ROLE_USER'}" class="user">
+    <!--div th:if="${session.user.role == 'ROLE_USER'}" class="user"-->
+
         <li class="css-0 ecbxmj1">
             <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=allList'">
                 전체 리뷰 리스트
                 <span class="css-e41glx e1x0rfoo0"></span>
             </a>
         </li>
-
+    <div th:if="${session.user != null}" class="user">
         <li class="css-0 ecbxmj1">
             <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=myFeed'">
                 My Feed
@@ -28,5 +29,15 @@
             </a>
         </li>
     </div>
+
+    <!-- 사용자가 로그인하지 않았을 때 표시 -->
+<!--    <div th:if="${session.user == null}" class="guest">-->
+<!--        <li class="css-0 ecbxmj1">-->
+<!--            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=allList'">-->
+<!--                전체 리뷰 리스트-->
+<!--                <span class="css-e41glx e1x0rfoo0"></span>-->
+<!--            </a>-->
+<!--        </li>-->
+<!--    </div>-->
 
 </ul>
