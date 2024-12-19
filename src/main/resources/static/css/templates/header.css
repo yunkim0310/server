@@ -148,16 +148,16 @@
   background-color: white;
   animation-name: dropdown;
   animation-duration: 0.6s;
-  display: block; 
+  display: block;
 }
 /* hover 상태가 끝날때 추가되는 클래스 */
 .fade{
   background-color: white;
   animation-name: up;
   animation-delay: 0.2s;
-  animation-duration: 1.5s; 
+  animation-duration: 1.5s;
   animation-fill-mode: forwards;
-  display: block; 
+  display: block;
 }
 
 
@@ -191,7 +191,7 @@
   0%{
     top: 175px;
       opacity: 1;
-      
+
   }
   10%{
       z-index: -1;
@@ -257,7 +257,7 @@
 }
 .small_categoryList a{
   padding: 8px 30px;
- 
+
 }
 .small_category ul{
   list-style:none;
@@ -286,7 +286,7 @@
 /* 스크롤헤더 활성화 */
 @keyframes appear_small_header{
   0%{
-      
+
       top: -50px;
       opacity: 0;
   }
@@ -342,9 +342,9 @@
   background-color: white;
   animation-name: small_up;
   animation-delay: 0.2s;
-  animation-duration: 1.5s; 
+  animation-duration: 1.5s;
   animation-fill-mode: forwards;
-  display: flex; 
+  display: flex;
 }
 /* 드롭다운 활성화 애니메이션 */
 @keyframes small_down{
@@ -373,7 +373,7 @@
   0%{
       top: 80px;
       opacity: 1;
-      
+
   }
   1%{
       z-index: -1;
