@@ -24,28 +24,28 @@ body {
 
 .__desc {
     display: flex;
-    flex-direction: column; /* 수직으로 정렬 */
-    align-items: center; /* 수평 중앙 정렬 */
-    text-align: center; /* 텍스트 중앙 정렬 */
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
 .news-item img {
     width: 200px;
     height: 200px;
     padding: 5px;
-    margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+    margin-bottom: 10px;
 }
 
 .news-item p {
     margin: 0;
-    font-size: 14px; /* 원하는 텍스트 크기로 설정 */
-    color: #333; /* 텍스트 색상 */
+    font-size: 14px;
+    color: #333;
     text-align: left;
     padding: 10px;
-    white-space: normal; /* 줄바꿈 허용 */
-    overflow: visible; /* 오버플로우 제거 */
-    text-overflow: clip; /* 텍스트 잘림 없음 */
-    word-break: break-word; /* 긴 단어 강제 줄바꿈 */
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
 }
 
 .restaurant-meta .info {
@@ -56,17 +56,17 @@ body {
 
 .storeBasicInfo > div {
     display: flex;
-    align-items: center; /* 텍스트와 아이콘을 수직 정렬 */
-    margin-bottom: 8px; /* 각 항목 간 간격 */
+    align-items: center;
+    margin-bottom: 8px;
 }
 
 .storeBasicInfo img {
-    margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+    margin-right: 8px;
     display: inline-block;
 }
 
 .storeBasicInfo span {
-    line-height: 1.5; /* 텍스트의 높이를 조정 */
+    line-height: 1.5;
 }
 
 #operationMore {
@@ -81,17 +81,17 @@ body {
 }
 
 .v-scroll::-webkit-scrollbar {
-    height: 8px; /* 스크롤바 높이 */
-    background: #f1f1f1; /* 스크롤바 배경색 */
+    height: 8px;
+    background: #f1f1f1;
 }
 
 .v-scroll::-webkit-scrollbar-thumb {
-    background: #888; /* 스크롤바 색상 */
-    border-radius: 4px; /* 둥글게 처리 */
+    background: #888;
+    border-radius: 4px;
 }
 
 .v-scroll::-webkit-scrollbar-thumb:hover {
-    background: #555; /* 마우스 오버 시 색상 */
+    background: #555;
 }
 
 /* 좋아요 */
@@ -109,6 +109,7 @@ body {
     margin-top: -18px;
     box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
     z-index: 10;
+    opacity: 1 !important;
 }
 
 .restaurant-detail-header #likeStore .btn-like-inactive{
@@ -125,6 +126,7 @@ body {
     margin-top: -18px;
     box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
     z-index: 10;
+    opacity: 1 !important;
 }
 
 .restaurant-detail-header .btn-chat {
@@ -141,6 +143,7 @@ body {
     margin-top: -18px;
     box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
     z-index: 10;
+    opacity: 1 !important;
 }
 
 .placeInfo {
