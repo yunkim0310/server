@@ -8,14 +8,9 @@
 
         <title>PlaceHere</title>
 
-        <link rel="stylesheet" href="/css/templates/style.css">
-
-        <th:block th:if="${mode == 'review'}">
-            <link rel="stylesheet" href="/css/templates/collection_detail.css">
-            <link rel="stylesheet" href="/css/templates/style.css">
-        </th:block>
-
         <link rel="stylesheet" href="/css/templates/mypage.css">
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/style.css">
 
         <div id="ch-plugin" class="notranslate">
             <div id="ch-plugin-core"></div>
@@ -42,6 +37,7 @@
 
 <!--        <link rel="stylesheet" href="/css/store/getStoreNewsList.css">-->
         <link rel="stylesheet" href="/css/store/getStore.css">
+        <link rel="stylesheet" href="/css/store/getMyStore.css">
 
     </head>
 
@@ -98,9 +94,9 @@
                                 </p>
                             </div>
                             <div class="restaurant-meta mb-16">
-                                <div class="rating">
-                                    <span class="star" th:text="'&ensp;'+${store.reviewScoreAvg}">리뷰 평균 별점</span>
-                                    <span class="count" th:text="|(${store.reviewCnt})|">리뷰개수</span>
+                                <div class="rating" style="display: flex; align-items: center;">
+                                    <span class="star" th:text="'&ensp;'+${store.reviewScoreAvg}" style="color: black;">리뷰 평균 별점</span>
+                                    <span class="count" th:text="|(${store.reviewCnt})|" style="margin-left: 5px;">리뷰개수</span>
                                 </div>
 
                                 <div class="storeBasicInfo">
