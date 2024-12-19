@@ -603,12 +603,12 @@
         <div class="css-833hqy ecbxmj4">
             <div class="side" style="margin-top:50px;position:fixed; margin-left: 138px;">
                 <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
-    padding: 5px 0px 35px 1px;">찜 목록</div>
+    padding: 5px 0px 35px 1px;">&nbsp;찜 목록</div>
                 <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
             </div>
         </div>
 
-        <div class="row" style="margin-top: 65px; z-index:0; width: 800px; margin-right: 470px; margin-left: auto;">
+        <div class="row" style="margin-top: 65px; z-index:0; width: 800px; margin-right: 600px; margin-left: auto;">
             <h3 style="font-size: 30px; font-weight: bold;"><span style="color:red;">❤&nbsp;</span>찜 목록</h3>
             <div class="col-md-9 text-right">
                 <div th:if="${wishList.size() != 0}">
@@ -621,7 +621,7 @@
                         <div class="product-list">
                             <div th:each="purchase : ${wishList}" class="product-card" th:data-prod-no="${purchase.purchaseProd.prodNo}">
                                 <div class="product-img" style="width:25%; max-height:500px; display: block;">
-                                    <img th:src="${url + purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
+                                    <img th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
                                 </div>
                                 <div class="product-info">
                                     <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>

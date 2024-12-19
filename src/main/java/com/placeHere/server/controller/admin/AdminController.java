@@ -1,6 +1,7 @@
 package com.placeHere.server.controller.admin;
 
 
+import com.placeHere.server.domain.Batch;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.admin.AdminService;
@@ -187,6 +188,42 @@ public class AdminController {
         } else {
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
         }
+    }
+
+    @GetMapping("/getBatchList")
+    public ResponseEntity<?> getBatchList() throws Exception {
+
+        log.info("http://localhost:8080/api-admin/getBatchList - GET Controller ");
+
+        List<Batch> list = new ArrayList<>();
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        // 배치 리스트
+        list = adminService.getBatchList();
+
+        // 개수
+        int total = list.size();
+
+        map.put("data", list);
+        map.put("total", total);
+
+        HttpHeaders headers = new HttpHeaders();
+
+        if (list != null) {
+
+            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
+            String contentRange = "getRsrvList 0-" + (list.size() - 1) + "/" + list.size();
+
+            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
+
+            log.info("Content-Range: " + contentRange);
+
+            return new ResponseEntity<>(map, headers, HttpStatus.OK);
+        } else {
+
+            return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
+        }
+
     }
 
 }

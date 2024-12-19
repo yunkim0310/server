@@ -1,5 +1,6 @@
 package com.placeHere.server.service.admin;
 
+import com.placeHere.server.domain.Batch;
 import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.User;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -42,6 +43,11 @@ public interface AdminService {
      * 예약 상세보기
      */
     public Reservation getRsrv(int id) throws Exception;
+
+    /**
+     * 배치 이력 보기
+     */
+    public List<Batch> getBatchList() throws Exception;
 
 
 

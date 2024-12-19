@@ -28,4 +28,6 @@ public interface PointDao {
 
     public List<Point> getPointHistoryList(Search search);
 
+    public int isTransactionExist(int relNo) throws Exception;
+
 }

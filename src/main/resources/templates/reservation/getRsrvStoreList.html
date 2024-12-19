@@ -111,11 +111,10 @@
 
         /* 테이블 스타일 */
         table {
-            width: 60%;
+            width: 55%; /* 너비를 화면 크기에 맞게 조정 */
+            max-width: 1200px; /* 최대 너비 제한 */
+            margin: 20px auto; /* 가운데 정렬 */
             border-collapse: collapse;
-            margin: 0 auto; /* 테이블 수평 가운데 정렬 */
-            margin-left: 500px; /* 테이블 왼쪽 공백 추가 */
-            margin-bottom: 20px;
             background-color: #fff;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -149,7 +148,7 @@
             align-items: center; /* 약간 왼쪽으로 정렬 */
             margin-left: auto; /* 자동 여백으로 약간 오른쪽으로 이동 */
             margin-right: 20px; /* 오른쪽 여백 */
-            width: 400px; /* 폼의 전체 너비 제한 */
+            width: 400vw; /* 폼의 전체 너비 제한 */
             height: 90%; /* 높이 설정 (원하는 값으로 수정) */
             padding-top: 20px; /* 폼 내에서 여백을 추가 */
             border: 3px solid #4880FF; /* 테두리 추가 */
@@ -186,6 +185,13 @@
             padding: 10px;
             text-align: center;
             font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+        }
+
+        @media (min-width: 1700px) {
+            table {
+                margin-left: 500px; /* 왼쪽 여백 추가 */
+                margin-right: auto; /* 오른쪽 여백 자동 */
+            }
         }
 
     </style>

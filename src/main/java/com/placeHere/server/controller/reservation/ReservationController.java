@@ -50,6 +50,9 @@ public class ReservationController {
     @Value("${list_size}")
     private int listSize;
 
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
+
 
     public ReservationController(){
         System.out.println("ReservationController Start");
@@ -306,6 +309,10 @@ public class ReservationController {
 
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+
+
+        StoreService store = storeService;
+
         int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
 
         Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
@@ -316,6 +323,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("store", store);
 
         // 뷰 반환
         return "reservation/getRsrvUserList";
@@ -358,10 +366,13 @@ public class ReservationController {
         Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
         model.addAttribute("paging", paging);
 
+        StoreService store = storeService;
+
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("store", store);
 
         return "reservation/getRsrvUserList";
     }
@@ -667,7 +678,7 @@ public class ReservationController {
                 reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
             }
         }
-        return "redirect:/reservation/getRsrvUserList";
+        return "redirect:/reservation/getRsrvStoreList";
     }
 
 

@@ -36,7 +36,7 @@ public class PointServiceImpl implements PointService {
     public void updatePoint(Point point) {
 
         point.setTranPoint(Integer.parseInt(String.valueOf(point.getTranPoint())));
-        System.out.println("tranPoint : "+point.getTranPoint());
+//        System.out.println("tranPoint : "+point.getTranPoint());
 
         pointDao.updatePoint(point);
     }
@@ -60,4 +60,10 @@ public class PointServiceImpl implements PointService {
         return pointDao.getPointHistoryList(search);
 
     }
+
+    public int isTransactionExist(int relNo) throws Exception {
+        int count = pointDao.isTransactionExist(relNo);
+        return count;
+    }
+
 }

@@ -139,6 +139,7 @@
             store_addr  as storeAddr,
             rsrv_number as rsrvNumber
         FROM reservation
+        WHERE rsrv_status = '이용 완료'
         ORDER BY    rsrv_no DESC
     </select>
 
@@ -153,6 +154,16 @@
             (batch_name, status, exec_dt)
         VALUES ( #{batchName}, #{status}, #{exec_dt} )
     </insert>
+
+    <select id="getBatchList">
+
+        SELECT
+                batch_no    as id,
+                batch_name  as batchName,
+                status      as status,
+                exec_dt     as exec_dt
+        FROM batch
+    </select>
 
 
 </mapper>

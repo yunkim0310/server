@@ -95,7 +95,7 @@ public class ProductController {
             Product product = new Product();
             model.addAttribute("product", product);
 
-            return "/pointShop/product/addProduct";
+            return "pointShop/product/addProduct";
         }else{
 
             return "redirect:/";
@@ -129,6 +129,24 @@ public class ProductController {
 //        } catch (IOException e) {
 //            e.printStackTrace();
 //        }
+        String prodImg1 = product.getProdImg1();
+        String prodImg2 = product.getProdImg2();
+        String prodImg3 = product.getProdImg3();
+
+        if (prodImg1 != null) {
+            prodImg1 = prodImg1.substring(prodImg1.lastIndexOf("/") + 1);
+            product.setProdImg1(prodImg1);
+        }
+
+        if (prodImg2 != null) {
+            prodImg2 = prodImg2.substring(prodImg2.lastIndexOf("/") + 1);
+            product.setProdImg2(prodImg2);
+        }
+
+        if (prodImg3 != null) {
+            prodImg3 = prodImg3.substring(prodImg3.lastIndexOf("/") + 1);
+            product.setProdImg3(prodImg3);
+        }
 
         productService.addProduct(product);
 
@@ -223,7 +241,7 @@ public class ProductController {
             model.addAttribute("wishCartNo", wishCartNo);
         }
 
-        return "/pointShop/product/getProduct";
+        return "pointShop/product/getProduct";
         }else{
 
             return "redirect:/";
@@ -249,7 +267,7 @@ public class ProductController {
             model.addAttribute("url", bucketUrl);
             model.addAttribute("product", product);
 
-            return "/pointShop/product/updateProduct";
+            return "pointShop/product/updateProduct";
         }else{
             return "redirect:/";
         }
@@ -284,6 +302,24 @@ public class ProductController {
 //            e.printStackTrace();
 //        }
 
+        String prodImg1 = product.getProdImg1();
+        String prodImg2 = product.getProdImg2();
+        String prodImg3 = product.getProdImg3();
+
+        if (prodImg1 != null) {
+            prodImg1 = prodImg1.substring(prodImg1.lastIndexOf("/") + 1);
+            product.setProdImg1(prodImg1);
+        }
+
+        if (prodImg2 != null) {
+            prodImg2 = prodImg2.substring(prodImg2.lastIndexOf("/") + 1);
+            product.setProdImg2(prodImg2);
+        }
+
+        if (prodImg3 != null) {
+            prodImg3 = prodImg3.substring(prodImg3.lastIndexOf("/") + 1);
+            product.setProdImg3(prodImg3);
+        }
         productService.updateProduct(product);
         model.addAttribute("url", bucketUrl);
         model.addAttribute("product", product);
@@ -341,7 +377,7 @@ public class ProductController {
 //        model.addAttribute("resultPage" , resultPage);
             model.addAttribute("search", search);
 
-            return "/pointShop/product/listProduct";
+            return "pointShop/product/listProduct";
         }else{
             return "redirect:/";
         }

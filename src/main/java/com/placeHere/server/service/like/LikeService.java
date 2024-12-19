@@ -1,7 +1,9 @@
 package com.placeHere.server.service.like;
 
 import com.placeHere.server.domain.Like;
+import com.placeHere.server.domain.Review;
 import com.placeHere.server.domain.Search;
+import com.placeHere.server.domain.User;
 
 import java.util.List;
 
@@ -23,5 +25,8 @@ public interface LikeService {
 
     // 가게 좋아요 목록 조회
     public List<Like> getStoreLikeList(String userName, Search search) throws Exception;
+
+    // 리뷰 좋아요 확인
+    public List<Review> chkReviewLike(String userName, List<Review> reviewList) throws Exception;
 
 }

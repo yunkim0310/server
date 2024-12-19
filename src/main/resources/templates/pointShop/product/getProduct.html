@@ -494,7 +494,7 @@
             justify-content: center;
             transition: all 0.3s ease;
             text-align: center;
-            margin-left: 340px;
+            margin-left: 395px;
         }
 
         /*.expand-btn:hover {*/
@@ -656,9 +656,10 @@
     <!--    <h1>상품 상세 정보</h1>-->
     <!--</div>-->
 
-    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
-        <div class="side" style="margin-top: 80px;">
-            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;상품 정보</div>
+    <div class="css-833hqy ecbxmj4" >
+        <div class="side" style="margin-top:80px;position:fixed; margin-left: 180px;">
+            <div class="css-1v4whg ecbxmj3" style="font-weight: 600; font-size: 28px; line-height: 35px; color: rgb(51, 51, 51); height: 75px;
+    padding: 5px 0px 35px 1px;">&nbsp;상품 정보</div>
             <div th:replace="~{pointShop/getPointShopAside :: getPointShopAside}"></div>
         </div>
     </div>
@@ -672,7 +673,7 @@
                         <div class="img-container" style="position: relative; object-fit: contain;">
                             <div class="img swiper-lazy swiper-lazy-loaded" style="display: flex; justify-content: center; align-items: center; height: 50vh;">
                                 <img class="guide-img" style="width: 50%; max-height:500px; display: block; "
-                                     th:src="${url + product.prodImg1}">
+                                     th:src="${url +'point/product/'+ product.prodImg1}">
                                 <img th:if="${product.prodStatus == false}" style="display: flex; justify-content: center; align-items: center; padding-top: 100px; position: absolute; top: 10%; left: 50%; transform: translateX(-50%); width: 15%;"
                                      src="/file/pointShop/icon_X_circle.png">
                             </div>
@@ -718,7 +719,7 @@
                                 <button class="css-18m884r e4nu7ef3" id="buy1" name="buyBtn" type="button" width="240" th:if="${product.prodStatus}"
                                         th:data-prod-no="${product.prodNo}"
                                         height="56" radius="3"
-                                        style="margin-left:610px; margin-bottom: auto; margin-top: 0px; width: 100px; text-align: center; background-color: #4880FF;">
+                                        style="margin-left:710px; margin-bottom: auto; margin-top: 0px; width: 100px; text-align: center; background-color: #4880FF;">
                                     <span class="css-ymwvow e4nu7ef1 submit-button-span">구매하기</span>
                                 </button>
                             </span>
@@ -727,7 +728,7 @@
                                 <button class="css-18m884r e4nu7ef3" id="edit1" name="editBtn" type="button" width="240"
                                         th:data-prod-no="${product.prodNo}"
                                         height="56" radius="3"
-                                        style="margin-left:610px; margin-bottom: auto; margin-top: 0px; width: 100px; text-align: center; background-color: #4880FF;">
+                                        style="margin-left:710px; margin-bottom: auto; margin-top: 0px; width: 100px; text-align: center; background-color: #4880FF;">
                                     <span class="css-ymwvow e4nu7ef1 submit-button-span">수&nbsp;정</span>
                                 </button>
                             </span>
@@ -778,9 +779,9 @@
 <!--                                    <dt><a class="__toggle" style="font-size: 20px;">상세 이미지</a></dt><br/>-->
                                     <div style="text-align: center;">
                                     <!--            <span class="value" th:text="${product.prodImg2}">상품 상세 이미지1</span>-->
-                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url + product.prodImg2}" alt="상품 상세 이미지"><br/><br/>
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg2 != null and product.prodImg2 != ''}" th:src="${url +'point/product/'+ product.prodImg2}" alt="상품 상세 이미지"><br/><br/>
                                     <!--            <span class="value" th:text="${product.prodImg3}">상품 상세 이미지2</span>-->
-                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url + product.prodImg3}" alt="상품 상세 이미지">
+                                    <img style="object-fit: contain; width: 100%; max-height:3000px; " th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" alt="상품 상세 이미지">
                                     </div>
                                 </dl>
                                 </div>
@@ -868,7 +869,7 @@
 <!--                                                    </div>-->
                                                 <div class="__desc" th:each="products : ${productList}"  th:if="${products.prodStatus == true and products.prodNo != product.prodNo}" th:data-prod-no="${products.prodNo}">
                                                     <div class="news-item">
-                                                        <img th:src="${url + products.prodImg1}" width="300" height="300" style="padding: 5px;align-items: self-end;">
+                                                        <img th:src="${url +'point/product/'+ products.prodImg1}" width="300" height="300" style="padding: 5px;align-items: self-end;">
                                                         <p th:text="${products.prodCateName}" style="font-size: 15px;">상품 카테고리</p>
                                                         <p th:text="${products.prodName}" style="font-weight: bold; font-size: 22px;">상품명</p>
                                                         <p th:text="${#numbers.formatInteger(products.prodPrice, 3, 'COMMA')+ 'P'}" style="font-size: 17px; color: #FB5555;">상품 가격</p>

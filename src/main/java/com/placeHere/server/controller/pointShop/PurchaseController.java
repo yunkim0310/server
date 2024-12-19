@@ -332,7 +332,7 @@ public class PurchaseController {
             model.addAttribute("purchaseList", purchaseList);
             model.addAttribute("username", username);
 
-            return "/pointShop/purchase/listPurchase";
+            return "pointShop/purchase/listPurchase";
         }else{
             return "redirect:/";
         }
@@ -362,7 +362,7 @@ public class PurchaseController {
             model.addAttribute("url", bucketUrl);
             model.addAttribute("purchase", purchase);
 
-            return "/pointShop/purchase/getPurchase";
+            return "pointShop/purchase/getPurchase";
         }else{
             return "redirect:/";
         }

@@ -561,7 +561,7 @@
                 </div>
             </div>
             <input type="file" name="file" style="display:none;">
-            <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:930px; margin-right:20px;">
+            <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:1000px; margin-right:20px;">
                 <div class="form-inline" th:if="${tranPoint != 0}">
                     <div class="form-group">
                         <div>
@@ -601,7 +601,7 @@
                 </div>
             </div>
 
-            <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 470px; margin-left: auto;">
+            <div class="row" style="z-index:0; width: 800px; margin-top:65px;margin-right: 600px; margin-left: auto;">
                 <h3 style="font-size: 30px; font-weight: bold;">🛒&nbsp;장바구니</h3>
                 <div class="col-md-9 text-right">
 
@@ -616,7 +616,7 @@
                             <div class="product-list">
                                 <div th:each="purchase : ${cartList}" class="product-card" th:value="${purchase.purchaseProd.prodStatus}" th:data-prod-no="${purchase.purchaseProd.prodNo}">
                                     <div class="product-img" style="width:25%; max-height:500px; display: block;">
-                                        <img th:src="${url + purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
+                                        <img th:src="${url +'point/product/'+ purchase.purchaseProd.prodImg1}" alt="상품 대표 이미지">
                                     </div>
                                     <div class="product-info">
                                         <p th:text="${purchase.purchaseProd.prodCateName}">상품 카테고리</p>
