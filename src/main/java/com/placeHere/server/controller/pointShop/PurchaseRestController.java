@@ -4,6 +4,7 @@ package com.placeHere.server.controller.pointShop;
 import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.User;
 import com.placeHere.server.service.pointShop.PurchaseService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +22,22 @@ public class PurchaseRestController {
 
     // 장바구니에 제품 추가
     @PostMapping("/addCart")
-    public String addCart(@SessionAttribute("user") User buyer,
-                            @RequestBody Purchase purchase) {
+    public String addCart(HttpSession session,
+                          @RequestBody Purchase purchase,
+                          Model model) {
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
 //            int prodNo = purchase.getProdNo();
             System.out.println("prodNo : "+ purchase.getProdNo());
             int isCartExist = purchaseService.isProductInCartList(purchase);
@@ -47,17 +57,30 @@ public class PurchaseRestController {
             e.printStackTrace();
             return "장바구니 추가 실패: " + e.getMessage();
         }
+        }else{
+            return "redirect:/";
+        }
     }
 
     // 찜 목록에 제품 추가
     @PostMapping("/addWish")
-    public String addWish(@SessionAttribute("user") User buyer,
-                            @RequestBody Purchase purchase) {
+    public String addWish(HttpSession session,
+                            @RequestBody Purchase purchase,
+                          Model model) {
+
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
+
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
 //            int prodNo = purchase.getProdNo();
             System.out.println("prodNo : "+ purchase.getProdNo());
             int isWishExist = purchaseService.isProductInWishList(purchase);
@@ -81,19 +104,30 @@ public class PurchaseRestController {
             e.printStackTrace();
             return "오류 발생: " + e.getMessage();
         }
+        }else{
+            return "redirect:/";
+        }
     }
 
     // 찜 목록에서 제품 삭제
     @DeleteMapping("/removeWish")
-    public String removeWish(@ModelAttribute("purchase") Purchase purchase, @SessionAttribute("user") User buyer) {
+    public String removeWish(@ModelAttribute("purchase") Purchase purchase, HttpSession session,
+                             Model model) {
 
         System.out.println("removeWish");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
              purchaseService.removeWish(purchase);
 
 //            purchaseService.removeWishCart(wishCartNo);
@@ -102,19 +136,29 @@ public class PurchaseRestController {
             e.printStackTrace();
             return "찜 목록 삭제 실패: " + e.getMessage();
         }
+        }else{
+            return "redirect:/";
+        }
     }
 
     @DeleteMapping("/removeCart")
     public String removeCart(@ModelAttribute("purchase") Purchase purchase,
-                             @SessionAttribute("user") User buyer, Model model) {
+                             HttpSession session, Model model) {
 
         System.out.println("removeCart");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
             purchaseService.removeCart(purchase);
             model.addAttribute("username", username);
 
@@ -124,19 +168,29 @@ public class PurchaseRestController {
             e.printStackTrace();
             return "장바구니 삭제 실패: " + e.getMessage();
         }
+        }else{
+            return "redirect:/";
+        }
     }
 
     @DeleteMapping("/clearCart")
     public String clearCart(@ModelAttribute("purchase") Purchase purchase,
-                             @SessionAttribute("user") User buyer, Model model) {
+                            HttpSession session, Model model) {
 
         System.out.println("removeCart");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
             purchaseService.clearWishCartByUsername(username);
             model.addAttribute("username", username);
 
@@ -146,19 +200,29 @@ public class PurchaseRestController {
             e.printStackTrace();
             return "장바구니 삭제 실패: " + e.getMessage();
         }
+        }else{
+            return "redirect:/";
+        }
     }
 
     @DeleteMapping("/clearWish")
     public String clearWish(@ModelAttribute("purchase") Purchase purchase,
-                            @SessionAttribute("user") User buyer, Model model) {
+                            HttpSession session, Model model) {
 
         System.out.println("clearWish");
+        User user = (User) session.getAttribute("user");
+        model.addAttribute("user", user);
 
+        if (user == null) {
+
+            return "redirect:/";
+
+        }else if (user.getRole().equals("ROLE_USER")) {
         try {
-            String username = buyer.getUsername();
+            String username = user.getUsername();
             System.out.println("username : " + username);
-            purchase.setBuyer(buyer);
-            System.out.println("Buyer : " + buyer);
+            purchase.setBuyer(user);
+            System.out.println("Buyer : " + user);
             purchaseService.clearWishByUsername(username);
             model.addAttribute("username", username);
 
@@ -167,6 +231,9 @@ public class PurchaseRestController {
         } catch (Exception e) {
             e.printStackTrace();
             return "장바구니 삭제 실패: " + e.getMessage();
+        }
+        }else{
+            return "redirect:/";
         }
     }
 
