@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>PlaceHere</title>
+
+
+    <link rel="stylesheet" href="/css/templates/mypage.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+    <link th:insert="~{common/import :: importFragment}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="/javascript/templates/script.js"></script>
+
+    <script src="/javascript/community/like.js"></script>
+    <link rel="stylesheet" href="/css/community/getReviewList.css">
+
+</head>
+
+<script src="/javascript/community/getReviewList.js"></script>
+
+<!--<body>-->
+<!--&lt;!&ndash;<div th:include="~{community/getCommunityAside}"></div>&ndash;&gt;-->
+<!--&lt;!&ndash;<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;&ndash;&gt;-->
+
+<!--<header id="header"></header> &lt;!&ndash; 페이지 헤더 &ndash;&gt;-->
+
+
+<!--</p>-->
+<!--<div id="root"> &lt;!&ndash; 전체 컨텐츠를 감싸는 루트 요소 &ndash;&gt;-->
+<!--    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">-->
+<!--        <div class="side" style="margin-top: 80px;">-->
+<!--            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;리뷰 목록 </div>-->
+<!--            <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <div th:fragment="reviewListFragment">-->
+<!--        <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">-->
+<!--            <p>등록 된 리뷰가 없습니다.</p>-->
+<!--        </div>-->
+
+<!--        <div class="wrapper" id="wrapperDiv"> &lt;!&ndash; 전체 리뷰 리스트를 감싸는 주 컨테이너 &ndash;&gt;-->
+<!--            <main id="main">-->
+<!--                <section class="section mb-50">-->
+<!--                    <div class="container gutter-sm">-->
+<!--                        <div class="section-body">-->
+<!--                            <div class="__my-review-list ml&#45;&#45;50 mr&#45;&#45;100"> &lt;!&ndash; 리뷰 리스트를 담는 컨테이너 &ndash;&gt;-->
+<!--                                <div id="shopReviewListScroll"> &lt;!&ndash; 리뷰 스크롤을 위한 컨테이너 &ndash;&gt;-->
+<!--                                    <div id="shopReviewListScroll_0"> &lt;!&ndash; 특정 스크롤 섹션 &ndash;&gt;-->
+<!--                                        <article class="__my-review-post" th:each="review : ${reviewList}"> &lt;!&ndash; 각 리뷰에 대한 아티클 &ndash;&gt;-->
+<!--                                            <div class="__header" style="padding-left: 0;">-->
+<!--                                                <div class="__user-info" style="justify-content: space-between;">-->
+<!--                                                    <div class="review-details"> &lt;!&ndash; 리뷰 작성자를 표시하는 영역 &ndash;&gt;-->
+<!--                                                        <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진">-->
+<!--                                                        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">-->
+<!--                                                            <span th:text="${review.userName}"-->
+<!--                                                                  style="font-size: 1.5em; font-weight: bold; color: #2c3e50;-->
+<!--                                                                  text-transform: uppercase; margin-bottom: 5px; display: block;"></span> &lt;!&ndash; 작성자 이름 &ndash;&gt;-->
+<!--                                                        </a>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+
+<!--                                            <div class="__body" style="position: relative; padding: 0px;">-->
+<!--                                                <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> &lt;!&ndash; 리뷰 이미지들을 나열하는 영역 &ndash;&gt;-->
+<!--                                                    <div th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">-->
+<!--                                                        <div class="swiper-slide" style="margin-right: 16px;">-->
+<!--                                                            <img th:src="${url + review.reviewImg1}">-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                    <div th:if="${review.reviewImg2 != null && !review.reviewImg2.isEmpty()}">-->
+<!--                                                        <div class="swiper-slide" style="margin-right: 16px;">-->
+<!--                                                            <img th:src="${url + review.reviewImg2}">-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                    <div th:if="${review.reviewImg3 != null && !review.reviewImg3.isEmpty()}">-->
+<!--                                                        <div class="swiper-slide" style="margin-right: 16px;">-->
+<!--                                                            <img th:src="${url + review.reviewImg3}">-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+
+<!--                                                <div class="timeline-post-content">-->
+<!--                                                    <div class="__post-meta" style="display: flex; justify-content: space-between;"> &lt;!&ndash; 리뷰 메타 정보 (평점, 좋아요, 댓글) &ndash;&gt;-->
+<!--                                                        <img src="/file/community/star_icon1.png" style="margin-left: 5%;" th:text="${review.reviewScore}"> &lt;!&ndash; 리뷰 평점 &ndash;&gt;-->
+<!--    &lt;!&ndash;                                                    <th:block th:if="${session.user != null}">&ndash;&gt;-->
+<!--                                                            <a style="cursor: pointer" id="like"-->
+<!--                                                               th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"-->
+<!--                                                               th:data-review-no="${review.reviewNo}"-->
+<!--                                                               th:data-username="${session.user != null ? session.user.username : ''}">-->
+<!--                                                                <span class="like-count" style="margin-left: -25px;" th:text="${review.reviewLikeCnt}"></span>-->
+<!--                                                            </a>-->
+<!--    &lt;!&ndash;                                                    </th:block>&ndash;&gt;-->
+
+<!--                                                        <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" style="cursor: pointer;" id="comment" class="btn-comment">-->
+<!--                                                            <img src="/file/community/comment_icon.png" alt="댓글" style="width: 24px; height: 24px; margin-left: -730px;"/>-->
+<!--                                                            <span class="comment-count" style="margin-left: -27px;" th:text="${#lists.size(review.commentList)}"></span>-->
+<!--                                                        </a>-->
+
+<!--                                                        <div style="margin-left: -1%; text-align: right;" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + ' (수정됨)'}"></div> &lt;!&ndash; 수정된 날짜 &ndash;&gt;-->
+<!--                                                    </div>-->
+<!--                                                    <div class="restaurant-info" style="width: 90%; margin: 0 auto; padding: 2%;"> &lt;!&ndash; 식당 정보 영역 &ndash;&gt;-->
+<!--                                                        <div class="__info" style="font-size: 1em;">-->
+<!--                                                            <a th:href="'/getStore?mode=info&storeId='+${review.storeId}"> &lt;!&ndash; 식당 상세 페이지 링크 &ndash;&gt;-->
+<!--                                                                <h4 class="__name">-->
+<!--                                                                    <span th:text="${review.storeName}">매장명</span> &lt;!&ndash; 식당 이름 &ndash;&gt;-->
+<!--                                                                </h4>-->
+<!--                                                            </a>-->
+<!--                                                        </div>-->
+<!--                                                    </div>-->
+<!--                                                    <div class="__content" style="font-size: 1.2em; margin-left:6% ">-->
+<!--                                                        <p th:text="${review.reviewContent}" style="white-space: pre-line;"></p> &lt;!&ndash; 리뷰 내용 &ndash;&gt;-->
+<!--                                                    </div>-->
+<!--                                                    <hr class="hairline"> &lt;!&ndash; 리뷰 항목 간 구분선 &ndash;&gt;-->
+<!--                                        </article>-->
+<!--                                    </div> &lt;!&ndash; shopReviewListScroll_0 끝 &ndash;&gt;-->
+<!--                                </div> &lt;!&ndash; shopReviewListScroll 끝 &ndash;&gt;-->
+<!--                            </div> &lt;!&ndash; __my-review-list 끝 &ndash;&gt;-->
+<!--                        </div> &lt;!&ndash; section-body 끝 &ndash;&gt;-->
+<!--                    </div> &lt;!&ndash; container 끝 &ndash;&gt;-->
+<!--                </section> &lt;!&ndash; section 끝 &ndash;&gt;-->
+
+<!--                <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>-->
+
+<!--                <form name="pagingForm">-->
+<!--                    <input type="hidden" name="page">-->
+<!--                    <input type="hidden" name="type" value="allList">-->
+<!--                </form>-->
+<!--                &lt;!&ndash; 페이징 처리 부분 생략 &ndash;&gt;-->
+<!--            </main>-->
+<!--        </div> &lt;!&ndash; wrapperDiv 끝 &ndash;&gt;-->
+<!--    </div>-->
+<!--</div> &lt;!&ndash; root 끝 &ndash;&gt;-->
+
+111
+</body>
+</html>

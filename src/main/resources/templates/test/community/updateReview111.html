@@ -1,0 +1,230 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>리뷰 수정</title>-->
+<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+<!--    <script src="/javascript/community/fileUpload.js"></script>-->
+<!--    <script src="/javascript/common/fileUploader.js"></script>-->
+<!--&lt;!&ndash;    <link th:insert="~{common/import :: importFragment}">&ndash;&gt;-->
+
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;-->
+<!--            background-color: #f7f9fc;-->
+<!--            margin: 0;-->
+<!--            padding: 20px;-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            align-items: center;-->
+<!--            height: 100vh;-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            text-align: center;-->
+<!--            color: #333;-->
+<!--            margin-bottom: 50px; /* 수정: margin 조정 */-->
+<!--            font-size: 2.5rem;-->
+<!--        }-->
+
+<!--        form {-->
+<!--            background-color: #ffffff;-->
+<!--            border-radius: 15px;-->
+<!--            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);-->
+<!--            padding: 20px; /* padding 조정 */-->
+<!--            width: 100%;-->
+<!--            max-width: 400px; /* 수정: form 크기 조정 */-->
+<!--            display: flex;-->
+<!--            flex-direction: column; /* 수직 배치 */-->
+<!--            position: relative; /* 하위 요소의 절대 위치를 기반으로 하는 상위 요소 */-->
+<!--        }-->
+
+<!--        label {-->
+<!--            display: block;-->
+<!--            margin: 15px 0 5px;-->
+<!--            font-weight: bold;-->
+<!--            color: #555;-->
+<!--        }-->
+
+<!--        input[type="text"],-->
+<!--        textarea {-->
+<!--            width: 100%;-->
+<!--            padding: 8px;-->
+<!--            margin: 5px 0 20px;-->
+<!--            border-radius: 5px;-->
+<!--            border: 1px solid #ddd;-->
+<!--            font-size: 1rem;-->
+<!--        }-->
+
+<!--        textarea {-->
+<!--            resize: vertical;-->
+<!--            height: 100px;-->
+<!--        }-->
+
+<!--        .star-rating {-->
+<!--            display: flex;-->
+<!--            justify-content: flex-start;-->
+<!--            margin-bottom: 20px; /* 간격 조정 */-->
+<!--        }-->
+
+<!--        .star {-->
+<!--            font-size: 24px;-->
+<!--            color: #ddd; /* 별 기본 색상 */-->
+<!--            cursor: pointer;-->
+<!--            transition: color 0.2s;-->
+<!--        }-->
+
+<!--        .star.filled {-->
+<!--            color: #ffcc00; /* 색칠된 별 색상 */-->
+<!--        }-->
+
+<!--        button {-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            padding: 12px 24px;-->
+<!--            font-size: 1rem;-->
+<!--            border-radius: 25px;-->
+<!--            cursor: pointer;-->
+<!--            transition: background-color 0.3s, transform 0.3s;-->
+<!--            width: 100%; /* 수정: 버튼 너비 조정 */-->
+<!--            box-shadow: 0 4px 6px rgba(0, 123, 255, 0.3);-->
+<!--            position: relative; /* 절대 위치 스타일 변경 */-->
+<!--            margin-top: 10px; /* 버튼 위치 조정 */-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background-color: #0056b3;-->
+<!--            transform: translateY(-2px);-->
+<!--        }-->
+
+<!--        .__photos {-->
+<!--            display: flex;-->
+<!--            justify-content: center;-->
+<!--            flex-direction: column; /* 세로 방향으로 나열 */-->
+<!--            gap: 10px; /* 사진 사이의 간격 추가 */-->
+<!--            margin-bottom: 20px; /* 사진 섹션 아래의 간격 추가 */-->
+<!--        }-->
+
+<!--        .css-176lya2 {-->
+<!--            display: flex;-->
+<!--            flex-direction: column; /* 입력과 이미지를 세로 방향으로 쌓기 */-->
+<!--            align-items: center; /* 수평 중앙 정렬 */-->
+<!--        }-->
+
+<!--        .css-176lya2 img {-->
+<!--            margin-bottom: 10px; /* 이미지와 파일 입력 사이의 간격 추가 */-->
+<!--        }-->
+
+<!--        .return-link {-->
+<!--            position: relative; /* 절대 위치 스타일 변경 */-->
+<!--            margin-top: 10px; /* 링크 위치 조정 */-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--8-->
+<!--&lt;!&ndash;<div th:include="~{community/getCommunityAside}"></div>&ndash;&gt;-->
+<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
+
+<!--<form action="/review/updateReview" method="post" th:object="${review}" enctype="multipart/form-data">-->
+<!--    <h1>리뷰 수정</h1>-->
+<!--    <input type="hidden" th:field="*{reviewNo}" />-->
+
+<!--    <label>리뷰 점수</label>-->
+<!--    <div class="star-rating" id="star-rating">-->
+<!--        <span class="star" data-value="1">★</span>-->
+<!--        <span class="star" data-value="2">★</span>-->
+<!--        <span class="star" data-value="3">★</span>-->
+<!--        <span class="star" data-value="4">★</span>-->
+<!--        <span class="star" data-value="5">★</span>-->
+<!--        <input type="hidden" id="reviewScore" name="reviewScore" th:field="*{reviewScore}" required>-->
+<!--    </div>-->
+
+<!--    <div class="__photos" style="display: flex; flex-direction: column;">-->
+<!--        &lt;!&ndash; 리뷰 사진 1 &ndash;&gt;-->
+<!--        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer1">-->
+<!--            <input type="file" accept="image/*" class="reviewImg1">-->
+<!--            <input type="hidden" name="reviewImg1" th:value="${review.reviewImg1}">-->
+<!--            <img th:src="${url + review.reviewImg1}" style="width: 50px; height: 50px;">-->
+<!--            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer1')">삭제</button> &lt;!&ndash; 수정된 삭제 버튼 &ndash;&gt;-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 리뷰 사진 2 &ndash;&gt;-->
+<!--        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer2">-->
+<!--            <input type="file" accept="image/*" class="reviewImg2">-->
+<!--            <input type="hidden" name="reviewImg2" th:value="${review.reviewImg2}">-->
+<!--            <img th:src="${url + review.reviewImg2}" style="width: 50px; height: 50px;">-->
+<!--            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer2')">삭제</button> &lt;!&ndash; 수정된 삭제 버튼 &ndash;&gt;-->
+<!--        </div>-->
+
+<!--        &lt;!&ndash; 리뷰 사진 3 &ndash;&gt;-->
+<!--        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer3">-->
+<!--            <input type="file" accept="image/*" class="reviewImg3">-->
+<!--            <input type="hidden" name="reviewImg3" th:value="${review.reviewImg3}">-->
+<!--            <img th:src="${url + review.reviewImg3}" style="width: 50px; height: 50px;">-->
+<!--            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer3')">삭제</button> &lt;!&ndash; 수정된 삭제 버튼 &ndash;&gt;-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    <label for="content">리뷰 내용:</label>-->
+<!--    <textarea id="content" th:field="*{reviewContent}" required></textarea>-->
+
+<!--    <button type="submit">리뷰 업데이트</button>-->
+
+<!--    <div class="return-link">-->
+<!--        <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>-->
+<!--    </div>-->
+<!--</form>-->
+
+<!--<script>-->
+<!--    const stars = document.querySelectorAll('.star');-->
+<!--    const reviewScoreInput = document.getElementById('reviewScore');-->
+
+<!--    // 기존 점수로 별점 초기화-->
+<!--    const initialScore = parseInt(reviewScoreInput.value);-->
+<!--    if (initialScore) {-->
+<!--        updateStars(initialScore);-->
+<!--    }-->
+
+<!--    stars.forEach(star => {-->
+<!--        star.addEventListener('click', () => {-->
+<!--            const rating = star.getAttribute('data-value');-->
+<!--            reviewScoreInput.value = rating; // 리뷰 점수 입력란에 값 설정-->
+<!--            updateStars(rating);-->
+<!--        });-->
+<!--    });-->
+
+<!--    function updateStars(rating) {-->
+<!--        stars.forEach(star => {-->
+<!--            if (star.getAttribute('data-value') <= rating) {-->
+<!--                star.classList.add('filled'); // 별 채우기-->
+<!--            } else {-->
+<!--                star.classList.remove('filled'); // 별 비우기-->
+<!--            }-->
+<!--        });-->
+<!--    }-->
+
+<!--    // 파일 선택 시 파일 이름 표시-->
+<!--    document.querySelectorAll('input[type="file"]').forEach(input => {-->
+<!--        input.addEventListener('change', (event) => {-->
+<!--            const fileName = event.target.files[0]?.name || '선택된 파일 없음';-->
+<!--            event.target.nextElementSibling.textContent = fileName;-->
+<!--        });-->
+<!--    });-->
+<!--</script>-->
+
+<!--<script>-->
+<!--    // 이미지 삭제 함수-->
+<!--    function deleteImage(containerId) {-->
+<!--        const container = document.getElementById(containerId);-->
+<!--        if (container) {-->
+<!--            container.remove(); // DOM에서 해당 이미지를 포함한 컨테이너를 제거합니다.-->
+<!--            alert('이미지가 삭제되었습니다.');-->
+<!--        } else {-->
+<!--            alert('이미지를 찾을 수 없습니다.');-->
+<!--        }-->
+<!--    }-->
+<!--</script>-->
+<!--</body>-->
+<!--</html>-->
