@@ -47,6 +47,25 @@ $(function () {
     // 검색 버튼
     $("button[name='searchStore']").on("click", function () {
 
+        // REST 로 검색어 등록
+        var searchKeyword = $.trim($("input[name='searchKeyword']:text").val());
+
+        if (searchKeyword !== undefined && searchKeyword !== "" && searchKeyword != null) {
+
+            $.ajax({
+                url: '/api-store/addSearchKeyword',
+                type: 'POST',
+                data: {searchKeyword: searchKeyword},
+                success: function () {
+
+                },
+                error: function (xhr, status, error) {
+
+                    console.error("검색어 등록 중 오류 발생 : ", error);
+                }
+            })
+        }
+
         search(1);
     });
 
@@ -57,6 +76,26 @@ $(function () {
         if (e.keyCode === 13) {
 
             e.preventDefault();
+
+            // REST 로 검색어 등록
+            var searchKeyword = $.trim($("input[name='searchKeyword']:text").val());
+
+            if (searchKeyword !== undefined && searchKeyword !== "" && searchKeyword != null) {
+
+                $.ajax({
+                    url: '/api-store/addSearchKeyword',
+                    type: 'POST',
+                    data: {searchKeyword: searchKeyword},
+                    success: function () {
+
+                    },
+                    error: function (xhr, status, error) {
+
+                        console.error("검색어 등록 중 오류 발생 : ", error);
+                    }
+                })
+            }
+
             search(1);
         }
     });

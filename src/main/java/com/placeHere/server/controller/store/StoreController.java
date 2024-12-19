@@ -42,9 +42,6 @@ public class StoreController {
     private ReservationService reservationService;
 
     @Autowired
-    private AwsS3Service awsS3Service;
-
-    @Autowired
     private SearchService searchService;
 
     @Value("${amenities_name_list}")
@@ -419,11 +416,6 @@ public class StoreController {
         search.setPageSize(pageSize);
         search.setListSize(listSize);
         System.out.println(search);
-
-        // 검색어가 있을 경우 검색 기록 등록
-        if (search.getSearchKeyword() != null && !search.getSearchKeyword().trim().isEmpty()) {
-            searchService.addSearch(search.getSearchKeyword());
-        }
 
         // 필터에서 선택한 음식 카테고리
         List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
