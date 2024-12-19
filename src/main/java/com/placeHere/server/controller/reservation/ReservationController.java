@@ -322,6 +322,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("url", bucketUrl);
 
         // 뷰 반환
         return "reservation/getRsrvUserList";
@@ -369,6 +370,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
+        model.addAttribute("url", bucketUrl);
 
         return "reservation/getRsrvUserList";
     }
