@@ -27,7 +27,7 @@ $(function () {
     });
     
     // 좋아요 추가, 취소
-    $("a#like").on("click", function () {
+    $("a#likeStore").on("click", function () {
 
         const storeId = $("input[name='storeId']:hidden").val();
         const likeId = $(this).data("likeid");
@@ -493,7 +493,7 @@ function openImagePopup(imageUrl, title) {
                 <title>${title}</title>
                 <style>
                     body { margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; background-color: #000; }
-                    img { max-width: 100%; max-height: 100%; }
+                    img { max-width: 100%; max-height: 100%; background-color: #FFFFFF }
                 </style>
             </head>
             <body>
