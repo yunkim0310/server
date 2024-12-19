@@ -9,6 +9,7 @@ import com.placeHere.server.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,7 +32,9 @@ public class AdminController {
     @Autowired
     @Qualifier("adminServiceImpl")
     private AdminService adminService;
-    
+
+    @Value("${cloud.aws.s3.bucket-url}")
+    private String bucketUrl;
 
     // 회원 상세보기
     @GetMapping("/getUser")
@@ -43,8 +46,13 @@ public class AdminController {
 
         User user = adminService.getUser(id);
 
+        String profileImg = user.getProfileImg();
+        profileImg = bucketUrl+"user/" + profileImg;
+        user.setProfileImg(profileImg);
+
         if ( user != null ) {
             log.info(" >>> 가져온 user :: " + user );
+
             return new ResponseEntity<>(user, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("FAIL", HttpStatus.BAD_REQUEST);
@@ -53,7 +61,7 @@ public class AdminController {
 
     // 회원 리스트 목록
     @GetMapping("/getUserList")
-    public ResponseEntity<?> getUserList() throws Exception {
+    public ResponseEntity<?> getUserList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
 
         log.info("/api-admin/getUserList - GET Controller ");
 
@@ -64,27 +72,39 @@ public class AdminController {
         list = adminService.getUserList();
 
         int total = list.size();
+        int start = (page-1) * perPage;
+        int end = Math.min(start + perPage, total);
 
-        for(User user : list) {
+        log.info("page : "+ page);
+        log.info("perPage : "+ perPage);
+        log.info("start : "+ start);
+        log.info("end : "+ end);
+
+        List<User> pagedList = list.subList(start, end);
+
+        for(User user : pagedList) {
             System.out.println(user);
         }
 
-        map.put("data", list);
+        // 페이징 처리된 list put
+        map.put("data", pagedList);
         map.put("total", total);
 
         HttpHeaders headers = new HttpHeaders();
 
-        if (list != null) {
+        if (pagedList != null) {
 
-            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
-            String contentRange = "getUserList 0-" + (list.size() - 1) + "/" + list.size();
+//            headers.add("Content-Range", "getUserList 0-" + (list.size() - 1) + "/" + list.size());
+//            String contentRange = "getUserList 0-" + (list.size() - 1) + "/" + list.size();
+//            headers.add("Access-Control-Expose-Headers", "Content-Range");
+//            log.info("Content-Range: " + contentRange);
 
-            headers.add("Access-Control-Expose-Headers", "Content-Range"); // CORS 관련 헤더 노출
+            headers.add("Content-Range", "items " + start + "-" + (end - 1) + "/" + total);
+            headers.add("Access-Control-Expose-Headers", "Content-Range");
 
-            log.info("Content-Range: " + contentRange);
+            log.info("Content-Range: " + "items " + start + "-" + (end - 1) + "/" + total);
 
             // list 에서 map으로 변경
-//            return new ResponseEntity<>(list, headers, HttpStatus.OK);
             return new ResponseEntity<>(map, headers, HttpStatus.OK);
         } else {
             return new ResponseEntity<>("FAIL", headers, HttpStatus.BAD_REQUEST);
