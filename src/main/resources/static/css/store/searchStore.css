@@ -1,0 +1,59 @@
+/* 추천 레스토랑, 인기 검색어 관련 */
+.recommendList {
+    display: flex;
+    gap: 20px;
+}
+
+.recommendStore {
+    width: 65%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.recommendKeyword {
+    width: 35%;
+    padding: 10px;
+    box-sizing: border-box;
+}
+
+.listTable {
+    width: 100%;
+    border-collapse: collapse;
+    height: 100%;
+}
+
+.listTable th, .listTable td {
+    padding: 12px;
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+}
+
+.listTable th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    text-align: center;
+}
+
+.keywordList td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.popularSearchKeyword {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.listTable {
+    min-height: 300px;
+}
+
+.containerList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-top: 0;
+}
