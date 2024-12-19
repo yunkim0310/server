@@ -173,6 +173,7 @@ public class ReservationServiceImpl implements ReservationService{
     }
 
 
+    // 예약 확정들을 이용 완료로 바꾸기
     public void updateRsrvStatusDay() throws Exception {
         // 지나간 예약 확정 상태의 예약 번호 리스트 가져오기
         List<Integer> pastRsrvNos = reservationDao.getPastRsrvNos();
@@ -210,7 +211,7 @@ public class ReservationServiceImpl implements ReservationService{
     public StoreReservation getStoreReservation(Map<String, Object> params) throws Exception {
         int storeId = (Integer) params.get("storeId");
         String effectDt = (String) params.get("effectDt");
-        java.sql.Date sqlEffectDt = java.sql.Date.valueOf(effectDt); // String -> java.sql.Date 변환
+        java.sql.Date sqlEffectDt = java.sql.Date.valueOf(effectDt);
         StoreOperation operation = storeDao.getOperationByDt(storeId, sqlEffectDt);
         List<ReservationTimeStatus> reservationTimeStatusList = reservationDao.getRsrvTimeStatus(params);
         StoreReservation storeReservation = new StoreReservation();
@@ -227,14 +228,14 @@ public class ReservationServiceImpl implements ReservationService{
 
 
         if (reservationTimeStatusList != null && koreaDate.toString().equals(effectDt)) {
-            // 08:00부터 현재 시간까지 30분 단위로 반복해서 추가
-            LocalTime startTime = LocalTime.of(4, 0); // 시작 시간: 04:00
+
+            LocalTime startTime = LocalTime.of(4, 0);
 
             while (!startTime.isAfter(koreaTime)) {
                 // 새로운 ReservationTimeStatus 객체 생성
                 ReservationTimeStatus status = new ReservationTimeStatus();
-                status.setRsrvDt(effectDt + " " + startTime.toString()); // 예약 시간 (effectDt 날짜 + 시간)
-                status.setRsrvPerson(100); // 고정 예약 인원: 100
+                status.setRsrvDt(effectDt + " " + startTime.toString());
+                status.setRsrvPerson(100);
 
                 // 리스트에 추가
                 reservationTimeStatusList.add(status);
@@ -280,16 +281,16 @@ public class ReservationServiceImpl implements ReservationService{
                     );
                 }
                 System.out.println("예약 번호에서 환불할 내역: " + removeUserRsrvNos);
-                return true; // 정상 실행
+                return true;
             } else {
                 System.out.println("예약 번호에서 환불할 내역이 없습니다.");
-                return true; // 내역이 없지만 에러는 아니므로 true 반환
+                return true;
             }
         } catch (Exception e) {
             // 에러 발생 시 로그 출력
             System.err.println("회원 일괄 환불 처리 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return false; // 에러 발생 시 false 반환
+            return false;
         }
     }
 
@@ -325,16 +326,16 @@ public class ReservationServiceImpl implements ReservationService{
                     );
                 }
                 System.out.println("예약 번호에서 환불할 내역: " + removeStoreRsrvNos);
-                return true; // 정상 실행
+                return true;
             } else {
                 System.out.println("예약 번호에서 환불할 내역이 없습니다.");
-                return true; // 내역이 없어도 에러는 아님
+                return true;
             }
         } catch (Exception e) {
             // 에러 발생 시 로그 출력
             System.err.println("점주 회원 일괄 환불 중 오류 발생: " + e.getMessage());
             e.printStackTrace();
-            return false; // 에러 발생 시 false 반환
+            return false;
         }
     }
 

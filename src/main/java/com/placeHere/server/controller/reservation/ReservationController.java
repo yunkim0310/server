@@ -166,7 +166,7 @@ public class ReservationController {
 
 
         if (searchStatuses == null) {
-            search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약")); // 모든 상태 포함
+            search.setSearchStatuses(List.of("예약 요청", "예약 확정", "전화 예약"));
         }
         // 서비스 호출
         List<Reservation> reservations = reservationService.getRsrvStoreList(storeId, search);
@@ -189,7 +189,7 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("reservationCountsByDate", reservationCountsByDate);
         model.addAttribute("search", search);
-        model.addAttribute("searchStatuses", search.getSearchStatuses()); // 상태 추가
+        model.addAttribute("searchStatuses", search.getSearchStatuses());
         model.addAttribute("totalCnt", totalCnt);
 
         // 뷰 반환
@@ -303,7 +303,7 @@ public class ReservationController {
 
         if (order == null) {
             // 초기 Search 객체 설정 (기본값)
-            search.setOrder("desc"); // 기본 정렬
+            search.setOrder("desc");
         }
 
 
@@ -311,7 +311,6 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
 
 
-        StoreService store = storeService;
 
         int totalCnt = (reservations.isEmpty()) ? 0 : reservations.get(0).getTotalCnt();
 
@@ -323,7 +322,6 @@ public class ReservationController {
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
-        model.addAttribute("store", store);
 
         // 뷰 반환
         return "reservation/getRsrvUserList";
@@ -366,13 +364,11 @@ public class ReservationController {
         Paging paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
         model.addAttribute("paging", paging);
 
-        StoreService store = storeService;
 
         // 모델에 데이터 추가
         model.addAttribute("reservations", reservations);
         model.addAttribute("search", search);
         model.addAttribute("totalCnt", totalCnt);
-        model.addAttribute("store", store);
 
         return "reservation/getRsrvUserList";
     }
@@ -382,7 +378,7 @@ public class ReservationController {
     public String addRsrv(
             @RequestParam("storeId") int storeId,
             HttpSession session,
-            @RequestParam(value = "effectDt", required = false) String effectDtStr, // String으로 받기
+            @RequestParam(value = "effectDt", required = false) String effectDtStr,
             Model model) throws Exception {
 
         System.out.println("/reservation/addReservation : GET");
@@ -460,7 +456,7 @@ public class ReservationController {
 
     @RequestMapping(value = "addRsrv", method = RequestMethod.POST)
     public String addRsrv(
-            @RequestParam("selectedDate") String rsrvDtStr, // String으로 받기
+            @RequestParam("selectedDate") String rsrvDtStr,
             HttpSession session,
             @RequestParam("storeId") int storeId,
             @ModelAttribute("reservation") Reservation reservation,
@@ -485,7 +481,7 @@ public class ReservationController {
         java.util.Date parsedDate = dateTimeFormat.parse(rsrvDtStr);
 
         // java.sql.Date 또는 java.sql.Timestamp로 변환 필요
-        reservation.setRsrvDt(new java.sql.Date(parsedDate.getTime())); // java.sql.Date 사용 시
+        reservation.setRsrvDt(new java.sql.Date(parsedDate.getTime()));
 
         if (store.getUserName().equals(user.getUsername())) {
             reservationService.addRsrvStore(reservation);
@@ -496,7 +492,7 @@ public class ReservationController {
         reservationService.addRsrv(reservation);
 
         // 저장 후 예약 번호 가져오기 (MyBatis나 JPA의 경우, reservation 객체에 rsrvNo가 자동으로 설정됨)
-        int rsrvNo = reservation.getRsrvNo(); // MyBatis나 JPA가 예약 번호를 설정했다고 가정
+        int rsrvNo = reservation.getRsrvNo();
 
         // 예약 번호를 pay 페이지로 전달
         redirectAttributes.addAttribute("rsrvNo", rsrvNo);
@@ -578,7 +574,7 @@ public class ReservationController {
 
         String[] parts = orderId.split("_");
 
-        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
+        int rsrvNo = Integer.parseInt(parts[0]);
 
         paymentService.confirmPayment(paymentKey, orderId, amount);
 
@@ -598,14 +594,18 @@ public class ReservationController {
         // 2. 가게 정보 조회 (예약 최대 인수)
         Store store = storeService.getStore(reservation.getStoreId(), sqlRsrvDt);
         StoreOperation storeOperation = store.getStoreOperation();
-        int maxCapacity = store.getStoreOperation().getRsrvLimit(); // 가게의 예약 최대 인수
+
+        // 가게의 예약 최대 인수
+        int maxCapacity = store.getStoreOperation().getRsrvLimit();
 
         // 3. 휴무일 확인
-        List<String> closedayList = storeOperation.getClosedayList(); // 가게의 휴무일 목록
-        String reservationDate = sqlRsrvDt.toString(); // 예약 날짜를 문자열로 변환
+        // 가게의 휴무일 목록
+        List<String> closedayList = storeOperation.getClosedayList();
+        // 예약 날짜를 문자열로 변환
+        String reservationDate = sqlRsrvDt.toString();
 
+        // 예약 일자가 휴무일인 경우
         if (closedayList != null && closedayList.contains(reservationDate)) {
-            // 예약 일자가 휴무일인 경우
 
             paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다.",null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
@@ -621,7 +621,6 @@ public class ReservationController {
 
         // 5. 예약 최대 인수 비교 및 처리
         if (totalReservationCount > maxCapacity) {
-            // 예약 상태를 "예약 취소"로 변경
 
             paymentService.refundPayment(reservation.getPaymentId(), "예약이 마감되었습니다." ,null, amount);
             reservationService.updateRsrvStatus(rsrvNo, "예약 취소");
@@ -633,7 +632,6 @@ public class ReservationController {
             // 예약 상태를 "예약 요청"으로 변경
             reservationService.updateRsrvStatus(rsrvNo, "예약 요청");
 
-            // success.html로 이동
             return "redirect:getRsrvUserList";
         }
     }
@@ -680,35 +678,5 @@ public class ReservationController {
         }
         return "redirect:/reservation/getRsrvStoreList";
     }
-
-
-//    @RequestMapping(value = "paycheck", method = RequestMethod.GET)
-//    public String Paycheck(@RequestParam("orderId") String orderId,
-//                           @RequestParam("paymentKey") String paymentKey,
-//                           @RequestParam int amount,
-//                           Model model) throws Exception {
-//
-//        System.out.println("/reservation/Paycheck : GET");
-//
-//        String[] parts = orderId.split("_");
-//
-//        int rsrvNo = Integer.parseInt(parts[0]); // 예약 번호 추출
-//
-//        paymentService.confirmPayment(paymentKey, orderId, amount);
-//
-//        String paymentId = paymentKey;
-//
-//
-//        reservationService.updateRsrvpay(rsrvNo, paymentId);
-//
-//
-//
-//        model.addAttribute("rsrvNo", rsrvNo);
-//
-//        return "test/reservation/pay";
-//    }
-
-
-
 
 }
