@@ -1,6 +1,7 @@
 // 휴무일 달력 함수
 document.addEventListener('DOMContentLoaded', function () {
 
+    const storeId = $("input[name='storeId']").val()
     const calendarEl = document.getElementById('closedayCalendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: '/api-store/getClosedayByMonth',
                 type: 'GET',
                 data: {
-                    storeId: 1,
+                    storeId: storeId,
                     startDate: info.startStr,
                     endDate: info.endStr
                 },

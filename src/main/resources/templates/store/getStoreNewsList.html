@@ -73,9 +73,9 @@
                                                     <div class="css-82a6rk e744wfw3">
                                                         <div class="css-jmalg e1uzxhvi6">
                                                             <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                                                <textarea class="css-1bkd15f e1uzxhvi2"
+                                                                <textarea class="css-1bkd15f e1uzxhvi2" id="storeNews0"
                                                                           placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
-                                                                          maxlength="200"
+                                                                          minlength="1" maxlength="200"
                                                                           rows="10" cols="50" style="height: 100px;padding-top: 10px"></textarea>
                                                             </div>
                                                         </div>
@@ -124,52 +124,59 @@
 
 
                 <div class="containerList">
-                    <div class="containerItem" th:each="storeNews : ${storeNewsList}">
-                        <table>
-                            <tbody>
+                    <th:block th:if="${storeNewsList != null && !storeNewsList.isEmpty()}">
+                        <div class="containerItem" th:each="storeNews : ${storeNewsList}">
+                            <table>
+                                <tbody>
 
-                                <tr>
-                                    <td colspan="2">
-                                        <div class="containerHeader">
-                                            <span class="containerData" th:text="${storeNews.regDt}"/>
-                                            <div class="containerTitle">
-                                                <div class="css-1w0ksfz e744wfw2">
-                                                    <div class="btnContainer">
-                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="updateStoreNewsForm" type="button"
-                                                            th:attr="data-newsid=${storeNews.newsId}">
-                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">수정</span>
-                                                    </button>
-                                                    &ensp;
-                                                    <button class="css-ufulao e4nu7ef3 checkBtn" name="removeStoreNews" type="button"
-                                                            th:attr="data-newsid=${storeNews.newsId}">
-                                                        <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
-                                                    </button>
+                                    <tr>
+                                        <td colspan="2">
+                                            <div class="containerHeader">
+                                                <span class="containerData" th:text="${storeNews.regDt}"/>
+                                                <div class="containerTitle">
+                                                    <div class="css-1w0ksfz e744wfw2">
+                                                        <div class="btnContainer">
+                                                        <button class="css-ufulao e4nu7ef3 checkBtn" name="updateStoreNewsForm" type="button"
+                                                                th:attr="data-newsid=${storeNews.newsId}">
+                                                            <span class="css-ymwvow e4nu7ef1 checked_nick_btn">수정</span>
+                                                        </button>
+                                                        &ensp;
+                                                        <button class="css-ufulao e4nu7ef3 checkBtn" name="removeStoreNews" type="button"
+                                                                th:attr="data-newsid=${storeNews.newsId}">
+                                                            <span class="css-ymwvow e4nu7ef1 checked_nick_btn">삭제</span>
+                                                        </button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                        </td>
+                                    </tr>
 
-                                <tr style="display: flex; align-items: flex-start;margin-top: 5%;">
-                                    <td style="flex-shrink: 0;width: 300px; height: 300px">
-                                        <img th:src="${(storeNews.newsImg == null || storeNews.newsImg.isEmpty())? '/images/store/icon_no_image.png' : ((storeNews.newsImg.indexOf('_') != -1)? '/images/store/news/' + storeNews.newsImg : url + storeNews.newsImg)}" th:alt="${storeNews.newsImg}"
-                                             width="300" height="300" style="background-color: #FFFFFF;">
-                                    </td>
-                                    <td style="flex-grow: 1; padding-left: 20px;">
-                                        <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                                            <textarea class="css-1bkd15f e1uzxhvi2"
-                                                      placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
-                                                      maxlength="200"
-                                                      rows="10" cols="50" style="height: 300px; padding-top: 10px"
-                                                      th:text="${storeNews.newsContents}" disabled></textarea>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr style="display: flex; align-items: flex-start;margin-top: 5%;">
+                                        <td style="flex-shrink: 0;width: 300px; height: 300px">
+                                            <img th:src="${(storeNews.newsImg == null || storeNews.newsImg.isEmpty())? '/images/store/icon_no_image.png' : ((storeNews.newsImg.indexOf('_') != -1)? '/images/store/news/' + storeNews.newsImg : url + storeNews.newsImg)}" th:alt="${storeNews.newsImg}"
+                                                 width="300" height="300" style="background-color: #FFFFFF;">
+                                        </td>
+                                        <td style="flex-grow: 1; padding-left: 20px;">
+                                            <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                                                <textarea class="css-1bkd15f e1uzxhvi2" th:id="'storeNews'+${storeNews.newsId}"
+                                                          placeholder="매장 소식을 입력해주세요. * 최대 200 글자" name="newsContents"
+                                                          rows="10" cols="50" style="height: 300px; padding-top: 10px"
+                                                          minlength="1" maxlength="200"
+                                                          th:text="${storeNews.newsContents}" disabled></textarea>
+                                            </div>
+                                        </td>
+                                    </tr>
 
-                            </tbody>
-                        </table>
-                    </div>
+                                </tbody>
+                            </table>
+                        </div>
+                    </th:block>
+                    <th:block th:unless="${storeNewsList != null && !storeNewsList.isEmpty()}">
+                        <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                            등록된 매장 소식이 없습니다.
+                        </div>
+                    </th:block>
                 </div>
 
             </form>
