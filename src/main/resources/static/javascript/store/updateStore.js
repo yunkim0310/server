@@ -13,39 +13,67 @@ $(function() {
         googleApiKey = apiKey.google;
     });
 
+    // 편의시설 중복방지 함수 (콜키지, 키즈존 관련)
+    function chkAmenitiesValidation() {
+
+        const $corkageFree = $("#amenitiesNo3");
+        const $corkageAble = $("#amenitiesNo4");
+
+        const $kidsZone = $("#amenitiesNo5");
+        const $noKidsZone = $("#amenitiesNo6");
+
+        // 코르키지 관련 체크 상태 처리
+        $corkageAble.prop("disabled", $corkageFree.is(":checked"));
+        $corkageFree.prop("disabled", $corkageAble.is(":checked"));
+
+        // 키즈존 관련 체크 상태 처리
+        $noKidsZone.prop("disabled", $kidsZone.is(":checked"));
+        $kidsZone.prop("disabled", $noKidsZone.is(":checked"));
+    }
+
+    chkAmenitiesValidation();
+
     
     // submit 함수
-    $("button#submit").on("click", function () {
+    $("button#submit").on("click", function (e) {
 
-        // 음식 카테고리 합치기
-        var category1 = $("input[name='foodCategory1']:checked").val();
-        var category2 = $("input[name='foodCategory2']:checked").val();
-        var category3 = $("input[name='foodCategory3']:checked").val();
-        var category4 = $("input[name='foodCategory4']").val();
-        $("input[name='foodCategoryId']").val(category1+"/"+(category2.replace("-", ", "))+"/"+category3+"/"+category4);
+        if (chkValidation()) {
 
-        // 매장 주소 합치기
-        $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ', ' + $("input[name='storeAddr2']").val());
+            // 음식 카테고리 합치기
+            var category1 = $("input[name='foodCategory1']:checked").val();
+            var category2 = $("input[name='foodCategory2']:checked").val();
+            var category3 = $("input[name='foodCategory3']:checked").val();
+            var category4 = $("input[name='foodCategory4']").val();
+            $("input[name='foodCategoryId']").val(category1 + "/" + (category2.replace("-", ", ")) + "/" + category3 + "/" + category4);
 
-        // 매장 전화번호 합치기
-        var phone1 = $("input[name='storePhone1']").val().replace(" ", "");
-        if (phone1 != null && phone1 !== "") {
-            var phone2 = $("input[name='storePhone2']").val().replace(" ", "");
-            var phone3 = $("input[name='storePhone3']").val().replace(" ", "");
+            // 매장 주소 합치기
+            $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ', ' + $("input[name='storeAddr2']").val());
 
-            $("input[name='storePhone']:hidden").val(phone1+'-'+phone2+'-'+phone3);
+            // 매장 전화번호 합치기
+            var phone1 = $("input[name='storePhone1']").val().replace(" ", "");
+            if (phone1 != null && phone1 !== "") {
+                var phone2 = $("input[name='storePhone2']").val().replace(" ", "");
+                var phone3 = $("input[name='storePhone3']").val().replace(" ", "");
+
+                $("input[name='storePhone']:hidden").val(phone1 + '-' + phone2 + '-' + phone3);
+            }
+
+            // 해시태그 변경 (공백, # 제거)
+            $("input[name='hashtagList']").each(function () {
+
+                let hashtag = $(this).val();
+
+                hashtag = hashtag.replace("#", "").replace(" ", "");
+
+                $(this).val(hashtag);
+
+            });
+
+            $("form").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data").submit();
+
+        } else {
+            e.preventDefault();
         }
-
-        // 해시태그 변경 (공백, # 제거)
-        $("input[name='hashtagList']").each(function () {
-
-            let hashtag = $(this).val();
-
-            hashtag = hashtag.replace("#","").replace(" ", "");
-
-            $(this).val(hashtag);
-
-        });
 
     });
 
@@ -184,7 +212,7 @@ $(function() {
                     '<div class="css-jmalg e1uzxhvi6">' +
                         '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
                             '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
-                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
+                            'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList" maxlength="10">' +
                         '</div>' +
                     '</div>' +
                 '</div>' +
@@ -209,6 +237,7 @@ $(function() {
 
     });
 
+    // 해시태그 입력창 삭제 함수
     $(document).on('click', "button[name='removeHashtagInput']", function() {
         $(this).closest('.addedHashtagInput').remove();  // 해당 div 삭제
         hashtagCnt--;
@@ -221,6 +250,7 @@ $(function() {
     });
 
 
+    // 메뉴 입력창 생성함수
     var menuCnt = Number($("input[name='menuCnt']:hidden").val());
 
     $('button[name="addMenuInput"]').on('click', function () {
@@ -272,7 +302,7 @@ $(function() {
             '<div class="css-82a6rk e744wfw3">' +
             '<div class="css-jmalg e1uzxhvi6">' +
             '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-            `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName">` +
+            `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 이름을 입력해주세요." name="menuList[${menuCnt}].menuName" min="0" required>` +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -292,7 +322,7 @@ $(function() {
             '<div class="css-82a6rk e744wfw3">' +
             '<div class="css-jmalg e1uzxhvi6">' +
             '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-            `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice">` +
+            `<input type="number" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 가격을 입력해주세요." name="menuList[${menuCnt}].menuPrice" min="0" required>` +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -311,7 +341,7 @@ $(function() {
             '<div class="css-82a6rk e744wfw3">' +
             '<div class="css-jmalg e1uzxhvi6">' +
             '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-            `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo">` +
+            `<input type="text" class="css-1bkd15f e1uzxhvi2" placeholder="메뉴 설명을 입력해주세요." name="menuList[${menuCnt}].menuInfo" maxlength="100">` +
             '</div>' +
             '</div>' +
             '</div>' +
@@ -335,6 +365,7 @@ $(function() {
 
 
     // TODO 기존 선택한 대표메뉴 삭제시 #defaultMenu로 체크되게 변경
+    // 메뉴 입력창 삭제 함수
     $(document).on('click', "button[name='removeMenuInput']", function() {
 
         $(this).closest('.addedMenuInput').remove();  // 해당 div 삭제
@@ -351,5 +382,92 @@ $(function() {
     // 파일 업로드 모듈
     fileUploadEvent("storeImg", "store/store/");
     fileUploadEvent("menuImg", "store/menu/");
+
+
+    // 유효성 검사
+    function chkValidation () {
+
+        // 매장 사진
+        const storeImg1 = $("input[name='storeImg1']:hidden").val();
+        const storeImg2 = $("input[name='storeImg2']:hidden").val();
+        const storeImg3 = $("input[name='storeImg3']:hidden").val();
+
+        let result = true;
+
+        if (storeImg1 == null || storeImg2 == null || storeImg3 == null) {
+            alert("매장 사진이 부족합니다.");
+            return false;
+        }
+
+        // 매장명
+        var storeName = $.trim(("input[name='storeName']").val());
+
+        if (storeName === "") {
+            alert("매장명은 공백만 입력할 수 없습니다.");
+            return false;
+        }
+
+        // 주소
+        if ($("input[name='storeAddr1']").val() == null) {
+            alert("주소는 필수 입력사항입니다.")
+            return false;
+        }
+
+        // 매장 소개
+        var storeInfo = $.trim($("#storeInfo").val());
+
+        // 공백만 있거나 개행만 있는 경우
+        if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
+            alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+            return false;
+        }
+
+        // 음식 카테고리
+        if ($("input[name='foodCategory1']").is(":checked") && $("input[name='foodCategory2']").is(":checked") && $("input[name='foodCategory3']").is(":checked")) {
+            result = true;
+        } else {
+            alert("음식 카테고리를 3차까지 선택해주세요");
+            return false;
+        }
+
+        // 메뉴
+        if ($("input[name='menuList[0].menuName']").val() == null || $("input[name='menuList[0].menuPrice']") == null) {
+            alert("메뉴 이름과 가격은 필수 입력사항입니다.")
+            return false;
+        }
+
+        return result;
+    }
+
+
+    // 편의시설 중복 방지 함수 (콜키지 프리, 콜키지 가능/키즈존, 노키즈존)
+    $("input[name='amenitiesNoList']").on("change", function () {
+
+        chkAmenitiesValidation();
+
+    });
+
+    // 해시태그 입력 필터링 함수
+    function hashtagInputFilter(input) {
+
+        // 한글, 영어, 숫자만 허용하는 정규식
+        const pattern = /^[가-힣a-zA-Z0-9]*$/;
+
+        return input.split('').filter(char => pattern.test(char)).join('');
+    }
+
+    // 해시태그 입력 이벤트처리
+    $(document).on("input", "input[name='hashtagList']", function () {
+
+        var input = $(this).val();
+
+        // 필터링된 값으로 업데이트
+        var filteredValue = hashtagInputFilter(input);
+
+        if (input !== filteredValue) {
+            $(this).val(filteredValue);
+            alert("한글, 영어, 숫자만 입력 가능합니다. 공백은 허용되지 않습니다.");
+        }
+    });
 
 });

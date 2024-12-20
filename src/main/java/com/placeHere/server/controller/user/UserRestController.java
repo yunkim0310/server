@@ -74,7 +74,7 @@ public class UserRestController {
 
             if(user.getUsername().equals("admin")) {
                 log.info(" ADMIN USER LOGIN ");
-                session.setAttribute("user", dbUser);
+//                session.setAttribute("user", dbUser);
                 return new ResponseEntity<>("ADMIN_SUCCESS", HttpStatus.OK);
             }
 

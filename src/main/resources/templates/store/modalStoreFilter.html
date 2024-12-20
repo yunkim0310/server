@@ -214,14 +214,14 @@
                                                                    class="css-1bkd15f e1uzxhvi2"
                                                                    style="width: 45%;text-align: center;"
                                                                    placeholder="최소 가격을 입력해주세요" name="priceMin"
-                                                                   min="0" max="100000"
+                                                                   min="0" th:max="${(search != null)? search.priceMax : 100000}"
                                                                    th:value="${(search != null)? search.priceMin : 0}">
                                                             ~
                                                             <input type="number"
                                                                    class="css-1bkd15f e1uzxhvi2"
                                                                    style="width: 45%;text-align: center;"
                                                                    placeholder="최대 가격을 입력해주세요" name="priceMax"
-                                                                   min="0" max="100000"
+                                                                   th:min="${(search != null)? search.priceMin : 0}" max="100000"
                                                                    th:value="${(search != null)? search.priceMax : 100000}">
                                                         </div>
                                                     </div>
@@ -249,8 +249,8 @@
                                                         <div class="css-jmalg e1uzxhvi6">
                                                             <div class="css-176lya2 e1uzxhvi3 under-name-block">
                                                                 <input type="text"
-                                                                       class="css-1bkd15f e1uzxhvi2"
-                                                                       placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList"
+                                                                       class="css-1bkd15f e1uzxhvi2" name="hashtagList"
+                                                                       placeholder="#을 제외한 해시태그를 입력해주세요." maxlength="10"
                                                                        th:value="${(search.hashtagList != null && !search.hashtagList.isEmpty())? search.hashtagList.get(0) : null}">
                                                             </div>
                                                         </div>
