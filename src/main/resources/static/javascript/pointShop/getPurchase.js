@@ -2,6 +2,12 @@ $(function() {
 
     $("button[name='buyBtn']").on("click", function () {
         var prodNo = $(this).data("prod-no");
+        var prodStatus = $(this).data("prod-status");
+
+        if(!prodStatus){
+            alert("판매 중지된 상품입니다.");
+            return;
+        }
         self.location = "/purchase/addPurchase?prodNo=" + prodNo;
     });
 
