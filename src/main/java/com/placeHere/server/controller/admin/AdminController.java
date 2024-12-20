@@ -61,7 +61,10 @@ public class AdminController {
 
     // 회원 리스트 목록
     @GetMapping("/getUserList")
-    public ResponseEntity<?> getUserList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
+    public ResponseEntity<?> getUserList(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int perPage,
+                                         @RequestParam(required = false) String username
+                                                                                            ) throws Exception {
 
         log.info("/api-admin/getUserList - GET Controller ");
 
@@ -71,10 +74,16 @@ public class AdminController {
 
         list = adminService.getUserList();
 
+        // 검색 조건에 맞는 데이터 필터링
+        if (username != null && !username.isEmpty()) {
+            list = list.stream().filter(user -> user.getUsername().contains(username)).collect(Collectors.toList());
+        }
+
         int total = list.size();
         int start = (page-1) * perPage;
         int end = Math.min(start + perPage, total);
 
+        log.info("username : "+ username);
         log.info("page : "+ page);
         log.info("perPage : "+ perPage);
         log.info("start : "+ start);
@@ -113,7 +122,10 @@ public class AdminController {
     }
 
     @GetMapping("/getStoreList")
-    public ResponseEntity<?> getStoreList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
+    public ResponseEntity<?> getStoreList(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int perPage,
+                                          @RequestParam(required = false) String username
+                                                                                            ) throws Exception {
 
         log.info("/api-admin/getStoreList - GET Controller ");
         List<User> list = new ArrayList<>();
@@ -122,11 +134,16 @@ public class AdminController {
         // 점주회원 리스트
         list = adminService.getStoreList();
 
+        if (username != null && !username.isEmpty()) {
+            list = list.stream().filter(user -> user.getUsername().contains(username)).collect(Collectors.toList());
+        }
+
         // 점주회원 개수
         int total = list.size();
         int start = (page-1) * perPage;
         int end = Math.min(start + perPage, total);
 
+        log.info("username : "+ username);
         log.info("page : "+ page);
         log.info("perPage : "+ perPage);
         log.info("start : "+ start);
@@ -165,14 +182,23 @@ public class AdminController {
 
     // 예약 리스트
     @GetMapping("/getRsrvList")
-    public ResponseEntity<?> getRsrvList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
+    public ResponseEntity<?> getRsrvList(@RequestParam(defaultValue = "0") int page,
+                                         @RequestParam(defaultValue = "10") int perPage,
+                                         @RequestParam(required = false) String username
+                                                                                        ) throws Exception {
 
         log.info("/api-admin/getRsrvList - GET Controller ");
         List<Reservation> list = new ArrayList<>();
         Map<String, Object> map = new HashMap<String, Object>();
 
-        // 점주회원 리스트
+        // 예약 리스트
         list = adminService.getRsrvList();
+
+        if (username != null && !username.isEmpty()) {
+            list = list.stream()
+                    .filter(reservation -> reservation.getUserName() != null && reservation.getUserName().contains(username))
+                    .collect(Collectors.toList());
+        }
 
         // 점주회원 개수
         int total = list.size();
@@ -234,7 +260,10 @@ public class AdminController {
     }
 
     @GetMapping("/getBatchList")
-    public ResponseEntity<?> getBatchList(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int perPage) throws Exception {
+    public ResponseEntity<?> getBatchList(@RequestParam(defaultValue = "0") int page,
+                                          @RequestParam(defaultValue = "10") int perPage,
+                                          @RequestParam(required = false) String batchName
+                                                                                            ) throws Exception {
 
         log.info("http://localhost:8080/api-admin/getBatchList - GET Controller ");
 
@@ -245,8 +274,11 @@ public class AdminController {
         // 배치 리스트
         list = adminService.getBatchList();
 
-        log.info(">> input page :: " + page);
-        log.info(">> input perPage :: " + perPage);
+        if (batchName != null && !batchName.isEmpty()) {
+            list = list.stream()
+                    .filter(batch -> batch.getBatchName() != null && batch.getBatchName().contains(batchName))
+                    .collect(Collectors.toList());
+        }
 
         // 개수
         int total = list.size();
