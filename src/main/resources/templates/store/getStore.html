@@ -233,7 +233,7 @@
                     <!-- 리뷰 -->
                     <th:block th:if="${mode == 'review'}">
                         <th:block th:if="${session.user != null}">
-                            <div class="reviewList" th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
+                            <div class="reviewList" th:insert="~{community/getReviewList :: reviewListFragment}"></div>
                         </th:block>
                         <th:block th:unless="${session.user != null}">
                             <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
