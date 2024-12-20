@@ -279,6 +279,7 @@
                                     <div class="v-scroll-inner">
                                         <div class="best-food-list">
                                             <a class="best-food-list-item item"
+                                               th:if="${foodCategory != null && foodCategory.mainCategory != null}"
                                                th:each="category : ${foodCategory.mainCategory}"
                                                th:href="'/getStoreList?foodCategoryId='+${category}">
                                                     <span class="tb">
