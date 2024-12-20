@@ -73,6 +73,8 @@ public class ReservationController {
 
         }
 
+        model.addAttribute("url", bucketUrl);
+
         Reservation reservation = reservationService.getRsrv(rsrvNo);
         String userName = reservation.getUserName();
 

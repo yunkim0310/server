@@ -4,6 +4,7 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
+    <link th:insert="~{common/import :: importFragment}">
     <title>Reservation Form</title>
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
     <style>
@@ -162,6 +163,49 @@
             border-radius: 10px; /* 둥근 테두리 */
             cursor: pointer; /* 클릭 시 손가락 커서 */
         }
+        .headerMain{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+            margin-bottom: 0px;
+        }
+        .header-wrap{
+            position: fixed;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            top: -18px; /* 화면 상단에 고정 */
+            left: 0; /* 화면 왼쪽에 고정 */
+            transition: top 0.3s ease-in-out;
+        }
+        .centerLine{
+            background-color: #dcdcdc;
+            width: 100%;
+            height: 0.1px;
+            border: 0;
+            margin-top: -15px;
+            margin-bottom: 0px;
+        }
+        .headerCategory{
+            display: flex;
+            justify-content: space-between;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: center;
+            padding: 1px 0;
+        }
+        .lastLine{
+            border: 0;
+            height:3px;
+            background-color: #4880FF;
+            width: 100%;
+            margin-bottom: 0px;
+            margin-top:1px;
+        }
+
+
     </style>
 
     <script th:inline="javascript">
@@ -495,7 +539,7 @@
     </script>
 </head>
 <body>
-<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+
 
 <br/><br/><br/>
 
@@ -545,7 +589,7 @@
             <br><br>
 
             <div th:if="${session.user.getRole() == 'ROLE_USER'}" id="amount-box" class="amount-box"
-                 th:text="${store.getStoreOperation().getSecurity()} + ' 원'">0 원</div><br><br>
+                 th:text="${#numbers.formatInteger(store.getStoreOperation().getSecurity(), 3, 'COMMA')} + ' 원'">0 원</div><br><br>
 
             <button type="submit" id="payButton">결제</button>
 
