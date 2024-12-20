@@ -89,7 +89,6 @@
             margin: 0 auto;
             width: 1610px; display: inline-flex; flex-direction: column; align-items: center;
             gap: 10px;
-            margin-left: 110px; /* 왼쪽 여백 추가로 오른쪽으로 이동 */
         }
 
 
@@ -216,7 +215,7 @@
         <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}"
             style="background-color: #4880FF; font-size: 30px; font-weight: bold;">
             <td colspan="5" style="background-color: #4880FF; color: white;">
-                <span th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}" style="font-size: 30px; font-weight: bold;">[예약 날짜]</span>
+                <span th:utext="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')} + '&nbsp;&nbsp;'" style="font-size: 30px; font-weight: bold;">[예약 날짜]</span>
             </td>
         </tr>
 
