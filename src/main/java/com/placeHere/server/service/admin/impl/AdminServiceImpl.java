@@ -70,7 +70,7 @@ public class AdminServiceImpl implements AdminService {
      * 예약 확정 -> 이용 완료
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
 //    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     public void updateServiceComplete() throws Exception {
 
@@ -131,7 +131,8 @@ public class AdminServiceImpl implements AdminService {
 
 //    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     // 매일 03시 진행
-    @Scheduled(cron = "0 0 3 * * ?")
+//    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 0/2 * * ?")
     public void userInactive() throws Exception {
 
         Batch batch = new Batch();
