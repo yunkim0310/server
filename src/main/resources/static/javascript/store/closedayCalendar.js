@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const closeday = arg.event.start;
 
                 // AJAX 요청으로 삭제
-                if (confirm(`휴무일 ${closeday} 를 삭제하시겠습니까?`)) {
+                if (confirm(`휴무일 ${closeday.toISOString().split('T')[0]} 을 삭제하시겠습니까?`)) {
                     $.ajax({
                         url: '/api-store/removeCloseday',
                         type: 'POST',
