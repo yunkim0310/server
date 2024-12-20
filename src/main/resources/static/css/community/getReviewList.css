@@ -1,85 +1,95 @@
 body {
-            font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
-            background-color: #FFF; /* 배경색 */
-            color: #333; /* 기본 텍스트 색 */
-            margin: 17; /* 기본 마진 제거 */
-            padding: 0; /* 기본 패딩 제거 */
-        }
+    font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
+    background-color: #FFF; /* 배경색 */
+    color: #333; /* 기본 텍스트 색 */
+    margin: 17; /* 기본 마진 */
+    padding: 0; /* 기본 패딩 제거 */
+}
 
-<!--        .wrapper {-->
-<!--            max-width: 1200px; /* 최대 너비 설정 */-->
-<!--            margin: 40px auto; /* 중앙 정렬 및 위아래 여백 설정 */-->
-<!--            padding: 20px; /* 여백 추가 */-->
-<!--            background: #fff; /* 흰 배경 */-->
-<!--            border-radius: 8px; /* 둥근 모서리 */-->
-<!--            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */-->
-<!--        }-->
+.__my-review-post {
+    border: 1px solid #e2e2e2; /* 테두리 추가 */
+    border-radius: 5px; /* 테두리 둥글게 */
+    margin-bottom: 20px; /* 리뷰 간의 간격 */
+    padding: 15px; /* 패딩 추가 */
+    background-color: #fff; /* 배경색 */
+    transition: box-shadow 0.3s; /* 호버 효과 */
+}
 
-        .__my-review-post {
-            border: 1px solid #e2e2e2; /* 테두리 추가 */
-            border-radius: 5px; /* 테두리 둥글게 */
-            margin-bottom: 20px; /* 리뷰 간의 간격 */
-            padding: 15px; /* 패딩 추가 */
-            background-color: #fff; /* 배경색 */
-            transition: box-shadow 0.3s; /* 호버 효과 */
-        }
+.__my-review-post:hover {
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
+}
 
-        .__my-review-post:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
-        }
+.__post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* 세로 정렬 */
+    margin: 10px 0; /* 위아래 여백 */
+}
 
-        .__post-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center; /* 세로 정렬 */
-            margin: 10px 0; /* 위아래 여백 */
-        }
+.btn-like-inactive,
+.btn-like-active {
+    border-radius: 50%;
+    display: inline-block;
+    width: 40px;
+    height: 40px;
+    background-size: 50%; /* 아이콘 크기 조절 */
+    cursor: pointer;
+    margin-right: 700px;
+    transition: background 0.3s ease; /* 버튼 호버 효과 */
+}
 
-        .btn-like-inactive,
-        .btn-like-active {
-            border-radius: 50%;
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background-size: 50%; /* 아이콘 크기 조절 */
-            cursor: pointer;
-            margin-right: 700px;
-            transition: background 0.3s ease; /* 버튼 호버 효과 */
-        }
+.btn-like-inactive {
+    background: #fff url('/file/community/icon_heart_white.png') center no-repeat; /* 비활성화 상태 */
+}
 
-        .btn-like-inactive {
-            background: #fff url('/file/community/icon_heart_white.png') center no-repeat; /* 비활성화 상태 */
-        }
+.btn-like-active {
+    background: #fff url('/file/community/icon_heart_red.png') center no-repeat; /* 활성화 상태 */
+}
 
-        .btn-like-active {
-            background: #fff url('/file/community/icon_heart_red.png') center no-repeat; /* 활성화 상태 */
-        }
+.__content {
+    font-size: 1em; /* 텍스트 크기 조정 */
+    line-height: 1.5; /* 줄 간격 조정 */
+    margin-top: 10px; /* 상단 여백 */
+    width: 80%;
+    margin: 15px auto;
+}
 
-        .__content {
-            font-size: 1em; /* 텍스트 크기 조정 */
-            line-height: 1.5; /* 줄 간격 조정 */
-            margin-top: 10px; /* 상단 여백 */
-            width: 80%;
-            margin: 15px auto;
-        }
+.__rating {
+    font-weight: bold; /* 평점 굵게 표시 */
+    font-size: 1.5em; /* 평점 크기 조정 */
+    color: #ffcc00; /* 평점 색상 */
+}
 
-        .__rating {
-            font-weight: bold; /* 평점 굵게 표시 */
-            font-size: 1.5em; /* 평점 크기 조정 */
-            color: #ffcc00; /* 평점 색상 */
-        }
+.like-count,
+.comment-count {
+    font-weight: bold; /* 숫자 굵게 표시 */
+}
 
-<!--        .restaurant-info {-->
-<!--            whidth: 850px;-->
-<!--            margin: 0 auto;-->
-<!--            margin-top: 15px; /* 상단 여백 */-->
-<!--            border-top: 1px solid #e2e2e2; /* 상단 테두리 */-->
-<!--            padding-top: 10px; /* 패딩 추가 */-->
-<!--        }-->
+.photo-slider {
+    position: relative;
+    text-align: center; /* 가운데 정렬 */
+}
 
-        .like-count,
-        .comment-count {
-            font-weight: bold; /* 숫자 굵게 표시 */
-        }
+.photo-slider .photos img {
+    width: 100%; /* 이미지 크기 조절 */
+    max-width: 500px; /* 최대 너비 설정 */
+}
 
-        /* 추가적인 스타일 및 반응형 디자인 추가 가능 */
+.nav-btn {
+    position: absolute;
+    top: 50%; /* 수직 중앙 배치 */
+    transform: translateY(-50%); /* 수직 중앙 정렬 */
+    background-color: rgba(255, 255, 255, 0.8); /* 버튼 배경 색상 */
+    border: none; /* 테두리 제거 */
+    cursor: pointer; /* 커서 모양 변경 */
+    padding: 10px; /* 패딩 추가 */
+    z-index: 1; /* 버튼을 앞에 표시 */
+}
+
+#prevBtn {
+    left: 10px; /* 왼쪽 버튼 위치 설정 */
+}
+
+#nextBtn {
+    right: 10px; /* 오른쪽 버튼 위치 설정 */
+}

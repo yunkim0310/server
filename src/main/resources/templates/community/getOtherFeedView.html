@@ -210,14 +210,14 @@
 
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
         <main id="main">
-            <section class="section mb-50">
+            <section class="section mb-50" style="margin-top: 14%;">
                 <div class="container gutter-sm">
                     <div class="section-body">
                         <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
 
                             <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
-                                <img th:src="@{/file/community/friendReivewIsnotReivew_icon.png}" alt="리뷰 목록 없을때" style="width: 50px; height: 50px; margin-bottom: 10px;"> <!-- 아이콘 크기 조정 -->
-                                <p class="no-reviews-message" th:text="${friendUsername} + ' 님의 등록된 리뷰가 없습니다.'"></p> <!-- 이모티콘 추가 -->
+                                <img th:src="@{/file/community/friendReivewIsnotReivew_icon.png}" alt="리뷰 목록 없을때" style="width: 50px; height: 50px; margin-bottom: -46px; margin-left:65%;"> <!-- 아이콘 크기 조정 -->
+                                <p class="no-reviews-message"  style="text-align: center; padding: 0%;font-weight: bold; font-size: 18px;" th:text="${friendUsername} + ' 님의 등록된 리뷰가 없습니다.'"></p> <!-- 이모티콘 추가 -->
 
                                 <!-- 친구 목록 바로 가기 링크 -->
                                 <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'" style="display: inline-block; margin-top: 10px; text-decoration: none; color: #007BFF;">
@@ -231,8 +231,8 @@
                                     <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
                                         <div class="__header" style="padding-left: 0;">
                                             <div class="__user-info" style="justify-content: space-between;">
-                                                <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
-                                                    <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진">
+                                                <div class="review-details"  > <!-- 리뷰 작성자를 표시하는 영역 -->
+                                                    <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" style=" height: 71px; width: 72px; border-radius: 40px;" alt="프로필사진">
                                                     <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
                                                         <span th:text="${review.userName}"
                                                               style="font-size: 1.5em; font-weight: bold; color: #2c3e50;

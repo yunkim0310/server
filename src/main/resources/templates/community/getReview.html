@@ -19,21 +19,21 @@
 <body>
 
 <!--<div th:include="~{community/menuBar}"></div>-->
-<div class="__user-info" style="justify-content: space-between;">
+<div class="__user-info" style="justify-content: space-between; margin-left:12%;">
     <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
-        <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
-        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
-                                                        <span th:text="${review.userName}"
-                                                              style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
-                                                              text-transform: uppercase; margin-bottom: 5px; margin-left:430 display: block;"></span> <!-- 작성자 이름 -->
+        <img id="profileImgView" style=" height: 71px; width: 72px; border-radius: 40px; margin-top:6%;" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
+        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}" style="margin-left:0%;">
+                                        <span th:text="${review.userName}"
+                                              style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+                                              text-transform: uppercase; margin-bottom: 5px; margin-left:430 display: block;"></span> <!-- 작성자 이름 -->
         </a>
     </div>
 </div>
 
 <p style="margin-top:37px;">
-<th:block th:if="${review.currReviewUpdate != null}">
-    <p>최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd')}"></span> (수정됨)</p>
-</th:block>
+    <th:block th:if="${review.currReviewUpdate != null}">
+        <p style="margin-left:13%;">최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd')}"></span> (수정됨)</p>
+    </th:block>
 </p>
 
 <div class="review-container">
@@ -89,18 +89,18 @@
 
         <button type="button" name="addCommentBtn" style="margin-bottom:0%">댓글 추가</button>
         <div style="margin-left:6%; margin-top:-4%">
-        <span class="comment-count" style="margin-left:4.5%" th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>
-<!--            <span th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>-->
+            <span class="comment-count" style="margin-left:4.5%" th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>
+            <!--            <span th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>-->
 
 
             <th:block th:if="${(session.user != null) && (session.user.role == 'ROLE_USER' || session.user.role == 'ROLE_STORE')}">
-            <a style="cursor: pointer" id="like"
-               th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
-               th:data-review-no="${review.reviewNo}"
-               th:data-username="${session.user != null ? session.user.username : ''}">
-                <span class="like-count" style="margin-left: 98%;" th:text="${review.reviewLikeCnt}"></span>
-            </a>
-        </th:block>
+                <a style="cursor: pointer" id="like"
+                   th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
+                   th:data-review-no="${review.reviewNo}"
+                   th:data-username="${session.user != null ? session.user.username : ''}">
+                    <span class="like-count" style="margin-left: 98%;" th:text="${review.reviewLikeCnt}"></span>
+                </a>
+            </th:block>
         </div>
 
 
