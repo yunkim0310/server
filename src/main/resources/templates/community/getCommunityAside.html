@@ -1,43 +1,36 @@
-<ul class="css-1x9bshx ecbxmj2" th:fragment="getCommunityAside" xmlns:th="http://www.w3.org/1999/xhtml">
-    <!--div th:if="${session.user.role == 'ROLE_USER'}" class="user"-->
-
+    <ul class="css-1x9bshx ecbxmj2" th:fragment="getCommunityAside" xmlns:th="http://www.w3.org/1999/xhtml">
+        <!-- 전체 리뷰 리스트는 항상 표시 -->
         <li class="css-0 ecbxmj1">
             <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=allList'">
                 전체 리뷰 리스트
                 <span class="css-e41glx e1x0rfoo0"></span>
             </a>
         </li>
-    <div th:if="${session.user != null}" class="user">
-        <li class="css-0 ecbxmj1">
-            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=myFeed'">
-                My Feed
-                <span class="css-e41glx e1x0rfoo0"></span>
-            </a>
-        </li>
 
-        <li class="css-0 ecbxmj1">
-            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'">
-                친구 목록
-                <span class="css-e41glx e1x0rfoo0"></span>
-            </a>
-        </li>
+        <!-- 로그인 상태 및 역할에 따라 추가 메뉴 표시 -->
+        <div th:if="${session.user != null}">
+            <div th:if="${session.user.role == 'ROLE_USER'}">
+                <!-- ROLE_USER인 경우 모든 메뉴 표시 -->
+                <li class="css-0 ecbxmj1">
+                    <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=myFeed'">
+                        My Feed
+                        <span class="css-e41glx e1x0rfoo0"></span>
+                    </a>
+                </li>
 
-        <li class="css-0 ecbxmj1">
-            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendReqStatus'">
-                친구 요청 현황
-                <span class="css-e41glx e1x0rfoo0"></span>
-            </a>
-        </li>
-    </div>
+                <li class="css-0 ecbxmj1">
+                    <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'">
+                        친구 목록
+                        <span class="css-e41glx e1x0rfoo0"></span>
+                    </a>
+                </li>
 
-    <!-- 사용자가 로그인하지 않았을 때 표시 -->
-<!--    <div th:if="${session.user == null}" class="guest">-->
-<!--        <li class="css-0 ecbxmj1">-->
-<!--            <a class="css-pi3u6r ecbxmj0" th:href="'/review/getReviewList?type=allList'">-->
-<!--                전체 리뷰 리스트-->
-<!--                <span class="css-e41glx e1x0rfoo0"></span>-->
-<!--            </a>-->
-<!--        </li>-->
-<!--    </div>-->
+                <li class="css-0 ecbxmj1">
+                    <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendReqStatus'">
+                        친구 요청 현황
+                        <span class="css-e41glx e1x0rfoo0"></span>
+                    </a>
+                </li>
+            </div>
 
-</ul>
+    </ul>

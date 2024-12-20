@@ -98,8 +98,6 @@ public class MainController {
 
         if (reviewNoList != null && !reviewNoList.isEmpty()) {
             reviewList = communityService.getReviewListByReviewNo(reviewNoList);
-        } else {
-            reviewList = communityService.getReviewListByReviewNo(List.of(1, 2, 3, 4, 5));
         }
 
         System.out.println(reviewNoList);

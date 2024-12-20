@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
@@ -14,13 +14,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script type="text/javascript" src="/javascript/templates/script.js"></script>
 
+    <script src="/javascript/community/like.js"></script>
+
     <style>
         body {
             font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
             background-color: #FFF; /* 배경색 */
             color: #333; /* 기본 텍스트 색 */
-            margin-top: 72px;
-            margin-left: -15px;
+            margin: 0; /* 기본 마진 제거 */
             padding: 0; /* 기본 패딩 제거 */
         }
 
@@ -100,143 +101,101 @@
             font-weight: bold; /* 숫자 굵게 표시 */
         }
 
-        .no-reviews p {
-    font-size: 1.5em; /* 글씨 크기 */
-    font-family: 'Helvetica Neue', Arial, sans-serif; /* 폰트 스타일 */
-    color: #2c3e50; /* 글씨 색상 */
-    margin: 10px 0; /* 여백 조정 */
+            .hover-effect {
+        transition: transform 0.3s, opacity 0.3s; /* 애니메이션 효과를 부드럽게 */
     }
+
+     .hover-effect {
+        transition: transform 0.3s, opacity 0.3s, filter 0.3s; /* 애니메이션 효과를 부드럽게 */
+    }
+
+    .hover-effect:hover {
+        transform: scale(1.1); /* 이미지를 10% 확대 */
+        opacity: 0.8; /* 이미지 투명도를 80%로 변경 */
+        filter: brightness(0) saturate(100%) invert(26%) sepia(99%) saturate(3311%) hue-rotate(175deg) brightness(97%) contrast(98%); /* 원하는 색상 효과 추가 */
+    }
+
+            .preview-tooltip {
+        display: none; /* 기본적으로 숨김 */
+        position: absolute;
+        background-color: #fff; /* 하얀색 배경 */
+        border: 1px solid #ddd;
+        padding: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        z-index: 100; /* 다른 요소 위에 표시 */
+    }
+
+    .detail-button:hover .preview-tooltip {
+        display: block; /* 마우스 올려졌을 때 표시 */
+    }
+
+    .button-group {
+        position: relative; /* 툴팁을 버튼에 상대적으로 위치시키기 위해 설정 */
+    }
+
     </style>
 
-    <script type="text/javascript">
+    <script src="/javascript/community/getMyReviewList.js"></script>
 
-        $(function() {
-
-            $('a#like').on('click', function() {
-
-                const $this = $(this);
-                const reviewNo = $this.data('review-no');
-                const userName = $this.data('username');
-
-                console.log(reviewNo);
-                console.log(userName);
-
-                const currentLikeCount = parseInt($('.like-count').text());
-                const isActive = $this.attr("class") === "btn-like-active";
-
-                let likeData = {
-                    userName: userName,
-                    relationNo: reviewNo,
-                    target: 'review',
-                };
-
-                $.ajax({
-                    url: "/api-review/addLike",
-                    method: "POST",
-                    data: JSON.stringify(likeData),
-                    dataType: "json",
-                    headers: {
-                        "Content-Type" : "application/json"
-                    },
-                    success: function(result) {
-
-<!--                        alert(result);-->
-
-                        // 좋아요 취소
-                        if (result === "-1") {
-
-<!--                            alert("좋아요 취소 성공");-->
-
-                        } else if (result === "1") {
-
-<!--                            alert("좋아요 등록 성공");-->
-
-                        } else {
-<!--                            alert("오류");-->
-                        }
-
-                        location.reload();
-
-                    }
-
-                });
-                // ajax End
-
-            });
-        });
-    </script>
 <body>
 
 <!--<div th:include="~{community/getCommunityAside}"></div>-->
 <!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
-<div class="css-833hqy ecbxmj4" style="padding-right: 61%;margin-top: -15px;position: sticky">
-    <div class="side" style="margin-top: 100px; margin-left:190px;">
-        <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;친구 목록</div>
-        <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
-    </div>
-</div>
 
 
-<header id="header"></header> <!-- 페이지 헤더 --> <!-- todo   페이징처림(제대로 작동 되는지 확인) , 친구삭제 신청버튼추가-->
-
+<header id="header"></header> <!-- 페이지 헤더 -->
 <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
-
-    <!-- 친구 신청, 삭제 버튼 -->
-    <div class="fixed-button" style="margin-right: 20%; text-align:right; z-index: 1000;">
-    <!-- 친구 삭제 버튼 -->
-        <div th:if="${friendStatus == true}">
-            <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
-                <input type="hidden" name="friendNo" th:value="${friendNo}" /> <!-- 친구 번호 -->
-                <button type="submit" class="btn-primary del" style="border: none; background: none; cursor: pointer;">
-                    <img th:src="@{/file/community/removeFriend_icon.png}" alt="친구 삭제" style="width: 40px; height: 40px;">
-                    친구 삭제
-                </button>
-            </form>
-        </div>
-
-        <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
-        <div th:if="${friendStatus == false}">
-            <form th:action="@{/review/sendFriendReq}" method="post">
-                <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
-                <button type="submit" class="btn-primary" style="border: none; background: none; cursor: pointer;">
-                    <img th:src="@{/file/community/addFriend_icon.png}" alt="친구 신청" style="width: 40px; height: 40px;">
-                    친구 신청
-                </button>
-            </form>
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+        <div class="side" style="margin-top: 80px;">
+            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;마이 피드</div>
+            <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
         </div>
     </div>
-
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+<br><br>
+        <div>
+            <a th:href="@{/review/addReview}">
+                <img src="/file/community/addReview_icon.png" alt="리뷰 추가하기"
+                     class="hover-effect" style="cursor: pointer; width: 50px; height: 50px;"/>  <!-- 이미지 클릭 가능하게 하기 -->
+            </a>
+            <span style="font-size: 1.2em; font-weight: bold; color: #000000; font-family: 'Arial', sans-serif;"
+                  th:text="${session.user.username} + '님의 리뷰작성 바로가기'"></span>
+        </div>
+
+        <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+            <p>리뷰가 없습니다.</p>
+        </div>
+
         <main id="main">
             <section class="section mb-50">
                 <div class="container gutter-sm">
                     <div class="section-body">
                         <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
-
-                            <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
-                                <img th:src="@{/file/community/friendReivewIsnotReivew_icon.png}" alt="리뷰 목록 없을때" style="width: 50px; height: 50px; margin-bottom: 10px;"> <!-- 아이콘 크기 조정 -->
-                                <p class="no-reviews-message" th:text="${friendUsername} + ' 님의 등록된 리뷰가 없습니다.'"></p> <!-- 이모티콘 추가 -->
-
-                                <!-- 친구 목록 바로 가기 링크 -->
-                                <a class="css-pi3u6r ecbxmj0" th:href="'/review/getFriendList'" style="display: inline-block; margin-top: 10px; text-decoration: none; color: #007BFF;">
-                                    친구 목록 바로 가기
-                                    <span class="css-e41glx e1x0rfoo0"></span>
-                                </a>
-                            </div>
-
                             <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
                                 <div id="shopReviewListScroll_0"> <!-- 특정 스크롤 섹션 -->
                                     <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
-                                        <div class="__header" style="padding-left: 0;">
-                                            <div class="__user-info" style="justify-content: space-between;">
-                                                <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
-                                                    <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진">
-                                                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
-                                                        <span th:text="${review.userName}"
-                                                              style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
-                                                              text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
-                                                    </a>
-                                                </div>
+                                        <div class="__header" style="display: flex; justify-content: space-between; padding-left: 0;">
+                                            <div class="__user-info" style="display: flex; align-items: center;"> <!-- 리뷰 작성자를 표시하는 영역 -->
+                                                <img id="profileImgView" style=" height: 60px; width: 61px; border-radius: 40px;" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진"><!-- 프로필 이미지 -->
+                                                <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
+<span th:text="${review.userName}"
+      style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
+                                                </a>
+                                            </div>
+
+                                            <div class="button-group" style="display: flex; align-items: center;">
+
+                                                <a th:href="@{/review/updateReview?(reviewNo=${review.reviewNo})}" style="display: flex; align-items: center; text-decoration: none;">
+                                                    <img th:src="@{/file/community/updateReview_icon 1.png}" alt="수정" style="margin-right: 10px; width: 20px; height: 20px;"> <!-- 수정 이미지 -->
+                                                    <!--<span style="font-size: 1em; font-weight: bold; color: #000000;">수정</span> &lt;!&ndash; 필요한 경우 텍스트 추가 &ndash;&gt;-->
+                                                </a>
+                                                <form method="post" style="display:inline;" th:action="@{/review/removeReview}" onsubmit="return confirm('정말 삭제 하시겠습니까?');">
+                                                    <input name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
+                                                    <button type="submit" style="border: none; background: none; cursor: pointer;"> <!-- 버튼 스타일 설정 -->
+                                                        <img th:src="@{/file/community/removeReview_icon 1.png}" alt="삭제" style="width: 20px; height: 20px;" /> <!-- 삭제 이모티콘 -->
+                                                    </button>
+                                                </form>
                                             </div>
                                         </div>
 
@@ -290,6 +249,13 @@
                                                 <div class="__content" style="font-size: 1.2em;">
                                                     <p th:text="${review.reviewContent}" style="white-space: pre-line;"></p> <!-- 리뷰 내용 -->
                                                 </div>
+
+                                                <div class="button-group">
+                                                    <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" class="detail-button">
+                                                        <img th:src="@{/file/community/getReview_icon.png}" alt="리뷰 상세보기" style="width: 50px; height: 50px;"/> <!-- 이미지 사이즈 60x60으로 설정 -->
+                                                        <div class="preview-tooltip" th:text="리뷰상세보기" style="max-width: 200px;"></div> <!-- 미리보기 툴팁 -->
+                                                    </a>
+                                                </div>
                                                 <hr class="hairline"> <!-- 리뷰 항목 간 구분선 -->
                                     </article>
                                 </div> <!-- shopReviewListScroll_0 끝 -->
@@ -298,16 +264,15 @@
                     </div> <!-- section-body 끝 -->
                 </div> <!-- container 끝 -->
             </section> <!-- section 끝 -->
+            <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+            <form name="pagingForm">
+                <input type="hidden" name="page">
+                <input type="hidden" name="type" value="myFeed">
+            </form>
             <!-- 페이징 처리 부분 생략 -->
         </main>
     </div> <!-- wrapperDiv 끝 -->
 </div> <!-- root 끝 -->
-
-<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
-<form name="paginForm">
-    <input type="hidden" name="page">
-    <input type="hidden" name="type" value="friendList">
-</form>
-
 </body>
 </html>
