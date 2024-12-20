@@ -321,6 +321,9 @@
                             <div class="section-header section-header-v">
                                 <h3 class="section-title ebold">유저의 리얼리뷰 Pick</h3>
                                 <p style="color: rgb(98, 98, 98);">방문자들이 남긴 솔직한 리뷰를 만나보세요</p>
+                                <div th:if="${reviewList == null || reviewList.isEmpty()}" style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                    인기 리뷰 집계 중입니다.
+                                </div>
                             </div>
                             <div class="section-body">
                                 <div id="sectionReviewVscroll" class="v-scroll">
@@ -341,12 +344,6 @@
                                                 </a>
                                                 <a th:href="'reveiw/getReview?userName='+${review.userName}"
                                                    class="best-review-item-body">
-                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                        <div class="img">
-                                                            <img src="https://d3kzx7mqemhf0.cloudfront.net/catchtable/common/comm_232918085777781.webp?small400"
-                                                                 alt="">
-                                                        </div>
-                                                    </th:block>
                                                     <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                         <th:block>
                                                             <div class="img"
