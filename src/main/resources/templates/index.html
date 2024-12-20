@@ -40,7 +40,7 @@
         <style>
 
             .main-carousel {
-                width: 80%;
+                width: 100%;
                 text-align: center;
                 justify-content: space-between;
                 align-items: center;
@@ -72,21 +72,21 @@
                                     <th:block th:if="${iterStat.index == 0}">
                                         <div class="carousel-item active" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
                                                      th:alt="${store.storeImg1}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
                                                      th:alt="${store.storeImg2}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
                                                      th:alt="${store.storeImg3}">
                                             </a>
@@ -94,7 +94,7 @@
                                         <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
                                                          th:alt="${store.storeImg4}">
                                                 </a>
@@ -103,7 +103,7 @@
                                         <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
                                                          th:alt="${store.storeImg5}">
                                                 </a>
@@ -113,21 +113,21 @@
                                     <th:block th:unless="${iterStat.index == 0}">
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
                                                      th:alt="${store.storeImg1}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
                                                      th:alt="${store.storeImg2}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
                                                      th:alt="${store.storeImg3}">
                                             </a>
@@ -135,7 +135,7 @@
                                         <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
                                                          th:alt="${store.storeImg4}">
                                                 </a>
@@ -144,7 +144,7 @@
                                         <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700" style="object-fit: fill;"
+                                                    <img class="d-block w-100" height="500" style="object-fit: fill;"
                                                          th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
                                                          th:alt="${store.storeImg5}">
                                                 </a>
