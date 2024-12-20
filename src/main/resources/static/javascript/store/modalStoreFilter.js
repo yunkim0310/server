@@ -392,6 +392,16 @@ $(function() {
     // 가격 범위에 대한 이벤트 처리
     $("input[name^='price']").on('input', function() {
 
+        // 입력값을 정수로 변환
+        var inputValue = parseInt($(this).val(), 10);
+
+        // 입력값이 숫자가 아니거나 0 미만인 경우 0으로 설정
+        if (isNaN(inputValue) || inputValue < 0) {
+            $(this).val(0);
+        } else {
+            $(this).val(inputValue);
+        }
+
         updatePriceText();
     });
 
