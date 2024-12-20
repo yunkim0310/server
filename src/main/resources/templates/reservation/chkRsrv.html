@@ -99,6 +99,14 @@
             <th style="width: 30%;">매장 주소</th>
             <td th:text="${reservation.storeAddr}" style="width: 80%;"></td>
         </tr>
+        <tr>
+            <th style="width: 30%; color: red;">환불 정책:</th>
+            <td style="width: 80%;">
+                - 0~3일: 환불 불가<br/>
+                - 4~6일: 50% 환불<br/>
+                - 7일 이상: 전액 환불 가능
+            </td>
+        </tr>
         </tbody>
     </table>
 

@@ -23,6 +23,7 @@
         <result property="rsrvNumber" column="rsrv_number" jdbcType="VARCHAR"/>
         <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
 
+        <association property="store" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getStore"/>
     </resultMap>
 
 
@@ -160,7 +161,7 @@
 
 
     <select id="getRsrvUserList" parameterType="com.placeHere.server.domain.Search" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
+        SELECT rsrv_no, store_id, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             user_name = #{userName} <!-- 특정 유저 예약 -->

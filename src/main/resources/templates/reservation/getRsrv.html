@@ -165,6 +165,8 @@
 <br/>
 <br/>
 <div class="wrapper">
+    <img class="img" style="height: 400px; width: 1200px;"
+         th:src="${(reservation.store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+reservation.store.storeImg1 : url + reservation.store.storeImg1}"/>
     <table>
         <tbody>
         <tr>

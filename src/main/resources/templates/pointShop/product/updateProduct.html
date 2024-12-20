@@ -7,67 +7,18 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PlaceHere</title>
-  <link th:insert="~{common/import :: importFragment}">
 
   <link rel="stylesheet" href="/css/templates/collection_detail.css">
-  <link rel="stylesheet" href="/css/templates/regist_hp.css">
   <link href="/css/templates/mypage.css" rel="stylesheet">
 
 
   <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 
+    <link th:insert="~{common/import :: importFragment}">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
   <script src="/javascript/pointShop/updateProduct.js"></script>
 
-
-
-  <style>
-    .form-group.button-group {
-      text-align: center;
-    }
-
-    .btn-primary, .btn-confirm {
-      padding: 10px 20px;
-      font-size: 1rem;
-      cursor: pointer;
-      border: none;
-      border-radius: 5px;
-      margin-top: 10px;
-    }
-
-    [type="radio"]:checked {
-      /* min-width: 24px;
-      min-height: 24px;
-      display: inline-block;
-      position: relative;
-      border-radius: 50%;
-      background-color: #ff3d00; */
-      transition: border 0.5s ease-in-out;
-
-      /* border: 0.4em solid tomato; */
-      /*border: 0.4em solid #ff3d00;*/
-      border: 0.4em solid #4880FF;
-    }
-
-    /*.btn-primary {*/
-    /*  background-color: #0066cc;*/
-    /*  color: white;*/
-    /*  margin-right: 10px;*/
-    /*}*/
-
-    /*.btn-primary:hover {*/
-    /*  background-color: #005bb5;*/
-    /*}*/
-
-    /*.btn-confirm {*/
-    /*  background-color: #e0e0e0;*/
-    /*  color: #333;*/
-    /*}*/
-
-    /*.btn-confirm:hover {*/
-    /*  background-color: #d0d0d0;*/
-    /*}*/
-
-  </style>
+    <link rel="stylesheet" href="/css/pointShop/updateProduct.css">
 
 
 </head>
@@ -149,6 +100,18 @@
                     </div>
                   </div>
                 </div><br/><br/>
+                  <div class="css-1pjgd36 e744wfw6">
+                      <div class="css-1y8737n e744wfw5">
+                          <label class="css-1obgjqh e744wfw4">기존 이미지</label>
+                      </div><br/><br/>
+                      <div class="css-jmalg e1uzxhvi6">
+                          <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                              <img th:src="${url +'point/product/'+ product.prodImg1}" style="width:100px;height: 100px;">
+                              <img th:if="${product.prodImg2 != null}" th:src="${url +'point/product/'+ product.prodImg2}" style="width:100px;height: 100px;">
+                              <img th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" style="width:100px;height: 100px;">
+                          </div>
+                      </div>
+                  </div><br/><br/><br/><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
                   <div class="css-1y8737n e744wfw5">
@@ -158,12 +121,12 @@
                   </div><br/><br/>
                     <div class="css-jmalg e1uzxhvi6">
                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                            <input type="file" accept="image/*" class="prodImg1" >
+                            <input type="file" accept="image/*" class="prodImg1">
                             <input type="hidden" name="prodImg1" th:value="${product.prodImg1}">
                             <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
-<!--                            <img th:src="${url +'point/product/'+ product.prodImg1}" style="width:100px;height: 100px;">-->
-                            <div id="prodImg1" style="display: none;">
-                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
+
+                            <div id="prodImg1">
+                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg1}">
                             </div>
                         </div>
                     </div><br/>
@@ -183,20 +146,20 @@
                             <input type="hidden" name="prodImg2" th:value="${product.prodImg2}">
 <!--                            <img th:if="${product.prodImg2 != null}" th:src="${url +'point/product/'+ product.prodImg2}" style="margin-left: 100px; width:100px;height: 100px;">-->
                         </div>
-                        <div id="prodImg2" style="display: none;">
-                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100">
+                        <div id="prodImg2">
+                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg2}">
                         </div>
-                    </div><br/><br/><br/><br/>
+                    </div><br/><br/><br/><br/><br/><br/><br/>
                       <div class="css-176lya2 e1uzxhvi3 under-name-block">
                           <input type="file" accept="image/*" class="prodImg3">
                           <input type="hidden" name="prodImg3" th:value="${product.prodImg3}">
 <!--                          <img th:if="${product.prodImg3 != null or product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" style="width:100px;height: 100px;">-->
                       </div>
-                      <div id="prodImg3" style="display: none;">
-                          <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100">
+                      <div id="prodImg3">
+                          <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg3}">
                       </div>
                   </div>
-                </div><br/><br/>
+                </div><br/><br/><br/><br/><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
                   <label class="css-1obgjqh e744wfw4" for="prodCateNo"><strong>상품 카테고리 </strong><span

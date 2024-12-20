@@ -36,6 +36,12 @@ public class MainController {
     @Value("${region_list}")
     private List<String> regionList;
 
+    @Value("${page_size}")
+    private int pageSize;
+
+    @Value("${list_size}")
+    private int listSize;
+
 
     // Constructor
     public MainController() {
@@ -51,6 +57,10 @@ public class MainController {
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
+
+        // 메인 가게 사진
+        List<Store> mainStoreList = storeService.getStoreList(new Search(pageSize, 5));
+        model.addAttribute("mainStoreList", mainStoreList);
 
         // 인기 가게
         List<Integer> storeIdList = likeService.likeList("store");
@@ -88,8 +98,6 @@ public class MainController {
 
         if (reviewNoList != null && !reviewNoList.isEmpty()) {
             reviewList = communityService.getReviewListByReviewNo(reviewNoList);
-        } else {
-            reviewList = communityService.getReviewListByReviewNo(List.of(1, 2, 3, 4, 5));
         }
 
         System.out.println(reviewNoList);

@@ -6,16 +6,18 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>PlaceHere</title>
+        <link th:insert="~{common/import :: importFragment}">
 
-        <link rel="stylesheet" href="/css/templates/style.css">
+        <!-- 부트스트랩 CDN -->
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
 
-        <th:block th:if="${mode == 'review'}">
-            <link rel="stylesheet" href="/css/templates/collection_detail.css">
-            <link rel="stylesheet" href="/css/templates/style.css">
-        </th:block>
+        <link rel="stylesheet" href="/css/index.css">
 
         <link rel="stylesheet" href="/css/templates/mypage.css">
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/style.css">
 
         <div id="ch-plugin" class="notranslate">
             <div id="ch-plugin-core"></div>
@@ -24,8 +26,6 @@
                         style="position:relative!important;height:100%!important;width:100%!important;border:none!important;"></iframe>
             </div>
         </div>
-
-        <link th:insert="~{common/import :: importFragment}">
 
         <!-- 구글 맵 -->
         <script defer th:src="'https://maps.googleapis.com/maps/api/js?key='+${googleApi}+'&callback=initMap'"></script>
@@ -40,7 +40,7 @@
 
         <script type="module" src="/javascript/store/getStore.js"></script>
 
-<!--        <link rel="stylesheet" href="/css/store/getStoreNewsList.css">-->
+        <link rel="stylesheet" href="/css/store/getMyStore.css">
         <link rel="stylesheet" href="/css/store/getStore.css">
 
     </head>
@@ -48,7 +48,7 @@
     <body>
         <div id="root">
 
-            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 5%;position: sticky">
+            <div class="css-833hqy ecbxmj4" style="padding-left: 10%;padding-top: 15%;position: sticky">
                 <div class="side">
                     <div class="css-1v4whg ecbxmj3">가게 정보</div>
                     <div th:replace="~{store/getStoreAside :: getStoreAside}"></div>
@@ -64,8 +64,60 @@
                             <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
                                 <div class="img-container" style="position: relative;">
                                     <div class="img swiper-lazy swiper-lazy-loaded">
-                                        <img class="guide-img" style="width: 100%; max-height:500px; display: block;"
-                                             th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}">
+                                        <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                                            <div class="carousel-indicators">
+                                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                                                <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+                                                </th:block>
+                                                <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+                                                </th:block>
+                                            </div>
+
+                                            <div class="carousel-inner">
+                                                <div class="carousel-item active">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
+                                                         th:alt="${store.storeName + ' 사진1'}">
+                                                </div>
+                                                <div class="carousel-item">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
+                                                         th:alt="${store.storeName + ' 사진2'}">
+                                                </div>
+                                                <div class="carousel-item">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
+                                                         th:alt="${store.storeName + ' 사진3'}">
+                                                </div>
+                                                <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                                    <div class="carousel-item">
+                                                        <img class="d-block w-100" height="500"
+                                                             th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
+                                                             th:alt="${store.storeName + ' 사진4'}">
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                                    <div class="carousel-item">
+                                                        <img class="d-block w-100" height="500"
+                                                             th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
+                                                             th:alt="${store.storeName + ' 사진5'}">
+                                                    </div>
+                                                </th:block>
+                                            </div>
+
+                                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Previous</span>
+                                            </button>
+                                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                                <span class="visually-hidden">Next</span>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -74,11 +126,13 @@
                                    th:href="${(session.user != null) ? '/react/chat?name='+session.user.username+'&role='+session.user.role+'&storeId='+store.storeId : '/user/login'}">
                                     채팅
                                 </a>
-                                <a style="cursor: pointer" id="likeStore"
-                                   th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
-                                   th:data-likeid="${(like != null)? like.likeId : null}">
-                                    좋아요
-                                </a>
+                                <span id="likeStore">
+                                    <a style="cursor: pointer;"
+                                       th:class="${(session.user == null)? 'btn-like-inactive' : ((like == null)? 'btn-like-inactive' : 'btn-like-active')}"
+                                       th:data-likeid="${(like != null)? like.likeId : null}">
+                                        좋아요
+                                    </a>
+                                </span>
                             </th:block>
                         </div>
                     </section>
@@ -97,13 +151,13 @@
                                     매장 소개
                                 </p>
                             </div>
-                            <div class="restaurant-meta mb-16">
-                                <div class="rating">
-                                    <span class="star" th:text="'&ensp;'+${store.reviewScoreAvg}">리뷰 평균 별점</span>
-                                    <span class="count" th:text="|(${store.reviewCnt})|">리뷰개수</span>
-                                </div>
-
+                            <div class="restaurant-meta mb-16" id="main-info">
                                 <div class="storeBasicInfo">
+                                    <div class="rating" style="display: flex; align-items: center;">
+                                        <span class="star" th:text="'&ensp;'+${store.reviewScoreAvg}" style="color: black;">리뷰 평균 별점</span>
+                                        <span class="count" th:text="|(${store.reviewCnt})|" style="margin-left: 5px;">리뷰개수</span>
+                                    </div>
+
                                     <div class="storeLocation">
                                         <img src="/images/store/icon_location.png" width="18" height="18">
                                         <span th:text="${store.storeAddr}">매장 주소</span>
@@ -111,7 +165,7 @@
 
                                     <div class="specialMenu">
                                         <img src="/images/store/icon_thumb.png" width="18" height="18">
-                                        <span th:text="${store.menuList[store.specialMenuNo -1].menuName + ' ('+store.menuList[store.specialMenuNo -1].menuPrice+' 원)'}">대표메뉴</span>
+                                        <span th:text="${store.menuList[store.specialMenuNo -1].menuName + ' ('+#numbers.formatInteger(store.menuList[store.specialMenuNo -1].menuPrice, 3, 'COMMA')+' 원)'}">대표메뉴</span>
                                     </div>
 
                                     <div class="storeOperation">
@@ -201,7 +255,8 @@
                                             <div class="__restaurant-notice-v2"
                                                  style="display: flex; flex-wrap: nowrap;">
                                                 <div class="swiper-slide" style=" margin-right: 10px;">
-                                                    <article class="__restaurant-notice-v2-item">
+                                                    <article class="__restaurant-notice-v2-item"
+                                                             th:style="${(store.storeNewsList != null && !store.storeNewsList.isEmpty()) ? 'overflow-x: scroll; white-space: nowrap; width: 50%; display: flex; flex-wrap: nowrap;' : ''}">
                                                         <div class="__notice-content">
                                                             <div class="__pic">
                                                                 <div class="img"></div>
@@ -299,7 +354,7 @@
                                                     <tr>
                                                         <td style="width: 25%; padding: 15px;">
                                                             <span style="display: inline-flex">
-                                                                <h3 th:text="${menu.menuName}" style="font-weight: bold;">메뉴 이름</h3>
+                                                                <span th:text="${menu.menuName}" style="font-weight: bold;">메뉴 이름</span>
                                                             </span>
                                                             <br/>
                                                             <a class="menuImgLink" th:if="${menu.menuImg != null && !menu.menuImg.isEmpty()}"
@@ -314,7 +369,7 @@
                                                             </div>
                                                         </td>
                                                         <td style="width: 10%; padding: 15px;">
-                                                            <div th:text="|${(menu.menuPrice != 0)? menu.menuPrice : '시가'}|">
+                                                            <div class="menuPrice" th:text="|${(menu.menuPrice != 0)? #numbers.formatInteger(menu.menuPrice, 3, 'COMMA') : '시가'}|">
                                                                 메뉴 가격
                                                             </div>
                                                         </td>
@@ -358,33 +413,32 @@
                                         <div class="desc-block">
                                             <dl>
                                                 <dt>전화번호</dt>
-                                                <dd th:text="${(store.storePhone != null) ? store.storePhone : '번호 없음'}">02-6282-5000</dd>
+                                                <dd th:text="${(store.storePhone != null) ? store.storePhone : '번호 없음'}"></dd>
                                             </dl>
                                         </div>
+                                        <br/><br/>
                                         <div class="desc-block">
                                             <dl>
-                                                <dt>
-                                                    <a class="__toggle">매장 소개</a>
-                                                </dt>
-                                                <dd class="color-gray" th:text="${(store.storeInfo != null)? store.storeInfo : '없음'}" style="white-space: pre-line">
-                                                    매장 소개
-                                                </dd>
+                                                <dt>매장 소개</dt>
+                                                <dd class="color-gray" th:text="${(store.storeInfo != null)? store.storeInfo : '없음'}" style="white-space: pre-line"></dd>
                                             </dl>
                                         </div>
+                                        <br/><br/>
                                         <div class="desc-block">
                                             <dl>
-                                                <dt><a class="__toggle">영업시간</a></dt>
+                                                <dt>영업시간</dt>
                                                 <dd class="color-gray" th:text="${store.storeOperation.openTime.subSequence(0, 5) + ' ~ ' + store.storeOperation.closeTime.subSequence(0, 5)}">
                                                     오픈시간 ~ 마감시간
                                                 </dd>
                                             </dl>
                                         </div>
+                                        <br/><br/>
                                         <div class="desc-block">
                                             <dl>
-                                                <dt><a class="__toggle">정기 휴무</a></dt>
+                                                <dt>정기 휴무</dt>
                                                 <dd class="color-gray">
                                                     <th:block th:if="${store.storeOperation.regularClosedayList[0]!=null}" th:each="regularCloseday : ${store.storeOperation.regularClosedayList}">
-                                                        <span th:text="${(regularCloseday!=null)? regularCloseday : ''}"></span>
+                                                        <span th:text="${(regularCloseday!=null)? regularCloseday + '요일' : ''}"></span>
                                                     </th:block>
                                                     <th:block th:if="${store.storeOperation.regularClosedayList[0]==null}">
                                                         <span>없음</span>
@@ -392,8 +446,7 @@
                                                 </dd>
                                             </dl>
                                         </div>
-                                        <div class="desc-block">
-                                        </div>
+                                        <br/><br/>
                                     </div>
                                 </div>
                             </div>

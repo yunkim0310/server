@@ -74,7 +74,7 @@
 
         .allpoint1 {
             position: fixed;
-            right: 10px;
+            right: 20px;
             width: 330px;
             display: inline-flex;
             justify-content: center;
@@ -84,7 +84,7 @@
         }
 
         .allpoint2 {
-            right: 1px; /* 오른쪽으로 이동 */
+            right: 10px; /* 오른쪽으로 이동 */
             left: 2px;
             margin: 0 auto;
             width: 1610px; display: inline-flex; flex-direction: column; align-items: center;
@@ -215,13 +215,13 @@
         <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'yyyy.MM.dd') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'yyyy.MM.dd')))}"
             style="background-color: #4880FF; font-size: 30px; font-weight: bold;">
             <td colspan="5" style="background-color: #4880FF; color: white;">
-                <span th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}" style="font-size: 30px; font-weight: bold;">[예약 날짜]</span>
+                <span th:utext="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')} + '&nbsp;&nbsp;'" style="font-size: 30px; font-weight: bold;">[예약 날짜]</span>
             </td>
         </tr>
 
         <tr th:if="${reservation.rsrvDt != null && (iterStat.index == 0 || (reservations.size > iterStat.index && #dates.format(reservation.rsrvDt, 'HH:mm') != #dates.format(reservations[iterStat.index - 1].rsrvDt, 'HH:mm')))}">
             <td colspan="3" style="font-size: 20px; font-weight: bold; background-color: #979EA8; color: white;">
-                <span style="position: relative; left: 200px;" th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">[예약 시간]</span>
+                <span style="position: relative; left: 180px;" th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}">[예약 시간]</span>
             </td>
             <td colspan="2" style="padding-left: 100px; font-size: 15px; font-weight: bold; background-color: #979EA8; color: white;">
                 <span th:utext="'현재 예약 인원&nbsp;&nbsp;&nbsp;'+${reservationCountsByDate[reservation.rsrvDt]} + '&nbsp;&nbsp;명' ?: 0 + '명'">[현재 예약 인원]</span>
@@ -231,7 +231,7 @@
         <tr th:if="${iterStat.index == 0}">
             <th>예약 상태</th>
             <th>전화 번호</th>
-            <th>인원 수</th>
+            <th>&nbsp;&nbsp;&nbsp;&nbsp;인원 수</th>
             <th>요청 사항</th>
             <th></th>
         </tr>
@@ -240,7 +240,7 @@
             style="cursor: pointer;">
             <td class="status-cell" th:text="${reservation.rsrvStatus}">[예약 상태]</td>
             <td th:text="${reservation.rsrvNumber}" data-phone>[전화 번호]</td>
-            <td th:text="${reservation.rsrvPerson} + '명'">[예약 인원]</td>
+            <td th:utext="'&nbsp;&nbsp;&nbsp;&nbsp;' + ${reservation.rsrvPerson} + '명'">[예약 인원]</td>
             <td>
         <span th:if="${reservation.rsrvReq != null && !reservation.rsrvReq.isEmpty()}"
               th:text="${reservation.rsrvReq.length() > 10 ? reservation.rsrvReq.substring(0, 10) + '...' : reservation.rsrvReq}">

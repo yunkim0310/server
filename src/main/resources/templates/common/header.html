@@ -37,6 +37,14 @@
                 top: -100%; /* header는 화면에서 숨김 */
             }
         }
+        .centerLine {
+            background-color: #dcdcdc !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            height: 1px !important; /* 선의 굵기를 3px로 설정 */
+            border: 0 !important;
+        }
+
 
     </style>
 
@@ -64,7 +72,7 @@
                         </a>
                     </li>
                     <li class="non-side-bar">
-                        <span style="font-weight: bold;" id="username" class="text-white me-2">
+                        <span style="font-weight: bold;color: black !important;" id="username" class="text-white me-2">
                             [[ ${session.user.username} ]]
                         </span>
                     </li>
@@ -85,8 +93,8 @@
             <div th:if="${session.user == null}" class="login">
                 <ul class="loginMenu">
                     <li id="login" class="non-side-bar">
-<!--                        <a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" />로그인</a>-->
                         <a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></a>
+<!--                        <a href="/user/login"><span style="font-weight: bold; color:black !important;">로그인&ensp;<img style="margin-right:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></span></a>-->
                     </li>
                 </ul>
             </div>

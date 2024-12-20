@@ -29,7 +29,13 @@ $(function() {
         // 소식 등록
         $("#addStoreNews").on("click", function () {
 
-            $("form[name='addStoreNews']").submit();
+            const newsContents = $.trim($("#storeNews0").val());
+
+            if (newsContents === "" || newsContents.replace(/\n/g, "") === "") {
+                alert("매장 소식은 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+            } else {
+                $("form[name='addStoreNews']").submit();
+            }
 
         });
 
@@ -113,14 +119,17 @@ $(function() {
 
             var newsId = $(this).data("newsid");
 
-            console.log(newsId);
+            const newsContents = $.trim($(`#storeNews${newsId}`).val());
 
-            $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
-            $("input[name='fnc']:hidden").val("update");
+            if (newsContents === "" || newsContents.replace(/\n/g, "") === "") {
+                alert("매장 소식은 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+            } else {
 
-            console.log("updateStoreNews " + newsId);
+                $("input[name='newsId']:hidden").prop("disabled", null).val(newsId);
+                $("input[name='fnc']:hidden").val("update");
 
-            $("form[name='updateAndRemoveStoreNews']").submit();
+                $("form[name='updateAndRemoveStoreNews']").submit();
+            }
         });
 
 

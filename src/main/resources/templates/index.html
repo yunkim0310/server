@@ -6,9 +6,11 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-
-
         <link th:insert="~{common/import :: importFragment}">
+
+        <!-- 부트스트랩 CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 
         <link rel="stylesheet" href="/css/templates/collection_detail.css">
         <link rel="stylesheet" href="/css/templates/slider.css">
@@ -30,13 +32,27 @@
         <script src="/javascript/templates/brand.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/js/swiper.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--        <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/614007/sliiide.min.js"></script>-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenMax.min.js"></script>
 
+<!--        <link rel="stylesheet" href="/css/templates/header.css">-->
+        <link rel="stylesheet" href="/css/index.css">
+
         <style>
-            .swiper-slide {
-                height: 80%;
+
+            .main-carousel {
+                width: 80%;
+                text-align: center;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0 auto; /* 가로 중앙 정렬 */
+                left: 50%; /* 가로 중앙 정렬 */
             }
+
+            .carousel-item img {
+                background-color: #FFFFFF;
+                object-fit: fill;
+            }
+
         </style>
 
     </head>
@@ -47,6 +63,107 @@
 
             <div class="wrapper" style="max-width: 1100px;">
                 <main id="dock">
+
+                    <div class="main-carousel">
+
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <th:block th:each="store, iterStat : ${mainStoreList}">
+                                    <th:block th:if="${iterStat.index == 0}">
+                                        <div class="carousel-item active" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
+                                                     th:alt="${store.storeImg1}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
+                                                     th:alt="${store.storeImg2}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
+                                                     th:alt="${store.storeImg3}">
+                                            </a>
+                                        </div>
+                                        <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="700"
+                                                         th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
+                                                         th:alt="${store.storeImg4}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="700"
+                                                         th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
+                                                         th:alt="${store.storeImg5}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:unless="${iterStat.index == 0}">
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
+                                                     th:alt="${store.storeImg1}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
+                                                     th:alt="${store.storeImg2}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="700"
+                                                     th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
+                                                     th:alt="${store.storeImg3}">
+                                            </a>
+                                        </div>
+                                        <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="700"
+                                                         th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
+                                                         th:alt="${store.storeImg4}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="700" style="object-fit: fill;"
+                                                         th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
+                                                         th:alt="${store.storeImg5}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                    </th:block>
+                                </th:block>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                    </div>
                     <!-- 추천 카테고리 TODO 수정 필요 -->
 <!--                    <div class="__shortcut-list-wrap">-->
 <!--                        <div class="__shortcut-list">-->
@@ -204,6 +321,9 @@
                             <div class="section-header section-header-v">
                                 <h3 class="section-title ebold">유저의 리얼리뷰 Pick</h3>
                                 <p style="color: rgb(98, 98, 98);">방문자들이 남긴 솔직한 리뷰를 만나보세요</p>
+                                <div th:if="${reviewList == null || reviewList.isEmpty()}" style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                    인기 리뷰 집계 중입니다.
+                                </div>
                             </div>
                             <div class="section-body">
                                 <div id="sectionReviewVscroll" class="v-scroll">
@@ -224,12 +344,6 @@
                                                 </a>
                                                 <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}"
                                                    class="best-review-item-body">
-                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                        <div class="img">
-                                                            <img src="https://d3kzx7mqemhf0.cloudfront.net/catchtable/common/comm_232918085777781.webp?small400"
-                                                                 alt="">
-                                                        </div>
-                                                    </th:block>
                                                     <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                         <th:block>
                                                             <div class="img"
@@ -287,7 +401,9 @@
                                     가장 주목 받는 맛집을 모아봤어요
                                 </p>
                                 <div th:if="${storeList == null || storeList.isEmpty()}" style="padding-top: 20px;">
-                                    <div>인기 가게 집계 중입니다.</div>
+                                    <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                        인기 가게 집계 중입니다.
+                                    </div>
                                 </div>
                             </div>
                             <div class="section-body">
@@ -300,7 +416,7 @@
                                                     <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
                                                         <div class="img">
                                                             <img width="200" height="200"
-                                                                 th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + 'store/menu/' + store.storeImg1}"
+                                                                 th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url +  store.storeImg1}"
                                                                  th:alt="${store.storeImg1}">
                                                         </div>
                                                     </a>

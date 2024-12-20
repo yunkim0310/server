@@ -70,7 +70,7 @@ public class AdminServiceImpl implements AdminService {
      * 예약 확정 -> 이용 완료
      * @throws Exception
      */
-    @Scheduled(cron = "0 0 0 * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
 //    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     public void updateServiceComplete() throws Exception {
 
@@ -79,7 +79,7 @@ public class AdminServiceImpl implements AdminService {
 
         Batch batch = new Batch();
         batch.setBatchName("예약상태변경");
-        batch.setExec_dt(new Date());
+        batch.setExecDt(new Date());
 
 //        Set<Integer> processedRsrvNos = new HashSet<>();
         
@@ -131,12 +131,13 @@ public class AdminServiceImpl implements AdminService {
 
 //    @Scheduled(initialDelay = 10000, fixedDelay = 10000)
     // 매일 03시 진행
-    @Scheduled(cron = "0 0 3 * * ?")
+//    @Scheduled(cron = "0 0 3 * * ?")
+    @Scheduled(cron = "0 0 0/2 * * ?")
     public void userInactive() throws Exception {
 
         Batch batch = new Batch();
         batch.setBatchName("휴면계정전환");
-        batch.setExec_dt(new Date());
+        batch.setExecDt(new Date());
 
         // 1. 상태값 update ACTIVE -> INACTIVE
         int result = 0;

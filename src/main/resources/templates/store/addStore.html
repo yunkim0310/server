@@ -26,7 +26,7 @@
 
         <div id="root">
 
-            <form>
+            <form name="addStore" id="addStore">
 
                 <input type="hidden" name="userName" th:value="${userName}">
                 <input type="hidden" name="storeLocation">
@@ -80,7 +80,7 @@
                                                 <input  id="storeName" name="storeName"
                                                        placeholder="매장명을 입력해 주세요" type="text"
                                                        class="css-1bkd15f e1uzxhvi2"
-                                                        maxlength="50" required>
+                                                       minlength="1" maxlength="50" required>
                                             </div>
                                             <p class="font-12 color-gray mt-10">매장을 검색 및 소개에 사용되는 이름입니다. 명확한 매장명을 입력해주세요</p>
                                         </div>
@@ -141,15 +141,15 @@
                                             <div class="css-176lya2 e1uzxhvi3">
                                                 <input  id="storePhone1" name="storePhone1" placeholder="02"
                                                         type="tel" class="css-1bkd15f e1uzxhvi2" style="width: 20%;"
-                                                        maxlength="4">
+                                                        maxlength="4" pattern="[0-9]{1,4}">
                                                 -
                                                 <input  name="storePhone2" placeholder="숫자만 입력해주세요"
                                                         type="tel" class="css-1bkd15f e1uzxhvi2" style="width: 35%;"
-                                                        maxlength="4">
+                                                        maxlength="4" pattern="[0-9]{1,4}">
                                                 -
                                                 <input  name="storePhone3" placeholder="숫자만 입력해주세요"
                                                         type="tel" class="css-1bkd15f e1uzxhvi2" style="width: 35%;"
-                                                        maxlength="4">
+                                                        maxlength="4" pattern="[0-9]{1,4}">
                                             </div>
                                             <p class="font-12 color-gray mt-10">하이픈(-)을 제외한 숫자만 입력해 주세요.</p>
                                         </div>
@@ -235,8 +235,7 @@
                                             <div class="css-176lya2 e1uzxhvi3 password-block">
                                                 <textarea id="storeInfo" name="storeInfo" class="css-1bkd15f e1uzxhvi2" placeholder="매장 소개를 입력해주세요. * 최대 200글자"
                                                           rows="20" style="resize: none; height: 100px"
-                                                          maxlength="200">
-                                                </textarea>
+                                                          maxlength="200"></textarea>
                                             </div>
                                         </div>
                                     </div>

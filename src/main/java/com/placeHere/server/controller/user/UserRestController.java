@@ -72,6 +72,11 @@ public class UserRestController {
             activeStatus = dbUser.getActiveStatus();
             log.info("activeStatus :: " + activeStatus);
 
+            if(user.getUsername().equals("admin")) {
+                log.info(" ADMIN USER LOGIN ");
+//                session.setAttribute("user", dbUser);
+                return new ResponseEntity<>("ADMIN_SUCCESS", HttpStatus.OK);
+            }
 
             if (activeStatus.equals("ACTIVE")) {
                 log.info(" ACTIVE USER ");

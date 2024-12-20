@@ -29,7 +29,10 @@ $(function () {
         self.location = "/purchase/listPurchase";
     });
 
-    $("button.btn-primary.list").on("click", function () {
+    // $("button.btn-primary.list").on("click", function () {
+    //     self.location = "/product/listProduct";
+    // });
+    $("button[name='confirmBtn']").on("click", function () {
         self.location = "/product/listProduct";
     });
 
