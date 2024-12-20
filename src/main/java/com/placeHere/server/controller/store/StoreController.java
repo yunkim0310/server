@@ -71,6 +71,7 @@ public class StoreController {
 
     // Method
     // TODO 가게 등록 중간에 닫어버리면?
+    // TODO SysOut 줄이기
     // 가게 기본 정보 등록
     @GetMapping(value="/store/addStore")
     public String addStore(HttpSession session, Model model) {

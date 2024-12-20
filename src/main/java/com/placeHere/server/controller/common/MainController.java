@@ -109,8 +109,11 @@ public class MainController {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int week = today.get(weekFields.weekOfMonth());
 
+        // 음식 카테고리
+        FoodCategory foodCategory = new FoodCategory();
+
         // 음식 카테고리, 지역 필터 TODO 음식,지역 이미지 리스트도 만들기
-        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("foodCategory", foodCategory);
         model.addAttribute("regionList", regionList);
         model.addAttribute("regionImgList", regionImgList);
 
