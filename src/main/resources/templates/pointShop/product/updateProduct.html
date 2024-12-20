@@ -100,6 +100,18 @@
                     </div>
                   </div>
                 </div><br/><br/>
+                  <div class="css-1pjgd36 e744wfw6">
+                      <div class="css-1y8737n e744wfw5">
+                          <label class="css-1obgjqh e744wfw4">기존 이미지</label>
+                      </div><br/><br/>
+                      <div class="css-jmalg e1uzxhvi6">
+                          <div class="css-176lya2 e1uzxhvi3 under-name-block">
+                              <img th:src="${url +'point/product/'+ product.prodImg1}" style="width:100px;height: 100px;">
+                              <img th:if="${product.prodImg2 != null}" th:src="${url +'point/product/'+ product.prodImg2}" style="width:100px;height: 100px;">
+                              <img th:if="${product.prodImg3 != null and product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" style="width:100px;height: 100px;">
+                          </div>
+                      </div>
+                  </div><br/><br/><br/><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
                   <div class="css-1y8737n e744wfw5">
@@ -109,12 +121,12 @@
                   </div><br/><br/>
                     <div class="css-jmalg e1uzxhvi6">
                         <div class="css-176lya2 e1uzxhvi3 under-name-block">
-                            <input type="file" accept="image/*" class="prodImg1" >
+                            <input type="file" accept="image/*" class="prodImg1">
                             <input type="hidden" name="prodImg1" th:value="${product.prodImg1}">
                             <span class="font-12 color-gray mt-10">상품 대표 이미지를 골라주세요.</span>
-<!--                            <img th:src="${url +'point/product/'+ product.prodImg1}" style="width:100px;height: 100px;">-->
-                            <div id="prodImg1" style="display: none;">
-                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100">
+
+                            <div id="prodImg1">
+                                <img class="prodImg1" alt="상품 대표 이미지" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg1}">
                             </div>
                         </div>
                     </div><br/>
@@ -134,20 +146,20 @@
                             <input type="hidden" name="prodImg2" th:value="${product.prodImg2}">
 <!--                            <img th:if="${product.prodImg2 != null}" th:src="${url +'point/product/'+ product.prodImg2}" style="margin-left: 100px; width:100px;height: 100px;">-->
                         </div>
-                        <div id="prodImg2" style="display: none;">
-                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100">
+                        <div id="prodImg2">
+                            <img class="prodImg2" alt="상품 상세 이미지 1" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg2}">
                         </div>
-                    </div><br/><br/><br/><br/>
+                    </div><br/><br/><br/><br/><br/><br/><br/>
                       <div class="css-176lya2 e1uzxhvi3 under-name-block">
                           <input type="file" accept="image/*" class="prodImg3">
                           <input type="hidden" name="prodImg3" th:value="${product.prodImg3}">
 <!--                          <img th:if="${product.prodImg3 != null or product.prodImg3 != ''}" th:src="${url +'point/product/'+ product.prodImg3}" style="width:100px;height: 100px;">-->
                       </div>
-                      <div id="prodImg3" style="display: none;">
-                          <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100">
+                      <div id="prodImg3">
+                          <img class="prodImg3" alt="상품 상세 이미지 2" width="100" height="100" th:src="${url +'point/product/'+ product.prodImg3}">
                       </div>
                   </div>
-                </div><br/><br/>
+                </div><br/><br/><br/><br/><br/><br/>
 
                 <div class="css-1pjgd36 e744wfw6">
                   <label class="css-1obgjqh e744wfw4" for="prodCateNo"><strong>상품 카테고리 </strong><span
