@@ -1,0 +1,142 @@
+.container {
+    margin: 0 auto;
+    width: 1400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.pl {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 200px;
+    height: 150px;
+}
+
+.pl select {
+    background-color: #4880FF;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    padding: 10px;
+    height: 80px;
+    border: none;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+}
+
+.pl option {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.reservation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 550px;
+    max-width: 100%;
+    padding: 15px;
+    height: 80vh;
+    margin-left: 20px;
+}
+
+.reservation-item {
+    border: 1px solid #4880FF;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #F8F8F8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 500px;
+    max-width: 100%;
+}
+
+.reservation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.reservation-header .reservation-date {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+.reservation-header .reservation-number {
+    font-size: 16px;
+    color: #888;
+    text-align: right;
+}
+
+.reservation-body {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
+.reservation-details {
+    flex: 1;
+}
+
+.reservation-body p {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #333;
+    flex: 1;
+}
+
+.reservation-body img {
+    margin-left: 20px;
+    height: 180px;
+    width: 150px;
+    align-self: flex-start;
+}
+
+.reservation-status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.review-button {
+    background-color: #4880FF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 15px;
+    font-size: 14px;
+    cursor: pointer;
+    display: block;
+}
+
+.review-button:hover {
+    background-color: #E04E4E;
+}
+
+.status-actions {
+    display: flex;
+    align-items: center;
+    min-height: 40px;
+}
+
+form#searchForm {
+    position: fixed;
+    top: 300px;
+    right: 200px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 10px;
+}

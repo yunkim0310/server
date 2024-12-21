@@ -1,44 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <style>
-    #charCounter {
-      margin-top: 10px;
-      font-size: 14px;
-    }
-
-    #charCounter.error {
-      color: red;
-    }
-
-    #charCounter.success {
-      color: green;
-    }
-
-    .confirm-btn:disabled {
-      background-color: #646D7A;
-      cursor: not-allowed;
-    }
-
-    #reasonTextarea {
-      width: 100%;
-      height: 100px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      box-sizing: border-box;
-      resize: none; /* 크기 조정 불가 */
-      overflow-wrap: break-word; /* 자동 줄바꿈 */
-      word-break: break-word; /* 단어 단위 줄바꿈 */
-      line-height: 1.5;
-    }
-
-    #reasonTextarea:focus {
-      border-color: #007BFF;
-      outline: none;
-    }
-  </style>
+  <link rel="stylesheet" href="/css/reservation/modalRsrvCancel.css">
 </head>
 <body>
 <div class="modal-wrapper">
@@ -62,30 +25,6 @@
   </form>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function () {
-    const reasonTextarea = document.getElementById("reasonTextarea");
-    const charCounter = document.getElementById("charCounter");
-    const confirmBtn = document.querySelector(".confirm-btn");
-
-    reasonTextarea.addEventListener("input", function () {
-
-      this.value = this.value.replace(/\n/g, "");
-
-      const currentLength = reasonTextarea.value.length;
-      const remaining = 50 - currentLength;
-
-      if (currentLength < 10) {
-        charCounter.textContent = `최소 10자 이상 입력하세요 (${remaining}자 남음)`;
-        charCounter.className = "error";
-        confirmBtn.disabled = true;
-      } else {
-        charCounter.textContent = `${remaining}자 남음`;
-        charCounter.className = "success";
-        confirmBtn.disabled = false;
-      }
-    });
-  });
-</script>
+<script src="/javascript/reservation/modalRsrvCancel.js"></script>
 </body>
 </html>

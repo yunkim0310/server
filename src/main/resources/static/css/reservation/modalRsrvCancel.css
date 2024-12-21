@@ -1,0 +1,36 @@
+#charCounter {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+#charCounter.error {
+    color: red;
+}
+
+#charCounter.success {
+    color: green;
+}
+
+.confirm-btn:disabled {
+    background-color: #646D7A;
+    cursor: not-allowed;
+}
+
+#reasonTextarea {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+    resize: none;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+#reasonTextarea:focus {
+    border-color: #007BFF;
+    outline: none;
+}
