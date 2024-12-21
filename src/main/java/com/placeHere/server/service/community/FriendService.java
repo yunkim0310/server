@@ -47,9 +47,6 @@ public interface FriendService {
 
 //    //친구 아이디를 검색하다 ( 보류)
 //    public List<Friend> searchFriend(Search search) throws Exception;
-//
-
-
     //친구 요청을 확인하다   => 필요  X getFriendReq 합침
 //    public List<Friend> checkFriendReq(String friendRes) throws Exception;
 
