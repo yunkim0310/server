@@ -75,9 +75,6 @@ public interface StoreService {
     // 휴무일 삭제 (DELETE)
     public boolean removeCloseday(int closedayId);
 
-    // 가게 주변 시설 추천 (구글 API)
-    public Map<String, Place> getNearbyPlaces(String storeAddr);
-
     // 가게 예약 통계 (RsrvDao 사용)
     public Map<String, Map<String, Integer>> getStatistics(int storeId);
 }

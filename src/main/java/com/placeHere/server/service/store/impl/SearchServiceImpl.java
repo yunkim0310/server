@@ -19,18 +19,12 @@ public class SearchServiceImpl implements SearchService {
     @Override
     public boolean addSearch(String searchKeyword) {
 
-        System.out.println(searchKeyword);
-
         try {
-
             searchDao.addSearch(searchKeyword.split(" "));
             return true;
-
         } catch (Exception e) {
-
             e.printStackTrace();
             return false;
-
         }
     }
 

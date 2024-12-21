@@ -3,7 +3,7 @@ import { getLocation, getApiKey } from "./geoLocation.mjs";
 $(function() {
 
     // form 속성 설정
-    // $("form[name='addStore']").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
+    $("form[name='addStore']").attr("action", "/store/addStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
     // 중복체크, 사업자번호 확인 결과 텍스트
     let duplicateResult = "";
@@ -484,7 +484,7 @@ $(function() {
         }
 
         // 매장명
-        var storeName = $.trim(("input[name='storeName']").val());
+        var storeName = $.trim($("input[name='storeName']").val());
 
         if (storeName === "") {
             alert("매장명은 공백만 입력할 수 없습니다.");
