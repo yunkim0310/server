@@ -111,6 +111,15 @@
         button:hover {
             background-color: #0056b3; /* 버튼 호버 색상 */
         }
+
+        function showAlertAndConfirm() {
+    if (reviewScoreInput.value === '') {
+        alert('별점은 필수로 입력하셔야 합니다.');
+        return false; // 폼 제출 취소
+    }
+
+
+
     </style>
 
 </head>
@@ -208,19 +217,27 @@
         });
     }
 
-    // 리뷰 작성 확인 및 포인트 지급 알림 함수
-    function showAlertAndConfirm() {
+    // 리뷰 작성 확인 및 필수 입력 체크 함수
+    function showAlertAndConfirm(event) {
+        if (reviewScoreInput.value === '') {
+            alert('별점은 필수로 입력하셔야 합니다.'); // 별점 입력하지 않은 경우 alert
+            event.preventDefault(); // 폼 제출 취소
+            return false; // 반환값 False
+        }
         if (confirm('리뷰 작성 하시겠습니까?')) {
-            alert('100P 지급되었습니다!'); // 사용자에게 포인트 지급 알림
+            alert('100P 지급됩니다!'); // 사용자에게 포인트 지급 알림
             return true; // 폼 제출 계속 진행
         }
-        return false; // 폼 제출 취소
+        event.preventDefault(); // 폼 제출 취소
+        return false; // 반환값 False
     }
 
     // 폼 제출 시 showAlertAndConfirm 호출
     const form = document.querySelector('form'); // 폼 선택
-    form.onsubmit = showAlertAndConfirm; // 폼 제출 시 함수 연결
+    form.addEventListener('submit', showAlertAndConfirm); // submit 이벤트 핸들러 추가
 </script>
 
 </body>
 </html>
+
+
