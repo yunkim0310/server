@@ -1,5 +1,5 @@
-const category = document.querySelector(".categoryList");
-const smallCategory = document.querySelector(".small_categoryList");
+// const category = document.querySelector(".categoryList");
+// const smallCategory = document.querySelector(".small_categoryList");
 const dropdown = document.querySelector(".dropdown");
 const smallHeader = document.querySelector(".small_header");
 const smallDropdown = document.querySelector(".small_dropdown");

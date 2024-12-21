@@ -268,6 +268,9 @@ public class StoreController {
         boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
         boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
 
+        System.out.println("amenitiesEquals = "+amenitiesEquals);
+        System.out.println("menuEquals = "+menuEquals);
+
         storeService.updateStore(store, amenitiesEquals, menuEquals);
 
         return "redirect:/store/updateOperation";
@@ -410,7 +413,7 @@ public class StoreController {
         // 가게 목록 검색
         List<Store> storeList = storeService.getStoreList(search);
         int totalCnt = (storeList.isEmpty()) ? 0 : storeList.get(0).getTotalCnt();
-        System.out.println("totalCnt = " + totalCnt);
+        System.out.println("storeTotalCnt = " + totalCnt);
         
         // 검색, 필터 관련
         model.addAttribute("mode", "result");
@@ -767,20 +770,20 @@ public class StoreController {
 
             case "closeday":
 
-                System.out.println(closeday);
-
                 // 휴무일 등록
                 if (fnc.equals("add")) {// 휴무일 등록
+
                     System.out.println("addCloseday");
 
-                    // TODO 예약이 있는지 확인은 Rest로? 변경 생각해보기
                     int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
-
                     System.out.println(rsrvCnt);
 
                     // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
                     if (rsrvCnt == 0) {
+
+                        System.out.println(closeday);
                         storeService.addCloseday(closeday);
+
                     } else {
                         redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
                     }
