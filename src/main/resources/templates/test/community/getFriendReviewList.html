@@ -1,93 +1,94 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>친구 리뷰 목록</title>
-    <style>
-        /* 고정 위치를 위한 스타일 */
-        .fixed-button {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 1000;
-        }
-        button {
-            background-color: #007bff; /* 버튼 배경색 */
-            color: white; /* 버튼 텍스트 색상 */
-            border: none; /* 테두리 없애기 */
-            padding: 10px 20px; /* 패딩 추가 */
-            text-align: center; /* 텍스트 중앙 정렬 */
-            text-decoration: none; /* 링크 장식 없애기 */
-            display: inline-block; /* 버튼 형태로 가져가기 */
-            margin: 4px 2px; /* 버튼 마진 */
-            cursor: pointer; /* 마우스 포인팅 커서 */
-            border-radius: 5px; /* 경계 둥글게 */
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
-    <script type="text/javascript">
-        function confirmDelete() {
-            return confirm("정말 친구 삭제하시겠습니까?");
-        }
-    </script>
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>친구 리뷰 목록</title>-->
+<!--    <style>-->
+<!--        /* 고정 위치를 위한 스타일 */-->
+<!--        .fixed-button {-->
+<!--            position: fixed;-->
+<!--            top: 20px;-->
+<!--            right: 20px;-->
+<!--            z-index: 1000;-->
+<!--        }-->
+<!--        button {-->
+<!--            background-color: #007bff; /* 버튼 배경색 */-->
+<!--            color: white; /* 버튼 텍스트 색상 */-->
+<!--            border: none; /* 테두리 없애기 */-->
+<!--            padding: 10px 20px; /* 패딩 추가 */-->
+<!--            text-align: center; /* 텍스트 중앙 정렬 */-->
+<!--            text-decoration: none; /* 링크 장식 없애기 */-->
+<!--            display: inline-block; /* 버튼 형태로 가져가기 */-->
+<!--            margin: 4px 2px; /* 버튼 마진 */-->
+<!--            cursor: pointer; /* 마우스 포인팅 커서 */-->
+<!--            border-radius: 5px; /* 경계 둥글게 */-->
+<!--        }-->
+<!--        button:hover {-->
+<!--            background-color: #0056b3;-->
+<!--        }-->
+<!--    </style>-->
+<!--    <script type="text/javascript">-->
+<!--        function confirmDelete() {-->
+<!--            return confirm("정말 친구 삭제하시겠습니까?");-->
+<!--        }-->
+<!--    </script>-->
 
-    <link rel="stylesheet" href="path/to/your/styles.css">
-</head>
-<body>
-<div th:include="~{common/header}"></div>
+<!--    <link rel="stylesheet" href="path/to/your/styles.css">-->
+<!--</head>-->
+<!--<body>-->
+<!--5-->
+<!--<div th:include="~{common/header}"></div>-->
 
-<h1>친구 리뷰 목록 getFriendReviewList</h1>
+<!--<h1>친구 리뷰 목록 getFriendReviewList</h1>-->
 
-<div th:if="${message}" style="color: red;">
-    <p th:text="${message}"></p>
-</div>
+<!--<div th:if="${message}" style="color: red;">-->
+<!--    <p th:text="${message}"></p>-->
+<!--</div>-->
 
-<div class="review-list">
-    <div th:if="${#lists.isEmpty(reviewList)}">
-        <p>리뷰가 없습니다.</p>
-    </div>
+<!--<div class="review-list">-->
+<!--    <div th:if="${#lists.isEmpty(reviewList)}">-->
+<!--        <p>리뷰가 없습니다.</p>-->
+<!--    </div>-->
 
-    <div th:each="review : ${reviewList}">
-        <div class="review-item">
-            <h2 th:text="${review.storeName}">가게 이름</h2>
-            <img th:src="${review.profileImg}" alt="작성자 프로필 이미지" />
-            <p>작성자: <span th:text="${review.userName}"></span></p>
-            <p>별점: <span th:text="${review.reviewScore}"></span></p>
-            <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
-            <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>
-            <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>
-            <p>매장 이름: <span th:text="${review.storeName}"></span></p>
-            <p>매장 아이디: <span th:text="${review.storeId}"></span></p>
+<!--    <div th:each="review : ${reviewList}">-->
+<!--        <div class="review-item">-->
+<!--            <h2 th:text="${review.storeName}">가게 이름</h2>-->
+<!--            <img th:src="${review.profileImg}" alt="작성자 프로필 이미지" />-->
+<!--            <p>작성자: <span th:text="${review.userName}"></span></p>-->
+<!--            <p>별점: <span th:text="${review.reviewScore}"></span></p>-->
+<!--            <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>-->
+<!--            <p>좋아요 수: <span class="like-count" th:text="${review.reviewLikeCnt}"></span></p>-->
+<!--            <p>댓글 수: <span class="comment-count" th:text="${#lists.size(review.commentList)}"></span></p>-->
+<!--            <p>매장 이름: <span th:text="${review.storeName}"></span></p>-->
+<!--            <p>매장 아이디: <span th:text="${review.storeId}"></span></p>-->
 
-            <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" class="review-detail-button">
-                <button>리뷰 상세보기</button>
-            </a>
+<!--            <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" class="review-detail-button">-->
+<!--                <button>리뷰 상세보기</button>-->
+<!--            </a>-->
 
-            <hr />
-        </div>
-    </div>
-</div>
+<!--            <hr />-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
 
-<div class="fixed-button">
-    <!-- 친구 삭제 버튼 -->
-    <div th:if="${friendStatus == true}">
-        <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
-            <input type="hidden" name="friendNo" th:value="${friendNo}" /> <!-- 친구 번호 -->
-            <button type="submit" class="btn-primary del">친구 삭제</button>
-        </form>
-    </div>
+<!--<div class="fixed-button">-->
+<!--    &lt;!&ndash; 친구 삭제 버튼 &ndash;&gt;-->
+<!--    <div th:if="${friendStatus == true}">-->
+<!--        <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">-->
+<!--            <input type="hidden" name="friendNo" th:value="${friendNo}" /> &lt;!&ndash; 친구 번호 &ndash;&gt;-->
+<!--            <button type="submit" class="btn-primary del">친구 삭제</button>-->
+<!--        </form>-->
+<!--    </div>-->
 
-    <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
-    <div th:if="${friendStatus == false}">
-        <form th:action="@{/review/sendFriendReq}" method="post">
-            <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>
-            <button type="submit" class="btn-primary">친구 신청</button>
-        </form>
-    </div>
-</div>
+<!--    &lt;!&ndash; 친구 신청 버튼 (친구가 아닐 경우) &ndash;&gt;-->
+<!--    <div th:if="${friendStatus == false}">-->
+<!--        <form th:action="@{/review/sendFriendReq}" method="post">-->
+<!--            <input id="friendRes" name="friendRes" type="hidden" th:value="${friendUsername}"/>-->
+<!--            <button type="submit" class="btn-primary">친구 신청</button>-->
+<!--        </form>-->
+<!--    </div>-->
+<!--</div>-->
 
-<p>현재 <span th:text="${friendUsername}"></span>님의 Feed 입니다</p>
-</body>
-</html>
+<!--<p>현재 <span th:text="${friendUsername}"></span>님의 Feed 입니다</p>-->
+<!--</body>-->
+<!--</html>-->

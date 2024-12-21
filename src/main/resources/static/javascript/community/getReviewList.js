@@ -1,3 +1,5 @@
+getReviewList.js
+
 $(function() {
 
     // submit 함수

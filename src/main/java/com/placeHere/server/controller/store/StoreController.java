@@ -1,7 +1,6 @@
 package com.placeHere.server.controller.store;
 
 import com.placeHere.server.domain.*;
-import com.placeHere.server.service.aws.AwsS3Service;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
 import com.placeHere.server.service.reservation.ReservationService;
@@ -14,7 +13,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.sql.Date;
@@ -78,17 +76,16 @@ public class StoreController {
         System.out.println("/store/addStore : GET");
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         
         // 로그인 안 한 경우
         if (user == null) {
-
             return "redirect:/user/login";
             
         // 점주 회원의 경우
         } else if (user.getRole().equals("ROLE_STORE")) {
 
             int storeId = storeService.getStoreId(user.getUsername());
+            System.out.println("storeId = " + storeId);
             
             // 등록된 가게가 있는 경우
             if (storeId != 0) {
@@ -97,13 +94,11 @@ public class StoreController {
 
                 // 등록된 가게 운영이 있는 경우
                 if (store.getStoreOperation() != null) {
-
                     return "redirect:/store/getMyStore";
                 }
 
                 // 등록된 가게 운영이 없는 경우
                 else {
-
                     return "redirect:/store/addOperation";
                 }
                 
@@ -152,11 +147,9 @@ public class StoreController {
         System.out.println("/store/addOperation : GET");
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         
         // 로그인 안 한 경우
         if (user == null) {
-
             return "redirect:/user/login";
         
         // 점주 회원의 경우
@@ -164,6 +157,7 @@ public class StoreController {
 
             int storeId = storeService.getStoreId(user.getUsername());
             Store store = storeService.getStore(storeId);
+            System.out.println("storeId = " + storeId);
             
             // 등록된 가게가 있는 경우
             if (storeId != 0) {
@@ -178,19 +172,16 @@ public class StoreController {
                 
                 // 등록된 가게 운영이 있는 경우
                 } else {
-
                     return "redirect:/store/getMyStore";
                 }
             
             // 등록된 가게가 없는 경우
             } else {
-
                 return "redirect:/store/addStore";
             }
         
         // 일반 회원의 경우
         } else {
-
             return "redirect:/";
         }
     }
@@ -199,7 +190,6 @@ public class StoreController {
     public String addOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
         System.out.println("/store/addOperation : POST");
-
         System.out.println(storeOperation);
 
         storeService.addOperation(storeOperation);
@@ -215,12 +205,10 @@ public class StoreController {
         System.out.println("/store/updateStore : GET");
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         model.addAttribute("url", bucketUrl);
 
         // 로그인 안 한 경우
         if (user == null) {
-
             return "redirect:/user/login";
         }
 
@@ -228,10 +216,10 @@ public class StoreController {
         else if (user.getRole().equals("ROLE_STORE")) {
 
             int storeId = storeService.getStoreId(user.getUsername());
+            System.out.println("storeId = " + storeId);
             
             // 등록된 가게가 없는 경우
             if (storeId == 0) {
-
                 return "redirect:/store/addStore";
 
             } else {
@@ -239,16 +227,12 @@ public class StoreController {
                 Store store = storeService.getStore(storeId);
 
                 if (store.getStoreOperation() == null) {
-
                     return "redirect:/store/addOperation";
                 }
 
                 else {
 
                     List<String> selectedCategoryList = Arrays.asList(store.getFoodCategoryId().split("/"));
-
-                    System.out.println(store);
-                    System.out.println(selectedCategoryList);
 
                     model.addAttribute("store", store);
                     model.addAttribute("selectedCategoryList", selectedCategoryList);
@@ -272,15 +256,12 @@ public class StoreController {
     @PostMapping("/store/updateStore")
     public String updateStore(@ModelAttribute Store store, Model model) {
         
-        // TODO 사진 입력값이 없을 시 기존 사용하는 코드 추가 필요
-        
         System.out.println("/store/updateStore : POST");
 
         List<String> hashtagList = store.getHashtagList();
         hashtagList.removeIf(hashtag -> hashtag == null || hashtag.isEmpty());
         store.setHashtagList(hashtagList);
 
-        System.out.println("changeStore");
         System.out.println(store);
 
         Store beforeStore = storeService.getStore(store.getStoreId());
@@ -300,7 +281,6 @@ public class StoreController {
         System.out.println("/store/updateOperation : GET");
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         
         // 로그인 안 한 경우
         if (user == null) {
@@ -312,25 +292,19 @@ public class StoreController {
         else if (user.getRole().equals("ROLE_STORE")) {
 
             int storeId = storeService.getStoreId(user.getUsername());
+            System.out.println("storeId = " + storeId);
 
             if (storeId == 0) {
-
                 return "redirect:/store/addStore";
-
             }
 
             else {
 
                 Store store = storeService.getStore(storeId);
-
                 StoreOperation storeOperation = storeService.getOperation(store.getStoreId());
 
-                System.out.println(storeOperation);
-
                 if (storeOperation == null) {
-
                     return "redirect:/store/addOperation";
-
                 }
 
                 else {
@@ -348,7 +322,6 @@ public class StoreController {
         
         // 일반 회원의 경우
         else {
-
             return "redirect:/";
         }
 
@@ -358,11 +331,9 @@ public class StoreController {
     public String updateOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
 
         System.out.println("/store/updateOperation : POST");
-
         System.out.println(storeOperation);
 
         storeService.updateOperation(storeOperation);
-
         Store store = storeService.getStore(storeOperation.getStoreId());
 
         model.addAttribute("store", store);
@@ -381,15 +352,17 @@ public class StoreController {
         List<String> popularKeywordList = searchService.getPopularKeyword();
         System.out.println(popularKeywordList);
 
-        // 인기 가게
-//        List<Integer> storeIdList = likeService.likeList("store");
+        // 추천 가게
         List<Store> storeList = storeService.getStoreList(new Search(pageSize, 6));
         List<Store> storeList1 = storeList.subList(0, 3);
         List<Store> storeList2 = storeList.subList(3, 6);
 
+        // 음식 카테고리
+        FoodCategory foodCategory = new FoodCategory();
+
         model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
-        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("foodCategory", foodCategory);
         model.addAttribute("amenitiesNameList", amenitiesNameList);
         model.addAttribute("search", new Search());
         model.addAttribute("popularKeywordList", popularKeywordList);
@@ -403,19 +376,13 @@ public class StoreController {
     // 가게 목록 조회
     @GetMapping("/getStoreList")
     public String getStoreList(@ModelAttribute Search search,
-                               HttpSession session,
                                Model model) {
 
         System.out.println("/getStoreList : GET");
         
-        // 로그인 한 유저
-        User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
-        
         // search 페이지양, 리스트양 설정
         search.setPageSize(pageSize);
         search.setListSize(listSize);
-        System.out.println(search);
 
         // 필터에서 선택한 음식 카테고리
         List<String> selectedCategoryList = Arrays.asList(search.getFoodCategoryId().split("/"));
@@ -443,7 +410,7 @@ public class StoreController {
         // 가게 목록 검색
         List<Store> storeList = storeService.getStoreList(search);
         int totalCnt = (storeList.isEmpty()) ? 0 : storeList.get(0).getTotalCnt();
-        System.out.println(storeList);
+        System.out.println("totalCnt = " + totalCnt);
         
         // 검색, 필터 관련
         model.addAttribute("mode", "result");
@@ -482,16 +449,16 @@ public class StoreController {
                            Model model) throws Exception {
 
         System.out.println("/getStore : GET");
-        System.out.println(storeId);
-        System.out.println("mode: " + mode);
+        System.out.println("storeId = " + storeId);
+        System.out.println("mode = " + mode);
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         model.addAttribute("url", bucketUrl);
-
-        Store store = storeService.getStore(storeId, Date.valueOf(LocalDate.now()));
         search.setPageSize(pageSize);
         search.setListSize(listSize);
+        
+        // 현재 적용중인 운영정보의 가게
+        Store store = storeService.getStore(storeId, Date.valueOf(LocalDate.now()));
 
         if (store == null || store.getStoreOperation() == null) {
             return "redirect:/";
@@ -506,8 +473,6 @@ public class StoreController {
                 storeImgList.removeIf(storeImg -> storeImg == null || storeImg.isEmpty());
                 store.setStoreImgList(storeImgList);
             }
-
-            System.out.println(store);
 
             // 회원의 좋아요 여부
             if (user != null && user.getRole().equals("ROLE_USER")) {
@@ -528,6 +493,7 @@ public class StoreController {
             switch (mode) {
 
                 case "info":
+                    
                     // 가게 정보
                     System.out.println("/getStore 가게 정보");
 
@@ -536,8 +502,10 @@ public class StoreController {
                     break;
 
                 case "statistics":
+                    
                     // 예약 통계
                     System.out.println("/getStore 예약통계");
+                    
                     Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
                     model.addAttribute("week", statistics.get("week"));
@@ -547,23 +515,27 @@ public class StoreController {
                     model.addAttribute("statistics", statistics);
 
                     if (user != null) {
-
+                        
+                        // 본인 가게 여부
                         boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
                         model.addAttribute("isMyStore", isMyStore);
+                        
                     }
 
                     break;
 
                 case "review":
+                    
                     // 가게 리뷰
                     System.out.println("/getStore 가게 리뷰");
+                    
                     List<Review> reviewList = communityService.getReviewList(storeId, search);
                     int totalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
 
-                    System.out.println(reviewList);
-
+                    System.out.println("reviewTotalCnt = " + totalCnt);
+                    
+                    // 유저의 리뷰 좋아요 여부 확인
                     if (user != null) {
-
                         reviewList = likeService.chkReviewLike(user.getUsername(), reviewList);
                     }
 
@@ -576,6 +548,7 @@ public class StoreController {
                     break;
 
                 case "nearby":
+                    
                     // 가게 주변시설 추천
                     System.out.println("/getStore 주변시설 추천");
 
@@ -596,7 +569,6 @@ public class StoreController {
         System.out.println("/store/getLikeStoreList : GET");
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
 
         Search search = new Search(pageSize, listSize);
         search.setPage(page);
@@ -604,7 +576,8 @@ public class StoreController {
         if (user != null) {
 
             if (user.getRole().equals("ROLE_USER")) {
-
+                
+                // 가게 좋아요 목록
                 List<Like> storeLikeList = likeService.getStoreLikeList(user.getUsername(), search);
                 int totalCnt = (storeLikeList.isEmpty())? 0 : storeLikeList.get(0).getLikeTotalCnt();
 
@@ -619,7 +592,6 @@ public class StoreController {
             }
 
             else {
-
                 return "redirect:/";
             }
         }
@@ -640,14 +612,12 @@ public class StoreController {
                              Model model) throws Exception {
 
         System.out.println("/store/getMyStore : GET");
-        System.out.println("mode: " + mode);
+        System.out.println("mode = " + mode);
 
         User user = (User) session.getAttribute("user");
-        model.addAttribute("user", user);
         model.addAttribute("url", bucketUrl);
 
         if (user == null) {
-
             return "redirect:/user/login";
         }
 
@@ -657,9 +627,9 @@ public class StoreController {
             search.setListSize(listSize);
 
             int storeId = storeService.getStoreId(user.getUsername());
+            System.out.println("storeId = " + storeId);
 
             if (storeId == 0) {
-
                 return "redirect:/store/addStore";
             }
 
@@ -668,7 +638,6 @@ public class StoreController {
                 Store store = storeService.getStore(storeId);
 
                 if (store.getStoreOperation() == null) {
-
                     return "redirect:/store/addOperation";
                 }
 
@@ -687,12 +656,13 @@ public class StoreController {
                             List<Review> reviewList = communityService.getReviewList(storeId, search);
                             int reviewTotalCnt = (reviewList != null && !reviewList.isEmpty()) ? reviewList.get(0).getReviewTotalCnt() : 0;
                             reviewList = likeService.chkReviewLike(user.getUsername(), reviewList);
+                            System.out.println("reviewTotalCnt = " + reviewTotalCnt);
 
                             model.addAttribute("reviewList", reviewList);
                             model.addAttribute("totalCnt", reviewTotalCnt);
 
                             // 페이징
-                            paging = new Paging(reviewTotalCnt, search.getPage(), pageSize, listSize);
+                            paging = new Paging(reviewTotalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
                             break;
 
@@ -703,6 +673,7 @@ public class StoreController {
 
                             List<StoreNews> storeNewsList = storeService.getStoreNewsList(storeId, search);
                             int newsTotalCnt = (storeNewsList.isEmpty()) ? 0 : storeNewsList.get(0).getTotalCnt();
+                            System.out.println("newsTotalCnt = " + newsTotalCnt);
 
                             model.addAttribute("storeNewsList", storeNewsList);
                             model.addAttribute("totalCnt", newsTotalCnt);
@@ -737,7 +708,6 @@ public class StoreController {
         }
 
         else {
-
             return "redirect:/";
         }
 
@@ -752,37 +722,41 @@ public class StoreController {
                              RedirectAttributes redirectAttributes) throws Exception {
 
         System.out.println("/store/getMyStore : POST");
-        System.out.println("mode: " + mode);
-        System.out.println("fnc: " + fnc);
+        System.out.println("mode = " + mode);
+        System.out.println("fnc = " + fnc);
 
         switch (mode) {
 
             case "news":
 
-                System.out.println(storeNews);
-
                 // 매장 소식 등록, 수정, 삭제
                 switch (fnc) {
 
                     case "add":
+
                         // 매장 소식 등록
                         System.out.println("addStoreNews");
+                        System.out.println(storeNews);
 
                         storeService.addStoreNews(storeNews);
 
                         break;
 
                     case "update":
+
                         // 매장 소식 수정
                         System.out.println("updateStoreNews");
+                        System.out.println(storeNews);
 
                         storeService.updateStoreNews(storeNews);
 
                         break;
 
                     case "remove":
+
                         // 매장 소식 삭제
                         System.out.println("removeStoreNews");
+                        System.out.println(storeNews.getNewsId());
 
                         storeService.removeStoreNews(storeNews.getNewsId());
 

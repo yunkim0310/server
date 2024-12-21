@@ -1,6 +1,7 @@
 // 휴무일 달력 함수
 document.addEventListener('DOMContentLoaded', function () {
 
+    const storeId = $("input[name='storeId']").val()
     const calendarEl = document.getElementById('closedayCalendar');
 
     const calendar = new FullCalendar.Calendar(calendarEl, {
@@ -12,7 +13,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 url: '/api-store/getClosedayByMonth',
                 type: 'GET',
                 data: {
-                    storeId: 1,
+                    storeId: storeId,
                     startDate: info.startStr,
                     endDate: info.endStr
                 },
@@ -50,7 +51,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const closeday = arg.event.start;
 
                 // AJAX 요청으로 삭제
-                if (confirm(`휴무일 ${closeday} 를 삭제하시겠습니까?`)) {
+                if (confirm(`휴무일 ${closeday.toISOString().split('T')[0]} 을 삭제하시겠습니까?`)) {
                     $.ajax({
                         url: '/api-store/removeCloseday',
                         type: 'POST',

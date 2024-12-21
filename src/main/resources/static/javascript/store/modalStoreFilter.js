@@ -5,6 +5,29 @@ $(function() {
 
     console.log(mode);
 
+    // 해시태그 입력 필터링 함수
+    function hashtagInputFilter(input) {
+
+        // 한글, 영어, 숫자만 허용하는 정규식
+        const pattern = /^[가-힣a-zA-Z0-9]*$/;
+
+        return input.split('').filter(char => pattern.test(char)).join('');
+    }
+
+    // 해시태그 입력 이벤트처리
+    $(document).on("input", "input[name='hashtagList']", function () {
+
+        var input = $(this).val();
+
+        // 필터링된 값으로 업데이트
+        var filteredValue = hashtagInputFilter(input);
+
+        if (input !== filteredValue) {
+            $(this).val(filteredValue);
+            alert("한글, 영어, 숫자만 입력 가능합니다. 공백은 허용되지 않습니다.");
+        }
+    });
+
     // mode 가 결과창일때 (getStoreList)
     if (mode === "result") {
 
@@ -274,7 +297,7 @@ $(function() {
                 '<div class="css-82a6rk e744wfw3">' +
                     '<div class="css-jmalg e1uzxhvi6">' +
                         '<div class="css-176lya2 e1uzxhvi3 under-name-block">' +
-                            '<input type="text" class="css-1bkd15f e1uzxhvi2" ' +
+                            '<input type="text" class="css-1bkd15f e1uzxhvi2" maxlength="10" ' +
                             'placeholder="#을 제외한 해시태그를 입력해주세요." name="hashtagList">' +
                         '</div>' +
                     '</div>' +
@@ -368,6 +391,16 @@ $(function() {
 
     // 가격 범위에 대한 이벤트 처리
     $("input[name^='price']").on('input', function() {
+
+        // 입력값을 정수로 변환
+        var inputValue = parseInt($(this).val(), 10);
+
+        // 입력값이 숫자가 아니거나 0 미만인 경우 0으로 설정
+        if (isNaN(inputValue) || inputValue < 0) {
+            $(this).val(0);
+        } else {
+            $(this).val(inputValue);
+        }
 
         updatePriceText();
     });

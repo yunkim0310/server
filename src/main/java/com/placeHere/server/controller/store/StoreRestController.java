@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -110,16 +109,14 @@ public class StoreRestController {
     
     // 가게 목록 조회
     @GetMapping("/getStoreList")
-    public ResponseEntity<List<Store>> getStoreList(@ModelAttribute Search search,
-                               Model model) {
+    public ResponseEntity<List<Store>> getStoreList(@ModelAttribute Search search) {
 
         System.out.println("/api-store/getStoreList : GET");
-
-        System.out.println(search);
+        System.out.println("search : " + ((search != null) ? search.getSearchKeyword() : "null"));
 
         List<Store> storeList = storeService.getStoreList(search);
 
-        System.out.println(storeList);
+        System.out.println("storeList : " + ((storeList != null) ? storeList.size() : "null"));
 
         return ResponseEntity.ok(storeList);
     }

@@ -40,7 +40,7 @@
         <style>
 
             .main-carousel {
-                width: 80%;
+                width: 100%;
                 text-align: center;
                 justify-content: space-between;
                 align-items: center;
@@ -72,21 +72,21 @@
                                     <th:block th:if="${iterStat.index == 0}">
                                         <div class="carousel-item active" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
                                                      th:alt="${store.storeImg1}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
                                                      th:alt="${store.storeImg2}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
                                                      th:alt="${store.storeImg3}">
                                             </a>
@@ -94,7 +94,7 @@
                                         <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
                                                          th:alt="${store.storeImg4}">
                                                 </a>
@@ -103,7 +103,7 @@
                                         <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
                                                          th:alt="${store.storeImg5}">
                                                 </a>
@@ -113,21 +113,21 @@
                                     <th:block th:unless="${iterStat.index == 0}">
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
                                                      th:alt="${store.storeImg1}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
                                                      th:alt="${store.storeImg2}">
                                             </a>
                                         </div>
                                         <div class="carousel-item" data-bs-interval="2000">
                                             <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                <img class="d-block w-100" height="700"
+                                                <img class="d-block w-100" height="500"
                                                      th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
                                                      th:alt="${store.storeImg3}">
                                             </a>
@@ -135,7 +135,7 @@
                                         <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700"
+                                                    <img class="d-block w-100" height="500"
                                                          th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
                                                          th:alt="${store.storeImg4}">
                                                 </a>
@@ -144,7 +144,7 @@
                                         <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
                                             <div class="carousel-item" data-bs-interval="2000">
                                                 <a th:href="${'/getStore?storeId=' + store.storeId}">
-                                                    <img class="d-block w-100" height="700" style="object-fit: fill;"
+                                                    <img class="d-block w-100" height="500" style="object-fit: fill;"
                                                          th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
                                                          th:alt="${store.storeImg5}">
                                                 </a>
@@ -279,6 +279,7 @@
                                     <div class="v-scroll-inner">
                                         <div class="best-food-list">
                                             <a class="best-food-list-item item"
+                                               th:if="${foodCategory != null && foodCategory.mainCategory != null}"
                                                th:each="category : ${foodCategory.mainCategory}"
                                                th:href="'/getStoreList?foodCategoryId='+${category}">
                                                     <span class="tb">
@@ -321,6 +322,9 @@
                             <div class="section-header section-header-v">
                                 <h3 class="section-title ebold">유저의 리얼리뷰 Pick</h3>
                                 <p style="color: rgb(98, 98, 98);">방문자들이 남긴 솔직한 리뷰를 만나보세요</p>
+                                <div th:if="${reviewList == null || reviewList.isEmpty()}" style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                    인기 리뷰 집계 중입니다.
+                                </div>
                             </div>
                             <div class="section-body">
                                 <div id="sectionReviewVscroll" class="v-scroll">
@@ -339,14 +343,8 @@
                                                     </div>
                                                     <div class="date" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + '(수정됨)'}">최근 방문일<br></div>
                                                 </a>
-                                                <a th:href="'reveiw/getReview?userName='+${review.userName}"
+                                                <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}"
                                                    class="best-review-item-body">
-                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                        <div class="img">
-                                                            <img src="https://d3kzx7mqemhf0.cloudfront.net/catchtable/common/comm_232918085777781.webp?small400"
-                                                                 alt="">
-                                                        </div>
-                                                    </th:block>
                                                     <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
                                                         <th:block>
                                                             <div class="img"
@@ -404,7 +402,9 @@
                                     가장 주목 받는 맛집을 모아봤어요
                                 </p>
                                 <div th:if="${storeList == null || storeList.isEmpty()}" style="padding-top: 20px;">
-                                    <div>인기 가게 집계 중입니다.</div>
+                                    <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                        인기 가게 집계 중입니다.
+                                    </div>
                                 </div>
                             </div>
                             <div class="section-body">

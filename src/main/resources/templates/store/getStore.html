@@ -233,7 +233,7 @@
                     <!-- 리뷰 -->
                     <th:block th:if="${mode == 'review'}">
                         <th:block th:if="${session.user != null}">
-                            <div class="reviewList" th:insert="~{test/community/getReviewList :: reviewListFragment}"></div>
+                            <div class="reviewList" th:insert="~{community/getReviewList :: reviewListFragment}"></div>
                         </th:block>
                         <th:block th:unless="${session.user != null}">
                             <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
@@ -254,9 +254,9 @@
                                         <div class="v-scroll-inner">
                                             <div class="__restaurant-notice-v2"
                                                  style="display: flex; flex-wrap: nowrap;">
-                                                <div class="swiper-slide" style=" margin-right: 10px;">
+                                                <div class="swiper-slide" style=" margin-right: 10px; width: 100%">
                                                     <article class="__restaurant-notice-v2-item"
-                                                             th:style="${(store.storeNewsList != null && !store.storeNewsList.isEmpty()) ? 'overflow-x: scroll; white-space: nowrap; width: 50%; display: flex; flex-wrap: nowrap;' : ''}">
+                                                             th:style="${(store.storeNewsList != null && !store.storeNewsList.isEmpty()) ? 'overflow-x: scroll; white-space: nowrap; width: 55%; display: flex; flex-wrap: nowrap;' : ''}">
                                                         <div class="__notice-content">
                                                             <div class="__pic">
                                                                 <div class="img"></div>

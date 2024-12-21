@@ -77,7 +77,7 @@ public class CommunityController {
         model.addAttribute("review", review);
         model.addAttribute("currentUser", user);
 
-        return "test/community/addReview";
+        return "community/addReview";
     }
 
     @PostMapping("/addReview")
@@ -98,9 +98,15 @@ public class CommunityController {
     public String getReview(@RequestParam("reviewNo") int reviewNo,
                             @ModelAttribute Search search,
                             Model model,
-                            @SessionAttribute("user") User user) throws Exception {
+                            HttpSession session) throws Exception { //todo 방어코딩
 
         System.out.println("/review/getReview : GET");
+
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            return "redirect:/user/login";
+        }
 
         search.setPageSize(pageSize);
         search.setListSize(listSize);
@@ -182,7 +188,7 @@ public class CommunityController {
         model.addAttribute("review", review);
         model.addAttribute("url", bucketUrl);
 
-        return "test/community/updateReview";
+        return "community/updateReview";
     }
 
     @PostMapping("/updateReview")
@@ -223,6 +229,7 @@ public class CommunityController {
 
         System.out.println("/review/getReviewList : GET");
 
+
         try {
 
             String currentUser ="";
@@ -257,7 +264,7 @@ public class CommunityController {
                     totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
                     paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
-                    result = "test/community/getReviewList";
+                    result = "community/getReviewList";
 
                     break;
 
@@ -311,9 +318,9 @@ public class CommunityController {
 
 
                             if (friendUsername.equals(currentUser)) {
-                                result = "test/community/getMyReviewList"; // 사용자의 리뷰 리스트로 이동
+                                result = "community/getMyReviewList"; // 사용자의 리뷰 리스트로 이동
                             } else {
-                                result = "test/community/feedTest"; // 친구의 피드로 이동
+                                result = "community/getOtherFeedView"; // 친구의 피드로 이동
                             }
                         }
                         break;
@@ -347,17 +354,21 @@ public class CommunityController {
                         paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
 //                    return "test/community/getMyReviewList";
-                        result = "test/community/getMyReviewList";
+                        result = "community/getMyReviewList";
 
                         break;
                     }
                 case "otherFeed":
                     // 다른 사람 리뷰 리스트 가져오기
                     if (friendUsername != null && !friendUsername.isEmpty()) {
+
+                        if (user == null) {
+                            return "redirect:/user/login"; // 로그인 상태가 아니면 로그인 페이지로 리다이렉트
+                        }
+
                         reviewList = communityService.getReviewList(List.of(friendUsername), search);
 //                        model.addAttribute("reviewList", reviewList);
-//                        return "test/community/getOtherFeedView";
-                        result = "test/community/getOtherFeedView";
+                        result = "community/getOtherFeedView";
                     }
                     break;
 
@@ -370,7 +381,7 @@ public class CommunityController {
                     totalCnt = (reviewList.isEmpty()) ? 0 : reviewList.get(0).getReviewTotalCnt();
                     paging = new Paging(totalCnt, search.getPage(), search.getPageSize(), search.getListSize());
 
-                    result = "test/community/getReviewList";
+                    result = "community/getReviewList";
             }
 
             for (int i = 0; i < reviewList.size(); i++) {
@@ -507,7 +518,7 @@ public class CommunityController {
             model.addAttribute("message", "친구 요청을 가져오는 데 오류가 발생했습니다.");
         }
 
-        return "test/community/getFriendReqStatus";
+        return "community/getFriendReqStatus";
     }
 
 
@@ -602,7 +613,7 @@ public class CommunityController {
             model.addAttribute("keyword", keyword);
             model.addAttribute("user", user);
 
-            return "test/community/getFriendList";
+            return "community/getFriendList";
 
         } catch (Exception e) {
 
