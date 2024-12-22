@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--  <link rel="stylesheet" href="/css/user/loginView.css">-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Place Here</title>
+    <link rel="stylesheet" th:href="@{/css/user/loginView.css}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/javascript/user/user.js"></script>
+
+
+</head>
+<body>
+<div class="container">
+    <main>
+        <div class="login-form">
+
+            <div class="logo">
+                <a id="home" href="/">
+                    <img class="logoImg" src="/images/common/logo.png"/></a>
+            </div>
+<!--            <form th:action="@{/user/resetPwd}" method="post" onsubmit="return changePwd()">-->
+<!--            <form th:action="@{/user/resetPwd}" method="post">-->
+            <form>
+                <div class="input-group">
+
+                    <div th:if="${session.user != null}" class="login">
+                        <input type="hidden" id="username" name="username" th:value="${session.user.username}">
+                    </div>
+
+                    <label for="password">비밀번호</label>
+                    <input type="password" id="password" name="password" placeholder="8글자 이상 영문, 특수문자를 모두 사용해야 합니다." required>
+                </div>
+                <div class="input-group">
+                    <label for="passwordConfirm">비밀번호 확인</label>
+                    <input type="password" id="passwordConfirm" name="passwordChk" placeholder="입력하신 비밀번호와 동일하게 입력해주세요." required>
+                    <p class="font-10 mt-5" id="invalid-feedback-pwdConfirm"></p>
+                </div>
+
+
+                <button onclick="resetPwd()">확 인</button>
+            </form>
+
+
+
+
+        </div>
+    </main>
+</div>
+
+
+</body>
+</html>

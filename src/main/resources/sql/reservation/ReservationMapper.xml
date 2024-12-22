@@ -21,7 +21,9 @@
         <result property="storeName" column="store_name" jdbcType="VARCHAR"/>
         <result property="storeAddr" column="store_addr" jdbcType="VARCHAR"/>
         <result property="rsrvNumber" column="rsrv_number" jdbcType="VARCHAR"/>
+        <result property="totalCnt" column="total_cnt" jdbcType="INTEGER"/>
 
+        <association property="store" column="store_id" select="com.placeHere.server.dao.store.StoreDao.getStore"/>
     </resultMap>
 
 
@@ -100,6 +102,15 @@
     </select>
 
 
+    <select id="getCountAllRsrv" parameterType="map" resultType="int">
+        SELECT COALESCE(SUM(rsrv_person), 0)
+        FROM reservation
+        WHERE rsrv_dt = #{rsrvDt}
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청', '이용 완료', '리뷰 완료');
+    </select>
+
+
     <select id="getCountDayRsrv" parameterType="map" resultType="int">
         SELECT COALESCE(SUM(rsrv_person), 0)
         FROM reservation
@@ -113,8 +124,8 @@
         SELECT COUNT(*)
         FROM reservation
         WHERE user_name = #{userName}
-        AND DATE(rsrv_dt) > NOW()
-        AND rsrv_status IN ('예약 확정', '예약 요청');
+          AND DATE(rsrv_dt) > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
     </select>
 
 
@@ -138,19 +149,19 @@
 
 
     <select id="getRsrvList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             rsrv_status &lt;&gt; '결제 중'
         </where>
         ORDER BY
-            rsrv_dt DESC <!-- 내림차순 -->
+        rsrv_dt DESC
     </select>
 
 
 
-    <select id="getRsrvUserList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr
+    <select id="getRsrvUserList" parameterType="com.placeHere.server.domain.Search" resultMap="ReservationResultMap">
+        SELECT rsrv_no, store_id, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, user_name, store_name, store_addr, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             user_name = #{userName} <!-- 특정 유저 예약 -->
@@ -171,11 +182,14 @@
         <if test="search.order == 'desc'">
             rsrv_no DESC <!-- 내림차순 -->
         </if>
+        <if test="search.listSize != null and search.listSize != 0">
+            LIMIT #{search.startRowNum}, #{search.listSize}
+        </if>
     </select>
 
 
-    <select id="getRsrvStoreList" resultMap="ReservationResultMap">
-        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt
+    <select id="getRsrvStoreList" parameterType="com.placeHere.server.domain.Search" resultMap="ReservationResultMap">
+        SELECT rsrv_no, rsrv_status, rsrv_number, rsrv_person, rsrv_req, rsrv_dt, COUNT(*) OVER() AS total_cnt
         FROM reservation
         <where>
             store_id = #{storeId} <!-- 점주 가게 ID -->
@@ -185,13 +199,18 @@
                 AND DATE(rsrv_dt) >= CURRENT_DATE
             </if>
 
+            <!-- 기본 조건: 예약 일시가 현재 이후 -->
+            <if test="search.startDate == '' and search.endDate == ''">
+                AND DATE(rsrv_dt) >= CURRENT_DATE
+            </if>
+
             <!-- 시작 날짜 조건 -->
-            <if test="search.startDate != null">
+            <if test="search.startDate != null and search.startDate != ''">
                 AND DATE(rsrv_dt) >= #{search.startDate}
             </if>
 
             <!-- 종료 날짜 조건 -->
-            <if test="search.endDate != null">
+            <if test="search.endDate != null and search.endDate != ''">
                 AND DATE(rsrv_dt) &lt;= #{search.endDate}
             </if>
 
@@ -207,23 +226,54 @@
             </if>
         </where>
         ORDER BY rsrv_dt ASC, rsrv_no DESC <!-- 예약 일시 오름차순 -->
+        <if test="search.listSize != null and search.listSize != 0">
+            LIMIT #{search.startRowNum}, #{search.listSize}
+        </if>
     </select>
 
 
+    <select id="getPastRsrvNos" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE rsrv_status = '예약 확정'
+        AND rsrv_dt &lt; NOW()
+    </select>
 
 
+    <select id="getRemoveUserRsrvNos" parameterType="string" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE user_name = #{userName}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
 
 
+    <select id="getRemoveStoreRsrvNos" parameterType="int" resultType="int">
+        SELECT rsrv_no
+        FROM reservation
+        WHERE store_id = #{storeId}
+          AND rsrv_dt > NOW()
+          AND rsrv_status IN ('예약 확정', '예약 요청');
+    </select>
 
 
+    <select id="getRsrvTimeStatus" parameterType="map" resultType="com.placeHere.server.domain.ReservationTimeStatus">
+        SELECT rsrv_dt as rsrvDt, COALESCE(SUM(rsrv_person), 0) as rsrvPerson
+        FROM reservation
+        WHERE DATE(rsrv_dt) = DATE(#{effectDt})
+          AND store_id = #{storeId}
+          AND rsrv_status IN ('예약 확정', '전화 예약', '예약 요청')
+        group by rsrv_dt
+    </select>
 
 
-
-
-
-
-
-
+    <select id="getRsrvClose" parameterType="int" resultType="com.placeHere.server.domain.CloseDayOnEffectDay">
+        select effect_dt as effectDt, regular_closeday1 as day1, regular_closeday2 as day2, regular_closeday3 as day3
+        from operation
+        where store_id = #{storeId}
+        order by effectDt
+    </select>
 
 
 

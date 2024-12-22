@@ -26,26 +26,28 @@ repositories {
 
 dependencies {
 
-    // 타임리프
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-    // 타임리프에서 스프링시큐리티의 문법이나 형식을 지원하는 확장팩 라이브러리
-    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.1'
-    implementation 'org.springframework.security:spring-security-taglibs'
-
-
     // JWT
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
-    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
+//    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
+//    implementation 'io.jsonwebtoken:jjwt-impl:0.12.3'
+//    implementation 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 
     // jUnit 5 의존성 추가
 //    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
 //    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
 
+    /* QR code zxing */
+    implementation 'com.google.zxing:core:3.5.1'
+    implementation 'com.google.zxing:javase:3.5.1'
+
+    // 타임리프
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+    implementation 'org.springframework.cloud:spring-cloud-starter-aws:2.2.6.RELEASE'
+
     implementation 'org.springframework.boot:spring-boot-starter-batch'
-    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-    implementation 'org.springframework.boot:spring-boot-starter-quartz'
-    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+//    implementation 'org.springframework.boot:spring-boot-starter-quartz'
+//    implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.3'
     compileOnly 'org.projectlombok:lombok'
@@ -57,8 +59,14 @@ dependencies {
     testImplementation 'org.springframework.batch:spring-batch-test'
     testImplementation 'org.springframework.security:spring-security-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
 }

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+
+        <!-- 부트스트랩 CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="/css/templates/mypage.css">
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/style.css">
+
+        <link th:insert="~{common/import :: importFragment}">
+
+        <!-- 리뷰 관련 스크립트 -->
+        <script src="/javascript/community/like.js"></script>
+        <script src="/javascript/store/getStoreReviewList.js"></script>
+
+        <link rel="stylesheet" href="/css/store/getMyStore.css">
+        <script src="/javascript/store/fileUploadEvent.js"></script>
+        <script src="/javascript/store/getMyStore.js"></script>
+
+        <link rel="stylesheet" href="/css/community/getReviewList.css">
+
+    </head>
+
+    <body>
+
+        <div id="root">
+
+            <input type="hidden" id="mode" th:value="${mode}">
+
+            <div class="css-luwwab eug5r8l1">
+                <div class="css-833hqy ecbxmj4">
+                    <div class="side">
+                        <div class="css-1v4whg ecbxmj3">가게 관리</div>
+                        <div th:replace="~{store/getMyStoreAside :: getMyStoreAside}"></div>
+                    </div>
+                </div>
+                <div class="css-171zbec eug5r8l0">
+                    <div class="css-j0lifa ed9qr673">
+                        <div class="css-fhxb3m ed9qr672">
+                            <h2 class="css-1268zpe ed9qr671">[[${store.userName}]] 님의 가게 보기</h2>
+                        </div>
+                    </div>
+
+                    <main id="main">
+                        <section class="section section-overflow-hidden pt-24">
+                            <div class="container  ">
+                                <div class="mypage-profile">
+                                    <div class="profile-pic">
+
+                                        <div class="img"
+                                             th:style="'margin-top: 20px;background-image: url('+${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}+');'">
+                                        </div>
+
+                                    </div>
+                                    <div class="mypage-profile-meta">
+                                        <div>
+                                            <h4 class="name username">
+                                                <span class="txt" id="followingNick"
+                                                      style="max-width: none;"
+                                                      th:text="${store.storeName}">
+                                                    매장명
+                                                </span>
+                                            </h4>
+
+                                            <br/>
+
+                                            <div class="meta">
+                                                <div class="profile-summary">
+                                                <div class="color-gray" th:text="${store.storeAddr}">
+                                                    매장 주소
+                                                </div>
+
+                                                <br/>
+
+                                                <a th:href="'/store/getMyStore?mode=review&userName='+${store.userName}">
+
+                                                        <div class="__avr-rate">
+                                                            <div class="stars">
+                                                              <span class="star full" style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                            </div>
+                                                            <span th:text="${store.reviewScoreAvg+'&ensp;( '+store.reviewCnt+' )'}" style="font-weight: normal">리뷰 별점</span>
+                                                        </div>
+                                                </a>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="mypage-profile--desc" style="display: block;">
+                                            <div class="__desc">
+                                                <p class="expand" id="introduce_p"></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
+
+                        <hr class="separator mt-28">
+
+                        <section class="section section-overflow-hidden">
+                            <div class="profile-summary">
+
+                                <br/>
+
+                                <!-- 매장 소식 -->
+                                <th:block th:if="${mode == 'news'}" th:insert="~{store/getStoreNewsList}"></th:block>
+
+                                <!-- 휴무일 -->
+                                <th:block th:if="${mode == 'closeday'}" th:insert="~{store/getClosedayList}"></th:block>
+
+                                <!-- 리뷰 보기 -->
+                                <th:block th:if="${mode == 'review'}">
+
+                                    <dl class="__block">
+                                        <dt>평균 별점</dt>
+                                        <dd>
+                                            <div class="__avr-rate"><strong th:text="${store.reviewScoreAvg}">5</strong>
+                                                <div class="stars">
+                                                    <span th:class="${(store.reviewScoreAvg >= 1)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 2)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 3)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg >= 4)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                    <span th:class="${(store.reviewScoreAvg == 5)? 'star full' : 'star'}"
+                                                          style="width: 20px; height: 20px; margin-right: 8px;"></span>
+                                                </div>
+                                            </div>
+                                        </dd>
+                                    </dl>
+                                    <dl class="__block">
+                                        <dt>활동 지역</dt>
+                                        <dd>
+                                            <div class="color-gray"
+                                                 th:text="${store.storeAddr} == null ? '아직 활동지역이 없습니다.': ${store.storeAddr}">
+                                                서울
+                                            </div>
+                                        </dd>
+                                    </dl>
+
+                                    <div class="reviewList" th:insert="~{community/getReviewList :: reviewListFragment}"></div>
+
+                                </th:block>
+
+                            </div>
+
+                            <hr class="separator mt-28">
+
+                        </section>
+
+                    </main>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </body>
+
+</html>

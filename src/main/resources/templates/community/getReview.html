@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>리뷰 상세보기 ==> getReview.html</title>
+
+    <link th:insert="~{common/import :: importFragment}">
+
+    <!-- 부트스트랩 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="/css/community/getReview.css">
+
+    <script src="/javascript/community/like.js"></script>
+    <script src="/javascript/community/getReview.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="/css/community/getReviewList.css">
+
+</head>
+
+<body>
+
+<!--<div th:include="~{community/menuBar}"></div>-->
+<div class="__user-info" style="justify-content: space-between; margin-left:12%;">
+    <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
+        <img id="profileImgView" style=" height: 71px; width: 72px; border-radius: 40px; margin-top:6%;" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
+        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}" style="margin-left:0%;">
+                                        <span th:text="${review.userName}"
+                                              style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+                                              text-transform: uppercase; margin-bottom: 5px; margin-left:430 display: block;"></span> <!-- 작성자 이름 -->
+        </a>
+    </div>
+</div>
+
+<p style="margin-top:37px;">
+    <th:block th:if="${review.currReviewUpdate != null}">
+        <p style="margin-left:13%;">최종 수정일: <span th:text="${#dates.format(review.currReviewUpdate, 'yyyy-MM-dd')}"></span> (수정됨)</p>
+    </th:block>
+</p>
+
+<div class="review-container">
+    <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
+
+        <!-- 케러셀 -->
+        <th:block th:if="${(review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL') || (review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL') || (review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL')}">
+            <div class="carousel-container" style="width: 80%;">
+                <div th:id="'carousel'+${review.reviewNo}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" th:if="${review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" th:if="${review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" th:if="${review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" th:if="${review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg1}" class="d-block w-100" alt="review.reviewImg1" height="500">
+                        </div>
+                        <div class="carousel-item" th:if="${review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg2}" class="d-block w-100" alt="review.reviewImg2" height="500">
+                        </div>
+                        <div class="carousel-item" th:if="${review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg3}" class="d-block w-100" alt="review.reviewImg3" height="500">
+                        </div>
+                    </div>
+                    <th:block th:if="${(review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL') || (review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL')}">
+                        <button class="carousel-control-prev" type="button" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </th:block>
+                </div>
+            </div>
+        </th:block>
+
+    </div>
+</div>
+
+
+<div>
+    <img src="/file/community/star_icon1.png" style="margin-left: 23%;" th:text="${review.reviewScore}"><p>
+    <div class="comment-content" style="margin-left:23%">
+        <p>리뷰 내용: <span th:text="${review.reviewContent}"></span></p>
+    </div>
+</div>
+
+
+
+
+<div class="restaurant-info" style="width: 54%; margin: 0 auto; padding: 0px;"> <!-- 식당 정보 영역 -->
+    <div class="__info" style="font-size: 1.5em; margin-top:-98; margin-left:-132">
+        <a th:href="'/getStore?mode=info&storeId='+${review.storeId}"> <!-- 식당 상세 페이지 링크 -->
+            <h4 class="__name">
+                <span th:text="${review.storeName}">매장명</span> <!-- 식당 이름 -->
+            </h4>
+        </a>
+    </div>
+</div>
+
+<a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+
+<div class="comment-section">
+    <h2>댓글 작성하기</h2>
+    <form>
+        <input id="reviewNo" name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
+        <input id="userName" name="userName" type="hidden" th:value="${user.username}"/>
+        <textarea id="commentsContent" name="commentsContent" placeholder="댓글을 입력하세요" required></textarea><br/>
+        <!--        <button type="submit">댓글 추가</button>-->
+
+        <button type="button" name="addCommentBtn" style="margin-bottom:0%">댓글 추가</button>
+        <div style="margin-left:6%; margin-top:-4%">
+            <span class="comment-count" style="margin-left:4.5%" th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>
+            <!--            <span th:text="${#lists.isEmpty(review.commentList) ? 0 : review.commentList[0].commentTotalCnt}"></span>-->
+
+
+            <th:block th:if="${(session.user != null) && (session.user.role == 'ROLE_USER' || session.user.role == 'ROLE_STORE')}">
+                <a style="cursor: pointer" id="like"
+                   th:class="${(session.user == null) ? 'btn-like-inactive' : ((review.like == null) ? 'btn-like-inactive' : 'btn-like-active')}"
+                   th:data-review-no="${review.reviewNo}"
+                   th:data-username="${session.user != null ? session.user.username : ''}">
+                    <span class="like-count" style="margin-left: 98%;" th:text="${review.reviewLikeCnt}"></span>
+                </a>
+            </th:block>
+        </div>
+
+
+
+    </form>
+    <!-- 에러 메시지 표시 -->
+    <div class="error-message"></div>
+</div>
+
+<div class="comment-section">
+    <ul class="comment-list" id="commentList">
+        <li th:each="comment : ${commentList}">
+            <p><strong th:text="${comment.userName}"></strong></p>
+            <p th:text="${comment.commentsContent}"></p>
+            <p th:text="${#dates.format(comment.commentsDt, 'yyyy-MM-dd ')}"></p>
+
+            <button class="btn-primary edit" th:data-comment-no="${comment.commentNo}"
+                    th:data-current-comment="${comment.commentsContent}"
+                    th:if="${comment.userName == user.username}">수정
+            </button>
+
+            <form method="post" onsubmit="return confirm('정말 삭제 하시겠습니까?');" style="display:inline;"
+                  th:action="@{/review/removeComment}"
+                  th:if="${comment.userName == user.username}">
+                <input type="hidden" name="commentNo" th:value="${comment.commentNo}"/>
+                <input type="hidden" name="reviewNo" th:value="${review.reviewNo}"/>
+                <button type="submit">삭제</button>
+            </form>
+            <hr/>
+        </li>
+    </ul>
+</div>
+
+<form name="pagingForm" style="margin-top:-30%">
+    <input type="hidden" name="page">
+    <input type="hidden" name="reviewNo" th:value="${review.reviewNo}">
+</form>
+
+<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+</body>
+</html>

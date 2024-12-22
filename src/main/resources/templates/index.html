@@ -1,18 +1,458 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <link rel="stylesheet" href="/css/common/header.css">
-    <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
-    <script defer src="/javascript/user.js"></script>
-</head>
-<body>
-<header class="header-wrap">
-    <th:block th:replace="~{/common/header}"></th:block>
-</header>
 
-<!--&lt;!&ndash; CDN(Content Delivery Network) 호스트 사용 &ndash;&gt;-->
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link th:insert="~{common/import :: importFragment}">
+
+        <!-- 부트스트랩 CDN -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        <link rel="stylesheet" href="/css/templates/collection_detail.css">
+        <link rel="stylesheet" href="/css/templates/slider.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/css/swiper.min.css"/>
+        <script src="http://code.jquery.com/jquery-1.11.2.min.js"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js"
+                integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
+                crossorigin="anonymous"></script>
+
+        <script src="/javascript/templates/slide.js"></script>
+        <script src="/javascript/templates/drag1.js"></script>
+        <script src="/javascript/templates/drag2.js"></script>
+        <script src="/javascript/templates/drag3.js"></script>
+        <script src="/javascript/templates/drag4.js"></script>
+        <script src="/javascript/templates/drag5.js"></script>
+        <script src="/javascript/templates/menu.js"></script>
+        <script src="/javascript/templates/slider.js"></script>
+        <script src="/javascript/templates/brand.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/4.3.5/js/swiper.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.2/TweenMax.min.js"></script>
+
+<!--        <link rel="stylesheet" href="/css/templates/header.css">-->
+        <link rel="stylesheet" href="/css/index.css">
+
+        <style>
+
+            .main-carousel {
+                width: 100%;
+                text-align: center;
+                justify-content: space-between;
+                align-items: center;
+                margin: 0 auto; /* 가로 중앙 정렬 */
+                left: 50%; /* 가로 중앙 정렬 */
+            }
+
+            .carousel-item img {
+                background-color: #FFFFFF;
+                object-fit: fill;
+            }
+
+        </style>
+
+    </head>
+
+    <body>
+
+        <div id="root">
+
+            <div class="wrapper" style="max-width: 1100px;">
+                <main id="dock">
+
+                    <div class="main-carousel">
+
+                        <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner">
+                                <th:block th:each="store, iterStat : ${mainStoreList}">
+                                    <th:block th:if="${iterStat.index == 0}">
+                                        <div class="carousel-item active" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
+                                                     th:alt="${store.storeImg1}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
+                                                     th:alt="${store.storeImg2}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
+                                                     th:alt="${store.storeImg3}">
+                                            </a>
+                                        </div>
+                                        <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
+                                                         th:alt="${store.storeImg4}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
+                                                         th:alt="${store.storeImg5}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                    </th:block>
+                                    <th:block th:unless="${iterStat.index == 0}">
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url + store.storeImg1}"
+                                                     th:alt="${store.storeImg1}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg2.indexOf('_') != -1)? '/images/store/store/'+store.storeImg2 : url + store.storeImg2}"
+                                                     th:alt="${store.storeImg2}">
+                                            </a>
+                                        </div>
+                                        <div class="carousel-item" data-bs-interval="2000">
+                                            <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                <img class="d-block w-100" height="500"
+                                                     th:src="${(store.storeImg3.indexOf('_') != -1)? '/images/store/store/'+store.storeImg3 : url + store.storeImg3}"
+                                                     th:alt="${store.storeImg3}">
+                                            </a>
+                                        </div>
+                                        <th:block th:if="${store.storeImg4 != null && store.storeImg4 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="500"
+                                                         th:src="${(store.storeImg4.indexOf('_') != -1)? '/images/store/store/'+store.storeImg4: url + store.storeImg4}"
+                                                         th:alt="${store.storeImg4}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                        <th:block th:if="${store.storeImg5 != null && store.storeImg5 != ''}">
+                                            <div class="carousel-item" data-bs-interval="2000">
+                                                <a th:href="${'/getStore?storeId=' + store.storeId}">
+                                                    <img class="d-block w-100" height="500" style="object-fit: fill;"
+                                                         th:src="${(store.storeImg5.indexOf('_') != -1)? '/images/store/store/'+store.storeImg5: url + store.storeImg5}"
+                                                         th:alt="${store.storeImg5}">
+                                                </a>
+                                            </div>
+                                        </th:block>
+                                    </th:block>
+                                </th:block>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+
+                    </div>
+                    <!-- 추천 카테고리 TODO 수정 필요 -->
+<!--                    <div class="__shortcut-list-wrap">-->
+<!--                        <div class="__shortcut-list">-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisRegion/청담?sort=revScore">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085260325.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;">-->
+<!--                                        <div class="balloon">-->
+<!--                                            <div class="title" style="background-color: rgb(255, 102, 50);">추천해요!</div>-->
+<!--                                            <svg-->
+<!--                                                    width="8" height="4" viewBox="0 0 8 4" fill="none"-->
+<!--                                                    xmlns="http://www.w3.org/2000/svg" style="margin-right: 12px;">-->
+<!--                                                <path-->
+<!--                                                        d="M0.863735 3.56813C0.544995 3.7275 0.192685 3.42195 0.305377 3.08387L1.33333 0L8 4.03788e-07L0.863735 3.56813Z"-->
+<!--                                                        fill="#FF6632"></path>-->
+<!--                                            </svg>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                    <div class="title">청담 모임</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisRegion/강남?sort=revScore">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_group.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">강남 모임</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/오마카세">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_omakase.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">오마카세</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/우마카세">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_umakase.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">우마카세</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/이탈리안">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_guidebook-v2.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">이탈리안</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/중식">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085268139.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">중식</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/카페">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112217324694065.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">카페</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/브런치">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/shortcut/shortcut_date.svg"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">브런치</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/파스타">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src="https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112520085271176.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;">-->
+<!--                                    </div>-->
+<!--                                    <div class="title">파스타</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                            <div class="list-item">-->
+<!--                                <a href="shop/list/bisCategory/기타">-->
+<!--                                    <div class="icon-wrap"><img-->
+<!--                                            src=" https://d3kzx7mqemhf0.cloudfront.net/common_img/comm_22112217312994265.png"-->
+<!--                                            alt="" style="width: 100%; height: 100%; border-radius: 4px;"></div>-->
+<!--                                    <div class="title">기타</div>-->
+<!--                                </a>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </div>-->
+
+<!--                    <div class="__shortcut-list-dummy-bottom"></div>-->
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                    <!-- 추천 음식 카테고리 TODO 수정 필요 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header">
+                                <h3 class="section-title ebold">음식 카테고리</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="v-scroll items3">
+                                    <div class="v-scroll-inner">
+                                        <div class="best-food-list">
+                                            <a class="best-food-list-item item"
+                                               th:if="${foodCategory != null && foodCategory.mainCategory != null}"
+                                               th:each="category : ${foodCategory.mainCategory}"
+                                               th:href="'/getStoreList?foodCategoryId='+${category}">
+                                                    <span class="tb">
+                                                        <img th:src="${foodCategory.categoryImg.get(category)}">
+                                                    </span>
+                                                <span class="name" th:text="${category}">음식 카테고리</span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- 지역 필터 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header">
+                                <h3 class="section-title ebold">어디로 가시나요?</h3>
+                            </div>
+                            <div class="section-body">
+                                <div class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div class="quick-search items">
+                                            <a th:each="regionImg, iterStat : ${regionImgList}"
+                                               th:href="'/getStoreList?regionList='+${regionList[iterStat.index]}" class="item"
+                                               th:attr="style='background-image: url('+${regionImg}+');'">
+                                                <span class="label" th:text="${regionList[iterStat.index]}"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header section-header-v">
+                                <h3 class="section-title ebold">유저의 리얼리뷰 Pick</h3>
+                                <p style="color: rgb(98, 98, 98);">방문자들이 남긴 솔직한 리뷰를 만나보세요</p>
+                                <div th:if="${reviewList == null || reviewList.isEmpty()}" style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                    인기 리뷰 집계 중입니다.
+                                </div>
+                            </div>
+                            <div class="section-body">
+                                <div id="sectionReviewVscroll" class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div id="sectionReviewVscroll" class="best-review items1"
+                                             style="display: flex; flex-wrap: nowrap;">
+                                            <div th:each="review :${reviewList}" class="best-review-item item">
+                                                <a th:href="'reveiw/getReviewList?type=otherFeed&userName='+${review.userName}"
+                                                   class="best-review-item-header">
+                                                    <div class="user">
+                                                        <!-- TODO 유저 사진으로 변경 필요 -->
+                                                        <span class="profile-pic"
+                                                              style="background-image: url('https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/noimg/profile_default_v2.png');"></span>
+                                                        <span th:text="${review.userName}"
+                                                              class="name username ">리뷰 작성자</span>
+                                                    </div>
+                                                    <div class="date" th:text="${(review.currReviewUpdate == null)? review.reviewDt : review.currReviewUpdate + '(수정됨)'}">최근 방문일<br></div>
+                                                </a>
+                                                <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}"
+                                                   class="best-review-item-body">
+                                                    <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                        <th:block>
+                                                            <div class="img"
+                                                                 th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
+                                                                     class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+review.reviewImg1}">
+                                                            </div>
+                                                            <div class="img"
+                                                                 th:unless="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
+                                                                     class="guide-img"
+                                                                     style="width: 100%; max-height:500px; display: block;"
+                                                                     th:src="${url+review.reviewImg1}">
+                                                            </div>
+                                                        </th:block>
+                                                    </th:block>
+                                                    <div class="review-post-info">
+                                                        <p th:text="${review.reviewContent}">
+                                                            리뷰 내용
+                                                        <p>
+                                                    </div>
+                                                </a>
+                                                <div class="best-review-item-footer">
+                                                    <a th:href="'/getStore?storeId='+${review.storeId}"
+                                                       class="restaurant-detail">
+                                                        <h3 class="name" th:text="${review.storeName}">
+                                                            리뷰 매장명
+                                                         </h3>
+                                                        <div class="meta">
+                                                            <span class="tags">
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
 
 
-</body>
+                    <!-- 인기 가게 -->
+                    <section class="section pb-45">
+                        <div class="container gutter-sm">
+                            <div class="section-header section-header-v">
+                                <h3 class="section-title ebold">
+                                    <span th:text="|${month}월 ${week}주차|"></span>
+                                    &nbsp;인기 레스토랑
+                                </h3>
+                                <p style="color: rgb(98, 98, 98);">
+                                    가장 주목 받는 맛집을 모아봤어요
+                                </p>
+                                <div th:if="${storeList == null || storeList.isEmpty()}" style="padding-top: 20px;">
+                                    <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                        인기 가게 집계 중입니다.
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="section-body">
+                                <div id="publicPopularShop_15" class="v-scroll">
+                                    <div class="v-scroll-inner">
+                                        <div id="publicPopularShop_23" class="restaurant-list restaurant-list-sm items2"
+                                             style="display: flex; flex-wrap: nowrap;">
+                                            <div th:if="${storeList != null && !storeList.isEmpty()}" th:each="store : ${storeList}" class="restaurant-list-item item">
+                                                <div class="img">
+                                                    <a class="tb" th:href="'/getStore?storeId='+${store.storeId}">
+                                                        <div class="img">
+                                                            <img width="200" height="200"
+                                                                 th:src="${(store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+store.storeImg1 : url +  store.storeImg1}"
+                                                                 th:alt="${store.storeImg1}">
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                                <div class="detail">
+                                                    <a th:href="'/getStore?storeId='+${store.storeId}">
+                                                        <h3 th:text="${store.storeName}" class="name">매장명</h3>
+                                                        <div class="meta">
+                                                            <span class="tags" th:text=" ${(store.storeAddr.split(' ')[1])+ '&ensp;|&ensp;' + (store.foodCategoryId.split('/')[0]+'&ensp;'+((store.foodCategoryId.split('/').length>3) ? store.foodCategoryId.split('/')[3] : ''))}">
+                                                                주소(구) | 음식 카테고리
+                                                            </span>
+                                                        </div>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                    <section class="full-banner pb-45">
+                        <div class="swiper swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events __type1 swiper-container-backface-hidden"></div>
+                    </section>
+
+                </main>
+
+            </div>
+
+        </div>
+
+    </body>
+
 </html>

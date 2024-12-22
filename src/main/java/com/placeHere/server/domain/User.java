@@ -2,21 +2,25 @@ package com.placeHere.server.domain;
 
 
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
+
 
 @Data
 public class User implements Serializable {
 
     // Field
+
+    // 회원 인덱스
+    private Long id;
     // 회원어아디
     private String username;
     // 비밀번호
     private String password;
     // 이메일
     private String email;
-
     // 역할 (ROLE_USER, ROLE_STORE, ROLE_ADMIN, ROLE_POINT)
     private String role;
     private Date regDt;
@@ -24,7 +28,9 @@ public class User implements Serializable {
     private Date loginDt;
     private Date updateDt;
     private String gender;
+
     // util의 데이터 타입
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date birth;
 
     // 회원 활동상태
@@ -32,5 +38,8 @@ public class User implements Serializable {
     // INACTIVE : 휴면계정상태
     // DELETED : 탈퇴상태
     private String activeStatus;
+
+    private String  recommendedId;
+
 
 }

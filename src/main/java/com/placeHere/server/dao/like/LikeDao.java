@@ -1,6 +1,7 @@
 package com.placeHere.server.dao.like;
 
 import com.placeHere.server.domain.Like;
+import com.placeHere.server.domain.Search;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -25,7 +26,7 @@ public interface LikeDao {
     public Like chkLike(Like like) throws Exception;
 
     // 가게 좋아요 목록 조회
-    public List<Like> getStoreLikeList(String userName) throws Exception;
+    public List<Like> getStoreLikeList(@Param("userName") String userName,@Param("search") Search search) throws Exception;
 
 }
 

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/reservation/failRsrv.css">
+</head>
+<body>
+<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+
+<!-- 팝업 영역 -->
+<div id="customPopup" class="overlay" style="display: none;">
+    <div class="custom-alert">
+        <p>예약이 실패 되었습니다</p>
+        <button onclick="redirectToReservation()">확인</button>
+    </div>
+</div>
+
+<script src="/javascript/reservation/fail.js"></script>
+</body>
+</html>

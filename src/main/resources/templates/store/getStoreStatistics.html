@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>PlaceHere</title>
+    </head>
+
+    <body>
+
+        <div class="statistics" th:fragment="statisticsFragment" style="padding-top: 5%;padding-bottom: 5%;">
+            <input type="hidden" name="isMyStore" th:value="${isMyStore}">
+            <canvas id="rsrvChart"></canvas>
+            <br/><br/>
+            <canvas id="percentChart"></canvas>
+            <br/><br/>
+        </div>
+
+    </body>
+
+</html>

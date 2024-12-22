@@ -1,0 +1,163 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>친구 요청 현황</title>-->
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 75px;-->
+<!--            background-color: #f4f4f4;-->
+<!--            text-align: center; /* 가운데 정렬 */-->
+<!--        }-->
+
+<!--        h1, h2 {-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 60%; /* 폭을 줄여서 중앙으로 모아짐 */-->
+<!--            margin: 20px auto; /* 테이블 가운데 정렬 */-->
+<!--            border-collapse: collapse; /* 테두리 겹치기 없애기 */-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 10px;-->
+<!--            border: 1px solid #ddd;-->
+<!--            text-align: left;-->
+<!--        }-->
+
+<!--        th {-->
+<!--            background-color: #007bff; /* 파란색으로 변경 */-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        tr:nth-child(even) {-->
+<!--            background-color: #f2f2f2;-->
+<!--        }-->
+
+<!--        tr:hover {-->
+<!--            background-color: #ddd; /* 마우스 오버 시 하이라이트 효과 */-->
+<!--        }-->
+
+<!--        .friend-info {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center; /* 중앙 정렬 */-->
+<!--        }-->
+
+<!--        .friend-info img {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%; /* 원형 프로필로 만들기 */-->
+<!--            margin-right: 15px; /* 간격 조정 */-->
+<!--        }-->
+
+<!--        .button-container {-->
+<!--            display: flex;-->
+<!--            justify-content: center; /* 버튼 가운데 정렬 */-->
+<!--        }-->
+
+<!--        button {-->
+<!--            padding: 8px 12px;-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--            transition: background-color 0.3s; /* 배경색 변환 효과 */-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background-color: #0056b3;-->
+<!--        }-->
+
+<!--        .message {-->
+<!--            color: red;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .allPage {-->
+<!--            margin-bottom:30px;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--4-->
+<!--<div th:include="~{common/header}"></div>-->
+<!--<div th:include="~{community/menuBar}"></div>-->
+
+<!--<div style="allPage">-->
+<!--<h1>친구 요청 목록</h1>-->
+
+<!--<div th:if="${message}" class="message">-->
+<!--    <p th:text="${message}"></p>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; 내가 보낸 친구 신청 목록 &ndash;&gt;-->
+<!--<h2>내가 보낸 친구 신청 목록</h2>-->
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>프로필</th>-->
+<!--        <th>보낸 사람</th>-->
+<!--        <th>신청 날짜</th>-->
+<!--        <th>상태</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="request : ${friendRequests}">-->
+<!--        <td>-->
+<!--            <div class="friend-info">-->
+<!--                <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        <td th:text="${request.friendRes}"></td>-->
+<!--        <td th:text="${request.friendDt}"></td>-->
+<!--        <td>-->
+<!--            <span th:if="${request.friendStatus}" th:text="'수락 됨'"></span>-->
+<!--            <span th:if="${!request.friendStatus}">수락 대기중</span>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+
+<!--&lt;!&ndash; 내가 수신한 친구 신청 목록 &ndash;&gt;-->
+<!--<h2>내게 온 친구 신청 목록</h2>-->
+<!--<table>-->
+<!--    <thead>-->
+<!--    <tr>-->
+<!--        <th>보낸 사람</th>-->
+<!--        <th>신청 날짜</th>-->
+<!--        <th>수락</th>-->
+<!--        <th>거절</th>-->
+<!--    </tr>-->
+<!--    </thead>-->
+<!--    <tbody>-->
+<!--    <tr th:each="request : ${receivedRequests}">-->
+<!--        <td th:text="${request.friendReq}"></td>-->
+<!--        <td th:text="${request.friendDt}"></td>-->
+<!--        <td>-->
+<!--            <div class="button-container">-->
+<!--                <form th:action="@{/review/addFriend}" method="post" onsubmit="return confirm('정말로 수락 하시겠습니까?');">-->
+<!--                    <input type="hidden" name="friendNo" th:value="${request.friendNo}" />-->
+<!--                    <button type="submit">수락</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <div class="button-container">-->
+<!--                <form th:action="@{/review/removeFriendReq}" method="post" onsubmit="return confirm('정말로 거절 하시겠습니까?');">-->
+<!--                    <input type="hidden" name="friendNo" th:value="${request.friendNo}" />-->
+<!--                    <button type="submit">거절</button>-->
+<!--                </form>-->
+<!--            </div>-->
+<!--        </td>-->
+<!--    </tr>-->
+<!--    </tbody>-->
+<!--</table>-->
+<!--</div>-->
+<!--</body>-->
+<!--</html>-->

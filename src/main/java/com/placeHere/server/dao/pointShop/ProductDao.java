@@ -17,6 +17,8 @@ public interface ProductDao {
 
     public void updateProduct(Product product) throws Exception;
 
+    public List<String> getAutocomplete(String prodName) throws Exception;
+
 //    // 상품 검색
 //    public void searchProduct(Search search) throws Exception;
 //

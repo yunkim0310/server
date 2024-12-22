@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="/css/reservation/sendRsrvHome.css" rel="stylesheet">
+</head>
+<body>
+<div style="margin-top: 8px;" th:insert="~{common/header}"></div>
+
+<!-- 어두운 배경 -->
+<div class="overlay" id="overlay"></div>
+
+<!-- 사용자 정의 팝업 -->
+<div class="custom-alert" id="customAlert">
+    <p>잘못된 접근입니다.</p>
+    <button onclick="redirect()">확인</button>
+</div>
+
+<script src="/javascript/reservation/sendRsrvHome.js"></script>
+</body>
+</html>

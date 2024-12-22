@@ -2,9 +2,11 @@ package com.placeHere.server.service.community.impl;
 
 import com.placeHere.server.dao.community.CommunityDao;
 import com.placeHere.server.domain.Comment;
+import com.placeHere.server.domain.Reservation;
 import com.placeHere.server.domain.Review;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.service.community.CommunityService;
+import com.placeHere.server.service.reservation.ReservationService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +23,10 @@ public class CommunityServiceImpl implements CommunityService {
     @Autowired
     @Qualifier("communityDao")
     private CommunityDao communityDao;
+
+    @Autowired
+    @Qualifier("reservationServiceImpl")
+    private ReservationService reservationService;
 
     @Value("${page_size}")
     private int pageSize;
@@ -40,22 +46,31 @@ public class CommunityServiceImpl implements CommunityService {
     // Method
     //리뷰 작성
     @Override
-    public void addReview(Review review) throws Exception {
+    public boolean addReview(Review review) throws Exception {
 
         System.out.println("addReview(review)");
 
-        communityDao.addReview(review);
+        int rsrvNo = review.getRsrvNo();
+        System.out.println("rsrvNo : "+rsrvNo);
+
+        try {
+            communityDao.addReview(review);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
     //리뷰 상세보기
     @Override
-    public Review getReview(int reviewNo) throws Exception {
+    public Review getReview(int reviewNo, Search search) throws Exception {
 
         System.out.println("getReview(reviewNo)");
 
         Review review = communityDao.getReview(reviewNo);
-        review.setCommentList(communityDao.getCommentList(review.getReviewNo()));
+        review.setCommentList(communityDao.getCommentListBySearch(review.getReviewNo(), search));
 
         return review;
     }
@@ -123,11 +138,11 @@ public class CommunityServiceImpl implements CommunityService {
 
     //댓글 불러오다
     @Override
-    public List<Comment> getCommentList(int reviewNo) throws Exception {
+    public List<Comment> getCommentList(int reviewNo, Search search) throws Exception {
 
         System.out.println("getCommentList(reviewNo)");
 
-        return communityDao.getCommentList(reviewNo);
+        return communityDao.getCommentListBySearch(reviewNo, search);
     }
 
 
@@ -149,5 +164,42 @@ public class CommunityServiceImpl implements CommunityService {
 
         communityDao.removeComment(comment);
     }
+
+    //댓글 존재 여부 확인 메서드
+    @Override
+    public Comment getComment (int commentNo) throws  Exception{
+        return communityDao.getCommentById(commentNo);
+    }
+
+    // 탈퇴 회원이 작성한 모든 리뷰를 삭제하다.
+    @Override
+    public int deleteAllReviewsByUser(String username) throws Exception {
+        return communityDao.deleteAllReviewsByUser(username);
+    }
+
+    // 탈퇴 회원이 작성한 모든 댓글을 삭제하다.
+    @Override
+    public int deleteAllCommentsByUser(String username) throws Exception {
+        return communityDao.deleteAllCommentsByUser(username);
+    }
+
+    // 탈퇴 회원의 리뷰 리스트 조회
+    @Override
+    public List<Review> getDeletedUserReview(String username) throws Exception {
+        return communityDao.getDeletedUserReview(username);
+    }
+
+    // 탈퇴 회원의 댓글 리스트 조회
+    @Override
+    public List<Comment> getDeletedUserComment(String username) throws Exception {
+        return communityDao.getDeletedUserComment(username);
+    }
+
+    @Override
+    public List<Review> getReviewListByReviewNo(List<Integer> reviewNoList) throws Exception {
+
+        return communityDao.getReviewListByReviewNo(reviewNoList);
+    }
+
 
 }

@@ -4,6 +4,7 @@ import com.placeHere.server.dao.store.StoreDao;
 import com.placeHere.server.domain.*;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.like.LikeService;
+import com.placeHere.server.service.store.SearchService;
 import com.placeHere.server.service.store.StoreService;
 import org.junit.jupiter.api.Test;
 import org.mybatis.spring.annotation.MapperScan;
@@ -33,6 +34,9 @@ public class StoreServiceTest {
     private LikeService likeService;
 
     @Autowired
+    private SearchService searchService;
+
+    @Autowired
     private StoreDao storeDao;
 
     @Value("${list_size}")
@@ -40,6 +44,18 @@ public class StoreServiceTest {
 
     @Value("${page_size}")
     private int pageSize;
+
+
+    @Test
+    public void addSearch() {
+
+        Search search = new Search();
+//        search.setSearchKeyword("강남 자장면 맛집 크리스마스");
+        search.setSearchKeyword("강남");
+
+        searchService.addSearch(search.getSearchKeyword());
+
+    }
 
 
     @Test
@@ -79,7 +95,9 @@ public class StoreServiceTest {
 //        System.out.println(likeList.size());
 //        System.out.println(likeList);
 
-        List<Like> storeLikeList = likeService.getStoreLikeList("user01");
+        Search search = new Search(pageSize,listSize);
+
+        List<Like> storeLikeList = likeService.getStoreLikeList("user01", search);
 
         System.out.println(storeLikeList.size());
         System.out.println(storeLikeList);
@@ -192,7 +210,7 @@ public class StoreServiceTest {
         List<Menu> menuList = new ArrayList<>(List.of(menu1, menu2));
         store.setMenuList(menuList);
 
-        storeService.updateStore(store);
+//        storeService.updateStore(store);
 
     }
 
@@ -266,7 +284,7 @@ public class StoreServiceTest {
     @Test
     public void getStore() {
 
-        Store store = storeService.getStore(1);
+        Store store = storeService.getStore(15);
 //        Store store = storeService.getStore(1, Date.valueOf("2024-11-26"));
 
         System.out.println(store);

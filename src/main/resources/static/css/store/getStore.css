@@ -1,0 +1,182 @@
+.__restaurant-notice-v2 .__restaurant-notice-v2-item .__notice-content .__desc {
+    margin-right: 15px;
+}
+
+.video-swiper-wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.container.gutter-sm .v-scroll {
+    margin-left: 0px;
+}
+
+body {
+    scrollbar-color: white;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow-x: hidden;
+}
+
+.__name .__info {
+    position: absolute;
+}
+
+.__desc {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.news-item img {
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+    margin-bottom: 10px;
+}
+
+.news-item p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+    text-align: left;
+    padding: 10px;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    word-break: break-word;
+}
+
+.restaurant-meta .info {
+    display: flex;
+    margin-bottom: 8px;
+    align-items: baseline;
+}
+
+.storeBasicInfo > div {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.storeBasicInfo img {
+    margin-right: 8px;
+    display: inline-block;
+}
+
+.storeBasicInfo span {
+    line-height: 1.5;
+}
+
+#operationMore {
+    margin-left: 30px;
+}
+
+/* 스크롤 */
+.v-scroll {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+.v-scroll::-webkit-scrollbar {
+    height: 8px;
+    background: #f1f1f1;
+}
+
+.v-scroll::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.v-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 좋아요 */
+.restaurant-detail-header #likeStore .btn-like-active{
+    border-radius: 50%;
+    background: #fff url('/images/store/icon_heart_red.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+    opacity: 1 !important;
+}
+
+.restaurant-detail-header #likeStore .btn-like-inactive{
+    border-radius: 50%;
+    background: #fff url('/images/store/icon_heart_white.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+    opacity: 1 !important;
+}
+
+.restaurant-detail-header .btn-chat {
+    border-radius: 50%;
+    background: #fff url('/images/store/icon_chat.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 100px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+    opacity: 1 !important;
+}
+
+.placeInfo {
+    text-align: left;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#main-info {
+    display: inline-block;
+}
+
+#main-info .rating {
+    display: flex;
+    align-items: center;
+}
+
+#main-info .star {
+    color: black;
+}
+
+#main-info .count {
+    margin-left: 5px;
+}
+
+.carousel-item img {
+    background-color: #FFFFFF;
+}
+
+.review-star,
+.like-count,
+.comment-count {
+    font-weight: bold; /* 숫자 굵게 표시 */
+}

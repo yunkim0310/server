@@ -1,123 +1,203 @@
 package com.placeHere.server.controller.user;
 
-
-import com.placeHere.server.domain.CustomUser;
+import com.google.zxing.qrcode.decoder.Mode;
 import com.placeHere.server.domain.User;
-import com.placeHere.server.jwt.provider.JwtTokenProvider;
 import com.placeHere.server.service.user.UserService;
+import jakarta.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 
 @Slf4j
 @Controller
-//@ResponseBody
-//@RequestMapping("/user")
+@RequestMapping("/user")
 public class UserController {
 
+    ///Field
     @Autowired
     @Qualifier("userServiceImpl")
     private UserService userService;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    @GetMapping("/login")
+    public String login () {
 
-    private final JwtTokenProvider jwtTokenProvider;
+        log.info("login Controller - get 호출");
 
-    public UserController(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+        return "user/loginView";
+//        return "test/user/loginTest";
+
     }
 
+    @PostMapping("/login")
+    public String login(@ModelAttribute("user") User user , HttpSession session ) throws Exception {
 
-    @GetMapping("/")
-    public String mainP() {
+        log.info("login Controller - post 호출");
+        log.info(" 요청된 data " + user);
 
-//        String username = SecurityContextHolder.getContext().getAuthentication().getName();
-//
-//        // ROLE 확인
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//
-//        Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities();
-//        Iterator<? extends GrantedAuthority> iter = authorities.iterator();
-//        GrantedAuthority auth = iter.next();
-//        String role = auth.getAuthority();
-//
-//        return "Main Controller : "+username + role;
-        return "index";
-    }
+        log.info(user.getUsername());
+        log.info(user.getPassword());
 
-    @GetMapping("/user/loginView")
-    public String login () throws Exception {
+        User dbUser = userService.getUser(user.getUsername());
+        log.info("login user :: " + user);
 
-        log.info("login page plz.....");
-        return "/user/loginView";
-    }
-
-    @GetMapping("/user/setting")
-    public String getUser (@RequestHeader("Authorization") String jwt, Model model) throws Exception {
-
-        log.info("login page plz.....");
-
-        System.out.println(" input jwt :: " + jwt);
-
-        Authentication authentication = jwtTokenProvider.getAuthentication(jwt);
-
-        model.addAttribute("username", authentication.getName());
-        model.addAttribute("authorities", authentication.getAuthorities());
-        return "/user/setting";
-    }
-
-
-    /**
-     * 사용자 정보 조회
-     * @param customUser
-     * @return
-     */
-    // USER 권한 설정
-//    @Secured("ROLE_USER")
-    @GetMapping("/user/info")
-    public ResponseEntity<?> getUser(@AuthenticationPrincipal CustomUser customUser) {
-
-        log.info("getUser Controllr :: ");
-
-        log.info("::::: customUser :::::");
-        log.info("customUser : "+ customUser);
-
-        User user = customUser.getUser();
-        log.info("user : " + user);
-
-        // 인증된 사용자 정보
-        if( user != null ) {
-            return new ResponseEntity<>(user, HttpStatus.OK);
+        // TODO 비밀번호 암호화 하기
+        if( user.getPassword().equals(dbUser.getPassword())){
+            session.setAttribute("user", dbUser);
         }
 
-        // 인증 되지 않음
-        return new ResponseEntity<>("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+        return "redirect:/";
+    }
+
+    @GetMapping("/logout")
+    public String logout(HttpSession session) {
+
+        log.info("logout Controller - get 호출");
+        session.invalidate();
+
+        return "redirect:/";
+    }
+
+    @GetMapping("/selectRole")
+    public String join() {
+
+        log.info("join Controller 호출");
+
+        return "user/selectRole";
+    }
+
+    @GetMapping("/join")
+    public String join(@RequestParam(name = "role") String role, Model model) {
+
+        log.info("join Controller - get 호출");
+        log.info("param :: " + role);
+
+        model.addAttribute("role", role);
+
+        return "user/join";
     }
 
 
     @PostMapping("/join")
-    public String joinP (User user) throws Exception {
+    public String join( @ModelAttribute("user") User user ) throws Exception{
+
+        log.info("join Controller - post 호출");
+        log.info("User 객체 :: " + user);
 
         userService.join(user);
 
-        return "joink ok";
+        return "user/loginView";
     }
 
-    @GetMapping("/admin")
-    public String adminP() {
+    @GetMapping("/getUser")
+    public String getUser(@ModelAttribute("user") User user) {
 
-        return "admin Conroller";
+        log.info("getUser Controller - get 호출");
+        log.info("user :: " + user);
+
+        return "test/user/getUserTest";
     }
+
+    @GetMapping("/resetPwdValidation")
+    public String resetPwdValidation() {
+
+        log.info("resetPwdValidation - get 요청");
+
+        return "user/resetPwdValidation";
+    }
+
+    @PostMapping("/resetPwdValidation")
+    public String resetPwdValidation( @ModelAttribute("user") User user, HttpSession session, Model model) throws Exception{
+
+        log.info("resetPassword - post 요청");
+        log.info(">>> INPUT USER CHECK :: " + user);
+
+        if ( user.getUsername() != null ) {
+
+            String username = user.getUsername();
+            log.info("username :: " + username);
+        }
+
+        user = userService.getUser(user.getUsername());
+
+        boolean result = userService.resetPwdValidation(user);
+
+        if ( result ) {
+            log.info(" resetPwdValidation OK ");
+            log.info(" user chk :: " + user);
+            session.setAttribute("user", user);
+//            model.addAttribute("result", Boolean.valueOf(result) );
+            return "user/resetPwd";
+
+        } else {
+            log.info(" resetPwdValidation NOK ");
+            model.addAttribute("error", "정보가 일치하지 않습니다.");
+            return "user/resetPwd";
+        }
+    }
+
+    @GetMapping("/resetPwd")
+    public String resetPwd(HttpSession session) {
+
+        User user = (User) session.getAttribute("user");
+
+        session.getAttribute("user :: " + user);
+        log.info("resetPwd - get 요청");
+
+
+        return "user/resetPwd";
+    }
+
+    @PostMapping("/resetPwd")
+    public String resetPwd(@RequestParam("password") String password,
+                           HttpSession session, Model model) throws Exception {
+
+        log.info("resetPwd - post 요청");
+
+        // 세션에서 사용자 정보 가져오기
+        User user = (User) session.getAttribute("user");
+
+        if (user == null) {
+            model.addAttribute("error", "사용자 정보를 찾을 수 없습니다.");
+            return "user/resetPwdValidation";  // 세션에 사용자 정보가 없으면 다시 첫 번째 단계로 돌아감
+        } else {
+
+            log.info("user 정보 확인 ");
+            log.info( "username :: " + user.getUsername() );
+            log.info( "password :: " + password );
+
+            user.setPassword(password);
+
+            userService.updatePwd(user);
+        }
+
+        // 비밀번호 변경 후, 세션에서 사용자 정보 삭제
+        session.removeAttribute("user");
+
+//        return "index";
+        return "redirect:/";
+    }
+
+    @GetMapping("/setting")
+    public String setting(HttpSession session, Model model) throws Exception{
+
+        log.info("setting - get 요청");
+        User Sessionuser = (User) session.getAttribute("user");
+
+        String username = Sessionuser.getUsername();
+        log.info("username :: " + username);
+        User user = userService.getUser(username);
+
+        log.info("user :: " + user);
+
+        session.getAttribute("setting user chk :: " + user);
+        model.addAttribute("user", user);
+
+        return "user/setting";
+    }
+
+
 
 }

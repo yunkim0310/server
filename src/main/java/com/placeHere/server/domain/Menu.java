@@ -35,4 +35,18 @@ public class Menu {
             this.menuImg = menuImgFile.getOriginalFilename();
         }
     }
+
+
+    public boolean equals(Menu menu) {
+
+        boolean result = false;
+
+        result = this.menuNo == menu.menuNo;
+        result = this.menuImg.equals((menu.menuImg==null)? "" : menu.menuImg);
+        result = this.menuName.equals(menu.menuName);
+        result = this.menuPrice == menu.menuPrice;
+        result = this.menuInfo.equals((menu.menuInfo==null)? "" : menu.menuInfo);
+
+        return result;
+    }
 }

@@ -8,20 +8,50 @@
 
     <!--    <resultMap id="userSelectMap" type="user">-->
     <resultMap id="userSelectMap" type="com.placeHere.server.domain.User">
-        <result property="username" 			column="username" 			jdbcType="VARCHAR"/>
+
+        <id property="username" column="username" />
+
+        <result property="id" 			        column="id" 			    jdbcType="BIGINT"  />
+        <result property="username" 			column="username" 			jdbcType="VARCHAR" />
         <result property="password"	            column="password" 		    jdbcType="VARCHAR" />
         <result property="email" 	            column="email" 		        jdbcType="VARCHAR" />
         <result property="role" 				column="role" 				jdbcType="VARCHAR" />
-        <result property="regDt" 				column="reg_dt" 			jdbcType="DATE" />
+        <result property="regDt" 				column="reg_dt" 			jdbcType="DATE"    />
         <result property="profileImg" 			column="profile_img" 		jdbcType="VARCHAR" />
-        <result property="loginDt" 				column="login_dt" 			jdbcType="DATE" />
-        <result property="updateDt" 			column="update_dt" 			jdbcType="DATE"  />
+        <result property="loginDt" 				column="login_dt" 			jdbcType="DATE"    />
+        <result property="updateDt" 			column="update_dt" 			jdbcType="DATE"    />
         <result property="gender" 		        column="gender" 			jdbcType="VARCHAR" />
-        <result property="birth" 		        column="birth" 			    jdbcType="DATE" />
-        <result property="activeStatus" 		column="activeStatus" 		jdbcType="VARCHAR" />
+        <result property="birth" 		        column="birth" 			    jdbcType="DATE"    />
+        <result property="activeStatus" 		column="active_status" 		jdbcType="VARCHAR" />
     </resultMap>
 
+
+    <!--  로그인  -->
+    <update id="login" parameterType="java.lang.String">
+        UPDATE user
+        SET login_dt = now()
+        WHERE username = #{username};
+    </update>
+
     <select id="getUser" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
+        SELECT
+            id              as id,
+            username        as username,
+            password        as password,
+            email           as email,
+            role            as role,
+            active_status   as activeStatus,
+            reg_dt          as regDt,
+            profile_img     as profileImg,
+            login_dt        as loginDt,
+            update_dt       as updateDt,
+            gender          as gender,
+            birth           as birth
+        FROM user
+        WHERE username = #{username}
+    </select>
+
+    <select id="chkEmail" parameterType="java.lang.String" resultType="com.placeHere.server.domain.User">
         SELECT
             username,
             password,
@@ -35,7 +65,7 @@
             gender,
             birth
         FROM user
-        WHERE username = #{value}
+        WHERE email = #{email}
     </select>
 
     <update id="updateLoginDt" parameterType="java.lang.String">
@@ -44,7 +74,7 @@
         WHERE username = #{username}
     </update>
 
-    <insert id="join" parameterType="com.placeHere.server.domain.User">
+    <insert id="join">
         INSERT INTO user (username, password, email, role, reg_dt, gender, birth )
         VALUES ( #{username}, #{password}, #{email}, #{role}, NOW(), #{gender}, #{birth}  )
     </insert>
@@ -67,6 +97,7 @@
 
     <select id="getUserList" resultType="com.placeHere.server.domain.User">
         SELECT
+            id,
             username,
             password,
             email,
@@ -79,23 +110,49 @@
             gender,
             birth
         FROM user
+        where role = 'ROLE_USER'
         --         WHERE active_status = 'ACTIVE'
 --        ORDER BY reg_dt DESC
     </select>
 
-    <select id="findPwdForm" parameterType="com.placeHere.server.domain.User" resultType="int">
-        SELECT COUNT(*)
+    <select id="getStoreList" resultType="com.placeHere.server.domain.User">
+        SELECT
+            id,
+            username,
+            password,
+            email,
+            role,
+            active_status,
+            reg_dt,
+            profile_img,
+            login_dt,
+            update_dt,
+            gender,
+            birth
         FROM user
-        WHERE username = #{username} AND email = #{email}
+        where role = 'ROLE_STORE'
+        --         WHERE active_status = 'ACTIVE'
+--        ORDER BY reg_dt DESC
     </select>
 
-    <update id="updatePassword" parameterType="java.lang.String">
-
-        UPDATE user
-        SET
-            password 	= #{password},
-            update_dt = NOW()
+    <select id="resetPwdValidation" resultType="boolean">
+        SELECT COUNT(*)
+        FROM user
         WHERE username = #{username}
+          AND   email = #{email}
+    </select>
+
+    <update id="updatePwd" parameterType="com.placeHere.server.domain.User">
+        UPDATE user
+        SET password = #{password},
+            update_dt = now()
+        WHERE username = #{username}
+    </update>
+
+    <update id="updateProfile" parameterType="com.placeHere.server.domain.User">
+        UPDATE user
+        SET profile_img = #{profileImg}
+        WHERE username = #{username};
     </update>
 
 

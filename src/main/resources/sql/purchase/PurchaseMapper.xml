@@ -9,7 +9,8 @@
     <!-- resultMap -->
     <resultMap id="purchaseSelectMap" type="com.placeHere.server.domain.Purchase">
         <result property="tranNo" column="tran_no" jdbcType="INTEGER"/>
-        <result property="userName" column="username" jdbcType="VARCHAR"/>
+        <result property="prodNo" column="prod_no" jdbcType="INTEGER"/>
+        <result property="username" column="username" jdbcType="VARCHAR"/>
         <result property="relNo" column="rel_no" jdbcType="INTEGER"/>
         <result property="barcodeNo" column="barcode_no" jdbcType="VARCHAR"/>
         <result property="barcodeName" column="barcode_img" jdbcType="VARCHAR"/>
@@ -19,84 +20,188 @@
         <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
         <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
         <result property="wishCartNo" column="wishcart_no" jdbcType="INTEGER"/>
+        <result property="purchaseTotalCnt" column="purchase_total_cnt" jdbcType="INTEGER"/>
 
         <association property="purchaseProd" column="prod_no" select="com.placeHere.server.dao.pointShop.ProductDao.getProduct"/>
-<!--        <association property="user" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>-->
+        <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
     </resultMap>
 
     <insert id="addPurchase" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO Point_Transaction (
-            username, prod_no, barcode_no, barcode_img, cnt_prod, tran_point, point_dt, curr_point
+            username, prod_no, barcode_no, barcode_img, cnt_prod, tran_point, point_dt, dep_type, curr_point, rel_no
         )
         VALUES (
-                   #{userName}, #{prodNo}, #{barcodeNo}, #{barcodeName}, #{cntProd}, #{tranPoint}, CURRENT_DATE, #{currPoint}
+                   #{username}, #{prodNo}, #{barcodeNo}, #{barcodeName}, #{purchaseProd.cntProd}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo}
                )
     </insert>
 
 
-<!--    <select id="calcTranPoint" parameterType="String" resultType="int">-->
-<!--        SELECT SUM(p.prod_price * pt.cnt_prod)-->
-<!--        FROM Point_Transaction pt, Product p-->
-<!--        WHERE pt.prod_no = p.prod_no AND pt.username = #{userName}-->
-<!--        AND pt.point_dt = CURRENT_DATE-->
-<!--    </select>-->
+        <select id="calcTranPoint" parameterType="String" resultType="int">
+            SELECT SUM(p.prod_price)
+            FROM Point_Transaction pt
+            JOIN Product p ON pt.prod_no = p.prod_no
+            WHERE pt.username = #{username}
+              AND pt.cnt_prod > 0
+        </select>
 
     <select id="getPurchase" parameterType="int" resultMap="purchaseSelectMap">
         SELECT
-        pt.tran_no, pt.username, pt.prod_no, pt.rel_no, pt.barcode_no, pt.barcode_img,
-        pt.cnt_prod, pt.tran_point, pt.point_dt, pt.dep_type, pt.curr_point,
-        p.prod_name, p.prod_detail, p.prod_price, p.prod_img1, p.prod_img2, p.prod_img3
+            pt.tran_no,
+            pt.username,
+            pt.prod_no,
+#         pt.rel_no,
+            pt.barcode_no,
+            pt.barcode_img,
+#         pt.cnt_prod,
+            pt.tran_point,
+            pt.point_dt,
+#         pt.dep_type,
+            pt.curr_point,
+            p.prod_no,
+            p.prod_name,
+            p.prod_detail,
+            p.prod_price,
+            p.prod_img1,
+            p.prod_img2,
+            p.prod_img3
         FROM Point_Transaction pt, Product p
         WHERE pt.prod_no = p.prod_no AND pt.tran_no = #{tranNo}
     </select>
 
-    <select id="getPurchaseList" parameterType="String" resultMap="purchaseSelectMap">
+    <select id="getPurchaseList" resultMap="purchaseSelectMap">
         SELECT
-        pt.tran_no, pt.username, pt.prod_no,
-        p.prod_name, p.prod_price, p.prod_img1
+            pt.tran_no,
+            pt.username,
+            pt.prod_no,
+            pt.point_dt,
+            p.prod_name,
+            p.prod_price,
+            p.prod_img1,
+            COUNT(*) OVER() AS purchase_total_cnt
         FROM Point_Transaction pt , Product p
-        WHERE pt.prod_no = p.prod_no AND pt.username = #{userName}
-        ORDER BY pt.tran_no DESC
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                p.prod_name or p.prod_category_name LIKE CONCAT('%',#{searchKeyword},'%')
+            </if>
+            <if test="priceMin != null">
+                AND p.prod_price BETWEEN #{priceMin} AND #{priceMax}
+            </if>
+            AND pt.prod_no = p.prod_no AND pt.username = #{username}
+        </where>
+        <if test="order == 'asc'">
+            ORDER BY p.prod_price ASC
+        </if>
+        <if test="order == 'desc'">
+            ORDER BY p.prod_price DESC
+        </if>
+        <if test="order == 'default'">
+            ORDER BY pt.tran_no DESC
+        </if>
+        <if test="order == null">
+            ORDER BY pt.tran_no DESC
+        </if>
+        LIMIT #{startRowNum}, #{listSize}
     </select>
 
-<!--    <select id="getNextBarcodeNumber" resultType="String">-->
-<!--        SELECT LAST_INSERT_ID()-->
-<!--    </select>-->
+<!--        <select id="getNextBarcodeNumber" resultType="String">-->
+<!--            SELECT LAST_INSERT_ID()-->
+<!--        </select>-->
 
-<!--    <select id="getNextBarcodeNumber" resultType="String">-->
-<!--        SELECT UUID_SHORT()-->
-<!--    </select>-->
+<!--        <select id="getNextBarcodeNumber" resultType="String">-->
+<!--            SELECT UUID_SHORT()-->
+<!--        </select>-->
+
+    <select id="getNextBarcodeNumber" resultType="String">
+        SELECT MAX(barcode_no) + 1 FROM point_transaction
+    </select>
+
 
     <insert id="addCart" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{userName}, #{prodNo}, #{cntProd})
+        VALUES (#{buyer.username}, #{prodNo}, 1)
     </insert>
 
     <insert id="addWish" parameterType="com.placeHere.server.domain.Purchase">
         INSERT INTO WishCart (username, prod_no, cnt_prod)
-        VALUES (#{userName}, #{prodNo}, 0)
+        VALUES (#{buyer.username}, #{prodNo}, 0)
     </insert>
 
     <select id="getCartList" parameterType="String" resultMap="purchaseSelectMap">
-        SELECT wc.wishcart_no, wc.username, wc.prod_no, wc.cnt_prod, p.prod_name, p.prod_price,
-               p.prod_img1, p.prod_status
+        SELECT
+            wc.wishcart_no,
+            wc.username,
+            wc.prod_no,
+            wc.cnt_prod,
+            p.prod_name,
+            p.prod_price,
+            p.prod_img1,
+            p.prod_status,
+            wc.cnt_prod
         FROM WishCart wc, Product p
-        WHERE wc.prod_no = p.prod_no AND wc.username = #{userName} AND wc.cnt_prod != 0
+        WHERE wc.prod_no = p.prod_no AND wc.username = #{buyer.username} AND wc.cnt_prod != 0
     </select>
 
     <select id="getWishList" parameterType="String" resultMap="purchaseSelectMap">
-        SELECT wc.wishcart_no, wc.username, wc.prod_no, p.prod_name, p.prod_price,
-               p.prod_img1, p.prod_status
+        SELECT
+            wc.wishcart_no,
+            wc.username,
+            wc.prod_no,
+            p.prod_name,
+            p.prod_price,
+            wc.cnt_prod,
+            p.prod_img1,
+            p.prod_status
         FROM WishCart wc, Product p
-        WHERE wc.prod_no = p.prod_no AND wc.username = #{userName} AND wc.cnt_prod = 0
+        WHERE wc.prod_no = p.prod_no AND wc.username = #{buyer.username} AND wc.cnt_prod = 0
     </select>
 
-    <delete id="removeCart" parameterType="int">
-        DELETE FROM WishCart WHERE wishcart_no = #{wishCartNo}
+    <delete id="removeWish" parameterType="com.placeHere.server.domain.Purchase">
+        DELETE FROM WishCart
+        WHERE username = #{buyer.username}
+          AND prod_no = #{prodNo}
+          AND cnt_prod = 0;
     </delete>
 
-    <delete id="removeWish" parameterType="int">
-        DELETE FROM WishCart WHERE wishcart_no = #{wishCartNo}
+    <!--    찜 / 장바구니 삭제로 합쳐짐-->
+        <delete id="removeCart" parameterType="com.placeHere.server.domain.Purchase">
+            DELETE FROM WishCart
+            WHERE username = #{buyer.username}
+              AND prod_no = #{prodNo}
+              AND cnt_prod != 0;
+        </delete>
+
+    <select id="isProductInWishList" parameterType="com.placeHere.server.domain.Purchase" resultType="int">
+        SELECT COUNT(*)
+        FROM WishCart
+        WHERE prod_no = #{prodNo} AND username = #{username} AND cnt_prod = 0
+    </select>
+
+    <select id="isProductInCartList" parameterType="com.placeHere.server.domain.Purchase" resultType="int">
+        SELECT COUNT(*)
+        FROM WishCart
+        WHERE prod_no = #{prodNo} AND username = #{username} AND cnt_prod != 0
+    </select>
+
+    <select id="getWishListCount" resultType="int">
+        SELECT COUNT(*)
+        FROM wishcart
+        WHERE username = #{buyer.username} AND cnt_prod = 0
+    </select>
+
+    <select id="getCartListCount" resultType="int">
+        SELECT COUNT(*)
+        FROM wishcart
+        WHERE username = #{buyer.username} AND cnt_prod != 0
+    </select>
+
+    <delete id="clearWishCartByUsername">
+        DELETE FROM wishCart WHERE username = #{username} AND cnt_prod != 0
     </delete>
+
+    <delete id="clearWishByUsername">
+        DELETE FROM wishCart WHERE username = #{username} AND cnt_prod = 0
+    </delete>
+
+
 
 </mapper>

@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>장바구니</title>
+    <script th:inline="javascript">
+        function calculateTotal() {
+            let total = 0;
+            let selectedItems = [];
+            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    let cartId = checkbox.dataset.cartId;
+                    let quantity = document.querySelector(`#quantity-${cartId}`).value;
+                    let price = document.querySelector(`#price-${cartId}`).value;
+                    selectedItems.push({
+                        cartId: cartId,
+                        quantity: quantity,
+                        price: price
+                    });
+                }
+            });
+            fetch('/cart/calculateTotal', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedItems)
+            })
+                .then(response => response.json())
+                .then(totalPrice => {
+                    document.querySelector('#totalPrice').textContent = totalPrice;
+                });
+        }
+
+        function buySelectedItems() {
+            let selectedItems = [];
+            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    let cartId = checkbox.dataset.wishCartNo;
+                    let quantity = document.querySelector(`#quantity-${cartId}`).value;
+                    let price = document.querySelector(`#price-${cartId}`).value;
+                    selectedItems.push({
+                        cartId: cartId,
+                        quantity: quantity,
+                        price: price
+                    });
+                }
+            });
+            fetch('/purchase/buy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedItems)
+            })
+                .then(response => window.location.href = '/purchase/listCart?username=user1');
+        }
+
+        function removeSelectedItems() {
+            let selectedItems = [];
+            document.querySelectorAll('.cart-checkbox').forEach(function(checkbox) {
+                if (checkbox.checked) {
+                    let cartId = checkbox.dataset.cartId;
+                    selectedItems.push({ wishCar: cartId });
+                }
+            });
+            fetch('/purchase/removeSelected', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(selectedItems)
+            })
+                .then(response => window.location.href = '/purchase/listCart?username=user1');
+        }
+    </script>
+
+    <style>
+
+        .product-img {
+            width: 100%;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /*background-color: #f0f0f0; !* 기본 배경색 *!*/
+            background-color: #fff;
+            color: #999; /* 텍스트 색상 */
+            font-size: 16px; /* 텍스트 크기 */
+            text-align: center;
+            border: 1px solid #ddd; /* 이미지를 표시하지 않을 때 테두리 표시 */
+        }
+
+        .product-img img {
+            width: 100%; /* 가로를 100%로 설정 */
+            height: 100%; /* 세로도 100%로 설정 */
+            object-fit: cover; /* 이미지 비율을 유지하면서 영역을 채움 */
+            display: block;
+        }
+
+        .product-img span {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #666;
+        }
+        /* 기본 스타일 */
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #ffffff;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+        }
+
+        /* 테이블 영역 스타일 */
+        .container {
+            width: 60%;
+            margin: 0 auto;
+            padding-top: 30px;
+            position: relative;
+        }
+
+        /* 테이블 스타일 */
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            padding-top: 30px;
+            background-color: #fff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px 20px;
+            text-align: center;
+            font-size: 1rem;
+            border-bottom: 1px solid #ddd;
+            align-items: flex-start; /* 수직 정렬 (위쪽 정렬) */
+            vertical-align: middle; /* 텍스트를 상단에 정렬 */
+        }
+
+        th {
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+        }
+
+        th text{
+            background-color: #f5f5f5;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        td {
+            padding-top: 100px;
+            background-color: #fff;
+            color: #333;
+        }
+
+        td input[type="hidden"] {
+            display: none;
+        }
+
+        /* 반응형 디자인 */
+        @media (max-width: 768px) {
+            table {
+                font-size: 0.9rem;
+            }
+
+            th, td {
+                padding: 8px 12px;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h3 {
+                font-size: 1.2rem;
+            }
+        }
+        .point-header {
+            background-color: #ffffff;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .point-header h1 {
+            color: #333;
+            font-size: 2rem;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+
+        /* 테이블 전체 텍스트 크기 */
+        .purchase-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1.2rem; /* 전체 테이블의 폰트 크기를 키움 */
+        }
+
+        .purchase-table th, .purchase-table td {
+            padding: 10px;
+            text-align: center;
+            font-size: 1.2rem; /* th와 td의 텍스트 크기 설정 */
+        }
+
+        .available {
+            color: green;
+            font-weight: bold;
+        }
+
+        .unavailable {
+            color: red;
+            font-weight: bold;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="point-header">
+    <div th:insert="~{common/header}"></div>
+    <div th:insert="~{pointShop/menuBar}"></div>
+    <br/><br/>
+    <h1>장바구니</h1>
+</div>
+<div class="header-line"></div>
+<form th:action="@{/purchase/listCart}" method="get">
+    <table>
+        <thead>
+        <tr>
+            <th>상품 대표 이미지</th>
+            <th>상품명</th>
+            <th>상품 가격</th>
+            <th>판매 가능 상태</th>
+            <th>상품 수량</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="purchase : ${cartList}">
+            <td th:text="${purchase.purchaseProd.prodName}"></td>
+            <td>
+                <input type="number" id="quantity-[[${purchase.wishCartNo}]]" value="[[${purchase.purchaseProd.cntProd}]]" />
+            </td>
+            <td>
+                <input type="hidden" id="price-[[${purchase.wishCartNo}]]" value="[[${purchase.purchaseProd.prodPrice}]]" />
+                <span th:text="${purchase.purchaseProd.prodPrice}"></span>
+            </td>
+            <td>
+                <input type="checkbox" class="cart-checkbox" th:data-wishCart-no="${purchase.wishCartNo}" onchange="calculateTotal()" />
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <div>
+        <p>총 가격: <span id="totalPrice">0</span></p>
+        <button type="button" onclick="buySelectedItems()">구매하기</button>
+        <button type="button" onclick="removeSelectedItems()">선택 삭제</button>
+    </div>
+</form>
+</body>
+</html>

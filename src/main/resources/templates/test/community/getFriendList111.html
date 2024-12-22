@@ -1,0 +1,136 @@
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <meta charset="UTF-8">-->
+<!--    <title>친구 목록</title>-->
+
+<!--    <link th:insert="~{common/import :: importFragment}">-->
+
+<!--    <script src="/javascript/community/getFriendList.js"></script>-->
+
+<!--    <style>-->
+<!--        body {-->
+<!--            font-family: Arial, sans-serif;-->
+<!--            margin: 0;-->
+<!--            padding: 70px;-->
+<!--            background-color: #ffffff;-->
+<!--            text-align: center; /* 가운데 정렬 */-->
+<!--        }-->
+
+<!--        h1 {-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        .search-container {-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        input[type="text"] {-->
+<!--            padding: 10px;-->
+<!--            width: 300px;-->
+<!--            border: 1px solid #ccc;-->
+<!--            border-radius: 4px;-->
+<!--            margin-right: 10px;-->
+<!--        }-->
+
+<!--        button {-->
+<!--            padding: 10px 15px;-->
+<!--            background-color: #28a745;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background-color: #218838;-->
+<!--        }-->
+
+<!--        ul {-->
+<!--            list-style-type: none;-->
+<!--            padding: 0;-->
+<!--            margin-top: 20px;-->
+<!--            display: inline-block; /* 가운데 정렬을 위해 inline-block 사용 */-->
+<!--        }-->
+
+<!--        li {-->
+<!--            background: white;-->
+<!--            margin: 10px 0;-->
+<!--            padding: 15px;-->
+<!--            border-radius: 4px;-->
+<!--            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: space-between;-->
+<!--        }-->
+
+<!--        .friend-info {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--        }-->
+
+<!--        .friend-info img {-->
+<!--            width: 50px; /* 조정 가능한 프로필 이미지 크기 */-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%; /* 원형 프로필로 만들기 */-->
+<!--            margin-right: 15px; /* 프로필 이미지와 이름 간 간격 */-->
+<!--        }-->
+
+<!--        li span {-->
+<!--            font-weight: bold;-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        li .friend-date {-->
+<!--            font-size: 12px; /* 날짜의 크기를 작게 */-->
+<!--            color: #777; /* 부드러운 회색 */-->
+<!--            margin-left: 10px; /* 이름과 날짜 간 간격 */-->
+<!--        }-->
+
+<!--        li a {-->
+<!--            text-decoration: none;-->
+<!--            color: #007bff;-->
+<!--            transition: color 0.3s;-->
+<!--        }-->
+
+<!--        li a:hover {-->
+<!--            color: #0056b3;-->
+<!--        }-->
+<!--    </style>-->
+<!--</head>-->
+<!--<body>-->
+<!--<div th:include="~{common/header}"></div>-->
+<!--&lt;!&ndash;<div th:include="~{community/getCommunityAside}"></div>&ndash;&gt;-->
+<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
+
+<!--<h1>친구 목록</h1>-->
+<!--<div class="search-container">-->
+<!--    &lt;!&ndash; 검색 폼 추가 &ndash;&gt;-->
+<!--    <form th:action="@{/review/getFriendList}" method="get">-->
+<!--        <input type="text" placeholder="검색어 입력" name="keyword" th:value="${keyword}"> &lt;!&ndash; 입력된 검색어 유지 &ndash;&gt;-->
+<!--        <button type="submit">검색</button>-->
+<!--    </form>-->
+<!--</div>-->
+
+<!--<ul>-->
+<!--    <li th:each="friend : ${friends}">-->
+<!--        <div class="friend-info">-->
+<!--            <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">-->
+<!--            <p>친구 이름: <span th:text="${friend.username}"></span></p>-->
+<!--            <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>-->
+<!--        </div>-->
+<!--        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${friend.username})}"-->
+<!--           th:text="${friend.username} + '님의 피드 바로가기'">N님 피드 바로가기</a>-->
+<!--    </li>-->
+<!--</ul>-->
+
+<!--<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>-->
+
+<!--<form name="pagingForm">-->
+<!--    <input type="hidden" name="page">-->
+<!--    <input type="hidden" placeholder="검색어 입력" name="keyword" th:value="${keyword}">-->
+<!--    <input type="hidden" name="type" value="friend">-->
+<!--</form>-->
+
+<!--</body>-->
+<!--</html>-->

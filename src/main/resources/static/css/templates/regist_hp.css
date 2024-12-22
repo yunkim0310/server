@@ -192,7 +192,7 @@ h3 {
 }
 
 .color-red {
-    color: #ff3d00!important;
+    color: #4880FF!important;
 }
 
 .section .confirm-box .__select-textarea textarea, .section .form-input {
@@ -278,8 +278,8 @@ a {
 }
 
 .btn-lg.btn-red, .btn-md.btn-red {
-    background: #ff3d00;
-    border-color: #ff3d00;
+    background: #4880FF;
+    border-color: #4880FF;
     color: #fff;
 }
 
@@ -803,11 +803,11 @@ border: 1px solid rgb(95, 0, 128); */
     height: 52px;
     border-radius: 3px;
     color: white;
-    background-color: #ff3d00;    
-    border-color: #ff3d00;
-    color: #ff3d00;
+    background-color: #4880FF;
+    border-color: #4880FF;
+    color: #4880FF;
     background-color: rgb(255, 255, 255);
-    border: 1px solid #ff3d00;
+    border: 1px solid #4880FF;
 }
 
 .css-1w0ksfz > button > span {
@@ -901,7 +901,7 @@ input[type=checkbox], input[type=radio] {
     display: inline-block;
     position: relative;
     border-radius: 50%;
-    background-color: #ff3d00;
+    background-color: #4880FF;
 } */
 
 /* radio 버튼 */
@@ -922,10 +922,10 @@ input[type=checkbox], input[type=radio] {
     display: inline-block;
     position: relative;
     border-radius: 50%;
-    background-color: #ff3d00; */
+    background-color: #4880FF; */
 
     /* border: 0.4em solid tomato; */
-    border: 0.4em solid #ff3d00;
+    border: 0.4em solid #4880FF;
 }
 
 
@@ -958,12 +958,12 @@ input[type="checkbox"] + label span.css-0 {
 
 /* 살릴 것 */
 input[type="checkbox"]:checked {
-    border: 0.4em solid #ff3d00;
+    border: 0.4em solid #4880FF;
 }
 
 /* 살릴 것 */
 input[type="checkbox"].active {
-    border: 0.4em solid #ff3d00;
+    border: 0.4em solid #4880FF;
 }
 
 /* input[type="checkbox"]:checked + label span.css-0 {
@@ -1137,7 +1137,7 @@ canvas, img, video {
 .css-7chi73 {
     padding-right: 22px;
     padding-bottom: 1px;
-    color: #ff3d00;
+    color: #4880FF;
     letter-spacing: 0px;
 }
 
@@ -1179,7 +1179,7 @@ a {
     padding-left: 16px;
     background: url(https://res.kurly.com/pc/service/common/2006/ico_sub_dot.svg) 0px 0px / 16px 20px no-repeat;
     font-size: 12px;
-    color: #ff3d00;
+    color: #4880FF;
     line-height: 18px;
     letter-spacing: -0.5px;
 }
@@ -1201,6 +1201,6 @@ a {
     height: 56px;
     border-radius: 3px;
     color: rgb(255, 255, 255);
-    background-color: #ff3d00;
+    background-color: #4880FF;
     border: 0px none;
 }

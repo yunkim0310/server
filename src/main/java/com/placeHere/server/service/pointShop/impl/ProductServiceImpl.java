@@ -43,23 +43,29 @@ public class ProductServiceImpl implements ProductService{
     }
 
     // 상품 목록 조회
-    public Map<String,Object> getProductList(Search search) throws Exception {
+    public List<Product> getProductList(Search search) throws Exception {
 
-        List<Product> list = productDao.getProductList(search);
+//        List<Product> productList =
+//
+//        Map<String, Object> map = new HashMap<String , Object>();
+//        map.put("productList", productList);
 
-        Map<String, Object> map = new HashMap<String , Object>();
-        map.put("list", list);
 
-
-        return map;
+        return productDao.getProductList(search);
 
     }
 
     // 상품 수정
-    public void updateProduct(Product prod) throws Exception{
+    public void updateProduct(Product product) throws Exception{
 
-        productDao.updateProduct(prod);
+        productDao.updateProduct(product);
 
+    }
+
+    public List<String> getAutocomplete(String prodName) throws Exception{
+        List<String> list = productDao.getAutocomplete("%"+prodName+"%");
+
+        return list;
     }
 
 //    // 상품 검색

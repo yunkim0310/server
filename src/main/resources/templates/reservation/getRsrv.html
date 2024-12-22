@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <link rel="stylesheet" href="/css/templates/style.css">
+    <link rel="stylesheet" href="/css/templates/regist_hp.css">
+    <link rel="stylesheet" href="/css/reservation/getRsrv.css">
+</head>
+
+<body>
+<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+<br/>
+<br/>
+
+<h1 style="font-size: 27px; font-family: Arial, Helvetica, sans-serif; font-weight: bold; color: black;"><br/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;예약 상세 정보</h1>
+<br/>
+<br/>
+<br/>
+<br/>
+<br/>
+<div class="wrapper">
+    <img class="img" style="height: 400px; width: 1200px;"
+         th:src="${(reservation.store.storeImg1.indexOf('_') != -1)? '/images/store/store/'+reservation.store.storeImg1 : url + reservation.store.storeImg1}"/>
+    <table>
+        <tbody>
+        <tr>
+            <th style="width: 30%;">전화 번호</th>
+            <td th:text="${reservation.rsrvNumber}" style="width: 80%;" data-phone></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">예약 번호</th>
+            <td th:text="${reservation.rsrvNo}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">매 장 명</th>
+            <td th:text="${reservation.storeName}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">예약 날짜</th>
+            <td th:text="${#dates.format(reservation.rsrvDt, 'yyyy.MM.dd')}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">예약 시간</th>
+            <td th:text="${#dates.format(reservation.rsrvDt, 'HH:mm')}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">예약 인수</th>
+            <td th:text="${reservation.rsrvPerson} + '명'" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">상태</th>
+            <td th:text="${reservation.rsrvStatus}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">요청 사항</th>
+            <td th:text="${reservation.rsrvReq}" style="width: 80%;"></td>
+        </tr>
+        <tr>
+            <th style="width: 30%;">매장 주소</th>
+            <td th:text="${reservation.storeAddr}" style="width: 80%;"></td>
+        </tr>
+        <tr th:if="${reservation.reason != null and reservation.reason != ''}">
+            <th style="width: 30%;">사유</th>
+            <td th:text="${reservation.reason}" style="width: 80%;"></td>
+        </tr>
+        </tbody>
+    </table>
+
+
+
+    <div th:if="${session.user.role == 'ROLE_USER' and (reservation.rsrvStatus == '예약 요청' or reservation.rsrvStatus == '예약 확정')}" class="css-137ca2h e1utgeno0">
+        <button class="css-18m884r e4nu7ef3" id="cancelUserButton" style="background-color: #4880FF; width: 120px;">  <!-- width 값 조정 -->
+            <span class="css-ymwvow e4nu7ef1 submit-button-span">예약 취소</span>
+        </button>
+    </div>
+
+    <div th:if="${session.user.role == 'ROLE_STORE' and (reservation.rsrvStatus == '예약 요청')}" class="css-137ca2h e1utgeno0" style="margin-top: 30px; display: flex; gap: 100px; justify-content: center;">
+        <a th:href="@{/reservation/updateRsrvStatus(rsrvNo=${reservation.rsrvNo})}" class="css-18m884r e4nu7ef3" style="background-color: #4880FF; width: 120px; height: 56px; display: flex; justify-content: center; align-items: center; text-decoration: none; color: white; font-weight: bold;"/>
+            <span class="css-ymwvow e4nu7ef1 submit-button-span">예약 수락</span>
+        </a>
+        <button class="css-18m884r e4nu7ef3" id="refusalButton" style="background-color: #4880FF; width: 120px;">
+            <span class="css-ymwvow e4nu7ef1 submit-button-span">예약 거절</span>
+        </button>
+    </div>
+    <div th:if="${session.user.role == 'ROLE_STORE' and (reservation.rsrvStatus == '예약 확정')}" class="css-137ca2h e1utgeno0">
+        <button class="css-18m884r e4nu7ef3" id="cancelStoreButton" style="background-color: #4880FF; width: 120px;">
+            <span class="css-ymwvow e4nu7ef1 submit-button-span">예약 취소</span>
+        </button>
+    </div>
+</div>
+
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <div th:insert="~{reservation/modalRsrvCancel}"></div>
+    </div>
+</div>
+
+<br/><br/><br/><br/>
+<script src="/javascript/reservation/getRsrv.js"></script>
+
+
+</body>
+</html>

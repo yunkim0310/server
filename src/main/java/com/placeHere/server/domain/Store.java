@@ -24,6 +24,8 @@ public class Store {
     private String storeName;
     // 매장 주소
     private String storeAddr;
+    // 가게 위치 (위도, 경도)
+    private String storeLocation;
     // 매장 전화번호
     private String storePhone;
     // 매장 사진 목록 (매장 대표 사진은 첫번째꺼)
@@ -83,6 +85,7 @@ public class Store {
         this.storeImgList = fileNameList;
     }
 
+    
     public void setHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
 
@@ -99,6 +102,7 @@ public class Store {
         this.hashtag = fullHashtag;
     }
 
+    
     public void setHashtag(String hashtag) {
         this.hashtag = hashtag;
 
@@ -116,7 +120,42 @@ public class Store {
 
         }
 
+    }
 
+    
+    // 메뉴 동일한지 비교 메서드
+    public boolean menuEquals(List<Menu> menuList) {
+
+        boolean result = false;
+
+        result = this.menuList.size() == menuList.size();
+
+        if (result) {
+
+            for (int i=0; i<this.menuList.size(); i++) {
+                result = this.menuList.get(i).equals(menuList.get(i));
+            }
+
+        }
+
+        return result;
+    }
+    
+    
+    // 편의시설 동일한지 비교 메서드
+    public boolean amenitiesEquals(List<Integer> amenitiesNoList) {
+
+        boolean result = false;
+
+        result = (this.amenitiesNoList != null && amenitiesNoList != null)? this.amenitiesNoList.size() == amenitiesNoList.size() : false;
+
+        if (result) {
+            for (int i=0; i<this.amenitiesNoList.size(); i++) {
+                result = this.amenitiesNoList.get(i).equals(amenitiesNoList.get(i));
+            }
+        }
+
+        return result;
     }
 
 }

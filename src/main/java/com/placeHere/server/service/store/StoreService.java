@@ -27,8 +27,17 @@ public interface StoreService {
     // 가게 검색, 가게 목록 조회
     public List<Store> getStoreList(Search search);
 
+    // 가게 목록 조회 (인기 가게)
+    public List<Store> getStoreList(List<Integer> storeIdList);
+
+    // 가게 목록 위치 조회
+    public List<Map<String, String>> getStoreLocationList(Search search);
+
+    // 가게 위치 조회
+    public List<Map<String, String>> getStoreLocation(int storeId);
+
     // 가게 수정
-    public void updateStore(Store store);
+    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals);
 
     // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
     public void removeStore(int storeId);
@@ -64,10 +73,7 @@ public interface StoreService {
     public List<Closeday> getClosedayList(int storeId, Search search);
 
     // 휴무일 삭제 (DELETE)
-    public void removeCloseday(int closedayId);
-
-    // 가게 주변 시설 추천 (구글 API)
-    public Map<String, Place> getNearbyPlaces(String storeAddr);
+    public boolean removeCloseday(int closedayId);
 
     // 가게 예약 통계 (RsrvDao 사용)
     public Map<String, Map<String, Integer>> getStatistics(int storeId);

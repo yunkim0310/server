@@ -1,18 +1,19 @@
 package com.placeHere.server.service.pointShop.impl;
 
+import com.placeHere.server.dao.pointShop.PointDao;
 import com.placeHere.server.dao.pointShop.PurchaseDao;
 import com.placeHere.server.domain.Purchase;
 import com.placeHere.server.domain.Search;
-import com.placeHere.server.service.pointShop.ProductService;
+import com.placeHere.server.service.pointShop.PointService;
 import com.placeHere.server.service.pointShop.PurchaseService;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+//import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Setter
 @Service("purchaseServiceImpl")
@@ -22,21 +23,36 @@ public class PurchaseServiceImpl implements PurchaseService {
     @Qualifier("purchaseDao")
     private PurchaseDao purchaseDao;
 
+    @Autowired
+    @Qualifier("pointDao")
+    private PointDao pointDao;
+
+    @Autowired
+    @Qualifier("pointServiceImpl")
+    private PointService pointService;
+
+
     // Constructor
     public PurchaseServiceImpl() {
     }
 
+    // 상품 구매 => 리스트 형식으로 바꿔야함
     @Override
     public void addPurchase(Purchase purchase) throws Exception{
 
-//        String barcodeNo = purchaseDao.getNextBarcodeNumber();
-//        purchase.setBarcodeNo(barcodeNo);
-//        int tranPoint = purchaseDao.calcTranPoint(purchase.getUserName());
-//        purchase.setTranPoint(tranPoint);
+//        List<Purchase> cartItems = purchaseDao.getCartList(purchase.getUsername());
+//
+//        for (Purchase purchase : cartItems) { // 구매 일자 설정
+//            purchaseMapper.insertPurchase(purchase);  // 구매 기록 저장
+//        }
+//        // 구매 후 장바구니 비우기
+//        purchaseMapper.clearWishCartByUserId(userId);  // 장바구니 비우기
+
         purchaseDao.addPurchase(purchase);
 
     }
 
+    // 구매한 상품 상세 정보 조회
     @Override
     public Purchase getPurchase(int tranNo) throws Exception{
 
@@ -44,50 +60,117 @@ public class PurchaseServiceImpl implements PurchaseService {
 
     }
 
-    //수정 필요
+    // 구매한 상품 목록 조회 => 수정 필요
     @Override
-    public Map<String, Object> getPurchaseList(String userName) throws Exception{
+    public List<Purchase> getPurchaseList(Search search) throws Exception{
 
-//        List<Purchase> list = purchaseDao.getPurchaseList(search, userName);
+        List<Purchase> list = purchaseDao.getPurchaseList(search);
 
-        Map<String, Object> map = new HashMap<String , Object>();
-        map.put("list", purchaseDao.getPurchaseList(userName));
-
-        return map;
+        return list;
     }
 
-//    public String getNextBarcodeNumber() throws Exception {
-//        return purchaseDao.getNextBarcodeNumber();
+    public String getNextBarcodeNumber() throws Exception {
+        return purchaseDao.getNextBarcodeNumber();
+    }
+
+    // 장바구니 추가
+    @Override
+    public void addCart(Purchase purchase) throws Exception {
+
+        purchaseDao.addCart(purchase);
+    }
+
+    // 찜 목록 추가
+    @Override
+    public void addWish(Purchase purchase) throws Exception {
+
+        purchaseDao.addWish(purchase);
+    }
+
+    // 장바구니 목록 조회
+    @Override
+    public List<Purchase> getCartList(String username) throws Exception {
+
+        return purchaseDao.getCartList(username);
+    }
+
+    // 찜 목록 조회
+    @Override
+    public List<Purchase> getWishList(String username) throws Exception {
+        return purchaseDao.getWishList(username);
+    }
+
+    // 찜 / 장바구니 삭제
+    @Override
+    public void removeWish(Purchase purchase) throws Exception {
+        purchaseDao.removeWish(purchase);
+    }
+
+    public void removeCart(Purchase purchase) throws Exception{
+        purchaseDao.removeCart(purchase);
+    }
+
+    // 찜 목록 삭제
+//    @Override
+//    public void removeWish(int wishCartNo) throws Exception {
+//        purchaseDao.removeWish(wishCartNo);
 //    }
 
     @Override
-    public void addCart(Purchase purchase) throws Exception {
-        purchaseDao.addCart(purchase); // 장바구니에 추가
+    public int isProductInWishList(Purchase purchase) throws Exception {
+        int count = purchaseDao.isProductInWishList(purchase);
+        return count;
+    }
+
+    public int isProductInCartList(Purchase purchase) throws Exception {
+        int count = purchaseDao.isProductInCartList(purchase);
+        return count;
     }
 
     @Override
-    public void addWish(Purchase purchase) throws Exception {
-        purchaseDao.addWish(purchase); // 찜 목록에 추가
+    public int getWishListCount(String username) {
+
+        return purchaseDao.getWishListCount(username);
     }
 
     @Override
-    public List<Purchase> getCartList(String userName) throws Exception {
-        return purchaseDao.getCartList(userName); // 사용자 장바구니 목록 조회
+    public int getCartListCount(String username) {
+
+        return purchaseDao.getCartListCount(username);
     }
 
+    // 선택된 상품들 일괄 구매 처리
+    public void buySelectedItems(List<Purchase> selectedItems) throws Exception {
+        purchaseDao.buySelectedItems(selectedItems);
+    }
+
+    // 선택된 상품 삭제 처리
+    public void removeSelectedItems(List<Purchase> selectedItems) throws Exception {
+        for (Purchase purchase : selectedItems) {
+            purchaseDao.removeCart(purchase);
+        }
+    }
+
+    @Transactional
     @Override
-    public List<Purchase> getWishList(String userName) throws Exception {
-        return purchaseDao.getWishList(userName); // 사용자 찜 목록 조회
+    public void purchaseProducts(String username) throws Exception {
+        // 장바구니 상품 조회
+        List<Purchase> cartItems = purchaseDao.getCartList(username);
+
+//        for (Purchase purchase : cartItems) { // 구매 일자 설정
+//            purchaseDao.addPurchase(purchase);  // 구매 기록 저장
+//        }
+        // 구매 후 장바구니 비우기
+        purchaseDao.clearWishCartByUsername(username);  // 장바구니 비우기
     }
 
-    @Override
-    public void removeCart(int wishCartNo) throws Exception {
-        purchaseDao.removeCart(wishCartNo); // 장바구니에서 항목 삭제
+    public void clearWishCartByUsername(String username) throws Exception {
+
+        purchaseDao.clearWishCartByUsername(username);
     }
 
-    @Override
-    public void removeWish(int wishCartNo) throws Exception {
-        purchaseDao.removeWish(wishCartNo); // 찜 목록에서 항목 삭제
-    }
+    public void clearWishByUsername(String username) throws Exception{
 
+        purchaseDao.clearWishByUsername(username);
+    }
 }

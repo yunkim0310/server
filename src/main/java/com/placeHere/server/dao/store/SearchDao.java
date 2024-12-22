@@ -1,13 +1,17 @@
 package com.placeHere.server.dao.store;
 
+import org.apache.ibatis.annotations.Mapper;
+
 import java.util.List;
 
+@Mapper
 public interface SearchDao {
 
-    // 검색 내역 추가
-    public void addSearch(List<String> searchKeywordList);
+    // Method
+    // 검색어 등록
+    public void addSearch(String[] searchKeywordArray);
 
     // 인기 검색어 조회
-    public List<String> getPopularKeyword();
+    public List<String> getPopularKeywordList();
 
 }

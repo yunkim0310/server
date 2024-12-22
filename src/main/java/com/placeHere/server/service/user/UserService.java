@@ -10,8 +10,10 @@ public interface UserService {
     // 아이디 중복확인
     public boolean chkDuplication(String username) throws Exception;
 
+    public boolean chkEmail(String email) throws Exception;
+
     // 회원가입
-    public void join(User user) throws Exception;
+    public int join(User user) throws Exception;
 
     // 로그인
     // getUser랑 기능 유사하지만 로그인일시 update 때문에 따로 빼둠
@@ -19,14 +21,18 @@ public interface UserService {
 
     public User getUser(String username) throws Exception;
 
-    public void updateUserStatus (String username) throws Exception;
 
-    public void updateLoginDt (String username) throws Exception;
+    public int updateUserStatus(User user) throws Exception;
+
+    public int updateLoginDt (String username) throws Exception;
 
     public List<User> getUserList() throws Exception;
 
-    public boolean findPwdForm(User user) throws Exception;
+    public List<User> getStoreList() throws Exception;
 
-    // 비밀번호 재설정
-    public void updatePassword(User user) throws Exception;
+    public boolean resetPwdValidation(User user) throws Exception;
+
+    public int updatePwd(User user) throws Exception;
+
+    public int updateProfile (User user) throws Exception;
 }

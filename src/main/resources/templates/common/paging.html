@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>PlaceHere</title>
+    </head>
+
+    <body>
+
+        <div th:fragment="pagingFragment">
+            <div class="paging" style="padding: 60px;">
+                <div class="page_nation" aria-label="Page navigation example">
+                    <a id="firstPage" data-page="1"
+                       th:class="'page-first' + (${(paging.isLeft) ? '' : ' page-disabled'})"></a>
+                    <a id="prevPage" th:data-page="${paging.startPage - 1}"
+                       th:class="'page-prev' + (${(paging.isLeft) ? '' : ' page-disabled'})"></a>
+
+                    <span th:each="pageNumber : ${#numbers.sequence(paging.startPage, paging.endPage)}">
+                                                        <a id="goPage" th:text="${pageNumber}"
+                                                           th:data-page="${pageNumber}"
+                                                           th:class="${(pageNumber == paging.page)? 'active' : ''}">페이지</a>
+                                                    </span>
+
+                    <a id="nextPage"
+                       th:data-page="${paging.endPage + 1}"
+                       th:class="'page-next' + (${(paging.isRight) ? '' : ' page-disabled'})"></a>
+                    <a id="lastPage"
+                       th:data-page="${paging.totalPage}"
+                       th:class="'page-last' + (${(paging.isRight) ? '' : ' page-disabled'})"></a>
+                </div>
+            </div>
+        </div>
+
+    </body>
+
+</html>

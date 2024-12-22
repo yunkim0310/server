@@ -1,0 +1,42 @@
+.containerList {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px;
+}
+
+.containerItem {
+    border: 1px solid #C4C4C4;
+    border-radius: 10px;
+    padding: 20px;
+    background-color: #F8F8F8;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 800px;
+    max-width: 100%;
+}
+
+.containerHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.containerHeader .containerData {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+}
+
+.containerHeader .containerTitle {
+    font-size: 16px;
+    color: #888;
+    text-align: right;
+}
+
+.btnContainer {
+    display: flex;
+}
+
+.checkBtn {
+    display: inline-block;
+}

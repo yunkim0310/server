@@ -1,5 +1,5 @@
-const category = document.querySelector(".categoryList");
-const smallCategory = document.querySelector(".small_categoryList");
+// const category = document.querySelector(".categoryList");
+// const smallCategory = document.querySelector(".small_categoryList");
 const dropdown = document.querySelector(".dropdown");
 const smallHeader = document.querySelector(".small_header");
 const smallDropdown = document.querySelector(".small_dropdown");
@@ -11,7 +11,7 @@ window.addEventListener('scroll', () => {
         mainHeader.style.display = "none";
         smallHeader.style.display = "block";
 
-    }else if(window.scrollY < 108){
+    }else {
         smallHeader.style.display = "none";
         mainHeader.style.display = "block";
 
@@ -49,10 +49,10 @@ const remove_scroll_handler = () =>{
 
 }
 
-dropdown.addEventListener('mouseover', keep_handler)
-dropdown.addEventListener('mouseout', remove_keep_handler)
-category.addEventListener('mouseover',down_handler)
-category.addEventListener('mouseout',up_handler)
+// dropdown.addEventListener('mouseover', keep_handler)
+// dropdown.addEventListener('mouseout', remove_keep_handler)
+// category.addEventListener('mouseover',down_handler)
+// category.addEventListener('mouseout',up_handler)
 
 // 스크롤헤더 드롭다운-----------------------
 // hover시 dropdown이 내려오는 함수
@@ -81,11 +81,7 @@ const small_remove_keep_handler = () =>{
     smallDropdown.classList.add("small_fade");
 }
 
-smallDropdown.addEventListener('mouseover', small_keep_handler)
-smallDropdown.addEventListener('mouseout', small_remove_keep_handler)
-smallCategory.addEventListener('mouseover',small_down_handler)
-smallCategory.addEventListener('mouseout',small_up_handler)
-
-
-
-
+// smallDropdown.addEventListener('mouseover', small_keep_handler)
+// smallDropdown.addEventListener('mouseout', small_remove_keep_handler)
+// smallCategory.addEventListener('mouseover',small_down_handler)
+// smallCategory.addEventListener('mouseout',small_up_handler)

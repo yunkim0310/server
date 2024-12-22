@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta content="no-cache, no-store, must-revalidate" http-equiv="Cache-Control">
+    <meta content="no-cache" http-equiv="Pragma">
+    <meta content="0" http-equiv="Expires">
+    <link th:insert="~{common/import :: importFragment}">
+    <link href="/css/reservation/addRsrv.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+</head>
+<body>
+
+
+<br/><br/><br/>
+
+<div class="container">
+    <div style="text-align: center; font-weight: bold; font-size: 25px;"
+         th:if="${session.user.getRole() == 'ROLE_STORE'}">
+        점주용
+    </div>
+    <h1 th:text="${store.storeName}"></h1>
+    <form action="/reservation/addRsrv" method="post">
+        <div id="calendar" style="width: 700px;"></div>
+        <div class="time-table no-display" id="time-table"></div>
+        <input name="storeId" th:value="${store.storeId}" type="hidden"/>
+        <input name="storeName" th:value="${store.storeName}" type="hidden"/>
+        <input name="storeAddr" th:value="${store.storeAddr}" type="hidden"/>
+        <input id="selectedDate" name="selectedDate" type="hidden"/>
+        <input id="amount" name="amount" readonly required type="hidden"/>
+        <input id="userName" name="userName" th:value="${session.user.getUsername()}" type="hidden"/>
+
+        <div class="form-group">
+
+            <div class="form-group-horizontal">
+                <label for="rsrvPerson"
+                       style="border: 2px solid #4880FF; border-radius: 10px; padding: 10px; margin: 10px;">예약 인수</label>
+                <select id="rsrvPerson" name="rsrvPerson" required
+                        style="border: 2px solid #4880FF; border-radius: 10px; padding: 10px; margin: 20px; width: 95px; height: 44px;"></select><br><br>
+            </div>
+
+            <div class="form-group-horizontal">
+                <label>전화 번호</label>
+                <div class="phone-input-group">
+                    <select id="phone-part1" required>
+                        <option value="010">010</option>
+                        <option value="011">011</option>
+                        <option value="016">016</option>
+                        <option value="017">017</option>
+                        <option value="018">018</option>
+                        <option value="019">019</option>
+                    </select>
+                    <span>-</span>
+                    <input id="phone-part2" maxlength="4" pattern="[0-9]{3,4}" placeholder="1234" required type="text"/>
+                    <span>-</span>
+                    <input id="phone-part3" maxlength="4" pattern="[0-9]{4}" placeholder="5678" required type="text"/>
+                </div>
+            </div>
+
+            <label for="rsrvReq">요청 사항</label>
+            <textarea id="rsrvReq" maxlength="100" name="rsrvReq" placeholder="요청 사항을 입력하세요 (최대 100자)" rows="4"
+                      style="width: 60%; resize: none;"></textarea>
+            <p id="charCount" style="font-size: 14px; color: gray;">0 / 100</p>
+            <br><br>
+
+            <div class="amount-box" id="amount-box" th:if="${session.user.getRole() == 'ROLE_USER'}"
+                 th:text="${#numbers.formatInteger(store.getStoreOperation().getSecurity(), 3, 'COMMA')} + ' 원'">0 원
+            </div>
+            <br><br>
+
+            <button id="payButton" type="submit">결제</button>
+
+
+        </div>
+        <br/><br/><br/>
+    </form>
+</div>
+
+<script th:inline="javascript">
+    var closeDayOnEffectDayList = [[${closeDayOnEffectDayList}]];
+    closeDayOnEffectDayList = JSON.parse(closeDayOnEffectDayList);
+
+    const storeClose = /*[[${storeClose}]]*/ [];
+    const pricePerPerson = /*[[${store.getStoreOperation().getSecurity()}]]*/ 0;
+</script>
+<script src="/javascript/reservation/addRsrv.js"></script>
+
+</body>
+</html>

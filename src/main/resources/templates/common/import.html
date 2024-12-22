@@ -1,0 +1,47 @@
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+
+    <th:block th:fragment="importFragment">
+
+        <title>PlaceHere</title>
+
+        <link rel="shortcut icon" href="/images/common/smallLogo.png">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- 구글 jQuery -->
+<!--        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+
+        <!-- 템플릿 -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet"
+              href="https://fonts.googleapis.com/css?family=Roboto|Noto+Sans+KR:300,400,500,700&amp;display=block&amp;subset=korean"
+              as="style" crossorigin="anonymous">
+<!--        <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>-->
+
+        <!-- 공통 제작 css 적용 -->
+        <link rel="stylesheet" href="/css/common/common.css">
+
+        <!-- pageNavigator -->
+        <script src="/javascript/common/pageNavigator.js"></script>
+        <link rel="stylesheet" href="/css/common/paging.css">
+
+        <!-- fileUploader -->
+        <script src="/javascript/common/fileUploader.js"></script>
+
+        <script type="text/javascript">
+
+          $(function () {
+            console.log("import");
+          })
+
+        </script>
+
+        <header id="header">
+            <div th:insert="~{common/header}"></div>
+        </header>
+
+    </th:block>
+
+
+</html>

@@ -1,79 +1,101 @@
 <!DOCTYPE html>
-<html lang="ko" xmlns:th="http://www.thymeleaf.org"
-                xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="/css/templates/header.css">
-    <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>
+<!--    <script src="https://kit.fontawesome.com/495cfd393e.js" crossorigin="anonymous"></script>-->
     <script defer src="/javascript/templates/header.js"></script>
+    <script src="/javascript/common/headerEvent.js"></script>
+
+    <style>
+        .header-wrap{
+            position: fixed;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            top: 0; /* 화면 상단에 고정 */
+            left: 0; /* 화면 왼쪽에 고정 */
+            transition: top 0.3s ease-in-out;
+        }
+
+        .small_header {
+            position: fixed;
+            width: 100%;
+            background-color: #fff;
+            z-index: 1000;
+            top: -100%; /* 초기 위치 */
+            left: 0;
+            transition: top 0.3s ease-in-out; /* 부드러운 전환 효과 */
+        }
+
+        /* 화면이 작은 경우 small_header를 활성화 */
+        @media screen and (max-width: 768px) {
+            .small_header {
+                top: 0; /* 화면에 나타나게 설정 */
+            }
+            .header {
+                top: -100%; /* header는 화면에서 숨김 */
+            }
+        }
+        .centerLine {
+            background-color: #dcdcdc !important;
+            opacity: 1 !important;
+            width: 100% !important;
+            height: 1px !important; /* 선의 굵기를 3px로 설정 */
+            border: 0 !important;
+        }
+
+
+    </style>
+
 </head>
-<!-- 제이쿼리 -->
-<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
-<script type="text/javascript">
-  $(document).ready(function() {
-
-    // 로그인 버튼 클릭
-    $("#btnLogin").click(function(e) {
-
-      e.preventDefault();
-
-      $.ajax({
-        url: '/user/loginView',
-        type: 'GET',
-        success: function(response) {
-
-          $('body').html(response);
-
-        },
-        error: function(xhr, status, error) {
-          console.error("Error:", status, error);
-        }
-      });
-    });
-
-    // 설정 버튼 클릭
-    $("#btnSetting").click(function(e) {
-
-      e.preventDefault();
-
-      $.ajax({
-
-        url: 'user/setting',
-        type: 'GET',
-        success: function(response) {
-
-          $('body').html(response);
-
-        },
-        error: function(xhr, status, error) {
-          console.error("Error:", status, error);
-        }
-
-      });
-    });
-
-  });
-
-</script>
-
-
 <body>
 <header th:fragment="header" class="header-wrap">
     <div class="header">
         <div class="headerMain">
             <div class="logo">
-                <a id="home" href="/"><img class="logoImg" src="/images/logo.png"/></a>
+                <a id="home" href="/">
+                    <img class="logoImg" src="/images/common/logo.png"/>
+                </a>
             </div>
-            <div class="login">
-                <ul class="loginMenu">
-                    <li class="non-side-bar"><span id="username" class="text-white me-2">username</span></li>
-                    <li id="btnLogin" class="non-side-bar">로그인</li>
-                    <div sec:authorize-expr="isAuthenticated()">
-                        <li id="btnSetting" class="non-side-bar">설정</li>
-                    </div>
 
-<!--                    <li id="logout"><a href="/logout">로그아웃</a></li>-->
-<!--                    <li id="join" class="non-side-bar"><a href="/join">회원가입</a></li>-->
+            <div th:if="${session.user != null}" class="login">
+                <ul class="loginMenu">
+                    <li class="non-side-bar">
+                        <a th:href="${(session.user != null) ? 'https://placehere.store/react/chat?name='+session.user.username+'&role='+session.user.role : '/user/login'}">
+                            <img src="/images/store/icon_chat.png"/>
+                        </a>
+                    </li>
+                    <li class="non-side-bar" th:if="${session.user.role == 'ROLE_USER'}">
+                        <a class="getStoreLikeList" style="cursor: pointer;">
+                            <img src="/images/store/icon_heart_red.png"/>
+                        </a>
+                    </li>
+                    <li class="non-side-bar">
+                        <span style="font-weight: bold;color: black !important;" id="username" class="text-white me-2">
+                            [[ ${session.user.username} ]]
+                        </span>
+                    </li>
+                    <li id="/user/setting" class="non-side-bar">
+                        <a href="/user/setting">
+                            <img class="logout" src="/images/common/settings.png" />
+                        </a>
+                    </li>
+                    <li id="logout">
+                        <a href="/user/logout">
+                            <img style="margin-left:5px;" class="logout" src="/images/common/logout.png" />
+<!--                            로그아웃-->
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <div th:if="${session.user == null}" class="login">
+                <ul class="loginMenu">
+                    <li id="login" class="non-side-bar">
+                        <a href="/user/login"><img style="margin-left:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></a>
+<!--                        <a href="/user/login"><span style="font-weight: bold; color:black !important;">로그인&ensp;<img style="margin-right:5px; margin-top:5px;" class="login" src="/images/common/login.png" /></span></a>-->
+                    </li>
                 </ul>
             </div>
         </div>
@@ -82,10 +104,19 @@
             <div class="category">
                 <ul class="categoryList">
                     <li><a href="/searchStore">가게 검색</a></li>
-                    <li><a href="#">커뮤니티</a></li>
-                    <li><a href="#">예약</a></li>
-                    <li><a href="#">포인트 상점</a></li>
-                    <li><a href="/store/getMyStore">가게관리</a></li>
+                    <li><a href="/review/getReviewList">커뮤니티</a></li>
+                    <li>
+                        <div th:if="${session.user != null}" >
+                            <a th:if="${session.user.role == 'ROLE_USER'}" href="/reservation/getRsrvUserList">예약</a>
+                            <a th:if="${session.user.role == 'ROLE_STORE'}" href="/reservation/getRsrvStoreList">예약</a>
+                        </div>
+                    </li>
+                    <th:block th:if="${session.user != null and (session.user.role == 'ROLE_USER' or session.user.role == 'ROLE_POINT')}">
+                        <li><a href="/product/listProduct">포인트 상점</a></li>
+                    </th:block>
+                    <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
+                        <li><a href="/store/getMyStore">가게관리</a></li>
+                    </th:block>
                 </ul>
             </div>
         </div>
@@ -97,13 +128,22 @@
             <div class="small_category">
                 <ul class="small_categoryList">
                     <li class="small_logo">
-                        <a href="/"><img class="logoImg" src="/images/logo.png"/></a>
+                        <a href="/"><img class="logoImg" src="/images/common/logo.png" style="transform: scale(0.8);transform-origin: center;"/></a>
                     </li>
                     <li><a href="/searchStore">가게 검색</a></li>
                     <li><a href="#">커뮤니티</a></li>
-                    <li><a href="#">예약</a></li>
-                    <li><a href="#">포인트 상점</a></li>
-                    <li><a href="/store/getMyStore">가게관리</a></li>
+                    <li>
+                        <div th:if="${session.user != null}" >
+                            <a th:if="${session.user.role == 'ROLE_USER'}" href="/reservation/getRsrvUserList">예약</a>
+                            <a th:if="${session.user.role == 'ROLE_STORE'}" href="/reservation/getRsrvStoreList">예약</a>
+                        </div>
+                    </li>
+                    <th:block th:if="${session.user != null and (session.user.role == 'ROLE_USER' or session.user.role == 'ROLE_POINT')}">
+                        <li><a href="/product/listProduct">포인트 상점</a></li>
+                    </th:block>
+                    <th:block th:if="${session.user != null and session.user.role == 'ROLE_STORE'}">
+                        <li><a href="/store/getMyStore">가게관리</a></li>
+                    </th:block>
                 </ul>
             </div>
 
@@ -111,5 +151,5 @@
         <hr class="lastLine">
     </div>
 </header>
-</body>
+</body><br/><br/><br/><br/><br/><br/>
 </html>

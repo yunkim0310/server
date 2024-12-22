@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.placeHere.server.dao.pointShop.PointDao">
+
+    <!-- resultMap -->
+    <resultMap id="pointSelectMap" type="com.placeHere.server.domain.Point">
+        <result property="tranNo" column="tran_no" jdbcType="INTEGER"/>
+<!--        <result property="username" column="username" jdbcType="VARCHAR"/>-->
+        <result property="relNo" column="rel_no" jdbcType="INTEGER"/>
+        <result property="tranPoint" column="tran_point" jdbcType="INTEGER"/>
+        <result property="pointDt" column="point_dt" jdbcType="DATE"/>
+        <result property="depType" column="dep_type" jdbcType="VARCHAR"/>
+        <result property="currPoint" column="curr_point" jdbcType="INTEGER"/>
+        <result property="pointTotalCnt" column="point_total_cnt" jdbcType="INTEGER"/>
+        <association property="buyer" column="username" select="com.placeHere.server.dao.user.UserDao.getUser"/>
+    </resultMap>
+
+    <select id="getCurrentPoint" parameterType="String" resultType="int">
+        SELECT curr_point
+        FROM point_transaction
+        WHERE username = #{username}
+        ORDER BY tran_no DESC LIMIT 1
+    </select>
+
+    <update id="updatePoint" parameterType="com.placeHere.server.domain.Point">
+        UPDATE point_transaction
+        SET curr_point = curr_point + #{tranPoint}
+        WHERE username = #{username}
+        ORDER BY tran_no DESC
+        LIMIT 1;
+    </update>
+
+    <insert id="addPointTransaction" parameterType="com.placeHere.server.domain.Point">
+        INSERT INTO point_transaction
+            (username, tran_point, point_dt, dep_type, curr_point, rel_no)
+        VALUES
+            (#{username}, #{tranPoint}, CURRENT_DATE, #{depType}, #{currPoint}, #{relNo})
+    </insert>
+
+    <select id="getPointHistoryList" resultMap="pointSelectMap">
+        SELECT
+            tran_no,
+            username,
+            dep_type,
+            tran_point,
+            point_dt,
+            curr_point,
+            rel_no,
+            COUNT(*) OVER() AS point_total_cnt
+        FROM point_transaction
+        <where>
+            <if test="searchKeyword != null and searchKeyword != ''">
+                <if test="searchKeyword == '차감'">
+                    dep_type LIKE '상품 구매'
+                </if>
+                <if test="searchKeyword == '적립">
+                    dep_type NOT LIKE '상품 구매'
+                </if>
+            </if>
+            AND username = #{username}
+        </where>
+#         WHERE
+        ORDER BY tran_no DESC
+        LIMIT #{startRowNum}, #{listSize}
+    </select>
+
+    <select id="isTransactionExist" resultType="int">
+        SELECT COUNT(*)
+        FROM point_transaction
+        WHERE dep_type = '예약 이용 완료' AND rel_no = #{relNo}
+    </select>
+
+</mapper>

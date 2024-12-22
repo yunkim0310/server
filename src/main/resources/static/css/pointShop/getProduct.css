@@ -1,0 +1,334 @@
+.available {
+    color: green;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.unavailable {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+.__restaurant-notice-v2 .__restaurant-notice-v2-item .__notice-content .__desc {
+    margin-right: 15px;
+}
+
+.video-swiper-wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.container.gutter-sm .v-scroll {
+    margin-left: 0px;
+}
+
+body {
+    scrollbar-color: white;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow-x: hidden;
+}
+
+.__name .__info {
+    position: absolute;
+    left: 400px;  /* 메뉴 설명을 왼쪽에서 20px 띄우기 */
+}
+
+.__desc {
+    display: flex;
+    flex-direction: column; /* 수직으로 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+
+    border: 1px solid #ddd;
+    /*border: 2px solid #4880FF;*/
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+/*.__desc:hover {*/
+/*    transform: translateY(-5px); !* 마우스를 올렸을 때 살짝 올라가는 효과 *!*/
+/*}*/
+
+.news-item img {
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+    margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+.news-item {
+    margin: 0;
+    font-size: 14px; /* 원하는 텍스트 크기로 설정 */
+    color: #333; /* 텍스트 색상 */
+    text-align: center;
+    padding: 10px;
+    white-space: normal; /* 줄바꿈 허용 */
+    overflow: visible; /* 오버플로우 제거 */
+    text-overflow: clip; /* 텍스트 잘림 없음 */
+    word-break: break-word; /* 긴 단어 강제 줄바꿈 */
+    cursor: pointer;
+}
+
+.restaurant-meta .info {
+    display: flex;
+    margin-bottom: 8px;
+    align-items: baseline;
+}
+
+.storeBasicInfo > div {
+    display: flex;
+    align-items: center; /* 텍스트와 아이콘을 수직 정렬 */
+    margin-bottom: 8px; /* 각 항목 간 간격 */
+}
+
+.storeBasicInfo img {
+    margin-right: 8px; /* 아이콘과 텍스트 사이 간격 */
+    display: inline-block;
+}
+
+.storeBasicInfo span {
+    line-height: 1.5; /* 텍스트의 높이를 조정 */
+}
+
+#operationMore {
+    margin-left: 30px;
+}
+
+/* 스크롤 */
+.v-scroll {
+    width: fit-content;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.v-scroll::-webkit-scrollbar {
+    height: 8px; /* 스크롤바 높이 */
+    background: #f1f1f1; /* 스크롤바 배경색 */
+}
+
+.v-scroll::-webkit-scrollbar-thumb {
+    background: #888; /* 스크롤바 색상 */
+    border-radius: 4px; /* 둥글게 처리 */
+}
+
+.v-scroll::-webkit-scrollbar-thumb:hover {
+    background: #555; /* 마우스 오버 시 색상 */
+}
+
+/* 아이콘 스타일 */
+.fas, .far {
+    font-size: 30px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+    align-self: center;
+}
+
+.addCart, .addWish {
+    padding: 0;
+}
+
+/* 버튼과 아이콘의 텍스트 간 간격 */
+.btn-primary i {
+    margin-right: 8px;
+}
+
+.p.available {
+    color: green;
+    font-weight: bold;
+}
+
+.p.unavailable {
+    color: red;
+    font-weight: bold;
+}
+
+
+button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.btn-primary {
+    padding: 12px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #0056b3;
+}
+
+.restaurant-detail-header .btn-like-active{
+    border-radius: 50%;
+    background: #fff url('/images/store/icon_heart_red.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+}
+
+.restaurant-detail-header .btn-like-inactive{
+    border-radius: 50%;
+    background: #fff url('/images/store/icon_heart_white.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+}
+
+.restaurant-detail-header .btn-cart {
+    border-radius: 50%;
+    background: #fff url('/file/pointShop/icon_cart.png') 50% 50% no-repeat;
+    display: block;
+    text-indent: -999em;
+    overflow: hidden;
+    width: 55px;
+    height: 55px;
+    position: absolute;
+    right: 100px;
+    top: 100%;
+    margin-top: -18px;
+    box-shadow: 0 5px 15px 0 rgb(0 0 0 / 10%), 0 0 3px 0 rgb(0 0 0 / 8%);
+    z-index: 10;
+}
+
+.btn-default {
+    background-color: #e0e0e0;
+    color: #333;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.btn-default:hover {
+    background-color: #d0d0d0;
+}
+
+/* footer 스타일 */
+.footer {
+    /*position: fixed;  !* 화면 하단에 고정 *!*/
+    bottom: 0;        /* 화면 아래쪽에 위치 */
+    left: 0;          /* 화면 왼쪽에 맞춤 */
+    width: 100%;      /* 화면 너비를 100%로 설정 */
+    background-color: #f8f8f8; /* 배경색 */
+    color: #555555;   /* 텍스트 색상 */
+    text-align: left; /* 텍스트를 중앙 정렬 */
+    font-size: 12px;   /* 글자 크기 작게 설정 */
+    padding: 10px 0;   /* 위 아래 여백 */
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* 그림자 효과 */
+}
+
+.footer p {
+    margin: 0; /* p 태그의 기본 여백 제거 */
+}
+
+
+
+/* 상품 리스트 그리드 */
+.product-list {
+    display: grid;
+    gap: 20px; /* 상품 간의 간격 */
+    margin: 0px;
+    min-height: 350px;
+
+
+
+    width: 200px;
+    height: 200px;
+    padding: 5px;
+    margin-bottom: 10px; /* 이미지와 텍스트 사이 간격 */
+}
+
+/* 상품 카드 스타일 */
+.product-card {
+    border: 1px solid #ddd;
+    /*border: 2px solid #4880FF;*/
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    /*display: flex;*/
+    flex-direction: column;
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    height: 360px;
+    display: flex;
+    flex-direction: column; /* 수직으로 정렬 */
+    align-items: center; /* 수평 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+}
+
+.product-card:hover {
+    transform: translateY(-5px); /* 마우스를 올렸을 때 살짝 올라가는 효과 */
+}
+
+
+.expandable-section {
+    margin-bottom: 20px;
+}
+
+.expand-btn {
+    border: 1px solid #ddd;
+    background-color: #fff;
+    color: black;
+    padding: 10px 20px;
+    /*border: none;*/
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center; /* 텍스트와 화살표를 세로로 정렬 */
+    justify-content: center;
+    transition: all 0.3s ease;
+    text-align: center;
+    margin-left: 395px;
+}
+
+/*.expand-btn:hover {*/
+/*    background-color: #0056b3; !* 마우스 오버 시 색상 변경 *!*/
+/*}*/
+
+/*.arrow {*/
+/*    margin-left: 10px; !* 화살표와 텍스트 간격 *!*/
+/*    transition: transform 0.3s ease; !* 애니메이션 효과 *!*/
+/*    color:black;*/
+/*}*/
+
+/*!* 펼친 상태에서 화살표 회전 *!*/
+/*.expandable-section.open .arrow {*/
+/*    transform: rotate(180deg);*/
+/*}*/
+
+.content {
+    margin-top: 10px;
+    padding: 15px;
+    /*border: 1px solid #ddd;*/
+    /*border-radius: 5px;*/
+    /*background-color: #f9f9f9;*/
+}
