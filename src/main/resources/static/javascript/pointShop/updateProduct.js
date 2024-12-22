@@ -1,7 +1,7 @@
 $(function() {
     $("button[name='cancelBtn']").on("click", function () {
         // history.go(-1);
-        self.location = "/product/listProduct";
+        self.location = "/product/getProductList";
     });
 });
 

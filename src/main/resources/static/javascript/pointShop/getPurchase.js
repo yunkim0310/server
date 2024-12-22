@@ -14,7 +14,7 @@ $(function() {
     // 확인 버튼 클릭
     $("button[name='confirmBtn']").on("click", function () {
         // var username = $(this).data("user-name");
-        self.location = "/purchase/listPurchase";
+        self.location = "/purchase/getPurchaseList";
     });
 });
 

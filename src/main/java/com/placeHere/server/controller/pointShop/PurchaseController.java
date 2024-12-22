@@ -222,7 +222,8 @@ public class PurchaseController {
         model.addAttribute("purchase", purchase);
 
         String fileName = file.getOriginalFilename();
-        String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+//        String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+        String uploadPath = "src/main/resources/static/file/pointShop";
 
         File barcodeDirectory = new File(uploadPath);
         if (!barcodeDirectory.exists()) {
@@ -287,17 +288,18 @@ public class PurchaseController {
 
 //        return "pointShop/purchase/addPurchaseResult";
 //        return "pointShop/purchase/getPurchase";
-        return "redirect:/purchase/listPurchase";
+//        return "redirect:/purchase/listPurchase";
+        return "redirect:/purchase/getPurchaseList";
     }
 
-    @RequestMapping( value="listPurchase")
-    public String listPurchase(HttpSession session,
+    @RequestMapping( value="getPurchaseList")
+    public String getPurchaseList(HttpSession session,
 //            @SessionAttribute("user") User buyer,
                                @RequestParam(value = "order", required = false) String order,
                                @ModelAttribute("search") Search search ,
                                Model model) throws Exception {
 
-        System.out.println("/purchase/listPurchase : GET / POST");
+        System.out.println("/purchase/getPurchaseList : GET / POST");
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
         if (user == null) {
@@ -307,7 +309,7 @@ public class PurchaseController {
         }else if (user.getRole().equals("ROLE_USER")) {
             String username = user.getUsername();
 
-            System.out.println("username's listPurchase : " + username);
+            System.out.println("username's getPurchaseList : " + username);
 
             search.setUsername(username);
             search.setOrder(order);
@@ -332,7 +334,8 @@ public class PurchaseController {
             model.addAttribute("purchaseList", purchaseList);
             model.addAttribute("username", username);
 
-            return "pointShop/purchase/listPurchase";
+//            return "pointShop/purchase/listPurchase";
+            return "redirect:/purchase/getPurchaseList";
         }else{
             return "redirect:/";
         }
@@ -369,7 +372,7 @@ public class PurchaseController {
 
     }
 
-    @GetMapping("/listCart")
+    @GetMapping("/getCartList")
     public String getCartList(HttpSession session,
 //            @SessionAttribute("user") User buyer,
                               @ModelAttribute("purchase") Purchase purchase,
@@ -431,7 +434,8 @@ public class PurchaseController {
             model.addAttribute("username", username);
 
             // Thymeleaf 템플릿 이름을 반환
-            return "pointShop/purchase/listCart"; // 템플릿 경로
+//            return "pointShop/purchase/listCart"; // 템플릿 경로
+            return "redirect:/purchase/getCartList";
         }else{
             return "redirect:/";
         }
@@ -471,7 +475,8 @@ public class PurchaseController {
 
             // 바코드 생성 및 파일 업로드 처리
             String fileName = file.getOriginalFilename();
-            String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+//            String uploadPath = "C:/WorkSpace/placeHere/server/src/main/resources/static/file/pointShop";
+            String uploadPath = "src/main/resources/static/file/pointShop";
             File barcodeDirectory = new File(uploadPath);
             if (!barcodeDirectory.exists()) {
                 barcodeDirectory.mkdirs();
@@ -525,14 +530,15 @@ public class PurchaseController {
         model.addAttribute("username", username);
 
 //        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
-        return "redirect:/purchase/listPurchase";
+//        return "redirect:/purchase/listPurchase";
+        return "redirect:/purchase/getPurchaseList";
     }
 
 
 
 
     // 찜 목록 조회
-    @GetMapping("/listWish")
+    @GetMapping("/getWishList")
     public String getWishList(HttpSession session,
 //                            @SessionAttribute("user") User buyer,
                             @ModelAttribute("purchase") Purchase purchase,
@@ -556,19 +562,20 @@ public class PurchaseController {
             model.addAttribute("username", username);
 
             // Thymeleaf 템플릿 이름을 반환
-            return "pointShop/purchase/listWish"; // 템플릿 경로
+//            return "pointShop/purchase/listWish"; // 템플릿 경로
+            return "redirect:/purchase/getWishList";
         }else{
             return "redirect:/";
         }
     }
 
-    @RequestMapping("listPointHistory")
+    @RequestMapping("getPointHistoryList")
     public String getPointHistoryList(HttpSession session,
 //            @SessionAttribute("user") User buyer,
                                       @ModelAttribute("search") Search search ,
                                       Model model) throws Exception {
 
-        System.out.println("/purchase/listPurchase : GET / POST");
+        System.out.println("/purchase/getPointHistoryList : GET / POST");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
@@ -615,7 +622,8 @@ public class PurchaseController {
             model.addAttribute("pointHistoryList", pointHistoryList);
             model.addAttribute("username", username);
 
-            return "pointShop/purchase/listPointHistory";
+//            return "pointShop/purchase/listPointHistory";
+            return "redirect:/purchase/getPointHistoryList";
         }else{
             return "redirect:/";
         }
@@ -643,7 +651,8 @@ public class PurchaseController {
         model.addAttribute("username", username);
 
         purchaseService.buySelectedItems(selectedItems);
-        return "pointShop/purchase/listCart"; // 구매 후 장바구니 목록 페이지로 이동
+//        return "pointShop/purchase/listCart"; // 구매 후 장바구니 목록 페이지로 이동
+        return "redirect:/purchase/getCartList";
     }
 
     // 선택된 상품들 삭제
@@ -655,7 +664,8 @@ public class PurchaseController {
         model.addAttribute("username", username);
 
         purchaseService.removeSelectedItems(selectedItems);
-        return "pointShop/purchase/listCart";
+//        return "pointShop/purchase/listCart";
+        return "redirect:/purchase/getCartList";
     }
 
 //    @PostMapping("/addPurchaseCart")

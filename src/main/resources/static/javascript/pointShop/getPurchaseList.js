@@ -19,21 +19,21 @@ $(function () {
         $("form")[0].reset();
         $("input[name='page']").val(page);
 
-        $("form").attr("action", "/purchase/listPurchase").attr("method", "post").submit()
+        $("form").attr("action", "/purchase/getPurchaseList").attr("method", "post").submit()
 
     }
 
     pageNavigator(paging);
 
     $("button.btn-confirm").on("click", function () {
-        self.location = "/purchase/listPurchase";
+        self.location = "/purchase/getPurchaseList";
     });
 
     // $("button.btn-primary.list").on("click", function () {
     //     self.location = "/product/listProduct";
     // });
     $("button[name='confirmBtn']").on("click", function () {
-        self.location = "/product/listProduct";
+        self.location = "/product/getProductList";
     });
 
     $("div.product-card").on("click", function () {
@@ -42,7 +42,7 @@ $(function () {
     });
 
     $("button.btn-primary.confirm").on("click", function () {
-        self.location = "/purchase/listPurchase";
+        self.location = "/purchase/getPurchaseList";
     });
 
     $("input[name='order']").on("change", function () {
@@ -52,7 +52,7 @@ $(function () {
 });
 
 function fncGetList(order) {
-    $("form").attr("method", "POST").attr("action", "/purchase/listPurchase").submit();
+    $("form").attr("method", "POST").attr("action", "/purchase/getPurchaseList").submit();
 }
 
 // var price = /*[${product.prodPrice}]*/ 1234567; // 가격 값 가져오기 (템플릿에서 렌더링된 값)
@@ -66,11 +66,11 @@ function updateSearchKeyword() {
         // 쉼표 제거 및 값을 입력
         document.getElementById('searchKeyword').value = selectedCategory.replace(',', '');
     }
-    $("form").attr("method", "POST").attr("action", "/purchase/listPurchase").submit();
+    $("form").attr("method", "POST").attr("action", "/purchase/getPurchaseList").submit();
 }
 
 function fncGetList(order) {
-    $("form").attr("method" , "POST").attr("action" , "/purchase/listPurchase").submit();
+    $("form").attr("method" , "POST").attr("action" , "/purchase/getPurchaseList").submit();
 }
 
 $(function() {
