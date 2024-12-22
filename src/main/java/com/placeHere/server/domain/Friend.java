@@ -28,7 +28,6 @@ public class Friend {
     //친구 수락 여부
     private boolean friendStatus;
 
-
     //회원프로필
     private String profileImg;
     //회원아이디
@@ -43,7 +42,5 @@ public class Friend {
         this.friendReq = friendReq;
         this.friendRes = friendRes;
     }
-
-
 
 }

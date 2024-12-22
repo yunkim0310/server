@@ -118,7 +118,7 @@
                                                         <p>친구 이름: <span th:text="${friend.username}"></span></p>
                                                         <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>
                                                     </div>
-                                                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${friend.username})}"
+                                                    <a th:href="@{/review/getReviewList(type='feed', friendUsername=${friend.username})}"
                                                        th:text="${friend.username} + '님의 피드 바로가기'">N님 피드 바로가기</a>
                                                 </li>
                                             </ul>

@@ -174,3 +174,9 @@ body {
 .carousel-item img {
     background-color: #FFFFFF;
 }
+
+.review-star,
+.like-count,
+.comment-count {
+    font-weight: bold; /* 숫자 굵게 표시 */
+}

@@ -2,7 +2,7 @@ body {
     font-family: 'Arial', sans-serif; /* 기본 폰트 설정 */
     background-color: #FFF; /* 배경색 */
     color: #333; /* 기본 텍스트 색 */
-    margin: 17; /* 기본 마진 제거 */
+    margin: 17px; /* 기본 마진 제거 */
     padding: 0; /* 기본 패딩 제거 */
 }
 
@@ -20,23 +20,23 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* 호버 시 그림자 효과 */
 }
 
-.btn-like-inactive,
-.btn-like-active {
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    background-size: 50%; /* 아이콘 크기 조절 */
-    cursor: pointer;
-    transition: background 0.3s ease; /* 버튼 호버 효과 */
-}
+/*.btn-like-inactive,*/
+/*.btn-like-active {*/
+/*    border-radius: 50%;*/
+/*    width: 40px;*/
+/*    height: 40px;*/
+/*    background-size: 50%; !* 아이콘 크기 조절 *!*/
+/*    cursor: pointer;*/
+/*    transition: background 0.3s ease; !* 버튼 호버 효과 *!*/
+/*}*/
 
-.btn-like-inactive {
-    background: #fff url('/file/community/icon_heart_white.png') center no-repeat; /* 비활성화 상태 */
-}
+/*.btn-like-inactive {*/
+/*    background: #fff url('/file/community/icon_heart_white.png') center no-repeat; !* 비활성화 상태 *!*/
+/*}*/
 
-.btn-like-active {
-    background: #fff url('/file/community/icon_heart_red.png') center no-repeat; /* 활성화 상태 */
-}
+/*.btn-like-active {*/
+/*    background: #fff url('/file/community/icon_heart_red.png') center no-repeat; !* 활성화 상태 *!*/
+/*}*/
 
 .__content {
     font-size: 1em; /* 텍스트 크기 조정 */
@@ -52,12 +52,16 @@ body {
     color: #ffcc00; /* 평점 색상 */
 }
 
+.review-star,
 .like-count,
 .comment-count {
     font-weight: bold; /* 숫자 굵게 표시 */
 }
 
 /* 추가적인 스타일 및 반응형 디자인 추가 가능 */
+
+
+
 
 /* 케러셀 관련 */
 .carousel-item img {
@@ -69,72 +73,10 @@ body {
     width: 80%;
 }
 
+
+
+
 /* 리뷰 메타 데이터 */
-.__post-meta {
-    display: inline-flex;
-    align-items: center;
-    width: 100%;
-    padding-left: 5%;
-    padding-right: 5%; /* 좌우 패딩 균형을 맞추기 위해 필요할 수 있음 */
-}
-
-.__post-meta img,
-.__post-meta a,
-.__post-meta div {
-    display: flex; /* 요소 내에서 콘텐츠 정렬을 용이하게 함 */
-    align-items: center; /* 수직 정렬 */
-    margin-right: 10px; /* 요소 간 간격 */
-}
-
-
-
-.__post-meta a {
-    cursor: pointer;
-}
-
-.btn-like-active-review {
-    /* 활성 아이콘을 배경으로 사용 */
-    background: url('/path/to/active-icon.png') no-repeat center;
-    width: 24px;  /* 아이콘 크기에 맞춰 조정 */
-    height: 24px; /* 아이콘 크기에 맞춰 조정 */
-}
-
-.comment-count,
-.like-count {
-    margin-left: 5px; /* 숫자와 아이콘 간 간격 */
-}
-
-.__post-meta img,
-.__post-meta a,
-.__post-meta div {
-    display: flex; /* 요소 내에서 콘텐츠 정렬을 용이하게 함 */
-    align-items: center; /* 수직 정렬 */
-    margin-right: 10px; /* 요소 간 간격 */
-}
-
-.__post-meta a {
-    cursor: pointer;
-}
-
-.btn-like-active-review {
-    /* 활성 아이콘을 배경으로 사용 */
-    width: 24px;  /* 아이콘 크기에 맞춰 조정 */
-    height: 24px; /* 아이콘 크기에 맞춰 조정 */
-}
-
-.comment-count,
-.like-count {
-    margin-left: 5px; /* 숫자와 아이콘 간 간격 */
-}
-
-.__post-meta a {
-    margin-right: 5px; /* 기본 여백을 줄여서 요소 간격 감소 */
-}
-
-.like-count {
-    margin-left: 3px; /* 숫자와 아이콘 간격 작은 공간 유지 */
-}
-
-.comment-count {
-    margin-left: 3px; /* 숫자와 아이콘 간격 작은 공간 유지 */
+.__my-review-post .__post-meta a:before, .__my-review-post .__post-meta span:before {
+    content: none;
 }

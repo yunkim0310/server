@@ -7,6 +7,10 @@
 
     <link th:insert="~{common/import :: importFragment}">
 
+    <!-- 부트스트랩 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="/css/community/getReview.css">
 
     <script src="/javascript/community/like.js"></script>
@@ -38,21 +42,41 @@
 
 <div class="review-container">
     <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
-        <div th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-            <div class="swiper-slide" style="margin-right: 16px;">
-                <img th:src="${url + review.reviewImg1}">
+
+        <!-- 케러셀 -->
+        <th:block th:if="${(review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL') || (review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL') || (review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL')}">
+            <div class="carousel-container" style="width: 80%;">
+                <div th:id="'carousel'+${review.reviewNo}" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        <button type="button" th:if="${review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                        <button type="button" th:if="${review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                        <button type="button" th:if="${review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL'}" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" th:if="${review.reviewImg1 != null && review.reviewImg1 != '' && review.reviewImg1 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg1}" class="d-block w-100" alt="review.reviewImg1" height="500">
+                        </div>
+                        <div class="carousel-item" th:if="${review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg2}" class="d-block w-100" alt="review.reviewImg2" height="500">
+                        </div>
+                        <div class="carousel-item" th:if="${review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL'}">
+                            <img th:src="${url + review.reviewImg3}" class="d-block w-100" alt="review.reviewImg3" height="500">
+                        </div>
+                    </div>
+                    <th:block th:if="${(review.reviewImg2 != null && review.reviewImg2 != '' && review.reviewImg2 != 'NULL') || (review.reviewImg3 != null && review.reviewImg3 != '' && review.reviewImg3 != 'NULL')}">
+                        <button class="carousel-control-prev" type="button" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" th:data-bs-target="'#carousel'+${review.reviewNo}" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </th:block>
+                </div>
             </div>
-        </div>
-        <div th:if="${review.reviewImg2 != null && !review.reviewImg2.isEmpty()}">
-            <div class="swiper-slide" style="margin-right: 16px;">
-                <img th:src="${url + review.reviewImg2}">
-            </div>
-        </div>
-        <div th:if="${review.reviewImg3 != null && !review.reviewImg3.isEmpty()}">
-            <div class="swiper-slide" style="margin-right: 16px;">
-                <img th:src="${url + review.reviewImg3}">
-            </div>
-        </div>
+        </th:block>
+
     </div>
 </div>
 

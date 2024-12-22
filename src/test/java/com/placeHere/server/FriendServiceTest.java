@@ -1,5 +1,6 @@
 package com.placeHere.server;
 
+import com.placeHere.server.dao.community.FriendDao;
 import com.placeHere.server.domain.Friend;
 import com.placeHere.server.domain.Search;
 import com.placeHere.server.domain.User;
@@ -23,6 +24,29 @@ class FriendServiceTest {
     @Autowired
     @Qualifier("FriendServiceImpl")
     private FriendService friendService;
+
+    @Autowired
+    private FriendDao friendDao;
+
+
+    @Test
+    public void getFriendList() throws Exception {
+
+        List<Friend> friendList = friendService.getFriendList("user01", new Search(5, 5), "");
+
+        System.out.println(friendList);
+
+    }
+
+
+    @Test
+    public void chkFriendByFriendNo() throws Exception {
+
+        Friend chkFriend = friendDao.chkFriendByFriendNo(2);
+
+        System.out.println(chkFriend);
+
+    }
 
     //친구 신청
     @Test

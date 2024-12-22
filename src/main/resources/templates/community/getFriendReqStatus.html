@@ -161,7 +161,9 @@
                                                                     <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
                                                                 </div>
                                                             </td>
-                                                            <td th:text="${request.friendRes}"></td>
+                                                            <td>
+                                                                <a th:href="'/review/getReviewList?type=feed&friendUsername='+${request.friendRes}" th:text="${request.friendRes}"></a>
+                                                            </td>
                                                             <td th:text="${request.friendDt}"></td>
                                                             <td>
                                                                 <span th:if="${request.friendStatus}" th:text="'수락 됨'"></span>
@@ -200,7 +202,9 @@
                                                     <th:blcok th:unless="${receivedRequests == null || receivedRequests.isEmpty()}">
 
                                                         <tr th:each="request : ${receivedRequests}">
-                                                            <td th:text="${request.friendReq}"></td>
+                                                            <td th:text="${request.friendReq}">
+                                                                <a th:href="'/review/getReviewList?type=feed&frinedUsername=' + ${request.friendRes}" th:text="${request.friendRes}"></a>
+                                                            </td>
                                                             <td th:text="${request.friendDt}"></td>
                                                             <td>
                                                                 <div class="button-container">
