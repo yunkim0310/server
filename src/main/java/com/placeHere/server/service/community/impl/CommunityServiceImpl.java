@@ -46,17 +46,20 @@ public class CommunityServiceImpl implements CommunityService {
     // Method
     //리뷰 작성
     @Override
-    public void addReview(Review review) throws Exception {
+    public boolean addReview(Review review) throws Exception {
 
         System.out.println("addReview(review)");
-
-        communityDao.addReview(review);
 
         int rsrvNo = review.getRsrvNo();
         System.out.println("rsrvNo : "+rsrvNo);
 
-
-
+        try {
+            communityDao.addReview(review);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

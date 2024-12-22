@@ -58,7 +58,7 @@ public class CommunityController {
     @GetMapping("/addReview")
     public String addReview(@SessionAttribute("user") User user, Model model) throws Exception {
 
-        System.out.println("/addReview.do : Get");
+        System.out.println("/addReview : Get");
 
         Search search = new Search();
 
@@ -83,11 +83,17 @@ public class CommunityController {
     @PostMapping("/addReview")
     public String addReview(@RequestParam("rsrvNo") int rsrvNo, @ModelAttribute("review") Review review) throws Exception {
 
-        System.out.println("/addReview.do : Post" + review.toString());
-        // B/L
-        communityService.addReview(review);
+        System.out.println("/community/addReview : Post");
+        System.out.println(review);
 
-        reservationService.updateRsrvStatus(rsrvNo, "리뷰 완료");
+        // B/L
+        boolean result = communityService.addReview(review);
+
+        if (result) {
+            reservationService.updateRsrvStatus(rsrvNo, "리뷰 완료");
+        } else {
+            System.out.println("리뷰 등록 중 오류 발생");
+        }
 
         return "redirect:/review/getReviewList?type=myFeed";
     }

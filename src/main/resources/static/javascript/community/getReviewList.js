@@ -1,4 +1,4 @@
-getReviewList.js
+// getReviewList.js
 
 $(function() {
 

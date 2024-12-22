@@ -8,15 +8,12 @@
 
     <script src="/javascript/community/getFriendList.js"></script>
 
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 9%;
-            padding: 70px;
-            background-color: #ffffff;
-            text-align: center; /* 가운데 정렬 */
-        }
+    <!-- Aside -->
+    <link rel="stylesheet" href="/css/templates/mypage.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
 
+    <style>
         h1 {
             color: #333;
         }
@@ -46,24 +43,6 @@
             background-color: #218838;
         }
 
-        ul {
-            list-style-type: none;
-            padding: 0;
-            margin-top: 20px;
-            display: inline-block; /* 가운데 정렬을 위해 inline-block 사용 */
-        }
-
-        li {
-            background: white;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 4px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
         .friend-info {
             display: flex;
             align-items: center;
@@ -76,10 +55,10 @@
             margin-right: 15px; /* 프로필 이미지와 이름 간 간격 */
         }
 
-        li span {
-            font-weight: bold;
-            color: #333;
-        }
+<!--        li span {-->
+<!--            font-weight: bold;-->
+<!--            color: #333;-->
+<!--        }-->
 
         li .friend-date {
             font-size: 12px; /* 날짜의 크기를 작게 */
@@ -87,50 +66,134 @@
             margin-left: 10px; /* 이름과 날짜 간 간격 */
         }
 
-        li a {
-            text-decoration: none;
-            color: #007bff;
-            transition: color 0.3s;
-        }
+<!--        li a {-->
+<!--            text-decoration: none;-->
+<!--            color: #007bff;-->
+<!--            transition: color 0.3s;-->
+<!--        }-->
 
-        li a:hover {
-            color: #0056b3;
-        }
+<!--        li a:hover {-->
+<!--            color: #0056b3;-->
+<!--        }-->
     </style>
+
 </head>
 <body>
 <!--<div th:include="~{common/header}"></div>-->
-<!--<div th:include="~{community/getCommunityAside}"></div>-->
-<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
+<!--<div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>-->
+<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
 
-<h1>친구 목록</h1>
-<div class="search-container">
-    <!-- 검색 폼 추가 -->
-    <form th:action="@{/review/getFriendList}" method="get">
-        <input type="text" placeholder="검색어 입력" name="keyword" th:value="${keyword}"> <!-- 입력된 검색어 유지 -->
-        <button type="submit">검색</button>
-    </form>
-</div>
-
-<ul>
-    <li th:each="friend : ${friends}">
-        <div class="friend-info">
-            <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">
-            <p>친구 이름: <span th:text="${friend.username}"></span></p>
-            <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>
+    <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+        <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+            <div class="side">
+                <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;리뷰 목록 </div>
+                <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
+            </div>
         </div>
-        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${friend.username})}"
-           th:text="${friend.username} + '님의 피드 바로가기'">N님 피드 바로가기</a>
-    </li>
-</ul>
 
-<th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+        <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+            <main id="main">
+                <section class="section mb-50">
+                    <div class="container gutter-sm">
+                        <div class="section-body">
+                            <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
+                                <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
+                                    <div id="shopReviewListScroll_0">
 
-<form name="pagingForm">
-    <input type="hidden" name="page">
-    <input type="hidden" placeholder="검색어 입력" name="keyword" th:value="${keyword}">
-    <input type="hidden" name="type" value="friend">
-</form>
+                                        <div>
+                                            <h1>친구 목록</h1>
+
+                                            <div class="search-container" style="text-align: center; padding: 10%;">
+                                                <!-- 검색 폼 추가 -->
+                                                <form th:action="@{/review/getFriendList}" method="get">
+                                                    <input type="text" placeholder="검색어 입력" name="keyword" th:value="${keyword}"> <!-- 입력된 검색어 유지 -->
+                                                    <button type="submit">검색</button>
+                                                </form>
+                                            </div>
+
+                                            <ul>
+                                                <li th:each="friend : ${friends}">
+                                                    <div class="friend-info">
+                                                        <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">
+                                                        <p>친구 이름: <span th:text="${friend.username}"></span></p>
+                                                        <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>
+                                                    </div>
+                                                    <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${friend.username})}"
+                                                       th:text="${friend.username} + '님의 피드 바로가기'">N님 피드 바로가기</a>
+                                                </li>
+                                            </ul>
+
+                                            <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>
+
+                                            <form name="pagingForm">
+                                                <input type="hidden" name="page">
+                                                <input type="hidden" placeholder="검색어 입력" name="keyword" th:value="${keyword}">
+                                                <input type="hidden" name="type" value="friend">
+                                            </form>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- 기존 -->
+
+<!--    <div id="root">-->
+
+<!--        <div class="css-luwwab eug5r8l1">-->
+<!--            <div class="css-833hqy ecbxmj4">-->
+<!--                <div class="side">-->
+<!--                    <div class="css-1v4whg ecbxmj3">커뮤니티</div>-->
+<!--                    <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="css-171zbec eug5r8l0">-->
+
+<!--                <h1>친구 목록</h1>-->
+<!--                <div class="search-container">-->
+<!--                    &lt;!&ndash; 검색 폼 추가 &ndash;&gt;-->
+<!--                    <form th:action="@{/review/getFriendList}" method="get">-->
+<!--                        <input type="text" placeholder="검색어 입력" name="keyword" th:value="${keyword}"> &lt;!&ndash; 입력된 검색어 유지 &ndash;&gt;-->
+<!--                        <button type="submit">검색</button>-->
+<!--                    </form>-->
+<!--                </div>-->
+
+<!--                <ul>-->
+<!--                    <li th:each="friend : ${friends}">-->
+<!--                        <div class="friend-info">-->
+<!--                            <img id="profileImgView" th:src="${url + 'user/' + friend.profileImg}" alt="프로필사진">-->
+<!--                            <p>친구 이름: <span th:text="${friend.username}"></span></p>-->
+<!--                            <span class="friend-date" th:text="${friend.friendDt}">신청 날짜</span>-->
+<!--                        </div>-->
+<!--                        <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${friend.username})}"-->
+<!--                           th:text="${friend.username} + '님의 피드 바로가기'">N님 피드 바로가기</a>-->
+<!--                    </li>-->
+<!--                </ul>-->
+
+<!--                <th:block th:insert="~{common/paging :: pagingFragment}"></th:block>-->
+
+<!--                <form name="pagingForm">-->
+<!--                    <input type="hidden" name="page">-->
+<!--                    <input type="hidden" placeholder="검색어 입력" name="keyword" th:value="${keyword}">-->
+<!--                    <input type="hidden" name="type" value="friend">-->
+<!--                </form>-->
+
+<!--            </div>-->
+
+<!--        </div>-->
+
+<!--    </div>-->
 
 </body>
 </html>
