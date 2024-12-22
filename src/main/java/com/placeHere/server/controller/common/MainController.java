@@ -53,7 +53,7 @@ public class MainController {
     @GetMapping("/")
     public String index(HttpSession session, Model model) throws Exception {
 
-        System.out.println("Home : GET");
+        System.out.println("/ : GET");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
@@ -71,9 +71,6 @@ public class MainController {
         }
 
         System.out.println(storeIdList);
-        System.out.println(storeList);
-
-        System.out.println(storeList.isEmpty());
 
         // 지역 필터 이미지 TODO 수정 필요
         List<String> regionImgList = new ArrayList<String>(
@@ -101,7 +98,6 @@ public class MainController {
         }
 
         System.out.println(reviewNoList);
-        System.out.println(reviewList);
 
         // 월, 주차 계산
         LocalDate today = LocalDate.now();
@@ -109,8 +105,11 @@ public class MainController {
         WeekFields weekFields = WeekFields.of(Locale.getDefault());
         int week = today.get(weekFields.weekOfMonth());
 
+        // 음식 카테고리
+        FoodCategory foodCategory = new FoodCategory();
+
         // 음식 카테고리, 지역 필터 TODO 음식,지역 이미지 리스트도 만들기
-        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("foodCategory", foodCategory);
         model.addAttribute("regionList", regionList);
         model.addAttribute("regionImgList", regionImgList);
 

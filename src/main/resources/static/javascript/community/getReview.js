@@ -38,65 +38,52 @@ $(function() {
     });
 
 
-    // 댓글 추가
-    function addComment() {
+// 댓글 추가
+function addComment() {
+    alert("댓글을 등록하시겠습니까");
 
-        alert("댓글을 등록하시겠습니까");
-        // 기본 폼 제출 동작 방지
-        const reviewNo = document.getElementById('reviewNo').value;
-        const commentsContent = document.getElementById('commentsContent').value;
+    // 폼 제출 기본 동작 방지
+    const reviewNo = $('#reviewNo').val();
+    const commentsContent = $('#commentsContent').val();
 
-        // 댓글 길이 체크
-        if (commentsContent.trim().length < 1 || commentsContent.length > 100) {
-            alert("댓글은 최소 1자, 최대 100자까지 입력 가능합니다.");
-            return;
-        }
-
-        console.log("reviewNo chk :: ", reviewNo);
-        console.log("commentsContent chk :: ", commentsContent);
-        console.log("username chk :: ", username);
-
-        fetch('/api-review/addComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                reviewNo: reviewNo,
-                username: username,
-                commentsContent: commentsContent
-            }),
-        })
-        .then(response => {
-
-            if (!response.ok) {
-                throw new Error('댓글 추가 실패');
-            }
-
-            return response.json(); // 댓글 추가 후 서버의 JSON 응답 파싱
-        })
-        .then(data => {
-
-            // 댓글 목록 업데이트
-            const commentList = document.querySelector('.comment-list');
-            const newComment = document.createElement('li');
-            newComment.textContent = data.commentsContent; // 서버에서 응답받은 댓글 내용
-            commentList.appendChild(newComment);
-
-            location.reload();
-
-            document.getElementById('commentsContent').value = ''; // 입력란 초기화
-
-            const commentCountElement = document.querySelector('.review-container .comment-count');
-            let currentCount = parseInt(commentCountElement.textContent);
-            commentCountElement.textContent = currentCount + 1;
-        })
-        .catch(error => {
-            document.querySelector('.error-message').textContent = error.message;
-        });
-
-
+    // 댓글 길이 체크
+    if (commentsContent.trim().length < 1 || commentsContent.length > 100) {
+        alert("댓글은 최소 1자, 최대 100자까지 입력 가능합니다.");
+        return;
     }
+
+    console.log("reviewNo chk :: ", reviewNo);
+    console.log("commentsContent chk :: ", commentsContent);
+    console.log("username chk :: ", username);
+
+    $.ajax({
+        url: '/api-review/addComment',
+        method: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify({
+            reviewNo: reviewNo,
+            username: username,
+            commentsContent: commentsContent
+        }),
+        success: function(data) {
+            // 댓글 목록 업데이트
+            const commentList = $('.comment-list');
+            const newComment = $('<li></li>').text(data.commentsContent); // 서버에서 응답받은 댓글 내용
+            commentList.append(newComment);
+
+            $('#commentsContent').val(''); // 입력란 초기화
+
+            const commentCountElement = $('.review-container .comment-count');
+            let currentCount = parseInt(commentCountElement.text());
+            commentCountElement.text(currentCount + 1);
+
+            location.reload(); // 페이지 새로고침
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            $('.error-message').text('댓글 추가 실패: ' + errorThrown);
+        }
+    });
+}
 
 
     // 댓글 삭제 함수

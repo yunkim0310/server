@@ -7,8 +7,6 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        <title>PlaceHere</title>
-
         <link rel="stylesheet" href="/css/templates/collection_detail.css">
         <link rel="stylesheet" href="/css/templates/regist_hp.css">
 
@@ -25,7 +23,7 @@
 
         <div id="root">
 
-            <form>
+            <form name="updateStore">
 
                 <input type="hidden" name="userName" th:value="${store.userName}">
                 <input type="hidden" name="storeId" th:value="${store.storeId}">
@@ -642,7 +640,7 @@
                             <div class="css-1eo0fey e1j7jtti0"></div>
 
                             <div class="css-137ca2h e1utgeno0">
-                                <button class="css-18m884r e4nu7ef3" id="submit" name="submit-button" type="submit" width="240"
+                                <button class="css-18m884r e4nu7ef3" id="submit" name="submitBtn" type="submit" width="240"
                                         height="56" radius="3" style="background-color: #4880FF">
                                     <span class="css-ymwvow e4nu7ef1 submit-button-span">다음 단계</span>
                                 </button>

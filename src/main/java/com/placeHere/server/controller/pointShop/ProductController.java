@@ -50,9 +50,6 @@ public class ProductController {
 
     }
 
-    @Value("${pointShop_upload_dir}")
-    String path;
-
     @Autowired
     ServletContext servletContext;
 

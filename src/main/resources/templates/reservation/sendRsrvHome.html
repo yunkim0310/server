@@ -2,66 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>잘못된 접근</title>
-    <style>
-        /* 사용자 정의 팝업 스타일 */
-        .custom-alert {
-            position: fixed;
-            top: 40%; /* 화면의 중간 근처에 위치 */
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #FFFFFF;
-            color: #333;
-            padding: 20px 30px;
-            border: 1px solid #4880FF;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-size: 16px;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .custom-alert button {
-            margin-top: 15px;
-            padding: 8px 15px;
-            background-color: #646D7A;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .custom-alert button:hover {
-            background-color: #4880FF;
-        }
-
-    </style>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <link href="/css/reservation/sendRsrvHome.css" rel="stylesheet">
 </head>
 <body>
-<div th:insert="~{common/header}" style="margin-top: 8px;"></div>
+<div style="margin-top: 8px;" th:insert="~{common/header}"></div>
 
 <!-- 어두운 배경 -->
 <div class="overlay" id="overlay"></div>
 
 <!-- 사용자 정의 팝업 -->
-<div id="customAlert" class="custom-alert">
+<div class="custom-alert" id="customAlert">
     <p>잘못된 접근입니다.</p>
     <button onclick="redirect()">확인</button>
 </div>
 
-<script>
-    // 확인 버튼 클릭 시 리다이렉트
-    function redirect() {
-        window.location.href = "/"; // '/' 경로로 리다이렉트
-    }
-
-    // 페이지 로드 시 팝업 표시
-    window.onload = function () {
-        document.getElementById('customAlert').style.display = 'block';
-        document.getElementById('overlay').style.display = 'block';
-    };
-</script>
+<script src="/javascript/reservation/sendRsrvHome.js"></script>
 </body>
 </html>

@@ -1,0 +1,31 @@
+/* 사용자 정의 팝업 스타일 */
+.custom-alert {
+    position: fixed;
+    top: 40%; /* 화면의 중간 근처에 위치 */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #FFFFFF;
+    color: #333;
+    padding: 20px 30px;
+    border: 1px solid #4880FF;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    text-align: center;
+    z-index: 1000;
+}
+
+.custom-alert button {
+    margin-top: 15px;
+    padding: 8px 15px;
+    background-color: #646D7A;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.custom-alert button:hover {
+    background-color: #4880FF;
+}

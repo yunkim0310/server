@@ -25,15 +25,6 @@
             padding: 0; /* 기본 패딩 제거 */
         }
 
-<!--        .wrapper {-->
-<!--            max-width: 1200px; /* 최대 너비 설정 */-->
-<!--            margin: 40px auto; /* 중앙 정렬 및 위아래 여백 설정 */-->
-<!--            padding: 20px; /* 여백 추가 */-->
-<!--            background: #fff; /* 흰 배경 */-->
-<!--            border-radius: 8px; /* 둥근 모서리 */-->
-<!--            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* 그림자 효과 */-->
-<!--        }-->
-
         .__my-review-post {
             border: 1px solid #e2e2e2; /* 테두리 추가 */
             border-radius: 5px; /* 테두리 둥글게 */
@@ -88,14 +79,6 @@
             color: #ffcc00; /* 평점 색상 */
         }
 
-<!--        .restaurant-info {-->
-<!--            whidth: 850px;-->
-<!--            margin: 0 auto;-->
-<!--            margin-top: 15px; /* 상단 여백 */-->
-<!--            border-top: 1px solid #e2e2e2; /* 상단 테두리 */-->
-<!--            padding-top: 10px; /* 패딩 추가 */-->
-<!--        }-->
-
         .like-count,
         .comment-count {
             font-weight: bold; /* 숫자 굵게 표시 */
@@ -115,7 +98,7 @@
         filter: brightness(0) saturate(100%) invert(26%) sepia(99%) saturate(3311%) hue-rotate(175deg) brightness(97%) contrast(98%); /* 원하는 색상 효과 추가 */
     }
 
-            .preview-tooltip {
+    .preview-tooltip {
         display: none; /* 기본적으로 숨김 */
         position: absolute;
         background-color: #fff; /* 하얀색 배경 */
@@ -152,7 +135,7 @@
         </div>
     </div>
     <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
-<br><br>
+        <br><br>
         <div>
             <a th:href="@{/review/addReview}">
                 <img src="/file/community/addReview_icon.png" alt="리뷰 추가하기"
@@ -176,24 +159,25 @@
                                     <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
                                         <div class="__header" style="display: flex; justify-content: space-between; padding-left: 0;">
                                             <div class="__user-info" style="display: flex; align-items: center;"> <!-- 리뷰 작성자를 표시하는 영역 -->
-                                                <img id="profileImgView" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진" style="margin-right: 10px;"><!-- 프로필 이미지 -->
+                                                <img id="profileImgView" style=" height: 60px; width: 61px; border-radius: 40px;" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진"><!-- 프로필 이미지 -->
                                                 <a th:href="@{/review/getReviewList(type='friendList', friendUsername=${review.userName})}">
-<span th:text="${review.userName}"
-      style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
-text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
+                                                    <span style="font-size: 1.5em; font-weight: bold; color: #2c3e50;text-transform: uppercase; margin-bottom: 5px; display: block;"
+                                                          th:text="${review.userName}">
+                                                        작성자 이름
+                                                    </span>
                                                 </a>
                                             </div>
 
                                             <div class="button-group" style="display: flex; align-items: center;">
 
                                                 <a th:href="@{/review/updateReview?(reviewNo=${review.reviewNo})}" style="display: flex; align-items: center; text-decoration: none;">
-                                                    <img th:src="@{/file/community/updateReview_icon 1.png}" alt="수정" style="margin-right: 10px; width: 20px; height: 20px;"> <!-- 수정 이미지 -->
+                                                    <img th:src="@{/file/community/updateReview_icon}" alt="수정" style="margin-right: 10px; width: 20px; height: 20px;"> <!-- 수정 이미지 -->
                                                     <!--<span style="font-size: 1em; font-weight: bold; color: #000000;">수정</span> &lt;!&ndash; 필요한 경우 텍스트 추가 &ndash;&gt;-->
                                                 </a>
                                                 <form method="post" style="display:inline;" th:action="@{/review/removeReview}" onsubmit="return confirm('정말 삭제 하시겠습니까?');">
                                                     <input name="reviewNo" th:value="${review.reviewNo}" type="hidden"/>
                                                     <button type="submit" style="border: none; background: none; cursor: pointer;"> <!-- 버튼 스타일 설정 -->
-                                                        <img th:src="@{/file/community/removeReview_icon 1.png}" alt="삭제" style="width: 20px; height: 20px;" /> <!-- 삭제 이모티콘 -->
+                                                        <img th:src="@{/file/community/removeReview_icon}" alt="삭제" style="width: 20px; height: 20px;" /> <!-- 삭제 이모티콘 -->
                                                     </button>
                                                 </form>
                                             </div>

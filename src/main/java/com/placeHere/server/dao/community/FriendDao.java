@@ -32,12 +32,17 @@ public interface FriendDao {
     //친구 목록을 조회하다 TODO
     public List<Friend> getFriendList(@Param("userName") String userName,@Param("search") Search search, @Param("keyword") String keyword) throws Exception;
 
+    // 친구 목록 조회 (친구 리뷰용)
+    public List<String> getFriendListAll(String userName);
+
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
     public void updateChkfriendReq(String userName) throws Exception;
 
     // 친구 상태 확인 => friend_status =1 만을 구분 TODO
     // friendReq 는 내 아이디, friendRes 는 상대 아이디
     public Friend chkFriend(Friend friend);
+
+    public Friend chkFriendByFriendNo(int friendNo) throws Exception;
 
 
 

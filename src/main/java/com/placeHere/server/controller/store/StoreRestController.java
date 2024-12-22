@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -58,10 +57,11 @@ public class StoreRestController {
 
         System.out.println("/api-store/chkDuplicateBusinessNo/" + businessNo);
 
-        int count = storeService.chkDuplicateBusinessNo(businessNo);
+        int result = storeService.chkDuplicateBusinessNo(businessNo);
+        System.out.println(result <= 0);
 
         // 중복된 사업자번호가 있을 경우 false, 없을 경우 true
-        return ResponseEntity.ok(count <= 0);
+        return ResponseEntity.ok(result <= 0);
     }
 
 
@@ -75,7 +75,6 @@ public class StoreRestController {
         User user = (User) session.getAttribute("user");
 
         if (user == null) {
-
             return ResponseEntity.ok(0);
         }
 
@@ -84,11 +83,10 @@ public class StoreRestController {
             like.setUserName(user.getUsername());
             like.setTarget("store");
 
-            System.out.println(like);
-
             likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
 
             Like result = likeService.chkLike(like);
+            System.out.println("likeId =" + result.getLikeId());
 
             return ResponseEntity.ok(result.getLikeId());
         }
@@ -100,7 +98,7 @@ public class StoreRestController {
     public ResponseEntity<Boolean> removeLikeStore(@ModelAttribute Like like) throws Exception {
 
         System.out.println("/api-store/removeLikeStore/");
-        System.out.println(like);
+        System.out.println("likeId = " + like.getLikeId());
 
         boolean result = likeService.removeLike(like);
 
@@ -110,16 +108,14 @@ public class StoreRestController {
     
     // 가게 목록 조회
     @GetMapping("/getStoreList")
-    public ResponseEntity<List<Store>> getStoreList(@ModelAttribute Search search,
-                               Model model) {
+    public ResponseEntity<List<Store>> getStoreList(@ModelAttribute Search search) {
 
         System.out.println("/api-store/getStoreList : GET");
-
-        System.out.println(search);
+        System.out.println("search : " + ((search != null) ? search.getSearchKeyword() : "null"));
 
         List<Store> storeList = storeService.getStoreList(search);
 
-        System.out.println(storeList);
+        System.out.println("storeList : " + ((storeList != null) ? storeList.size() : "null"));
 
         return ResponseEntity.ok(storeList);
     }
@@ -130,11 +126,9 @@ public class StoreRestController {
     public ResponseEntity<Store> getStore(@RequestParam("storeId") int storeId) {
 
         System.out.println("/api-store/getStore : GET");
-        System.out.println(storeId);
+        System.out.println("storeId" + storeId);
 
         Store store = storeService.getStore(storeId);
-
-        System.out.println(store);
 
         return ResponseEntity.ok(store);
     }
@@ -215,10 +209,18 @@ public class StoreRestController {
 
     // 사진 삭제
     @GetMapping("/removeFile")
-    public void removeFile(@RequestParam("filePath") String filePath) {
+    public ResponseEntity<Void> removeFile(@RequestParam("filePath") String filePath) {
 
-        awsS3Service.deleteFile(filePath);
+        System.out.println("/api-store/removeFile : GET");
+        System.out.println("filePath = " + filePath);
 
+        try {
+            awsS3Service.deleteFile(filePath);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 
@@ -257,6 +259,7 @@ public class StoreRestController {
     public ResponseEntity<Void> addSearchKeyword(@ModelAttribute Search search) {
 
         System.out.println("/api-store/addSearchKeyword : POST");
+        System.out.println("searchKeyword = " + search.getSearchKeyword());
 
         boolean result = false;
 

@@ -3,8 +3,7 @@ import { getLocation, getApiKey } from "./geoLocation.mjs";
 $(function() {
 
     // action 맵핑
-    $("form").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data");
-
+    $("form[name='updateStore']").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data");
 
     // API Key
     let googleApiKey = ""
@@ -35,7 +34,7 @@ $(function() {
 
     
     // submit 함수
-    $("button#submit").on("click", function (e) {
+    $("button[name='submitBtn']").on("click", function (e) {
 
         if (chkValidation()) {
 
@@ -44,10 +43,11 @@ $(function() {
             var category2 = $("input[name='foodCategory2']:checked").val();
             var category3 = $("input[name='foodCategory3']:checked").val();
             var category4 = $("input[name='foodCategory4']").val();
+
             $("input[name='foodCategoryId']").val(category1 + "/" + (category2.replace("-", ", ")) + "/" + category3 + "/" + category4);
 
             // 매장 주소 합치기
-            $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ', ' + $("input[name='storeAddr2']").val());
+            $("input[name='storeAddr']").val($("input[name='storeAddr1']").val() + ', ' + $.trim($("input[name='storeAddr2']").val()));
 
             // 매장 전화번호 합치기
             var phone1 = $("input[name='storePhone1']").val().replace(" ", "");
@@ -69,7 +69,7 @@ $(function() {
 
             });
 
-            $("form").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data").submit();
+            $("form[name='updateStore']").attr("action", "/store/updateStore").attr("method", "post").attr("enctype", "multipart/form-data").submit();
 
         } else {
             e.preventDefault();
@@ -384,62 +384,6 @@ $(function() {
     fileUploadEvent("menuImg", "store/menu/");
 
 
-    // 유효성 검사
-    function chkValidation () {
-
-        // 매장 사진
-        const storeImg1 = $("input[name='storeImg1']:hidden").val();
-        const storeImg2 = $("input[name='storeImg2']:hidden").val();
-        const storeImg3 = $("input[name='storeImg3']:hidden").val();
-
-        let result = true;
-
-        if (storeImg1 == null || storeImg2 == null || storeImg3 == null) {
-            alert("매장 사진이 부족합니다.");
-            return false;
-        }
-
-        // 매장명
-        var storeName = $.trim(("input[name='storeName']").val());
-
-        if (storeName === "") {
-            alert("매장명은 공백만 입력할 수 없습니다.");
-            return false;
-        }
-
-        // 주소
-        if ($("input[name='storeAddr1']").val() == null) {
-            alert("주소는 필수 입력사항입니다.")
-            return false;
-        }
-
-        // 매장 소개
-        var storeInfo = $.trim($("#storeInfo").val());
-
-        // 공백만 있거나 개행만 있는 경우
-        if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
-            alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
-            return false;
-        }
-
-        // 음식 카테고리
-        if ($("input[name='foodCategory1']").is(":checked") && $("input[name='foodCategory2']").is(":checked") && $("input[name='foodCategory3']").is(":checked")) {
-            result = true;
-        } else {
-            alert("음식 카테고리를 3차까지 선택해주세요");
-            return false;
-        }
-
-        // 메뉴
-        if ($("input[name='menuList[0].menuName']").val() == null || $("input[name='menuList[0].menuPrice']") == null) {
-            alert("메뉴 이름과 가격은 필수 입력사항입니다.")
-            return false;
-        }
-
-        return result;
-    }
-
-
     // 편의시설 중복 방지 함수 (콜키지 프리, 콜키지 가능/키즈존, 노키즈존)
     $("input[name='amenitiesNoList']").on("change", function () {
 
@@ -471,3 +415,58 @@ $(function() {
     });
 
 });
+
+// 유효성 검사
+function chkValidation () {
+
+    // 매장 사진
+    const storeImg1 = $("input[name='storeImg1']:hidden").val();
+    const storeImg2 = $("input[name='storeImg2']:hidden").val();
+    const storeImg3 = $("input[name='storeImg3']:hidden").val();
+
+    let result = true;
+
+    if (storeImg1 == null || storeImg2 == null || storeImg3 == null) {
+        alert("매장 사진이 부족합니다.");
+        return false;
+    }
+
+    // 매장명
+    var storeName = $.trim($("input[name='storeName']").val());
+
+    if (storeName === "") {
+        alert("매장명은 공백만 입력할 수 없습니다.");
+        return false;
+    }
+
+    // 주소
+    if ($("input[name='storeAddr1']").val() == null) {
+        alert("주소는 필수 입력사항입니다.")
+        return false;
+    }
+
+    // 매장 소개
+    var storeInfo = $.trim($("#storeInfo").val());
+
+    // 공백만 있거나 개행만 있는 경우
+    if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
+        alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+        return false;
+    }
+
+    // 음식 카테고리
+    if ($("input[name='foodCategory1']").is(":checked") && $("input[name='foodCategory2']").is(":checked") && $("input[name='foodCategory3']").is(":checked")) {
+        result = true;
+    } else {
+        alert("음식 카테고리를 3차까지 선택해주세요");
+        return false;
+    }
+
+    // 메뉴
+    if ($("input[name='menuList[0].menuName']").val() == null || $("input[name='menuList[0].menuPrice']") == null) {
+        alert("메뉴 이름과 가격은 필수 입력사항입니다.")
+        return false;
+    }
+
+    return result;
+}

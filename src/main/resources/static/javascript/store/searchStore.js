@@ -41,7 +41,20 @@ $(function () {
         $("input[name='mode']:hidden").val("result");
         $("input[name='page']").val(page);
 
-        $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
+        const priceMin = $("input[name='priceMin']").val();
+        const priceMax = $("input[name='priceMax']").val();
+
+        if (priceMin === null || priceMin === undefined ||
+            priceMax === null || priceMax === undefined ||
+            priceMin > priceMax) {
+
+            alert("가격 범위 설정이 잘못되었습니다.");
+            $("input[name='priceMin']").focus();
+
+        } else {
+            $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
+        }
+
     }
 
     // 검색 버튼

@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommunityService {
 
     //리뷰 작성
-    public void addReview(Review review) throws Exception;
+    public boolean addReview(Review review) throws Exception;
 
     //리뷰 상세보기
     public Review getReview(int reviewNo, Search search) throws  Exception;

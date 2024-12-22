@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+<!--    <title>PlaceHere</title>-->
+
+    <link th:insert="~{common/import :: importFragment}">
+
+<!--    <link rel="shortcut icon" href="/images/common/smallLogo.png">-->
+
+<!--    &lt;!&ndash; 템플릿 &ndash;&gt;-->
+<!--    <link rel="preconnect" href="https://fonts.googleapis.com">-->
+<!--    <link rel="stylesheet"-->
+<!--          href="https://fonts.googleapis.com/css?family=Roboto|Noto+Sans+KR:300,400,500,700&amp;display=block&amp;subset=korean"-->
+<!--          as="style" crossorigin="anonymous">-->
+
+<!--    &lt;!&ndash; pageNavigator &ndash;&gt;-->
+<!--    <script src="/javascript/common/pageNavigator.js"></script>-->
+<!--    <link rel="stylesheet" href="/css/common/paging.css">-->
+
+    <!-- Aside -->
+    <link rel="stylesheet" href="/css/templates/mypage.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link rel="stylesheet" href="/css/templates/style.css">
+
+    <style>
+
+<!--        h1, h2 {-->
+<!--            color: #333;-->
+<!--        }-->
+
+<!--        table {-->
+<!--            width: 60%; /* 폭을 줄여서 중앙으로 모아짐 */-->
+<!--            margin: 20px auto; /* 테이블 가운데 정렬 */-->
+<!--            border-collapse: collapse; /* 테두리 겹치기 없애기 */-->
+<!--        }-->
+
+<!--        th, td {-->
+<!--            padding: 10px;-->
+<!--            border: 1px solid #ddd;-->
+<!--            text-align: left;-->
+<!--        }-->
+
+<!--        th {-->
+<!--            background-color: #007bff; /* 파란색으로 변경 */-->
+<!--            color: white;-->
+<!--        }-->
+
+<!--        tr:nth-child(even) {-->
+<!--            background-color: #f2f2f2;-->
+<!--        }-->
+
+<!--        tr:hover {-->
+<!--            background-color: #ddd; /* 마우스 오버 시 하이라이트 효과 */-->
+<!--        }-->
+
+<!--        .friend-info {-->
+<!--            display: flex;-->
+<!--            align-items: center;-->
+<!--            justify-content: center; /* 중앙 정렬 */-->
+<!--        }-->
+
+<!--        .friend-info img {-->
+<!--            width: 50px;-->
+<!--            height: 50px;-->
+<!--            border-radius: 50%; /* 원형 프로필로 만들기 */-->
+<!--            margin-right: 15px; /* 간격 조정 */-->
+<!--        }-->
+
+<!--        .button-container {-->
+<!--            display: flex;-->
+<!--            justify-content: center; /* 버튼 가운데 정렬 */-->
+<!--        }-->
+
+<!--        button {-->
+<!--            padding: 8px 12px;-->
+<!--            background-color: #007bff;-->
+<!--            color: white;-->
+<!--            border: none;-->
+<!--            border-radius: 4px;-->
+<!--            cursor: pointer;-->
+<!--            transition: background-color 0.3s; /* 배경색 변환 효과 */-->
+<!--        }-->
+
+<!--        button:hover {-->
+<!--            background-color: #0056b3;-->
+<!--        }-->
+
+<!--        .message {-->
+<!--            color: red;-->
+<!--            margin-bottom: 20px;-->
+<!--        }-->
+
+<!--        .allPage {-->
+<!--            margin-bottom:30px;-->
+<!--        }-->
+    </style>
+</head>
+<body>
+
+<!--    <div th:include="~{common/header}"></div>-->
+<!--    <div th:include="~{community/menuBar}"></div>-->
+
+    <div id="root"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+        <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
+            <div class="side">
+                <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;리뷰 목록 </div>
+                <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
+            </div>
+        </div>
+
+        <div class="wrapper" id="wrapperDiv"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+            <main id="main">
+                <section class="section mb-50">
+                    <div class="container gutter-sm">
+                        <div class="section-body">
+                            <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
+                                <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
+                                    <div id="shopReviewListScroll_0">
+
+                                        <!-- 내꺼 시작 -->
+
+                                        <div style="allPage">
+                                            <h1>친구 요청 목록</h1>
+
+                                            <div th:if="${message}" class="message">
+                                                <p th:text="${message}"></p>
+                                            </div>
+
+                                            <!-- 내가 보낸 친구 신청 목록 -->
+                                            <h2>내가 보낸 친구 신청 목록</h2>
+
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>프로필</th>
+                                                        <th>보낸 사람</th>
+                                                        <th>신청 날짜</th>
+                                                        <th>상태</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <th:block th:if="${friendRequests == null || friendRequests.isEmpty()}">
+
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                                                    내가 보낸 친구 신청이 없습니다.
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                    </th:block>
+
+                                                    <th:blcok th:unless="${friendRequests == null || friendRequests.isEmpty()}">
+
+                                                        <tr th:each="request : ${friendRequests}">
+                                                            <td>
+                                                                <div class="friend-info">
+                                                                    <img id="profileImgView" th:src="${url + 'user/' + user.profileImg}" alt="프로필사진">
+                                                                </div>
+                                                            </td>
+                                                            <td>
+                                                                <a th:href="'/review/getReviewList?type=feed&friendUsername='+${request.friendRes}" th:text="${request.friendRes}"></a>
+                                                            </td>
+                                                            <td th:text="${request.friendDt}"></td>
+                                                            <td>
+                                                                <span th:if="${request.friendStatus}" th:text="'수락 됨'"></span>
+                                                                <span th:if="${!request.friendStatus}">수락 대기중</span>
+                                                            </td>
+                                                        </tr>
+
+                                                    </th:blcok>
+                                                </tbody>
+                                            </table>
+
+                                            <!-- 내가 수신한 친구 신청 목록 -->
+                                            <h2>내게 온 친구 신청 목록</h2>
+
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>보낸 사람</th>
+                                                        <th>신청 날짜</th>
+                                                        <th>수락</th>
+                                                        <th>거절</th>
+                                                    </tr>
+                                                </thead>
+
+                                                <tbody>
+                                                    <th:block th:if="${receivedRequests == null || receivedRequests.isEmpty()}">
+                                                        <tr>
+                                                            <td colspan="4">
+                                                                <div style="text-align: center; padding: 10%;font-weight: bold; font-size: 18px;">
+                                                                    내게 온 친구 신청이 없습니다.
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    </th:block>
+
+                                                    <th:blcok th:unless="${receivedRequests == null || receivedRequests.isEmpty()}">
+
+                                                        <tr th:each="request : ${receivedRequests}">
+                                                            <td th:text="${request.friendReq}">
+                                                                <a th:href="'/review/getReviewList?type=feed&frinedUsername=' + ${request.friendRes}" th:text="${request.friendRes}"></a>
+                                                            </td>
+                                                            <td th:text="${request.friendDt}"></td>
+                                                            <td>
+                                                                <div class="button-container">
+                                                                    <form th:action="@{/review/addFriend}" method="post" onsubmit="return confirm('정말로 수락 하시겠습니까?');">
+                                                                        <input type="hidden" name="friendNo" th:value="${request.friendNo}" />
+                                                                        <button type="submit">수락</button>
+                                                                    </form>
+                                                                </div>
+                                                            </td>
+                                                            </td>
+                                                            <td>
+                                                                <div class="button-container">
+                                                                    <form th:action="@{/review/removeFriendReq}" method="post" onsubmit="return confirm('정말로 거절 하시겠습니까?');">
+                                                                        <input type="hidden" name="friendNo" th:value="${request.friendNo}" />
+                                                                        <button type="submit">거절</button>
+                                                                    </form>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+
+                                                    </th:blcok>
+                                                </tbody>
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+            </main>
+
+        </div>
+
+    </div>
+
+</body>
+</html>

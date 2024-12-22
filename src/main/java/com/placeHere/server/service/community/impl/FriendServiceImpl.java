@@ -28,7 +28,14 @@ public class FriendServiceImpl implements FriendService {
 
         System.out.println("sendFriendReq");
 
-        friendDao.sendFriendReq(friend);
+        Friend chkFriend = friendDao.chkFriend(friend);
+
+        if (chkFriend == null) {
+            friendDao.sendFriendReq(friend);
+        } else {
+            System.out.println("chkFriend = " + chkFriend);
+            throw new Exception("친구 신청중 오류 발생");
+        }
     }
 
 
@@ -57,8 +64,15 @@ public class FriendServiceImpl implements FriendService {
     public boolean addFriend(int friendNo) throws Exception {
 
         System.out.println("addFriend 친구 수락");
-        
-        return friendDao.addFriend(friendNo) ;
+
+        Friend chkFriend = friendDao.chkFriendByFriendNo(friendNo);
+
+        if (chkFriend != null && !chkFriend.isFriendStatus()) {
+            return friendDao.addFriend(friendNo) ;
+        } else {
+            return false;
+        }
+
     }
 
 
@@ -68,7 +82,14 @@ public class FriendServiceImpl implements FriendService {
 
         System.out.println("removeFriendReq 친구 신청 거절");
 
-        return friendDao.removeFriendReq(friend);
+        Friend chkFriend = friendDao.chkFriendByFriendNo(friend.getFriendNo());
+
+        if (chkFriend != null && !chkFriend.isFriendStatus()) {
+            return friendDao.removeFriendReq(friend);
+        } else {
+            return false;
+        }
+
     }
 
 
@@ -78,8 +99,15 @@ public class FriendServiceImpl implements FriendService {
 
         System.out.println("removeFriend :: " + friend.getFriendNo());
 
-        // 친구를 삭제하는 DAO 메서드 호출
-        friendDao.removeFriend(friend);
+        Friend chkFriend = friendDao.chkFriendByFriendNo(friend.getFriendNo());
+
+        if (chkFriend != null && chkFriend.isFriendStatus()) {
+            friendDao.removeFriend(friend);
+        } else {
+            System.out.println("chkFriend = " + chkFriend);
+            throw new Exception("친구 삭제중 오류 발생");
+        }
+
     }
 
 
@@ -88,6 +116,13 @@ public class FriendServiceImpl implements FriendService {
     public List<Friend> getFriendList(String userName, Search search, String keyword) throws Exception {
         System.out.println("getFriendList 친구 목록 조회");
         return friendDao.getFriendList(userName, search, keyword);
+    }
+
+
+    @Override
+    public List<String> getFriendList(String userName) {
+
+        return friendDao.getFriendListAll(userName);
     }
 
 
@@ -105,8 +140,6 @@ public class FriendServiceImpl implements FriendService {
     public Friend chkFriend(Friend friend) throws Exception {
 
         System.out.println("chkFriend 친구 상태 확인" );
-        System.out.println("friendNo1111 : " + friend.getFriendNo());
-
 
         return friendDao.chkFriend(friend);
     }

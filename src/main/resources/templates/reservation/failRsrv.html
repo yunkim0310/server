@@ -1,40 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>예약 실패 페이지</title>
-    <style>
-        /* 사용자 정의 팝업 스타일 */
-        .custom-alert {
-            position: fixed;
-            top: 40%; /* 화면의 중간 근처에 위치 */
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #FFFFFF;
-            color: #333;
-            padding: 20px 30px;
-            border: 1px solid #4880FF;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            font-size: 16px;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        .custom-alert button {
-            margin-top: 15px;
-            padding: 8px 15px;
-            background-color: #646D7A;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-        }
-
-        .custom-alert button:hover {
-            background-color: #4880FF;
-        }
-    </style>
+    <link rel="stylesheet" href="/css/reservation/failRsrv.css">
 </head>
 <body>
 <div th:insert="~{common/header}" style="margin-top: 8px;"></div>
@@ -47,19 +14,6 @@
     </div>
 </div>
 
-<script>
-    // 팝업 표시 함수
-    function showCustomPopup() {
-        document.getElementById("customPopup").style.display = "block";
-    }
-
-    // 확인 버튼 클릭 시 리다이렉트
-    function redirectToReservation() {
-        window.location.href = "/reservation/addRsrv?storeId=1"; // 원하는 storeId 값으로 설정
-    }
-
-    // 페이지 로드 시 팝업 표시
-    window.onload = showCustomPopup;
-</script>
+<script src="/javascript/reservation/fail.js"></script>
 </body>
 </html>

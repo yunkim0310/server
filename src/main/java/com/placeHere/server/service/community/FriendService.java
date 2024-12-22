@@ -30,6 +30,9 @@ public interface FriendService {
     //친구 목록을 조회하다 TODO
     public List<Friend> getFriendList(String userName, Search search, String keyword) throws Exception;
 
+    // 친구 목록 조회 (친구 리뷰용)
+    public List<String> getFriendList(String userName);
+
     // 친구 요청 확인시 체크상태 변경 ( chkfriend_req  0 -> 1로 변경 )
     public void updateChkfriendReq(String userName) throws Exception;
 
@@ -47,9 +50,6 @@ public interface FriendService {
 
 //    //친구 아이디를 검색하다 ( 보류)
 //    public List<Friend> searchFriend(Search search) throws Exception;
-//
-
-
     //친구 요청을 확인하다   => 필요  X getFriendReq 합침
 //    public List<Friend> checkFriendReq(String friendRes) throws Exception;
 

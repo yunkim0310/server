@@ -72,7 +72,7 @@
         WHERE friend_no = #{friendNo};
     </delete>
 
-    <!--    친구 목록을 조회하다 -->
+    <!--    친구 목록을 조회하다 (사이드바 친구 목록) -->
     <select id="getFriendList" parameterType="map" resultMap="friendMap">
         SELECT *, COUNT(*) OVER() AS friend_total_cnt
         FROM
@@ -88,6 +88,20 @@
         LIMIT #{search.startRowNum}, #{search.listSize};
     </select>
 
+    <!-- 친구 목록 조회 (친구 리뷰용) -->
+    <select id="getFriendListAll">
+
+        SELECT friends.username
+        FROM
+        (SELECT User.username, User.profile_img
+        FROM Friend
+        JOIN User ON (Friend.friend_req = User.username OR Friend.friend_res = User.username)
+        WHERE (Friend.friend_req = #{userName} OR Friend.friend_res = #{userName})
+        AND Friend.friend_status = 1) AS friends
+        WHERE friends.username != #{userName}
+
+    </select>
+
 
     <!--친구 요청 확인시 상태 변경-->
     <update id="updateChkfriendReq" parameterType="String">
@@ -101,12 +115,22 @@
     <!-- 친구 상태 확인 => friend_status =1 만을 구분 -->
     <!-- friendReq 는 내 아이디, friendRes 는 상대 아이디 -->
     <select id="chkFriend" parameterType="com.placeHere.server.domain.Friend" resultMap="friendMap">
+
         SELECT *
         FROM friend
         WHERE ((friend_req = #{friendReq} AND friend_res = #{friendRes})
         OR (friend_req = #{friendRes} AND friend_res = #{friendReq}))
         ORDER BY friend_dt DESC
         LIMIT 1
+
+    </select>
+
+    <select id="chkFriendByFriendNo" resultMap="friendMap">
+
+        SELECT *
+        FROM friend
+        WHERE friend_no = #{friendNo}
+
     </select>
 
 
