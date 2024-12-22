@@ -327,7 +327,7 @@ public class PurchaseController {
             model.addAttribute("username", username);
 
 //            return "pointShop/purchase/listPurchase";
-            return "redirect:/purchase/getPurchaseList";
+            return "pointShop/purchase/getPurchaseList";
         }else{
             return "redirect:/";
         }
@@ -427,7 +427,7 @@ public class PurchaseController {
 
             // Thymeleaf 템플릿 이름을 반환
 //            return "pointShop/purchase/listCart"; // 템플릿 경로
-            return "redirect:/purchase/getCartList";
+            return "pointShop/purchase/getCartList";
         }else{
             return "redirect:/";
         }
@@ -523,7 +523,7 @@ public class PurchaseController {
 
 //        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
 //        return "redirect:/purchase/listPurchase";
-        return "redirect:/purchase/getPurchaseList";
+        return "pointShop/purchase/getPurchaseList";
     }
 
 
@@ -555,7 +555,7 @@ public class PurchaseController {
 
             // Thymeleaf 템플릿 이름을 반환
 //            return "pointShop/purchase/listWish"; // 템플릿 경로
-            return "redirect:/purchase/getWishList";
+            return "pointShop/purchase/getWishList";
         }else{
             return "redirect:/";
         }
@@ -615,7 +615,7 @@ public class PurchaseController {
             model.addAttribute("username", username);
 
 //            return "pointShop/purchase/listPointHistory";
-            return "redirect:/purchase/getPointHistoryList";
+            return "pointShop/purchase/getPointHistoryList";
         }else{
             return "redirect:/";
         }
@@ -644,7 +644,7 @@ public class PurchaseController {
 
         purchaseService.buySelectedItems(selectedItems);
 //        return "pointShop/purchase/listCart"; // 구매 후 장바구니 목록 페이지로 이동
-        return "redirect:/purchase/getCartList";
+        return "pointShop/purchase/getCartList";
     }
 
     // 선택된 상품들 삭제
@@ -657,7 +657,7 @@ public class PurchaseController {
 
         purchaseService.removeSelectedItems(selectedItems);
 //        return "pointShop/purchase/listCart";
-        return "redirect:/purchase/getCartList";
+        return "pointShop/purchase/getCartList";
     }
 
 //    @PostMapping("/addPurchaseCart")

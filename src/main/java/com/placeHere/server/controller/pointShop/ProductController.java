@@ -378,7 +378,7 @@ public class ProductController {
             model.addAttribute("search", search);
 
 //            return "pointShop/product/listProduct";
-            return "redirect:/product/getProductList";
+            return "pointShop/product/getProductList";
         }else{
             return "redirect:/";
         }
