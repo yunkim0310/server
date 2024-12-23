@@ -8,23 +8,23 @@
 
     <script>
 
-        $(function() {
-
-            $("button[name='delete']").on("click", function (){
-
-                const filePath = $(this).data("filepath");
-
-                $.ajax({
-                    url: "/api-store/removeFile?filePath="+filePath,
-                    method: "GET",
-                    success: function (result) {
-                        alert("삭제 완료");
-                    }
-                });
-
-          })
-
-        });
+        // $(function() {
+        //
+        //     $("button[name='delete']").on("click", function (){
+        //
+        //         const filePath = $(this).data("filepath");
+        //
+        //         $.ajax({
+        //             url: "/api-store/removeFile?filePath="+filePath,
+        //             method: "GET",
+        //             success: function (result) {
+        //                 alert("삭제 완료");
+        //             }
+        //         });
+        //
+        //   })
+        //
+        // });
 
     </script>
 </head>
