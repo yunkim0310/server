@@ -92,14 +92,15 @@
     <select id="getFriendListAll">
 
         SELECT friends.username
-        FROM
-        (SELECT User.username, User.profile_img
+        FROM (
+        SELECT User.username, User.profile_img
         FROM Friend
         JOIN User ON (Friend.friend_req = User.username OR Friend.friend_res = User.username)
         WHERE (Friend.friend_req = #{userName} OR Friend.friend_res = #{userName})
-        AND Friend.friend_status = 1) AS friends
+        AND Friend.friend_status = 1
+        ) AS friends
         WHERE friends.username != #{userName}
-
+        ORDER BY friends.username;
     </select>
 
 

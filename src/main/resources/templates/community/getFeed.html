@@ -30,7 +30,7 @@
 
 </p>
 
-<div id="root">
+<div id="root" style="margin-top:-6%;">
 
     <!-- 사이드 바 -->
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
@@ -70,11 +70,10 @@
                                         </th:block>
                                         <th:block th:unless="${isMyFeed}">
                                             <!-- 친구 신청, 삭제 버튼 -->
-                                            <div class="fixed-button" style="margin-right: 20%; text-align:right; z-index: 1000;">
+                                            <div class="fixed-button" style="margin-right: 0%; text-align:right; z-index: 1000;">
 
                                                 <!-- 친구 신청 (레코드 없음) -->
                                                 <th:block th:if="${chkFriend == null}">
-
                                                     <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
                                                     <div>
                                                         <form th:action="@{/review/sendFriendReq}" method="post">
@@ -85,7 +84,6 @@
                                                             </button>
                                                         </form>
                                                     </div>
-
                                                 </th:block>
 
                                                 <!-- 친구 대기중, 친구 삭제 (레코드 있음) -->
@@ -94,13 +92,13 @@
                                                     <!-- 친구 대기중 -->
                                                     <th:block th:if="${chkFriend.friendStatus == false}">
                                                         <a href="/review/getFriendReqStatus">
+                                                            <img th:src="@{/file/community/friend_Waiting_icon.png}" alt="친구 대기중" style="width: 40px; height: 40px; margin-right: 5px;">
                                                             친구 대기중
                                                         </a>
                                                     </th:block>
 
                                                     <!-- 친구 삭제-->
                                                     <th:block th:unless="${chkFriend.friendStatus == false}">
-
                                                         <!-- 친구 삭제 버튼 -->
                                                         <div>
                                                             <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
@@ -111,7 +109,6 @@
                                                                 </button>
                                                             </form>
                                                         </div>
-
                                                     </th:block>
 
                                                 </th:block>
