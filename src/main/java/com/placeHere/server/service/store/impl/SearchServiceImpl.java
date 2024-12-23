@@ -5,7 +5,6 @@ import com.placeHere.server.service.store.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,6 +15,7 @@ public class SearchServiceImpl implements SearchService {
     private SearchDao searchDao;
 
 
+    // Method
     @Override
     public boolean addSearch(String searchKeyword) {
 
@@ -27,6 +27,7 @@ public class SearchServiceImpl implements SearchService {
             return false;
         }
     }
+
 
     @Override
     public List<String> getPopularKeyword() {
@@ -44,4 +45,5 @@ public class SearchServiceImpl implements SearchService {
 
         return popularKeywordList;
     }
+
 }

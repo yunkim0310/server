@@ -17,7 +17,7 @@ $(function() {
 
     // 확인 버튼 클릭
     $("button[name='confirmBtn']").on("click", function () {
-        self.location = "/product/listProduct";
+        self.location = "/product/getProductList";
     });
 
     // 장바구니 아이콘 클릭

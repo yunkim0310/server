@@ -90,7 +90,7 @@ public class StoreServiceTest {
     @Test
     public void getlikeList() throws Exception {
 
-//        List<Integer> likeList = likeService.likeList("store");
+//        List<Integer> likeList = likeService.getLikeList("store");
 //
 //        System.out.println(likeList.size());
 //        System.out.println(likeList);
@@ -168,10 +168,9 @@ public class StoreServiceTest {
         menu1.setMenuNo(1);
         menu1.setMenuName("케밥(닭)");
         menu1.setMenuPrice(8500);
+
         
-        Menu menu2 = new Menu(0, 0, 2, null, null, "케밥(양)", 9000, "터키 최고급 양고기 사용");
-        
-        List<Menu> menuList = new ArrayList<>(List.of(menu1, menu2));
+        List<Menu> menuList = new ArrayList<>(List.of(menu1));
         store.setMenuList(menuList);
 
         storeService.addStore(store);
@@ -205,9 +204,8 @@ public class StoreServiceTest {
         menu1.setMenuName("케밥(닭)");
         menu1.setMenuPrice(9000);
 
-        Menu menu2 = new Menu(0, 0, 2, null, null, "케밥(양)", 10000, "터키 최고급 양고기 사용!!!");
 
-        List<Menu> menuList = new ArrayList<>(List.of(menu1, menu2));
+        List<Menu> menuList = new ArrayList<>(List.of(menu1));
         store.setMenuList(menuList);
 
 //        storeService.updateStore(store);

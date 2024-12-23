@@ -6,7 +6,7 @@ $(function() {
     });
 
     $("button[name='confirmBtn']").on("click", function () {
-        self.location = "/product/listProduct";
+        self.location = "/product/getProductList";
     });
 
     $("div.product-card").on("click", function () {

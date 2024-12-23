@@ -20,7 +20,6 @@ public class StoreNews {
     // 가게 ID (FK)
     private int storeId;
     // 소식 사진
-    private MultipartFile newsImgFile;
     private String newsImg;
     // 소식 내용
     private String newsContents;
@@ -28,15 +27,5 @@ public class StoreNews {
     private String regDt;
     // 뉴스 개수
     private int totalCnt;
-
-
-    // Method
-    public void setNewsImgFile(MultipartFile newsImgFile) {
-        this.newsImgFile = newsImgFile;
-
-        if (newsImgFile != null) {
-            this.newsImg = newsImgFile.getOriginalFilename();
-        }
-    }
 
 }

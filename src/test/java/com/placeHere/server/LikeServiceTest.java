@@ -67,7 +67,7 @@ public class LikeServiceTest {
 
         Like like = new Like();
         like.setTarget("review");
-        List<Integer> likeList = likeService.likeList("review");
+        List<Integer> likeList = likeService.getLikeList("review");
 
         System.out.println("LikeList ::: " + likeList);
 

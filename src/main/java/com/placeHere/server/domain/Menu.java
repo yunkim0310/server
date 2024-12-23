@@ -18,7 +18,6 @@ public class Menu {
     // 메뉴 번호
     private int menuNo;
     // 메뉴 사진
-    private MultipartFile menuImgFile;
     private String menuImg;
     // 메뉴 이름
     private String menuName;
@@ -27,16 +26,8 @@ public class Menu {
     // 메뉴 소개
     private String menuInfo;
 
-    public void setMenuImgFile(MultipartFile menuImgFile) {
 
-        this.menuImgFile = menuImgFile;
-
-        if (menuImgFile != null) {
-            this.menuImg = menuImgFile.getOriginalFilename();
-        }
-    }
-
-
+    // Method
     public boolean equals(Menu menu) {
 
         boolean result = false;
@@ -49,4 +40,5 @@ public class Menu {
 
         return result;
     }
+
 }

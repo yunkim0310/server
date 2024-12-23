@@ -5,7 +5,7 @@ $(function () {
         $("form")[0].reset();
         $("input[name='page']").val(page);
 
-        $("form").attr("action", "/purchase/listPointHistory").attr("method", "post").submit()
+        $("form").attr("action", "/purchase/getPointHistoryList").attr("method", "post").submit()
 
     }
 
@@ -22,7 +22,7 @@ function updateSearchKeyword() {
         // 쉼표 제거 및 값을 입력
         document.getElementById('searchKeyword').value = selectedCategory.replace(',', '');
     }else{
-        self.location = "/purchase/listPointHistory";
+        self.location = "/purchase/getPointHistoryList";
     }
-    $("form").attr("method", "POST").attr("action", "/purchase/listPurchase").submit();
+    $("form").attr("method", "POST").attr("action", "/purchase/getPurchaseList").submit();
 }

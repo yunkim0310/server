@@ -47,7 +47,7 @@
 <!--    LIMIT 5-->
 <!--    </select>-->
 
-    <select id="likeList">
+    <select id="getLikeList">
 
         SELECT relation_no
         FROM likes

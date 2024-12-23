@@ -15,8 +15,8 @@ public interface StoreDao {
     // 사업자번호 중복확인 (DB) - Rest 에서 사용
     public int chkDuplicateBusinessNo(String businessNo);
 
-    // 가게 등록 (return 되는 값은 store_id 의 값)
-    public int addStore(Store store);
+    // 가게 등록
+    public void addStore(Store store);
 
     // 가게 Id 조회
     public int getStoreId(String userName);
