@@ -668,14 +668,13 @@ function login() {
           if (result) {
             console.log('YEEEEEEEEEES');
             location.href='/user/resetPwdValidation';
+            console.log('YEEEEEEEEEES');
 
           } else {
             console.log('NOOOOOOOOOOO');
             location.href='/';
           }
 
-
-          location.href='/';
         } else if(data === "DELETED") {
           alert("탈퇴  회원입니다.");
           location.href='/';
