@@ -264,14 +264,7 @@ public class StoreController {
 
         System.out.println(store);
 
-        Store beforeStore = storeService.getStore(store.getStoreId());
-        boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
-        boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
-
-        System.out.println("amenitiesEquals = "+amenitiesEquals);
-        System.out.println("menuEquals = "+menuEquals);
-
-        storeService.updateStore(store, amenitiesEquals, menuEquals);
+        storeService.updateStore(store);
 
         return "redirect:/store/updateOperation";
     }

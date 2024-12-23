@@ -20,7 +20,7 @@ public interface LikeDao {
     public Long getTotalCount(@Param("relationNo") int relationNo , @Param("target") String target) throws Exception;
 
     // 좋아요 리스트 ( 인기 가게 => 좋아요가 가장 많은 번호의 리스트 )
-    public List<Integer> likeList(String target) throws Exception;
+    public List<Integer> getLikeList(String target) throws Exception;
 
     // 좋아요 검증
     public Like chkLike(Like like) throws Exception;
