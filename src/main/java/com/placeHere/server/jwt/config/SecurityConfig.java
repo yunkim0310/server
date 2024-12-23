@@ -98,18 +98,17 @@ public class SecurityConfig {
                         // 정적자원 경로 다 허용 (static)
                         // 프론트랑 백이랑 분리되어 있다면 굳이 필요 x
                         .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+                        .requestMatchers("/resources/**").permitAll()
+                        .requestMatchers("/static/**").permitAll()
+                        .requestMatchers("/static/javascript/**").permitAll()
+                        .requestMatchers("/javascript/**").permitAll()
+                        .requestMatchers("/public/**").permitAll()
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/login").permitAll()
-//                        .requestMatchers("/userView.html").permitAll()
-//                        .requestMatchers("/user/userView").permitAll()
                         .requestMatchers("/user/**").permitAll()
+                        .requestMatchers("/api-user/**").permitAll()
+                        .requestMatchers("/login").permitAll()
                         // UserController에서 이미 권한을 관리하고 있기 때문에 여기서 우선 permitAll
-//                        .requestMatchers("/users/**").hasAnyRole("USER" , "ADMIN")
-//                        .requestMatchers("/user/**").permitAll()
-//                        .requestMatchers("/store/**").hasRole("STORE")
-//                        .requestMatchers("/admin/**").hasRole("ADMIN")
-//                        .requestMatchers("/point/**").hasRole("POINT")
-//                        .requestMatchers("/store/**").hasRole("STORE")
+                        .requestMatchers("/api-admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated() )
         ;
 
