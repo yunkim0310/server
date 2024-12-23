@@ -123,7 +123,7 @@ public class StoreController {
     }
 
     @PostMapping("/store/addStore")
-    public String addStore(@ModelAttribute Store store, Model model) {
+    public String addStore(@ModelAttribute Store store) {
 
         System.out.println("/store/addStore : POST");
 
@@ -187,7 +187,7 @@ public class StoreController {
     }
 
     @PostMapping("/store/addOperation")
-    public String addOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
+    public String addOperation(@ModelAttribute StoreOperation storeOperation) {
 
         System.out.println("/store/addOperation : POST");
         System.out.println(storeOperation);
@@ -254,7 +254,7 @@ public class StoreController {
     }
 
     @PostMapping("/store/updateStore")
-    public String updateStore(@ModelAttribute Store store, Model model) {
+    public String updateStore(@ModelAttribute Store store) {
         
         System.out.println("/store/updateStore : POST");
 
@@ -264,14 +264,7 @@ public class StoreController {
 
         System.out.println(store);
 
-        Store beforeStore = storeService.getStore(store.getStoreId());
-        boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
-        boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
-
-        System.out.println("amenitiesEquals = "+amenitiesEquals);
-        System.out.println("menuEquals = "+menuEquals);
-
-        storeService.updateStore(store, amenitiesEquals, menuEquals);
+        storeService.updateStore(store);
 
         return "redirect:/store/updateOperation";
     }
@@ -331,15 +324,12 @@ public class StoreController {
     }
 
     @PostMapping("/store/updateOperation")
-    public String updateOperation(@ModelAttribute StoreOperation storeOperation, Model model) {
+    public String updateOperation(@ModelAttribute StoreOperation storeOperation) {
 
         System.out.println("/store/updateOperation : POST");
         System.out.println(storeOperation);
 
         storeService.updateOperation(storeOperation);
-        Store store = storeService.getStore(storeOperation.getStoreId());
-
-        model.addAttribute("store", store);
 
         return "redirect:/store/getMyStore";
     }
@@ -565,7 +555,7 @@ public class StoreController {
 
     // 가게 좋아요 목록 조회
     @GetMapping("/getStoreLikeList")
-    public String getLikeStoreList(HttpSession session,
+    public String getStoreLikeList(HttpSession session,
                                    @RequestParam(value = "page", required = false, defaultValue = "1") int page,
                                    Model model) throws Exception {
 

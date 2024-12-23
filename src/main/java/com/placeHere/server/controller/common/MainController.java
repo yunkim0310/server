@@ -63,7 +63,7 @@ public class MainController {
         model.addAttribute("mainStoreList", mainStoreList);
 
         // 인기 가게
-        List<Integer> storeIdList = likeService.likeList("store");
+        List<Integer> storeIdList = likeService.getLikeList("store");
         List<Store> storeList = new ArrayList<Store>();
 
         if (!storeIdList.isEmpty()) {
@@ -90,7 +90,7 @@ public class MainController {
                         "https://d21sjc85fy47a6.cloudfront.net/aaaaaqx/md/0706gwanghwamun.jpg?small200"));
 
         // 인기 리뷰
-        List<Integer> reviewNoList = likeService.likeList("review");
+        List<Integer> reviewNoList = likeService.getLikeList("review");
         List<Review> reviewList = new ArrayList<Review>();
 
         if (reviewNoList != null && !reviewNoList.isEmpty()) {

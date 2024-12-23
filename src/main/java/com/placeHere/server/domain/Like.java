@@ -30,7 +30,6 @@ public class Like {
     private int likeTotalCnt;
 
 
-
     // Constructor
     public Like(String userName){
         this.userName = userName;

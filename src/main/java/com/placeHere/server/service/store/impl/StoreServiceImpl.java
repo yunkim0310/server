@@ -22,12 +22,8 @@ public class StoreServiceImpl implements StoreService {
     @Qualifier("storeDao")
     private StoreDao storeDao;
 
-    @Value("${page_size}")
-    private int pageSize;
 
-    @Value("${list_size}")
-    private int listSize;
-
+    // Constructor
     public StoreServiceImpl() {
         super();
     }
@@ -172,7 +168,14 @@ public class StoreServiceImpl implements StoreService {
 
     // 가게 수정
     @Override
-    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals) {
+    public void updateStore(Store store) {
+
+        Store beforeStore = getStore(store.getStoreId());
+        boolean amenitiesEquals = store.amenitiesEquals(beforeStore.getAmenitiesNoList());
+        boolean menuEquals = store.menuEquals(beforeStore.getMenuList());
+
+        System.out.println("amenitiesEquals = "+amenitiesEquals);
+        System.out.println("menuEquals = "+menuEquals);
 
         // UPDATE 되는 TABLE : store, amenities, menu
         storeDao.updateStore(store);

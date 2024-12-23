@@ -1,3 +1,7 @@
+function prev() {
+
+}
+
 // 모든 유효성 검사 통과
 function validateAll() {
 
