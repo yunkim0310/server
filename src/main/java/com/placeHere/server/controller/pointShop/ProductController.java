@@ -150,7 +150,8 @@ public class ProductController {
         model.addAttribute("url", bucketUrl);
 
 //        return "/pointShop/product/addProductResult";
-        return "redirect:/product/listProduct";
+//        return "redirect:/product/listProduct";
+        return "redirect:/product/getProductList";
     }
 
 //    @RequestMapping( value="getProduct", method=RequestMethod.GET)
@@ -325,16 +326,17 @@ public class ProductController {
         System.out.println("Product: " + product);
 
 //        return "/pointShop/product/updateProductResult";
-        return "redirect:/product/listProduct";
+//        return "redirect:/product/listProduct";
+        return "redirect:/product/getProductList";
     }
 
     // @RequestParam("menu") String menu,
-    @RequestMapping( value="listProduct")
-    public String listProduct(HttpSession session, @RequestParam(value = "order", required = false) String order,
+    @RequestMapping( value="getProductList")
+    public String getProductList(HttpSession session, @RequestParam(value = "order", required = false) String order,
                               @ModelAttribute("search") Search search ,
                               Model model) throws Exception {
 
-        System.out.println("/product/listProduct : GET / POST");
+        System.out.println("/product/getProductList : GET / POST");
 
         User user = (User) session.getAttribute("user");
         model.addAttribute("user", user);
@@ -375,7 +377,8 @@ public class ProductController {
 //        model.addAttribute("resultPage" , resultPage);
             model.addAttribute("search", search);
 
-            return "pointShop/product/listProduct";
+//            return "pointShop/product/listProduct";
+            return "pointShop/product/getProductList";
         }else{
             return "redirect:/";
         }

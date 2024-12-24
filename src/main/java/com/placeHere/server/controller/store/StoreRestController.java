@@ -26,22 +26,13 @@ public class StoreRestController {
     private LikeService likeService;
 
     @Autowired
-    private AwsS3Service awsS3Service;
-
-    @Autowired
     private SearchService searchService;
 
-    @Value("${page_size}")
-    private int pageSize;
-
-    @Value("${list_size}")
-    private int listSize;
-
     @Value("${business_no_api}")
-    private String businessNoApiKey;
+    private String businessNoApi;
 
     @Value("${google_api}")
-    private String googleApiKey;
+    private String googleApi;
 
 
     // Constructor
@@ -67,7 +58,7 @@ public class StoreRestController {
 
     // 가게 좋아요 추가
     @GetMapping(value = "/addStoreLike", params = {"relationNo"})
-    public ResponseEntity<Integer> addLikeStore(HttpSession session,
+    public ResponseEntity<Integer> addStoreLike(HttpSession session,
                                              @ModelAttribute Like like) throws Exception {
 
         System.out.println("/api-store/addLikeStore/");
@@ -95,7 +86,7 @@ public class StoreRestController {
 
     // 가게 좋아요 취소
     @GetMapping(value = "/removeStoreLike", params = "likeId")
-    public ResponseEntity<Boolean> removeLikeStore(@ModelAttribute Like like) throws Exception {
+    public ResponseEntity<Boolean> removeStoreLike(@ModelAttribute Like like) throws Exception {
 
         System.out.println("/api-store/removeLikeStore/");
         System.out.println("likeId = " + like.getLikeId());
@@ -141,8 +132,8 @@ public class StoreRestController {
         System.out.println("/api-store/getApiKey : GET");
 
         Map<String, String> response = new HashMap<>();
-        response.put("businessNo", businessNoApiKey);
-        response.put("google", googleApiKey);
+        response.put("businessNo", businessNoApi);
+        response.put("google", googleApi);
 
         return ResponseEntity.ok(response);
     }
@@ -180,7 +171,7 @@ public class StoreRestController {
             }
 
             List<Map<String,String>> storeLocationList = storeService.getStoreLocationList(search);
-            System.out.println(storeLocationList);
+            System.out.println("storeLocationList.size() = " + storeLocationList.size());
 
             return ResponseEntity.ok(storeLocationList);
 
@@ -204,23 +195,6 @@ public class StoreRestController {
         Map<String, Map<String, Integer>> statistics = storeService.getStatistics(storeId);
 
         return ResponseEntity.ok(statistics);
-    }
-
-
-    // 사진 삭제
-    @GetMapping("/removeFile")
-    public ResponseEntity<Void> removeFile(@RequestParam("filePath") String filePath) {
-
-        System.out.println("/api-store/removeFile : GET");
-        System.out.println("filePath = " + filePath);
-
-        try {
-            awsS3Service.deleteFile(filePath);
-            return ResponseEntity.ok().build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
     }
 
 

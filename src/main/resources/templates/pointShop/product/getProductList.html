@@ -21,16 +21,12 @@
     <!--    <script src="/javascript/templates/script.js" type="text/javascript"></script>-->
 
     <link rel="stylesheet" href="/css/templates/regist_hp.css">
-    <script src="/javascript/pointShop/listProduct.js"></script>
+    <script src="/javascript/pointShop/getProductList.js"></script>
 
-    <link rel="stylesheet" href="/css/pointShop/listProduct.css">
+    <link rel="stylesheet" href="/css/pointShop/getProductList.css">
 
 </head>
 <body>
-<!--<br/><br/>-->
-<!--<br/><br/><br/><br/><br/><br/><br/><br/>-->
-<!--<div class="header-line"></div>-->
-<!-- 원래 스타일의 헤더 -->
 
 <div class="container">
     <div class="css-luwwab eug5r8l1">
@@ -46,7 +42,7 @@
         <div class="row" style="width: 800px; margin-right: 570px; margin-left: auto;">
             <!-- 왼쪽 부분: 3컬럼 (정렬 및 검색폼) -->
             <div class="col-md-3 text-left" style="margin-top: 100px; position:fixed; margin-left:930px; margin-right:20px;">
-                <form class="form-inline" name="detailForm" th:action="@{/product/listProduct}" method="post">
+                <form class="form-inline" name="detailForm" th:action="@{/product/getProductList}" method="post">
                     <input type="hidden" name="page" value="1">
                     <div class="form-group">
                         <div id="searchSorting">

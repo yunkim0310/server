@@ -2,6 +2,7 @@ package com.placeHere.server.controller.common;
 
 import com.placeHere.server.service.aws.AwsS3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -52,6 +53,22 @@ public class CommonRestController {
         System.out.println("/api-common/updateFile : POST");
 
         return ResponseEntity.ok(awsS3Service.updateFile(beforeFile, newFile, path));
+    }
+
+
+    // 파일 삭제
+    @PostMapping("/removeFile")
+    public ResponseEntity<Void> removeFile(@RequestParam("filePath") String filePath) {
+
+        System.out.println("/api-common/removeFile : POST");
+
+        try {
+            awsS3Service.deleteFile(filePath);
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

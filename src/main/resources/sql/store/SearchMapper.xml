@@ -19,7 +19,7 @@
 
         SELECT search_keyword
         FROM search
-        WHERE search_time BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW()
+        WHERE search_dt BETWEEN DATE_SUB(NOW(), INTERVAL 1 HOUR) AND NOW()
         GROUP BY search_keyword
         ORDER BY COUNT(*) DESC
         LIMIT 10;

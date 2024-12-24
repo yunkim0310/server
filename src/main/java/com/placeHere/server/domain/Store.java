@@ -29,7 +29,6 @@ public class Store {
     // 매장 전화번호
     private String storePhone;
     // 매장 사진 목록 (매장 대표 사진은 첫번째꺼)
-    private MultipartFile[] storeImgFiles;
     private List<String> storeImgList;
     private String storeImg1;
     private String storeImg2;
@@ -53,8 +52,6 @@ public class Store {
     private List<Menu> menuList;
     // 대표 메뉴 번호 (메뉴 번호 순서중 하나)
     private int specialMenuNo;
-    // 포트원 가게 ID
-    private String portOneStoreId;
     // 가게 운영 Class (오픈시간, 마감시간, 브레이크타임, 정기 휴무요일 목록, 예약 보증금, 예약 최대인수, 적용일, 휴무일 목록)
     private StoreOperation storeOperation;
     // 매장 소식 목록 (소식 ID, 가게 ID, 소식 사진, 소식 내용, 작성일시)
@@ -70,22 +67,6 @@ public class Store {
 
 
     // Method
-    public void setStoreImgFiles(MultipartFile[] storeImgFiles) {
-
-        this.storeImgFiles = storeImgFiles;
-
-        List<String> fileNameList = new ArrayList<>();
-
-        if (storeImgFiles != null) {
-            for(MultipartFile storeImgFile : storeImgFiles) {
-                fileNameList.add(storeImgFile.getOriginalFilename());
-            }
-        }
-
-        this.storeImgList = fileNameList;
-    }
-
-    
     public void setHashtagList(List<String> hashtagList) {
         this.hashtagList = hashtagList;
 

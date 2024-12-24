@@ -37,7 +37,7 @@ public interface StoreService {
     public List<Map<String, String>> getStoreLocation(int storeId);
 
     // 가게 수정
-    public void updateStore(Store store, boolean amenitiesEquals, boolean menuEquals);
+    public void updateStore(Store store);
 
     // 가게 삭제 (DELETE 아니고 storeStatus 를  0에서 1로 변경)
     public void removeStore(int storeId);

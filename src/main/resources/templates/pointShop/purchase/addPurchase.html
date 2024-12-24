@@ -85,7 +85,8 @@
                             </tr>
                             <tr>
                                 <th style="width: 30%;">보유 포인트</th>
-                                <td th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}" style="width: 80%; color: #4880FF;"></td>
+                                <td th:if="${currPoint < 100}" th:text="${currPoint+ 'P'}" style="width: 80%; color: #4880FF;"></td>
+                                <td th:if="${currPoint > 99}" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}" style="width: 80%; color: #4880FF;"></td>
                             </tr>
                             </tbody>
                         </table>
