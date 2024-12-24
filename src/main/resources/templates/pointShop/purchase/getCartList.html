@@ -49,8 +49,9 @@
                             </div>
                         </div><br/><br/>
                         <div id="totalPriceSection" style="font-size: 20px; font-weight: bold;">
-                            <h3>결제 포인트 : <span  style="color: #FB5555;" th:text="${#numbers.formatInteger(tranPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
-                            <h3>보유 포인트 : <span style="color: #4880FF;" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
+                            <h3>거래 포인트 : <span  style="color: #FB5555;" th:text="${#numbers.formatInteger(tranPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
+                            <h3>보유 포인트 : <span th:if="${currPoint < 100}" style="color: #4880FF;" th:text="${currPoint+ 'P'}">0</span>
+                                <span th:if="${currPoint > 99}" style="color: #4880FF;" th:text="${#numbers.formatInteger(currPoint, 3, 'COMMA')+ 'P'}">0</span></h3>
                         </div>
                     </div>
 

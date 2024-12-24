@@ -101,7 +101,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
         return map;
     }
 
-
+    
+    // 파일 삭제
     public void deleteFile(String filePath) {
 
         System.out.println("AWS S3 File Delete");
@@ -110,6 +111,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
 
+    // 파일 수정
     public Map<String, String> updateFile(String beforeFilePath, MultipartFile newFile, String path) throws IOException {
 
         System.out.println("AWS S3 File Update");

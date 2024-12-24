@@ -523,7 +523,7 @@ public class PurchaseController {
 
 //        return "pointShop/purchase/addPurchaseCartResult";  // 결과 페이지로 이동
 //        return "redirect:/purchase/listPurchase";
-        return "pointShop/purchase/getPurchaseList";
+        return "redirect:/purchase/getPurchaseList";
     }
 
 
