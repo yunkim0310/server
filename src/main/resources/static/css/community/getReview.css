@@ -54,7 +54,7 @@ textarea {
     margin-top: 5px;
 }
 
-button {
+.comment-section button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -64,7 +64,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+.comment-section button:hover {
     background-color: #0056b3; /* 버튼 호버 시 색상 변경 */
     transform: translateY(-2px);
 }
@@ -144,7 +144,7 @@ button:hover {
     display: block; /* 보여주기 */
 }
 /* 모든 버튼에 대한 기본 스타일 */
-button {
+.comment-section button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -154,7 +154,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+.comment-section button:hover {
     background-color: #0056b3; /* 버튼 호버 시 색상 변경 */
     transform: translateY(-2px);
 }
@@ -198,7 +198,7 @@ button:hover {
     text-align: center; /* 제목 중앙 정렬 */
 }
 
-textarea {
+.comment-section textarea {
     width: 100%;
     height: 60px;
     padding: 10px;
@@ -208,7 +208,7 @@ textarea {
 }
 
 /* 버튼 스타일 */
-button {
+.comment-section button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -218,7 +218,7 @@ button {
     transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+.comment-section button:hover {
     background-color: #0056b3; /* 버튼 호버 시 색상 변경 */
     transform: translateY(-2px);
 }
