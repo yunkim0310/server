@@ -5,16 +5,9 @@ $(function() {
 
         const $this = $(this);
         const reviewNo = $this.data('review-no');
-        const userName = $this.data('username');
-
         console.log(reviewNo);
-        console.log(userName);
-
-        const currentLikeCount = parseInt($('.like-count').text());
-        const isActive = $this.attr("class") === "btn-like-active";
 
         let likeData = {
-            userName: userName,
             relationNo: reviewNo,
             target: 'review',
         };
@@ -29,23 +22,25 @@ $(function() {
             },
             success: function(result) {
 
-//                alert(result);
+                console.log(result);
 
-                // 좋아요 취소
-//                if (result === "-1") {
+                // 로그인 안 한 경우
+                if (result === 0) {
 
-//                    alert("좋아요 취소 성공");
+                    if (confirm("좋아요는 회원만 가능한 기능입니다.\n로그인 하시겠습니까?")) {
+                        window.location.href = "/user/login";
+                    }
 
-//                } else if (result === "1") {
-
-//                    alert("좋아요 등록 성공");
-
-//                } else {
-//                    alert("오류");
-//                }
-
-                location.reload();
-
+                // 좋아요 추가가 성공한 경우
+                } else if (result === 1) {
+                    location.reload();
+                // 좋아요 취소가 된 경우
+                } else if (result === -1) {
+                    location.reload();
+                // 오류 발생
+                } else if (result === -2) {
+                    alert("알수 없는 오류가 발생했습니다.");
+                }
             }
 
         });

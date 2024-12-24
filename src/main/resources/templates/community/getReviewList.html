@@ -52,11 +52,30 @@
                                         <h1 th:if="${type == 'allList'}">전체 리뷰 목록</h1>
                                         <h1 th:if="${type == 'friend'}">친구 리뷰 목록</h1>
 
-                                        <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
-                                            <div style="text-align: center; font-weight: bold; font-size: 18px; padding:5%;">
-                                                등록된 리뷰가 없습니다.
+                                        <th:block th:if="${type == 'friend'}">
+
+                                            <th:block th:if="${friendNameList == null || friendNameList.isEmpty()}">
+                                                <div style="text-align: center; font-weight: bold; font-size: 18px; padding:5%;">
+                                                    등록된 친구가 없습니다.
+                                                </div>
+                                            </th:block>
+                                            <th:block th:unless="${friendNameList == null || friendNameList.isEmpty()}">
+                                                <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+                                                    <div style="text-align: center; font-weight: bold; font-size: 18px; padding:5%;">
+                                                        친구들의 등록된 리뷰가 없습니다.
+                                                    </div>
+                                                </div>
+                                            </th:block>
+
+                                        </th:block>
+
+                                        <th:block th:if="type == 'allList'">
+                                            <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+                                                <div style="text-align: center; font-weight: bold; font-size: 18px; padding:5%;">
+                                                    등록된 리뷰가 없습니다.
+                                                </div>
                                             </div>
-                                        </div>
+                                        </th:block>
 
                                         <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
                                             <div class="__header" style="padding-left: 0;">
@@ -140,8 +159,7 @@
 
                                                             <!-- 리뷰 좋아요 -->
                                                             <a style="cursor: pointer; display: flex;" id="like"
-                                                               th:data-review-no="${review.reviewNo}"
-                                                               th:data-username="${session.user != null ? session.user.username : ''}">
+                                                               th:data-review-no="${review.reviewNo}">
                                                                 <img th:src="${(session.user == null)? '/file/community/icon_heart_white.png' : ((review.like == null)? '/file/community/icon_heart_white.png' : '/file/community/icon_heart_red.png')}"
                                                                      style="width: 30px; height: 30px; background-color: #FFFFFF;">
                                                                 &ensp;
@@ -192,6 +210,7 @@
                 <form name="pagingForm">
                     <input type="hidden" name="page">
                     <input type="hidden" name="type" value="allList">
+                    <input type="hidden" name="role" value="${user.role}">
                 </form>
                 <!-- 페이징 처리 부분 생략 -->
             </main>

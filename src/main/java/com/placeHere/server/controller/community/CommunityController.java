@@ -384,7 +384,7 @@ public class CommunityController {
 
                     // 로그인 안 한 경우
                     else {
-                        result = "redirect:user/login";
+                        result = "redirect:/user/login";
                     }
 
                     break;
@@ -395,7 +395,8 @@ public class CommunityController {
 
                         // 친구 아이디 리스트
                         List<String> friendNameList = friendService.getFriendList(user.getUsername());
-                        
+                        model.addAttribute("friendNameList", friendNameList);
+
                         if (friendNameList != null && !friendNameList.isEmpty()) {
                             // 친구 리뷰 리스트 가져오기
                             reviewList = communityService.getReviewList(friendNameList, search);
@@ -409,7 +410,7 @@ public class CommunityController {
                     }
 
                     else {
-                        result = "redirect:user/login";
+                        result = "redirect:/user/login";
                     }
 
                     break;

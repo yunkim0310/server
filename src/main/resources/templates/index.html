@@ -331,7 +331,7 @@
                                         <div id="sectionReviewVscroll" class="best-review items1"
                                              style="display: flex; flex-wrap: nowrap;">
                                             <div th:each="review :${reviewList}" class="best-review-item item">
-                                                <a th:href="'reveiw/getReviewList?type=otherFeed&userName='+${review.userName}"
+                                                <a th:href="'/review/getReviewList?type=feed&friendUsername='+${review.userName}"
                                                    class="best-review-item-header">
                                                     <div class="user">
                                                         <!-- TODO 유저 사진으로 변경 필요 -->
@@ -345,22 +345,19 @@
                                                 <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}"
                                                    class="best-review-item-body">
                                                     <th:block th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                        <th:block>
-                                                            <div class="img"
-                                                                 th:if="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
-                                                                     class="guide-img"
-                                                                     style="width: 100%; max-height:500px; display: block;"
-                                                                     th:src="${url+review.reviewImg1}">
-                                                            </div>
-                                                            <div class="img"
-                                                                 th:unless="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
-                                                                <img src="https://dau2wmhjxkxtx.cloudfront.net/web-static/static_webapp_v2/img/375x250.png"
-                                                                     class="guide-img"
-                                                                     style="width: 100%; max-height:500px; display: block;"
-                                                                     th:src="${url+review.reviewImg1}">
-                                                            </div>
-                                                        </th:block>
+
+                                                        <div class="img">
+                                                            <img class="guide-img"
+                                                                 style="width: 100%; max-height:500px; display: block;"
+                                                                 th:src="${url+review.reviewImg1}">
+                                                        </div>
+                                                    </th:block>
+                                                    <th:block th:unless="${review.reviewImg1 != null && !review.reviewImg1.isEmpty()}">
+                                                        <div class="img">
+                                                            <img src="/images/store/icon_no_image.png"
+                                                                 class="guide-img"
+                                                                 style="width: 100%; max-height:500px; display: block;background-color: #FFFFFF;">
+                                                        </div>
                                                     </th:block>
                                                     <div class="review-post-info">
                                                         <p th:text="${review.reviewContent}">
