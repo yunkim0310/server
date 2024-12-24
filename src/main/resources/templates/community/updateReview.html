@@ -124,8 +124,8 @@
 </head>
 <body>
 <header id="header"></header>
-<!--<div th:include="~{community/getCommunityAside}"></div>-->
-<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
+
+<div th:include="~{community/getCommunityAside}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
 <form action="/review/updateReview" method="post" th:object="${review}" enctype="multipart/form-data">
     <h1>리뷰 수정</h1>
