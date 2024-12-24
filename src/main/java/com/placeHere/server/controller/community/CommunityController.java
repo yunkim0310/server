@@ -56,28 +56,37 @@ public class CommunityController {
     // Method
     //  @RequestMapping (value = "/addReview.do" , method = RequestMethod.GET)
     @GetMapping("/addReview")
-    public String addReview(@SessionAttribute("user") User user, Model model) throws Exception {
+    public String addReview(HttpSession session, Model model) throws Exception {
 
         System.out.println("/addReview : Get");
 
-        Search search = new Search();
+        User user = (User) session.getAttribute("user");
 
-        // 사용자 이름을 가져옴
-        String userName = user.getUsername();
+        if (user == null) {
+            return "redirect:/user/login";
+        } else {
 
-        search.setSearchKeyword("이용 완료");
-        search.setOrder("desc");
+            if (user.getRole().equals("ROLE_USER")) {
+                Search search = new Search(pageSize, listSize);
+                search.setSearchKeyword("이용 완료");
+                search.setOrder("desc");
 
-        List<Reservation> reservations = reservationService.getRsrvUserList(userName, search);
+                List<Reservation> reservations = reservationService.getRsrvUserList(user.getUsername(), search);
 
-        Review review = new Review();
+                Review review = new Review();
 
-        model.addAttribute("url", bucketUrl);
-        model.addAttribute("reservations", reservations);
-        model.addAttribute("review", review);
-        model.addAttribute("currentUser", user);
+                model.addAttribute("url", bucketUrl);
+                model.addAttribute("reservations", reservations);
+                model.addAttribute("review", review);
+                model.addAttribute("currentUser", user);
 
-        return "community/addReview";
+                return "community/addReview";
+
+            } else {
+                return "redirect:/";
+            }
+        }
+
     }
 
     @PostMapping("/addReview")
