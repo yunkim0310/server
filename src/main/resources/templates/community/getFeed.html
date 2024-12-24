@@ -67,7 +67,8 @@
                                         <th:block th:unless="${isMyFeed}">
                                             <!-- 친구 신청, 삭제 버튼 -->
                                             <div class="fixed-button" style="margin-right: 0%; text-align:right; z-index: 1000;">
-
+                                                <!-- 사용자가 ROLE_USER인 경우에만 버튼 표시 -->
+                                                <th:block th:if="${session.user != null && session.user.role == 'ROLE_USER'}">
                                                 <!-- 친구 신청 (레코드 없음) -->
                                                 <th:block th:if="${chkFriend == null}">
                                                     <!-- 친구 신청 버튼 (친구가 아닐 경우) -->

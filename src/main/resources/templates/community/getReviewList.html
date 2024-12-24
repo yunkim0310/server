@@ -63,15 +63,25 @@
                                                 <div class="__user-info" style="justify-content: space-between;">
                                                     <div class="review-details"> <!-- 리뷰 작성자를 표시하는 영역 -->
                                                         <img id="profileImgView" style=" height: 71px; width: 72px; border-radius: 40px;" th:src="${url + 'user/' + review.profileImg}" alt="프로필사진">
+
+                                                        <!-- 사용자 권한 확인 -->
+                                                        <th:block th:if="${session.user != null && (session.user.role == 'ROLE_USER' || session.user.role == 'ROLE_STORE')}">
                                                         <a th:href="@{/review/getReviewList(type='feed', friendUsername=${review.userName})}">
                                                             <span th:text="${review.userName}"
-                                                                  style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
-                                                                  text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
+                                                            style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+                                                            text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
                                                         </a>
+                                                        </th:block>
+                                                        <th:block th:if="${session.user == null}">
+                                                            <a th:href="@{/user/login}" style="cursor: pointer;">
+                                                                <span th:text="${review.userName}"
+                                                                style="font-size: 1.5em; font-weight: bold; color: #2c3e50;
+                                                                text-transform: uppercase; margin-bottom: 5px; display: block;"></span> <!-- 작성자 이름 -->
+                                                            </a>
+                                                        </th:block>
                                                     </div>
                                                 </div>
                                             </div>
-
                                             <div class="__body" style="position: relative; padding: 0px;">
 
                                                 <div class="__photos" style="display: flex; justify-content: center; flex-wrap: nowrap;"> <!-- 리뷰 이미지들을 나열하는 영역 -->
