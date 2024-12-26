@@ -44,26 +44,4 @@ public interface FriendDao {
 
     public Friend chkFriendByFriendNo(int friendNo) throws Exception;
 
-
-
-    // 친구 상태 확인
-//    public boolean checkFriendStatus(String userNameA, String userNameB) throws Exception;
-
-//    //두 사용자의 친구 관계 조회 메소드 추가
-//    Friend findFriendRelation(Map<String, String> params);
-//
-//    // 친구 상태 확인
-//    public int getFriendStatus(Map<String, String> params) throws Exception;
-//
-//    List<Friend> getFriendReq(String friendRes);
-
-    // 친구 요청을 확인하다   => 필요  X getFriendReq 합침
-    //public List<Friend> checkFriendReq(String friendRes) throws Exception;
-
-    // 친구 신청을 취소하다
-    //public void cancelFriend(Friend friend) throws Exception;
-
-    // 친구 아이디를 검색하다 ( 보류 )
-    // public List<Friend> searchFriend(Search search) throws Exception;
-
     }

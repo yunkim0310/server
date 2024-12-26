@@ -30,6 +30,9 @@ public class MainController {
     @Autowired
     private LikeService likeService;
 
+    @Autowired
+    private FoodCategory foodCategory;
+
     @Value("${cloud.aws.s3.bucket-url}")
     private String bucketUrl;
 
@@ -106,7 +109,7 @@ public class MainController {
         int week = today.get(weekFields.weekOfMonth());
 
         // 음식 카테고리
-        FoodCategory foodCategory = new FoodCategory();
+//        FoodCategory foodCategory = new FoodCategory();
 
         // 음식 카테고리, 지역 필터 TODO 음식,지역 이미지 리스트도 만들기
         model.addAttribute("foodCategory", foodCategory);

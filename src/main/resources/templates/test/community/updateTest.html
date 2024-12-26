@@ -1,17 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>리뷰 수정</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="/javascript/community/fileUpload.js"></script>
-    <script src="/javascript/common/fileUploader.js"></script>
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 
     <link rel="stylesheet" href="/css/templates/mypage.css">
     <link rel="stylesheet" href="/css/templates/collection_detail.css">
-    <link href="/css/templates/mypage.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/templates/style.css">
 
     <link th:insert="~{common/import :: importFragment}">
+
+    <link rel="stylesheet" href="/css/community/getReviewList.css">
+
+    <script src="/javascript/community/like.js"></script>
+    <script src="/javascript/community/getReviewList.js"></script>
 
     <style>
         body {
@@ -128,9 +131,14 @@
             margin-top: 10px; /* 링크 위치 조정 */
         }
     </style>
+
 </head>
+
 <body>
-<header id="header"></header>
+<!--<div th:include="~{community/getCommunityAside}"></div>-->
+<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
+
+<header id="header"></header> <!-- 페이지 헤더 -->
 
 </p>
 
@@ -144,7 +152,7 @@
 
     <div th:fragment="reviewListFragment">
 
-        <div class="wrapper" id="wrapperDiv" style="margin-top: 10%;"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+         <div class="wrapper" id="wrapperDiv" style="margin-top: 10%;"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
             <main id="main">
                 <section class="section mb-50">
                     <div class="container gutter-sm">
@@ -265,5 +273,6 @@
         }
     }
 </script>
+
 </body>
 </html>

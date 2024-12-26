@@ -183,7 +183,7 @@
 
 
         <label for="reviewContent">리뷰 내용:</label>
-        <textarea id="reviewContent" name="reviewContent" rows="5" required></textarea>
+        <textarea id="reviewContent" name="reviewContent" rows="5" minlength="1" maxlength="100" required></textarea>
 
         <input type="hidden" id="userName" name="userName" th:value="${currentUser.username}" />
 

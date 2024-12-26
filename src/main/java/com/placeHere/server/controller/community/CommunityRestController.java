@@ -8,6 +8,7 @@ import com.placeHere.server.domain.User;
 import com.placeHere.server.service.community.CommunityService;
 import com.placeHere.server.service.community.FriendService;
 import com.placeHere.server.service.like.LikeService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.RequestEntity;
@@ -35,31 +36,46 @@ public class CommunityRestController {
 
     //좋아요 추가
     @PostMapping("/addLike")
-    public ResponseEntity<String> addLike(@RequestBody Like like) {
+    public ResponseEntity<Integer> addLike(HttpSession session, @RequestBody Like like) {
 
-        try {
-            Like chkLike = likeService.chkLike(like);
-            System.out.println("/addLike 좋아요체크 : "+chkLike);
-            // 현재 사용자의 좋아요 상태 확인
-            if (chkLike != null) {
+        User user = (User) session.getAttribute("user");
 
-                // 좋아요가 존재하면 취소
-                likeService.removeLike(chkLike);
-                System.out.println("removeLike:: "+  likeService.removeLike(chkLike));
-                //return ResponseEntity.ok("좋아요가 취소 되었습니다");
-                return ResponseEntity.ok("-1");
+        if (user == null) {
+            return ResponseEntity.ok(0);
+        }
 
-            } else {
+        else {
 
-                //좋아요가 없으면 추가
-                likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
-                //return ResponseEntity.ok("좋아요가 추가되었습니다.");
-                return ResponseEntity.ok("1");
+            try {
 
+                like.setUserName(user.getUsername());
+
+                Like chkLike = likeService.chkLike(like);
+                System.out.println("/addLike 좋아요체크 : " + chkLike);
+
+                // 현재 사용자의 좋아요 상태 확인
+                if (chkLike != null) {
+
+                    // 좋아요가 존재하면 취소
+                    likeService.removeLike(chkLike);
+                    System.out.println("removeLike:: " + likeService.removeLike(chkLike));
+                    //return ResponseEntity.ok("좋아요가 취소 되었습니다");
+                    return ResponseEntity.ok(-1);
+
+                } else {
+
+                    //좋아요가 없으면 추가
+                    likeService.addLike(like.getUserName(), like.getRelationNo(), like.getTarget());
+                    //return ResponseEntity.ok("좋아요가 추가되었습니다.");
+                    return ResponseEntity.ok(1);
+
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                return ResponseEntity.status(500).body(-2);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(500).body("좋아요 오류 ");
+
         }
 
     }
@@ -113,27 +129,6 @@ public class CommunityRestController {
         }
     }
 
-
-//    @DeleteMapping("/removeFriend")
-//    public ResponseEntity<String> removeFriend(@RequestParam("friendNo") int friendNo) {
-//        try {
-//            // 친구 삭제 로직
-//            boolean success = friendService.removeFriendReq(friendNo);
-//            if (success) {
-//                return ResponseEntity.ok("친구가 삭제되었습니다.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                        .body("친구 삭제에 실패했습니다.");
-//            }
-//        } catch (Exception e) {
-//            // 예외 발생 시 로그를 기록
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-//                    .body("오류가 발생했습니다.");
-//        }
-//    }
-
-
     //댓글 수정
     @PutMapping("/updateComment")
     public ResponseEntity<Void> updateComment(@RequestBody Comment comment) {
@@ -172,110 +167,4 @@ public class CommunityRestController {
             return ResponseEntity.status(500).body(null);
         }
     }
-
-
-//     댓글 삭제 -> 노출여부 T => F 로 변경
-//    @DeleteMapping("/removeComment")
-//    public ResponseEntity<Void> removeComment(@PathVariable int commentNo) {
-//        try {
-//            // 댓글 객체 생성
-//            Comment comment = new Comment();
-//            comment.setCommentNo(commentNo);
-//
-//
-//            // 삭제 처리
-//            communityService.removeComment(comment);
-//            return ResponseEntity.noContent().build(); // 204 No Content
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).build(); // 서버 오류 발생 시 500 상태 코드 반환
-//        }
-//    }
-
-
-//    @PutMapping("/updateComment")
-//    public ResponseEntity<Void> updateComment(@RequestParam Long commentNo, @RequestParam String commentsContent) {
-//        try {
-//            Comment comment = new Comment();
-//            comment.setCommentNo(commentNo);
-//            comment.setCommentsContent(commentsContent);
-//            communityService.updateComment(comment);
-//            return ResponseEntity.noContent().build();
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).body(null);
-//        }
-//    }
-
-
-//    //addLike
-//    @PostMapping("/addLike")
-//    public ResponseEntity<Like> addLike(@RequestBody String userName, String target) {
-//
-//
-
-
-//    @PostMapping("/removeReview")
-//    public ResponseEntity<String> removeReview(@RequestParam("reviewNo") int reviewNo) {
-//        try {
-//            // 리뷰의 상태값을 0으로 변경
-//            communityService.removeReview(new Review(reviewNo));
-//            return ResponseEntity.ok("리뷰가 성공적으로 삭제되었습니다.");
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(500).body("리뷰 삭제 중 오류가 발생.");
-//        }
-//    }
-//}
-
-//    //    //리뷰 삭제
-//    @PostMapping("/removeReview")
-//    public String removeReview(@RequestParam("reviewNo") int reviewNo) throws Exception {
-//        Review review = new Review();
-//        review.setReviewNo(reviewNo);
-//
-//        //리뷰 삭제 메서드 => 리뷰 상테 값 변경
-//        communityService.removeReview(review);
-//
-//        return "redirect:/review/getReviewList";
-//    }
-
-
-//친구 삭제 POST방법 => 실패
-//    @PostMapping("/removeFriend")
-//    public ResponseEntity<String> removeFriend(@RequestParam("friendNo") int friendNo) {
-//        try {
-//            // 친구 삭제 로직
-//            boolean success = friendService.removeFriendReq(friendNo);
-//            if (success) {
-//                return ResponseEntity.ok("친구가 삭제되었습니다.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("친구 삭제에 실패했습니다.");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
-//        }
-//    }
-
-    // 친구 삭제 실패 버전
-//    @GetMapping("/removeFriend")
-//    public ResponseEntity<String> removeFriend(@RequestParam("friendNo") int friendNo, Model model) {
-//        try {
-//            // 친구 삭제 로직
-//            boolean success = friendService.removeFriend(friendNo);
-//            model.addAttribute("friendNo", friendNo);
-//
-//            if (success) {
-//                return ResponseEntity.ok("친구가 삭제되었습니다.");
-//            } else {
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("친구 삭제에 실패했습니다.");
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("오류가 발생했습니다.");
-//        }
-//    }
-
-
 }

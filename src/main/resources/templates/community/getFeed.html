@@ -67,7 +67,8 @@
                                         <th:block th:unless="${isMyFeed}">
                                             <!-- 친구 신청, 삭제 버튼 -->
                                             <div class="fixed-button" style="margin-right: 0%; text-align:right; z-index: 1000;">
-
+                                                <!-- 사용자가 ROLE_USER인 경우에만 버튼 표시 -->
+                                                <th:block th:if="${session.user != null && session.user.role == 'ROLE_USER'}">
                                                 <!-- 친구 신청 (레코드 없음) -->
                                                 <th:block th:if="${chkFriend == null}">
                                                     <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
@@ -208,8 +209,7 @@
 
                                                             <!-- 리뷰 좋아요 -->
                                                             <a style="cursor: pointer; display: flex;" id="like"
-                                                               th:data-review-no="${review.reviewNo}"
-                                                               th:data-username="${session.user != null ? session.user.username : ''}">
+                                                               th:data-review-no="${review.reviewNo}">
                                                                 <img th:src="${(session.user == null)? '/file/community/icon_heart_white.png' : ((review.like == null)? '/file/community/icon_heart_white.png' : '/file/community/icon_heart_red.png')}"
                                                                      style="width: 30px; height: 30px; background-color: #FFFFFF;">
                                                                 <span class="like-count" th:text="${review.reviewLikeCnt}"></span>
