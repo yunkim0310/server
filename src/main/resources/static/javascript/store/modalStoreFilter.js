@@ -9,7 +9,7 @@ $(function() {
     function hashtagInputFilter(input) {
 
         // 한글, 영어, 숫자만 허용하는 정규식
-        const pattern = /^[가-힣a-zA-Z0-9]*$/;
+        const pattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
 
         return input.split('').filter(char => pattern.test(char)).join('');
     }

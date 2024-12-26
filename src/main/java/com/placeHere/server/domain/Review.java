@@ -55,6 +55,7 @@ public class Review {
 
         // 매장명
         private String storeName;
+
         // 가게 Id
         private int storeId;
 

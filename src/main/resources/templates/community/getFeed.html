@@ -30,7 +30,7 @@
 
 </p>
 
-<div id="root">
+<div id="root" style="margin-top:-6%;">
 
     <!-- 사이드 바 -->
     <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 20px;position: sticky">
@@ -42,11 +42,7 @@
 
 
     <!-- 리뷰 리스트 -->
-    <div th:fragment="reviewListFragment">
-        <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
-            <p>등록 된 리뷰가 없습니다.</p>
-        </div>
-
+    <div>
          <div class="wrapper" id="wrapperDiv" style="margin-top: 10%;"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
             <main id="main">
                 <section class="section mb-50">
@@ -70,22 +66,21 @@
                                         </th:block>
                                         <th:block th:unless="${isMyFeed}">
                                             <!-- 친구 신청, 삭제 버튼 -->
-                                            <div class="fixed-button" style="margin-right: 20%; text-align:right; z-index: 1000;">
-
+                                            <div class="fixed-button" style="margin-right: 0%; text-align:right; z-index: 1000;">
+                                                <!-- 사용자가 ROLE_USER인 경우에만 버튼 표시 -->
+                                                <th:block th:if="${session.user != null && session.user.role == 'ROLE_USER'}">
                                                 <!-- 친구 신청 (레코드 없음) -->
                                                 <th:block th:if="${chkFriend == null}">
-
                                                     <!-- 친구 신청 버튼 (친구가 아닐 경우) -->
                                                     <div>
                                                         <form th:action="@{/review/sendFriendReq}" method="post">
                                                             <input id="friendRes" name="friendRes" type="hidden" th:value="${feedUser}"/>
                                                             <button type="submit" class="btn-primary" style="border: none; background: none; cursor: pointer;">
                                                                 <img th:src="@{/file/community/addFriend_icon.png}" alt="친구 신청" style="width: 40px; height: 40px;">
-                                                                친구 신청
                                                             </button>
+                                                            <span>친구 신청</span>
                                                         </form>
                                                     </div>
-
                                                 </th:block>
 
                                                 <!-- 친구 대기중, 친구 삭제 (레코드 있음) -->
@@ -94,30 +89,35 @@
                                                     <!-- 친구 대기중 -->
                                                     <th:block th:if="${chkFriend.friendStatus == false}">
                                                         <a href="/review/getFriendReqStatus">
+                                                            <img th:src="@{/file/community/friend_Waiting_icon.png}" alt="친구 대기중" style="width: 40px; height: 40px; margin-right: 5px;">
                                                             친구 대기중
                                                         </a>
                                                     </th:block>
 
                                                     <!-- 친구 삭제-->
                                                     <th:block th:unless="${chkFriend.friendStatus == false}">
-
                                                         <!-- 친구 삭제 버튼 -->
                                                         <div>
                                                             <form th:action="@{/review/remove}" method="post" onsubmit="return confirmDelete();">
                                                                 <input type="hidden" name="friendNo" th:value="${chkFriend.friendNo}" /> <!-- 친구 번호 -->
                                                                 <button type="submit" class="btn-primary del" style="border: none; background: none; cursor: pointer;">
                                                                     <img th:src="@{/file/community/removeFriend_icon.png}" alt="친구 삭제" style="width: 40px; height: 40px;">
-                                                                    친구 삭제
                                                                 </button>
+                                                                <span>친구 삭제</span>
                                                             </form>
                                                         </div>
-
                                                     </th:block>
 
                                                 </th:block>
 
                                             </div>
                                         </th:block>
+
+                                        <div th:if="${#lists.isEmpty(reviewList)}" class="no-reviews">
+                                            <div style="text-align: center; font-weight: bold; font-size: 18px; padding:5%;">
+                                                등록된 리뷰가 없습니다.
+                                            </div>
+                                        </div>
 
                                         <article class="__my-review-post" th:each="review : ${reviewList}"> <!-- 각 리뷰에 대한 아티클 -->
                                             <div class="__header" style="padding-left: 0;">
@@ -200,7 +200,7 @@
                                                     <div class="__post-meta" style="display: flex; width: 100%; text-align: left; align-items: center; justify-content: space-between;">
 
                                                         <!-- 왼쪽 리뷰 관련 요소 -->
-                                                        <div style="display: flex; align-items: center; gap: 10px;">
+                                                        <div style="display: flex; align-items: center; gap: 20px; margin-left:5%;">
                                                             <!-- 리뷰 평점 -->
                                                             <a th:href="@{/review/getReview?(reviewNo=${review.reviewNo})}" style="cursor: pointer; display: flex;">
                                                                 <img src="/file/community/star_icon1.png" style="display: flex;">
@@ -209,8 +209,7 @@
 
                                                             <!-- 리뷰 좋아요 -->
                                                             <a style="cursor: pointer; display: flex;" id="like"
-                                                               th:data-review-no="${review.reviewNo}"
-                                                               th:data-username="${session.user != null ? session.user.username : ''}">
+                                                               th:data-review-no="${review.reviewNo}">
                                                                 <img th:src="${(session.user == null)? '/file/community/icon_heart_white.png' : ((review.like == null)? '/file/community/icon_heart_white.png' : '/file/community/icon_heart_red.png')}"
                                                                      style="width: 30px; height: 30px; background-color: #FFFFFF;">
                                                                 <span class="like-count" th:text="${review.reviewLikeCnt}"></span>

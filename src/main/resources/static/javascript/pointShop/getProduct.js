@@ -39,7 +39,7 @@ $(function() {
             data: JSON.stringify({ username : username, prodNo: prodNo, cntProd: 1 }),
             success: function(response) {
 
-                alert(response);
+                // alert(response);
                 // if(response === "이미 추가된 상품입니다."){
                 //
                 //     alert(response);
@@ -53,6 +53,9 @@ $(function() {
                 //     alert(response);
                 //
                 // }
+                if (confirm("장바구니에 상품이 추가되었습니다.\n장바구니로 이동 하시겠습니까?")) {
+                    window.location.href = "/purchase/getCartList";
+                }
             },
             error: function(xhr, status, error) {
                 alert("장바구니 추가 실패: " + error);
@@ -87,9 +90,13 @@ $(function() {
 
                     if ($this.attr("class") === "btn-like-inactive") {
                         $this.attr("class", "btn-like-active");
+                        if (confirm("찜 목록에 상품이 추가되었습니다.\n찜 목록으로 이동 하시겠습니까?")) {
+                            window.location.href = "/purchase/getWishList";
+                        }
                     } else {
                         $this.attr("class", "btn-like-inactive");
                     }
+
                 }
             },
             error: function(error) {

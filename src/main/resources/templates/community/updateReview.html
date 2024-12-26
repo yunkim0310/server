@@ -6,12 +6,17 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="/javascript/community/fileUpload.js"></script>
     <script src="/javascript/common/fileUploader.js"></script>
-<!--    <link th:insert="~{common/import :: importFragment}">-->
+
+    <link rel="stylesheet" href="/css/templates/mypage.css">
+    <link rel="stylesheet" href="/css/templates/collection_detail.css">
+    <link href="/css/templates/mypage.css" rel="stylesheet">
+
+    <link th:insert="~{common/import :: importFragment}">
 
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f7f9fc;
+            background-color: ffffff;
             margin: 0;
             padding: 20px;
             display: flex;
@@ -33,10 +38,11 @@
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
             padding: 20px; /* padding 조정 */
             width: 100%;
-            max-width: 400px; /* 수정: form 크기 조정 */
+<!--            max-width: 400px; /* 수정: form 크기 조정 */-->
             display: flex;
             flex-direction: column; /* 수직 배치 */
             position: relative; /* 하위 요소의 절대 위치를 기반으로 하는 상위 요소 */
+            margin-top:12%;
         }
 
         label {
@@ -50,7 +56,7 @@
         textarea {
             width: 100%;
             padding: 8px;
-            margin: 5px 0 20px;
+            margin: 23% 0 20px;
             border-radius: 5px;
             border: 1px solid #ddd;
             font-size: 1rem;
@@ -59,6 +65,7 @@
         textarea {
             resize: vertical;
             height: 100px;
+            margin-top:4%;
         }
 
         .star-rating {
@@ -124,58 +131,90 @@
 </head>
 <body>
 <header id="header"></header>
-<!--<div th:include="~{community/getCommunityAside}"></div>-->
-<div th:include="~{community/menuBar}"></div> <!-- 커뮤니티 메뉴바 포함 -->
 
-<form action="/review/updateReview" method="post" th:object="${review}" enctype="multipart/form-data">
-    <h1>리뷰 수정</h1>
-    <input type="hidden" th:field="*{reviewNo}" />
+</p>
 
-    <label>리뷰 점수</label>
-    <div class="star-rating" id="star-rating">
-        <span class="star" data-value="1">★</span>
-        <span class="star" data-value="2">★</span>
-        <span class="star" data-value="3">★</span>
-        <span class="star" data-value="4">★</span>
-        <span class="star" data-value="5">★</span>
-        <input type="hidden" id="reviewScore" name="reviewScore" th:field="*{reviewScore}" required>
-    </div>
-
-    <div class="__photos" style="display: flex; flex-direction: column;">
-        <!-- 리뷰 사진 1 -->
-        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer1">
-            <input type="file" accept="image/*" class="reviewImg1">
-            <input type="hidden" name="reviewImg1" th:value="${review.reviewImg1}">
-            <img th:src="${url + review.reviewImg1}" style="width: 50px; height: 50px;">
-            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer1')">삭제</button> <!-- 수정된 삭제 버튼 -->
-        </div>
-
-        <!-- 리뷰 사진 2 -->
-        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer2">
-            <input type="file" accept="image/*" class="reviewImg2">
-            <input type="hidden" name="reviewImg2" th:value="${review.reviewImg2}">
-            <img th:src="${url + review.reviewImg2}" style="width: 50px; height: 50px;">
-            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer2')">삭제</button> <!-- 수정된 삭제 버튼 -->
-        </div>
-
-        <!-- 리뷰 사진 3 -->
-        <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer3">
-            <input type="file" accept="image/*" class="reviewImg3">
-            <input type="hidden" name="reviewImg3" th:value="${review.reviewImg3}">
-            <img th:src="${url + review.reviewImg3}" style="width: 50px; height: 50px;">
-            <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer3')">삭제</button> <!-- 수정된 삭제 버튼 -->
+<div id="root" style="margin-top:-7%;"> <!-- 전체 컨텐츠를 감싸는 루트 요소 -->
+    <div class="css-833hqy ecbxmj4" style="padding-left: 10%;margin-top: 10%;position: sticky">
+        <div class="side" style="margin-top: 80px;">
+            <div class="css-1v4whg ecbxmj3">&nbsp;&nbsp;리뷰 목록 </div>
+            <div th:replace="~{community/getCommunityAside :: getCommunityAside}"></div>
         </div>
     </div>
 
-    <label for="content">리뷰 내용:</label>
-    <textarea id="content" th:field="*{reviewContent}" required></textarea>
+    <div th:fragment="reviewListFragment">
 
-    <button type="submit">리뷰 업데이트</button>
+        <div class="wrapper" id="wrapperDiv" style="margin-top: 10%;"> <!-- 전체 리뷰 리스트를 감싸는 주 컨테이너 -->
+            <main id="main">
+                <section class="section mb-50">
+                    <div class="container gutter-sm">
+                        <div class="section-body">
+                            <div class="__my-review-list ml--50 mr--100"> <!-- 리뷰 리스트를 담는 컨테이너 -->
+                                <div id="shopReviewListScroll"> <!-- 리뷰 스크롤을 위한 컨테이너 -->
+                                    <div id="shopReviewListScroll_0"> <!-- 특정 스크롤 섹션 -->
 
-    <div class="return-link">
-        <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+                                        <!-- 리뷰 수정 -->
+                                        <form action="/review/updateReview" method="post" th:object="${review}" enctype="multipart/form-data">
+                                            <h1>리뷰 수정</h1>
+                                            <input type="hidden" th:field="*{reviewNo}" />
+
+                                            <label>리뷰 점수</label>
+                                            <div class="star-rating" id="star-rating">
+                                                <span class="star" data-value="1">★</span>
+                                                <span class="star" data-value="2">★</span>
+                                                <span class="star" data-value="3">★</span>
+                                                <span class="star" data-value="4">★</span>
+                                                <span class="star" data-value="5">★</span>
+                                                <input type="hidden" id="reviewScore" name="reviewScore" th:field="*{reviewScore}" required>
+                                            </div>
+
+                                            <div class="__photos" style="display: flex; flex-direction: column;">
+                                                <!-- 리뷰 사진 1 -->
+                                                <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer1">
+                                                    <input type="file" accept="image/*" class="reviewImg1">
+                                                    <input type="hidden" name="reviewImg1" th:value="${review.reviewImg1}">
+                                                    <img th:src="${url + review.reviewImg1}" style="width: 50px; height: 50px;">
+                                                    <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer1')">삭제</button> <!-- 수정된 삭제 버튼 -->
+                                                </div>
+
+                                                <!-- 리뷰 사진 2 -->
+                                                <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer2">
+                                                    <input type="file" accept="image/*" class="reviewImg2" style="margin-top:21%;">
+                                                    <input type="hidden" name="reviewImg2" th:value="${review.reviewImg2}">
+                                                    <img th:src="${url + review.reviewImg2}" style="width: 50px; height: 50px;">
+                                                    <button type="button" class="delete-image-btn" onclick="deleteImage('imageContainer2')">삭제</button> <!-- 수정된 삭제 버튼 -->
+                                                </div>
+
+                                                <!-- 리뷰 사진 3 -->
+                                                <div class="css-176lya2 e1uzxhvi3 under-name-block" id="imageContainer3" style="margin-top:52%;">
+                                                    <input type="file" accept="image/*" class="reviewImg3" >
+                                                    <input type="hidden" name="reviewImg3" th:value="${review.reviewImg3}">
+                                                    <img th:src="${url + review.reviewImg3}" style="width: 50px; height: 50px;">
+                                                    <button type="button" class="delete-image-btn" style="margin-top:-13%;" onclick="deleteImage('imageContainer3')">삭제</button> <!-- 수정된 삭제 버튼 -->
+                                                </div>
+                                            </div>
+
+                                            <label for="content" style="margin-top:7%">리뷰 내용:</label>
+                                            <textarea id="content" th:field="*{reviewContent}" required></textarea>
+
+                                            <button type="submit">리뷰 업데이트</button>
+
+                                            <div class="return-link">
+                                                <a th:href="@{/review/getReviewList}">리뷰 목록으로 돌아가기</a>
+                                            </div>
+                                        </form>
+
+                                    </div> <!-- shopReviewListScroll_0 끝 -->
+                                </div> <!-- shopReviewListScroll 끝 -->
+                            </div> <!-- __my-review-list 끝 -->
+                        </div> <!-- section-body 끝 -->
+                    </div> <!-- container 끝 -->
+                </section> <!-- section 끝 -->
+
+            </main>
+        </div> <!-- wrapperDiv 끝 -->
     </div>
-</form>
+</div> <!-- root 끝 -->
 
 <script>
     const stars = document.querySelectorAll('.star');

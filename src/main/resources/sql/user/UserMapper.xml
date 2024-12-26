@@ -145,7 +145,8 @@
     <update id="updatePwd" parameterType="com.placeHere.server.domain.User">
         UPDATE user
         SET password = #{password},
-            update_dt = now()
+            update_dt = now(),
+            active_status = 'ACTIVE'
         WHERE username = #{username}
     </update>
 

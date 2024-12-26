@@ -124,9 +124,7 @@
 
 </head>
 <body>
-1
-<!--<div th:include="~{community/getCommunityAside}"></div>-->
-<!--<div th:include="~{community/menuBar}"></div> &lt;!&ndash; 커뮤니티 메뉴바 포함 &ndash;&gt;-->
+
 
 <div class="css-833hqy ecbxmj4" style="margin-right:1500px; padding-left: 10%;margin-top: 20px;position: sticky">
     <div class="side" style="margin-top: 80px;">
@@ -185,7 +183,7 @@
 
 
         <label for="reviewContent">리뷰 내용:</label>
-        <textarea id="reviewContent" name="reviewContent" rows="5" required></textarea>
+        <textarea id="reviewContent" name="reviewContent" rows="5" minlength="1" maxlength="100" required></textarea>
 
         <input type="hidden" id="userName" name="userName" th:value="${currentUser.username}" />
 

@@ -33,4 +33,11 @@ public interface UserDao {
 
     public int updateProfile(User user) throws Exception;
 
+    public int findPwdForm(User user) throws Exception;
+
+    // 비밀번호 재설정
+    public void updatePassword(User user) throws Exception;
+
+
+
 }

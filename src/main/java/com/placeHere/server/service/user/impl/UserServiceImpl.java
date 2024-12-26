@@ -137,10 +137,6 @@ public class UserServiceImpl implements UserService {
 
     }
 
-    @Override
-    public User login(String username) throws Exception {
-        return null;
-    }
 
 
     public User getUser(String username) throws Exception {

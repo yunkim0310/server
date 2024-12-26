@@ -13,6 +13,17 @@ $(function () {
 
     });
 
+
+    // 정기 휴무요일 최대 3개 선택
+    $('input[name="regularClosedayList"]').on('change', function () {
+        const checkedCount = $('input[name="regularClosedayList"]:checked').length;
+        if (checkedCount > 3) {
+            alert('최대 3개까지만 선택 가능합니다.');
+            $(this).prop('checked', false); // 선택을 취소
+        }
+    });
+
+
     $("#submit").on("click", function () {
 
         $("form").submit();

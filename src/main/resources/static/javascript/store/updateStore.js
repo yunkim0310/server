@@ -395,7 +395,7 @@ $(function() {
     function hashtagInputFilter(input) {
 
         // 한글, 영어, 숫자만 허용하는 정규식
-        const pattern = /^[가-힣a-zA-Z0-9]*$/;
+        const pattern = /^[ㄱ-ㅎ가-힣a-zA-Z0-9]*$/;
 
         return input.split('').filter(char => pattern.test(char)).join('');
     }
@@ -419,12 +419,12 @@ $(function() {
 // 유효성 검사
 function chkValidation () {
 
+    let result = true;
+
     // 매장 사진
     const storeImg1 = $("input[name='storeImg1']:hidden").val();
     const storeImg2 = $("input[name='storeImg2']:hidden").val();
     const storeImg3 = $("input[name='storeImg3']:hidden").val();
-
-    let result = true;
 
     if (storeImg1 == null || storeImg2 == null || storeImg3 == null) {
         alert("매장 사진이 부족합니다.");
@@ -446,12 +446,17 @@ function chkValidation () {
     }
 
     // 매장 소개
-    var storeInfo = $.trim($("#storeInfo").val());
+    var storeInfo = $("#storeInfo").val();
 
-    // 공백만 있거나 개행만 있는 경우
-    if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
-        alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
-        return false;
+    if (storeInfo !== "") {
+
+        storeInfo = $.trim(storeInfo);
+
+        // 공백만 있거나 개행만 있는 경우
+        if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
+            alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+            return false;
+        }
     }
 
     // 음식 카테고리
