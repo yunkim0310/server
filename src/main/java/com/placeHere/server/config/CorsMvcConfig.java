@@ -17,11 +17,11 @@ public class CorsMvcConfig implements WebMvcConfigurer {
 //                .allowedHeaders("*")
 //                .exposedHeaders("Content-Range");
 
-        corsRegistry.addMapping("/**")
-                .allowedOrigins("https://placehere.store")
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("*")
-                .exposedHeaders("Content-Range");
+//        corsRegistry.addMapping("/**")
+//                .allowedOrigins("https://placehere.store")
+//                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+//                .allowedHeaders("*")
+//                .exposedHeaders("Content-Range");
     }
 
 }

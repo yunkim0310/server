@@ -42,6 +42,9 @@ public class StoreController {
     @Autowired
     private SearchService searchService;
 
+    @Autowired
+    private FoodCategory foodCategory;
+
     @Value("${amenities_name_list}")
     private List<String> amenitiesNameList;
 
@@ -107,7 +110,7 @@ public class StoreController {
             // 등록된 가게가 없는 경우
             else {
 
-                model.addAttribute("foodCategory", new FoodCategory());
+                model.addAttribute("foodCategory", foodCategory);
                 model.addAttribute("userName", user.getUsername());
                 model.addAttribute("amenitiesNameList", amenitiesNameList);
 
@@ -236,7 +239,7 @@ public class StoreController {
 
                     model.addAttribute("store", store);
                     model.addAttribute("selectedCategoryList", selectedCategoryList);
-                    model.addAttribute("foodCategory", new FoodCategory());
+                    model.addAttribute("foodCategory", foodCategory);
                     model.addAttribute("amenitiesNameList", amenitiesNameList);
 
                     return "store/updateStore";
@@ -351,7 +354,7 @@ public class StoreController {
         List<Store> storeList2 = storeList.subList(3, 6);
 
         // 음식 카테고리
-        FoodCategory foodCategory = new FoodCategory();
+//        FoodCategory foodCategory = new FoodCategory();
 
         model.addAttribute("mode", "search");
         model.addAttribute("regionList", regionList);
@@ -420,7 +423,7 @@ public class StoreController {
 
         // 필터 관련
         model.addAttribute("regionList", regionList);
-        model.addAttribute("foodCategory", new FoodCategory());
+        model.addAttribute("foodCategory", foodCategory);
         model.addAttribute("amenitiesNameList", amenitiesNameList);
 
         // 구글 맵

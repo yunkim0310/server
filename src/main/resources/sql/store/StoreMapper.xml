@@ -110,7 +110,7 @@
          </choose>
          <choose>
              <when test="storeInfo != null and storeInfo != ''">
-                 #{storePhone},
+                 #{storeInfo},
              </when>
              <otherwise>
                  NULL,

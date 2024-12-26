@@ -15,9 +15,6 @@ public interface UserService {
     // 회원가입
     public int join(User user) throws Exception;
 
-    // 로그인
-    // getUser랑 기능 유사하지만 로그인일시 update 때문에 따로 빼둠
-    public User login(String username) throws Exception;
 
     public User getUser(String username) throws Exception;
 

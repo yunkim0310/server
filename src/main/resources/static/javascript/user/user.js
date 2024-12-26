@@ -681,7 +681,8 @@ function login() {
         } else if(data === "ADMIN_SUCCESS") {
           alert("관리자 로그인 성공");
           // location.href='http://localhost:3000/react/getUserList';
-          location.href='https://placehere.store/react/getUserList';
+          location.href='http://localhost:8080/admin-login/';
+          // location.href='https://placehere.store/react/getUserList';
         } else {
           alert("계정 정보가 존재하지 않습니다.");
           location.href='/user/login';

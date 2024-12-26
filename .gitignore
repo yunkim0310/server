@@ -44,7 +44,9 @@ src/main/resources/api.yml
 api.yml
 cloud.yml
 
-# Gradle
+
+# Gradle
+.gradle
 build.gradle
 /build/
 .gradletasknamecache
