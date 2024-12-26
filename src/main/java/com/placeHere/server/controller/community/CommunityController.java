@@ -436,6 +436,27 @@ public class CommunityController {
         }
     }
 
+    // 친구 신청 취소
+    @PostMapping("/removeFriendRequest")
+    public String removeFriendRequest(@SessionAttribute("user") User user, @RequestParam int friendNo) throws Exception {
+        System.out.println("친구 신청 취소 : POST ::  friendNo=" + friendNo);
+
+
+        String currentUsername = user.getUsername();
+
+        Friend friend = friendService.chkFriendByFriendNo(friendNo);
+
+        if (friend != null) {
+            friendService.removeFriendRequest(friendNo);
+            System.out.println("친구 신청 취소됨.");
+        } else {
+            System.out.println("친구 신청 취소 중 오류.");
+        }
+
+        return "redirect:/review/getFriendReqStatus";
+    }
+
+
 
     //친구 요청 목록을 확인하다 (getFriendReq 합침)
     @GetMapping(value = "/getFriendReqStatus")

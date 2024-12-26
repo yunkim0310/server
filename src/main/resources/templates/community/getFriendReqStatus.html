@@ -176,6 +176,16 @@
                                                     <td>
                                                         <span th:if="${request.friendStatus}" th:text="'수락 됨'"></span>
                                                         <span th:if="${!request.friendStatus}">수락 대기중</span>
+                                                        <!-- 친구 신청 취소를 위한 폼 -->
+                                                        <div th:if="${!request.friendStatus}">
+                                                            <form th:action="@{/review/removeFriendRequest}" method="post" onsubmit="return confirm('정말로 취소 하시겠습니까?');">
+                                                                <input type="hidden" name="friendNo" th:value="${request.friendNo}" />
+                                                                <div class="button-container">
+                                                                    <button type="submit" style="margin-left:78%;">취소</button>
+                                                                </div>
+                                                            </form>
+                                                        </div>
+
                                                     </td>
                                                 </tr>
                                             </th:block>

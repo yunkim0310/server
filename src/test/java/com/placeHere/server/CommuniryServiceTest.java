@@ -128,22 +128,11 @@ public class CommuniryServiceTest {
         System.out.println("1111" + comment.getCommentNo());
         System.out.println("222222" + comment.getCommentsContent());
     }
+
+
+
+
+
 }
 
-//    // 댓글 삭제 테스트
-//    @Test
-//    public void testRemoveComment() throws Exception {
-//        Comment comment = new Comment();
-//        comment.setCommentNo(16L); // 삭제할 댓글 번호
-//
-//        // 댓글 삭제 메서드 호출
-//        communityService.removeComment(comment);
-//
-//        // 삭제 후 댓글 목록 확인
-//        List<Comment> commentList = communityService.getCommentList(52); // 리뷰 번호 44에 대한 댓글 목록 불러오기
-//        Assertions.assertFalse(commentList.stream().anyMatch(c -> c.getCommentNo() == 84)); // 댓글 번호 1이 목록에 없는지 검증
-//    }
-//}
-//
-//
-//
+

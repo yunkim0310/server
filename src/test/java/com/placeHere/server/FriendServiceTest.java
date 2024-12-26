@@ -121,24 +121,13 @@ class FriendServiceTest {
     }
 
 
-//    @Test
-//    public void testGetFriendRes() throws Exception {
-//        String friendRes = "user02"; // 친구 요청을 보낸 사용자
-//        Search search = new Search(); // 필요에 따라 검색 조건 설정
-//
-//        // 실제 서비스 메서드를 호출하여 친구 신청 받은 목록 요청
-//        List<Friend> friendResponses = friendService.getFriendResList(friendRes, search);
-//
-//        // 검증
-//        assertNotNull(friendResponses); // 결과가 null이 아님을 확인
-//        assertFalse(friendResponses.isEmpty(), "친구 신청 받은 목록이 비어있지 않아야 합니다."); // 목록이 비어있지 않은지 확인
-//
-//        // 결과 출력
-//        for (Friend response : friendResponses) {
-//            System.out.println("보낸 사람: " + response.getFriendReq());
-//        }
-//    }
+    @Test
+    public void testremoveFriendRequest() throws Exception{
+       int friendNo = 31;
 
+       friendService.removeFriendRequest(friendNo);
+
+    }
 
 
 
@@ -146,61 +135,4 @@ class FriendServiceTest {
 
 
 
-//     @Test
-//     public void testGetFrinedReq() throws  Exception{
-//
-//        String friendReq = "user01";
-//
-//         List<Friend> friendReqest = friendService.getFriendReq(friendReq);
-//
-//         System.out.println("");
-//         System.out.println("");
-//         System.out.println("");
-//         System.out.println("GetFrinedReq : " + friendReq);
-//         System.out.println("asdasdasd" + friendService.getFriendReq("user01"));
-//         System.out.println("");
-//         System.out.println("");
-//         System.out.println("");
-//     }
 
-
-
-
-//    @Transactional
-// 친구 거절 , 친구신청취소, 친구 삭제는 친구 레코드를 지우는거 동일 -> remove 메서드 하나 만들고 컨트롤러 에서 조절 필요
-//    @Test
-//    public void testRemoveFriend() throws Exception{
-//
-////        friendService.removeFriend(4);
-//
-//
-//        System.out.println("Remove Success !!!");
-//
-//    }
-
-//    @Test
-//    public void testGetFriendList() throws Exception{
-//        String friendReq = "user01";
-//        String friendRes = "user01";
-//        int startRowNum = 0;
-//        int listSize = 10;
-//        String username = "user01";
-//
-//        List<Friend> friendList = friendService.getFriendList(friendReq, startRowNum, listSize, friendRes, username);
-//
-//        System.out.println("friendReq1111: " + friendReq);
-//        System.out.println("friendRes22222: " + friendRes);
-//        System.out.println("username333333: " + username);
-//        System.out.println("친구 목록 444444: " + friendList);
-//
-//
-////        assertNotNull(friendList);
-////        assertFalse(friendList.isEmpty());
-//
-//        System.out.println("친구 목록 2342342: " + friendList);
-//
-//        for (Friend friend : friendList) {
-//            assertTrue(friend.isFriendStatus(), "친구 상태가 1이어야 합니다.");
-//        }
-//
-//    }

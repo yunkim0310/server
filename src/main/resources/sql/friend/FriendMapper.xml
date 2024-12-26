@@ -134,6 +134,12 @@
 
     </select>
 
+    <!-- 친구 신청을 취소하는 쿼리 -->
+    <delete id="removeFriendRequest" parameterType="int">
+        DELETE FROM Friend
+        WHERE friend_no = #{friendNo};
+    </delete>
+
 
     <!--    &lt;!&ndash; 친구 요청 상태 확인  : friend_req, friend_res, chkfriend_req, friend_status 등 chkFriend 추가로 필요 지우지x&ndash;&gt;-->
     <!--    <select id="findFriendRelation" parameterType="map" resultMap="friendMap"> &lt;!&ndash; 추가된 부분 &ndash;&gt;-->

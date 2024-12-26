@@ -145,49 +145,15 @@ public class FriendServiceImpl implements FriendService {
     }
 
 
+    //친구 신청 취소
+    public void removeFriendRequest(int friendNo)throws Exception{
+        System.out.println("removeFriendRequest 친구 신청 취소 ServiceImpl");
 
+        friendDao.removeFriendRequest(friendNo);
+    }
 
-
-
-//    @Override
-//    public int getFriendStatus(String currentUser, String targetUser) throws Exception {
-//        Map<String, String> params = new HashMap<>();
-//        params.put("userNameA", currentUser);
-//        params.put("userNameB", targetUser);
-//        return friendDao.getFriendStatus(params); // DAO를 통해 친구 상태 조회
-//    }
-
-//    @Override
-//    public Friend findFriendRelation(Map<String, String> params) throws Exception {
-//        return friendDao.findFriendRelation(params);
-//    }
-
-
-
-
-//    // 친구 신청 확인
-//    public List<Friend> getFriendReq(String friendReq,int startRowNum, int listSize, String friendRes, String username) throws Exception{
-//        return friendDao.getFriendReq(friendReq,startRowNum,  listSize, friendRes, username);
-//    }
-    //친구 요청을 확인하다   => 필요  X getFriendReq 합침
-//        public List<Friend> checkFriendReq(String friendRes) throws Exception{
-//            return friendDao.checkFriendReq(friendRes);
-//         }
-
-    //    친구 아이디를 검색하다 ( 보류)
-//    @Override
-//        public List<Friend> searchFriend(Search search) throws Exception{
-//        return friendDao.searchFriend(search);
-//    }
-
-
-//    친구 신청을 취소
-//    @Override
-//        public void cancelFriend(Friend friend) throws Exception{
-//        if(!friend.isFriendStatus()){
-//            friendDao.removeFriendReq(friend);
-//         }
-//        }
-//
-
+    // 친구 정보 가져오는 메서드
+    public Friend chkFriendByFriendNo(int friendNo) throws Exception {
+        return friendDao.chkFriendByFriendNo(friendNo);
+    }
 }

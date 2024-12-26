@@ -42,6 +42,10 @@ public interface FriendDao {
     // friendReq 는 내 아이디, friendRes 는 상대 아이디
     public Friend chkFriend(Friend friend);
 
+    // 친구 정보 가져오는 메서드
     public Friend chkFriendByFriendNo(int friendNo) throws Exception;
+
+    //친구 요청 취소
+    public void removeFriendRequest(int friendNo) throws Exception;
 
     }
