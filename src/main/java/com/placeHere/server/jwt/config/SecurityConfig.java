@@ -67,7 +67,7 @@ public class SecurityConfig {
 
                                 // 허용할 서버포트
 //                                configuration.setAllowedOrigins( Collections.singletonList( "http://localhost:3000"));
-                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000"));
+                                configuration.setAllowedOrigins(Arrays.asList("http://localhost:8080", "http://localhost:3000", "https://placehere.store/"));
                                 // get, post, option 등
                                 configuration.setAllowedMethods(Collections.singletonList("*"));
                                 configuration.setAllowCredentials(true);
