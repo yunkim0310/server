@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         start: closeday.closeday,
                         allDay: true,
                         id: closeday.closedayId,
-                        backgroundColor: '#4880FF'
+                        backgroundColor: '#4880FF',
+                        borderColor: '#4880FF'
                     }));
                     successCallback(events);
                 },
