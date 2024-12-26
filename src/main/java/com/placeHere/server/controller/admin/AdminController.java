@@ -91,9 +91,9 @@ public class AdminController {
 
         List<User> pagedList = list.subList(start, end);
 
-        for(User user : pagedList) {
-            System.out.println(user);
-        }
+//        for(User user : pagedList) {
+//            System.out.println(user);
+//        }
 
         // 페이징 처리된 list put
         map.put("data", pagedList);
@@ -213,9 +213,9 @@ public class AdminController {
 
         List<Reservation> pagedList = list.subList(start, end);
 
-        for(Reservation rsrv : pagedList) {
-            System.out.println(rsrv);
-        }
+//        for(Reservation rsrv : pagedList) {
+//            System.out.println(rsrv);
+//        }
 
         map.put("data", pagedList);
         map.put("total", total);
@@ -293,11 +293,11 @@ public class AdminController {
         // 페이징된 리스트
         List<Batch> pagedList = list.subList(start, end);
 
-        for(Batch batch : pagedList) {
-            log.info("batchId :: " + batch.getId().toString());
-            log.info("batchName :: " + batch.getBatchName());
-
-        }
+//        for(Batch batch : pagedList) {
+//            log.info("batchId :: " + batch.getId().toString());
+//            log.info("batchName :: " + batch.getBatchName());
+//
+//        }
 //        map.put("data", list);
         map.put("data", pagedList);
         map.put("total", total);

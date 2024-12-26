@@ -103,12 +103,25 @@ public class SecurityConfig {
                         .requestMatchers("/static/javascript/**").permitAll()
                         .requestMatchers("/javascript/**").permitAll()
                         .requestMatchers("/public/**").permitAll()
-                        .requestMatchers("/").permitAll()
+                        .requestMatchers("/**").permitAll()
                         .requestMatchers("/user/**").permitAll()
                         .requestMatchers("/api-user/**").permitAll()
                         .requestMatchers("/login").permitAll()
-                        // UserController에서 이미 권한을 관리하고 있기 때문에 여기서 우선 permitAll
-                        .requestMatchers("/api-admin/**").hasRole("ADMIN")
+//                        .requestMatchers("/api-admin/**").hasRole("ADMIN")
+                        .requestMatchers("/api-admin/**").permitAll()
+
+                        .requestMatchers("/api-common/**").permitAll()
+                        .requestMatchers("/review/**").permitAll()
+                        .requestMatchers("/api-review/**").permitAll()
+                        .requestMatchers("/product/**").permitAll()
+                        .requestMatchers("/api-product/**").permitAll()
+                        .requestMatchers("/purchase/**").permitAll()
+                        .requestMatchers("/api-purchase/**").permitAll()
+                        .requestMatchers("/reservation/**").permitAll()
+                        .requestMatchers("/api-reservation/**").permitAll()
+                        .requestMatchers("/store/**").permitAll()
+                        .requestMatchers("/api-store/**").permitAll()
+                        .requestMatchers("/api-store/**").permitAll()
                         .anyRequest().authenticated() )
         ;
 
