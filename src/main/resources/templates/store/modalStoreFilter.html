@@ -21,7 +21,7 @@
                                         <h1 class="paging-title" style="font-size: 20px; font-weight: bold;">필터</h1>
                                     </div>
                                     <div class="header-right">
-                                        <button name="resetFilter" class="btn-reset" style="cursor: pointer;" type="button">
+                                        <button name="resetFilter" class="btn-reset" style="cursor: pointer;color: #4880FF;" type="button">
                                             초기화
                                         </button>
                                     </div>
@@ -348,7 +348,7 @@
                                         name="closeFilter" type="button">
                                     취소
                                 </button>
-                                <button class="btn btn-lg btn-red" name="saveFilter" th:text="${(mode == 'search')? '저장' : '적용'}" type="button">적용</button>
+                                <button class="btn btn-lg btn-red" name="saveFilter" style="background-color: #4880FF;border-color: #4880FF;" th:text="${(mode == 'search')? '저장' : '적용'}" type="button">적용</button>
                             </div>
                         </div>
                     </div>
