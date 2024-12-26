@@ -545,12 +545,17 @@ function chkValidation () {
     }
 
     // 매장 소개
-    var storeInfo = $.trim($("#storeInfo").val());
+    var storeInfo = $("#storeInfo").val();
 
-    // 공백만 있거나 개행만 있는 경우
-    if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
-        alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
-        return false;
+    if (storeInfo !== "") {
+
+        storeInfo = $.trim(storeInfo);
+
+        // 공백만 있거나 개행만 있는 경우
+        if (storeInfo === "" || storeInfo.replace(/\n/g, "") === "") {
+            alert("매장 소개는 공백만 있을 수 없습니다. 내용을 입력해주세요.");
+            return false;
+        }
     }
 
     // 음식 카테고리
