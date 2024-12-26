@@ -13,7 +13,7 @@ $(function () {
             success: function (result) {
 
                 if (result) {
-                    window.location.href = "/getStoreLikeList";
+                    location.reload();
                 }
 
             }
