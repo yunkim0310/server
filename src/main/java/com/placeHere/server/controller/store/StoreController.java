@@ -486,6 +486,14 @@ public class StoreController {
             model.addAttribute("mode", mode);
             model.addAttribute("googleApi", googleApi);
 
+            if (user != null) {
+
+                // 본인 가게 여부
+                boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
+                model.addAttribute("isMyStore", isMyStore);
+
+            }
+
             switch (mode) {
 
                 case "info":
@@ -509,14 +517,6 @@ public class StoreController {
                     model.addAttribute("per", statistics.get("per"));
 
                     model.addAttribute("statistics", statistics);
-
-                    if (user != null) {
-                        
-                        // 본인 가게 여부
-                        boolean isMyStore = storeService.getStoreId(user.getUsername()) == storeId;
-                        model.addAttribute("isMyStore", isMyStore);
-                        
-                    }
 
                     break;
 

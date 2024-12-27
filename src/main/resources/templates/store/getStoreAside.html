@@ -30,7 +30,7 @@
         </li>
     </th:block>
 
-    <th:block th:if="${!(session.user !=null && session.user.role == 'ROLE_STORE')}">
+    <th:block th:if="${((session.user ==null || session.user.role == 'ROLE_USER')) || (isMyStore != null && isMyStore == true)}">
         <li class="css-0 ecbxmj1">
             <a class="css-pi3u6r ecbxmj0" th:href="'/reservation/addRsrv?storeId='+${store.storeId}">
                 예약하기
