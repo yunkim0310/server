@@ -34,3 +34,9 @@ function validateForm() {
   }
   return true;
 }
+
+function cancelForm() {
+
+  event.preventDefault();
+  window.location.href = '/';
+}
