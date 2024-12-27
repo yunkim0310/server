@@ -41,7 +41,12 @@ $(function () {
         $("input[name='mode']:hidden").val("result");
         $("input[name='page']").val(page);
 
-        $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
+        if ($("input[name='priceMin']").val() > $("input[name='priceMax']").val()) {
+            alert("가격 범위 설정이 잘못되었습니다.");
+            $("input[name='priceMin']").focus();
+        } else {
+            $("form[name='searchStore']").attr("action", "/getStoreList").attr("method", "get").submit();
+        }
 
     }
 

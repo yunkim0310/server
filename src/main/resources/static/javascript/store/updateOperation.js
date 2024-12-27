@@ -1,5 +1,7 @@
 $(function () {
 
+    alert("변경된 운영정보는 14일 후에 적용됩니다.");
+
     let checkedCount = $('input[name="regularClosedayList"]:checked').length;
 
     $("form").attr("action", "/store/updateOperation").attr("method", "post");
@@ -24,9 +26,7 @@ $(function () {
 
 
     $("#submit").on("click", function () {
-
         $("form").submit();
-
     })
 
 });
