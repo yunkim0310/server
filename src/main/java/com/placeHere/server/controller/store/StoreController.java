@@ -768,17 +768,26 @@ public class StoreController {
 
                     System.out.println("addCloseday");
 
-                    int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
-                    System.out.println(rsrvCnt);
+                    int closedayCnt = storeService.chkCloseday(closeday);
+                    System.out.println("closedayCnt = " + closedayCnt);
 
-                    // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
-                    if (rsrvCnt == 0) {
+                    if (closedayCnt == 0) {
 
-                        System.out.println(closeday);
-                        storeService.addCloseday(closeday);
+                        int rsrvCnt = reservationService.getCountDayRsrv(Date.valueOf(closeday.getCloseday()), closeday.getStoreId());
+                        System.out.println(rsrvCnt);
+
+                        // 예약이 없으면 휴무일 추가, 있으면 등록 불가 메세지 전달
+                        if (rsrvCnt == 0) {
+
+                            System.out.println(closeday);
+                            storeService.addCloseday(closeday);
+
+                        } else {
+                            redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
+                        }
 
                     } else {
-                        redirectAttributes.addFlashAttribute("message", "해당 날짜에 예약이 있어 휴무일 등록이 불가능합니다");
+                        redirectAttributes.addFlashAttribute("message", "동일한 날짜는 휴무일 등록이 불가능합니다.");
                     }
                 }
 

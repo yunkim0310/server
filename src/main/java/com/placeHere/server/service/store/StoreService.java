@@ -72,6 +72,9 @@ public interface StoreService {
     // 휴무일 목록 조회
     public List<Closeday> getClosedayList(int storeId, Search search);
 
+    // 휴무일 중복 확인
+    public int chkCloseday(Closeday closeday);
+
     // 휴무일 삭제 (DELETE)
     public boolean removeCloseday(int closedayId);
 

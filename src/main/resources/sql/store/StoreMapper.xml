@@ -620,6 +620,16 @@
 
     </select>
 
+    <!-- 휴무일 중복 확인 -->
+    <select id="chkCloseday" parameterType="com.placeHere.server.domain.Closeday">
+
+        SELECT COUNT(*)
+        FROM closeday
+        WHERE store_id = #{storeId}
+        AND closeday = #{closeday}
+
+    </select>
+
     <!-- 휴무일 삭제 -->
     <delete id="removeCloseday" parameterType="int">
 

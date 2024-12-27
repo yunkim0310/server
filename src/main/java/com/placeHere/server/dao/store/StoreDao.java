@@ -87,6 +87,9 @@ public interface StoreDao {
     // 휴무일 목록 조회 (오늘~14일후)
     public List<String> getClosedayList(int storeId);
 
+    // 휴무일 중복 확인
+    public int chkCloseday(Closeday closeday);
+
     // 휴무일 삭제 (DELETE)
     public void removeCloseday(int closedayId);
 

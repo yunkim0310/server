@@ -307,6 +307,14 @@ public class StoreServiceImpl implements StoreService {
 
         return storeDao.getClosedayListBySearch(storeId, search);
     }
+    
+    
+    // 휴무일 중복확인
+    @Override
+    public int chkCloseday(Closeday closeday) {
+
+        return storeDao.chkCloseday(closeday);
+    }
 
 
     // 휴무일 삭제 (DELETE)
