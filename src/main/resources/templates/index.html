@@ -177,10 +177,34 @@
                                                th:if="${foodCategory != null && foodCategory.mainCategory != null}"
                                                th:each="category : ${foodCategory.mainCategory}"
                                                th:href="'/getStoreList?foodCategoryId='+${category}">
-                                                    <span class="tb">
-                                                        <img th:src="${foodCategory.categoryImg.get(category)}">
-                                                    </span>
+                                                <span class="tb">
+                                                    <img th:src="${foodCategory.categoryImg.get(category)}">
+                                                </span>
                                                 <span class="name" th:text="${category}">음식 카테고리</span>
+                                            </a>
+                                            <a class="best-food-list-item item" href="/getStoreList?searchKeyword=구이">
+                                                <span class="tb">
+                                                    <img src="/images/store/icon_grill.jpg">
+                                                </span>
+                                                <span class="name">구이</span>
+                                            </a>
+                                            <a class="best-food-list-item item" href="/getStoreList?searchKeyword=면">
+                                                <span class="tb">
+                                                    <img src="/images/store/icon_ramen.png">
+                                                </span>
+                                                <span class="name">면</span>
+                                            </a>
+                                            <a class="best-food-list-item item" href="/getStoreList?foodCategoryId=한식/국, 탕/탕/">
+                                                <span class="tb">
+                                                    <img src="/images/store/icon_tang.jpg">
+                                                </span>
+                                                <span class="name">탕</span>
+                                            </a>
+                                            <a class="best-food-list-item item" href="/getStoreList?searchKeyword=한정식">
+                                                <span class="tb">
+                                                    <img src="/images/store/icon_korea_food.jpeg">
+                                                </span>
+                                                <span class="name">한정식</span>
                                             </a>
                                         </div>
                                     </div>
