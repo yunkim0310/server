@@ -558,7 +558,7 @@
                      NULL,
                  </otherwise>
              </choose>
-             #{newsContents}, NOW())
+             #{newsContents}, CONVERT_TZ(NOW(), 'UTC', 'Asia/Seoul'))
 
     </insert>
 
